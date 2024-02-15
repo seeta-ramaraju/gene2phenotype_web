@@ -1,6 +1,3 @@
-<script setup>
-import SearchIcon from "../icons/SearchIcon.vue";
-</script>
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -99,7 +96,7 @@ import SearchIcon from "../icons/SearchIcon.vue";
             <option value="2">Search Eye panel</option>
           </select>
           <button type="button" class="btn btn-primary">
-            <SearchIcon></SearchIcon>
+            <i class="bi bi-search"></i>
           </button>
         </div>
         <ul class="navbar-nav">

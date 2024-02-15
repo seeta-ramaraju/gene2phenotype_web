@@ -1,6 +1,3 @@
-<script setup>
-import SearchIcon from "../components/icons/SearchIcon.vue";
-</script>
 <template>
   <div class="container px-5">
     <div class="row py-3">
@@ -46,7 +43,7 @@ import SearchIcon from "../components/icons/SearchIcon.vue";
         <option value="2">Search Eye panel</option>
       </select>
       <button type="button" class="btn btn-primary">
-        <SearchIcon></SearchIcon>
+        <i class="bi bi-search"></i>
       </button>
     </div>
     <div class="row py-4">
