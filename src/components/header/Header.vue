@@ -40,9 +40,21 @@
               About
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">The project</a></li>
-              <li><a class="dropdown-item" href="#">Terminology</a></li>
-              <li><a class="dropdown-item" href="#">Variant filtering</a></li>
+              <li>
+                <router-link to="about/project" class="dropdown-item">
+                  The Project
+                </router-link>
+              </li>
+              <li>
+                <router-link to="about/terminology" class="dropdown-item">
+                  Terminology
+                </router-link>
+              </li>
+              <li>
+                <router-link to="about/variantfiltering" class="dropdown-item">
+                  Variant Filtering
+                </router-link>
+              </li>
               <li>
                 <router-link to="/publications" class="dropdown-item"
                   >Publications</router-link
