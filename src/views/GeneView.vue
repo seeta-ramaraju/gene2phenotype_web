@@ -58,27 +58,35 @@ export default {
   <div class="container px-5 py-3">
     <div v-if="isDataLoading">Data is loading...Please wait...</div>
     <div v-if="errorMsg" class="text-danger">{{ errorMsg }}</div>
-    <div v-if="geneData">
-      <h3>{{ geneData.gene_symbol }}</h3>
+    <div v-if="geneData && geneSummaryData">
+      <h3 v-if="geneData.gene_symbol">{{ geneData.gene_symbol }}</h3>
+      <h3 v-else>Not Available</h3>
       <h4 class="py-3">Other Synonyms</h4>
-      <div class="row mx-3">
-        <ul>
-          <li v-for="synonym in geneData.synonyms">{{ synonym }}</li>
-        </ul>
+      <div class="row">
+        <p v-if="geneData.synonyms && geneData.synonyms.length > 0">
+          {{ geneData.synonyms.join(", ") }}
+        </p>
+        <p v-else style="color: grey">Not Available</p>
       </div>
-      <h4 class="py-3">Gene Records Summary</h4>
-      <div class="row mx-3">
-        <table class="table table-hover table-bordered">
+      <h4 class="py-3">Latest Records</h4>
+      <div class="row mx-1">
+        <table
+          class="table table-hover table-bordered"
+          v-if="
+            geneSummaryData.records_summary &&
+            geneSummaryData.records_summary.length > 0
+          "
+        >
           <thead>
             <tr>
-              <th scope="col">Disease</th>
-              <th scope="col">Genotype</th>
-              <th scope="col">Variant Consequence</th>
-              <th scope="col">Variant Type</th>
-              <th scope="col">Mechanism</th>
-              <th scope="col">Confidence</th>
-              <th scope="col">Panels</th>
-              <th scope="col">Record Page</th>
+              <th>Disease</th>
+              <th>Genotype</th>
+              <th>Variant Consequence</th>
+              <th>Variant Type</th>
+              <th>Mechanism</th>
+              <th>Confidence</th>
+              <th>Panels</th>
+              <th>Record Page</th>
             </tr>
           </thead>
           <tbody v-for="item in geneSummaryData.records_summary">
@@ -91,11 +99,14 @@ export default {
               <td>{{ item.confidence }}</td>
               <td>{{ item.panels.join(", ") }}</td>
               <td>
-                <button class="btn btn-primary">View</button>
+                <button class="btn btn-primary">
+                  View <i class="bi bi-box-arrow-up-right"></i>
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
+        <p v-else style="color: grey">Not Available</p>
       </div>
       <h4 class="py-3">Additional Links</h4>
       <div class="row mx-3 pb-3">
@@ -106,7 +117,7 @@ export default {
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
-          <li>
+          <li v-if="geneData.ids.Ensembl">
             <a
               v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
               style="text-decoration: none"
@@ -115,7 +126,7 @@ export default {
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
-          <li>
+          <li v-if="geneData.ids.HGNC">
             <a
               v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:${geneData.ids.HGNC}`"
               style="text-decoration: none"
@@ -126,7 +137,13 @@ export default {
           </li>
         </ul>
       </div>
-      <p>Last Update: {{ geneData.last_updated }}</p>
+      <p>
+        <strong>Last Update: </strong>
+        <span v-if="geneData.last_updated">
+          {{ geneData.last_updated }}
+        </span>
+        <span v-else style="color: grey">Not Available</span>
+      </p>
     </div>
   </div>
 </template>
