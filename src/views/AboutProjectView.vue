@@ -1,6 +1,3 @@
-<script setup> 
-import About from './AboutView.vue';
-</script>
 <template>
     <About />
     <div class="container" style="vertical-align: middle">
