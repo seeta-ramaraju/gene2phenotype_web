@@ -1,6 +1,6 @@
 <template>
     <br>
-        <div class="container" style="vertical-align: middle">
+        <div class="container px-5 py-3" style="vertical-align: middle">
             <body>
                 <p>
                     The G2P project shares detailed, evidence-based gene-disease models, curated from the literature by experts. 
