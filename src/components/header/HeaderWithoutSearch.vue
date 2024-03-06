@@ -30,28 +30,27 @@
             >
           </li>
           <li class="nav-item dropdown">
-            <a
+            <span
               class="nav-link dropdown-toggle"
-              href="#"
               role="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               About
-            </a>
+            </span>
             <ul class="dropdown-menu">
               <li>
-                <router-link to="about/project" class="dropdown-item">
+                <router-link to="/about/project" class="dropdown-item">
                   The Project
                 </router-link>
               </li>
               <li>
-                <router-link to="about/terminology" class="dropdown-item">
+                <router-link to="/about/terminology" class="dropdown-item">
                   Terminology
                 </router-link>
               </li>
               <li>
-                <router-link to="about/variantfiltering" class="dropdown-item">
+                <router-link to="/about/variantfiltering" class="dropdown-item">
                   Variant Filtering
                 </router-link>
               </li>
