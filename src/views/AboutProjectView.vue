@@ -29,6 +29,14 @@ import About from './AboutView.vue';
                 <RouterLink to="/about/variant-filtering">here</RouterLink>
             </p>
         </body>
+        <a href="https://thegencc.org/">
+            <img
+                alt="GenCC logo"
+                src="../assets/GenCC.png"
+                width="25%"
+                height="auto"
+            /> </a> G2P is a member of the Gene Curation Coalition which seeks to standardise the curation and description of gene disease information
+        
     </div>
 
 </template>
