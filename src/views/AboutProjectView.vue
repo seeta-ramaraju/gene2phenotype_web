@@ -1,6 +1,6 @@
 <template>
-    <br>
     <div class="container px-5 py-3" style="vertical-align: middle">
+        <h5>The Project</h5>
         <p>
             The G2P project shares detailed, evidence-based gene-disease models, curated from the literature by experts.
             These data can be used in the G2P extension of the Ensembl Variant Effect Predictor (Ensembl VEP) to
@@ -37,5 +37,4 @@
         Gene Curation Coalition which seeks to standardise the curation and description of gene disease information
 
     </div>
-    </br>
 </template>
