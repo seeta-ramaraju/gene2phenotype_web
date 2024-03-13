@@ -1,14 +1,15 @@
 <template>
   <div class="container px-5 py-3">
-    <h3>Publications</h3>
-    <h5 class="pb-2">Citing G2P</h5>
+    <h2>Publications</h2>
+    <h4 class="pb-2">Citing G2P</h4>
     <h6 class="pb-2">
       If you have used Gene2Phenotype in your work, please cite the
       <a
         href="https://www.ebi.ac.uk/gene2phenotype"
         style="text-decoration: none"
-        >website</a
       >
+        website
+      </a>
       with date accessed and below article.
     </h6>
     <a
@@ -27,7 +28,22 @@
         Commun 10, 2373 (2019). https://doi.org/10.1038/s41467-019-10016-3
       </p>
     </div>
-    <h5 class="pb-2">Additional G2P Publications</h5>
+    <h4 class="pb-2">Additional G2P Publications</h4>
+    <a
+      href="https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1"
+      style="text-decoration: none"
+    >
+      <h6>Curating genomic disease-gene relationships with Gene2Phenotype.</h6>
+    </a>
+    <div class="pb-2 citation-div">
+      <p>
+        T Michael Yates, Morad Ansari, Louise Thompson, Sarah E Hunt, Elena
+        Cibrian Uhalte, Rachel J Hobson, Joseph A Marsh, Caroline F Wright,
+        Helen V Firth. Curating genomic disease-gene relationships with
+        Gene2Phenotype. medRxiv 2024.02.26.24303357; doi:
+        https://doi.org/10.1101/2024.02.26.24303357.
+      </p>
+    </div>
     <a
       href="https://doi.org/10.1136/jmg-2022-108618"
       style="text-decoration: none"
