@@ -30,6 +30,21 @@
     </div>
     <h4 class="pb-2">Additional G2P Publications</h4>
     <a
+      href="https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1"
+      style="text-decoration: none"
+    >
+      <h6>Curating genomic disease-gene relationships with Gene2Phenotype.</h6>
+    </a>
+    <div class="pb-2 citation-div">
+      <p>
+        T Michael Yates, Morad Ansari, Louise Thompson, Sarah E Hunt, Elena
+        Cibrian Uhalte, Rachel J Hobson, Joseph A Marsh, Caroline F Wright,
+        Helen V Firth. Curating genomic disease-gene relationships with
+        Gene2Phenotype. medRxiv 2024.02.26.24303357; doi:
+        https://doi.org/10.1101/2024.02.26.24303357.
+      </p>
+    </div>
+    <a
       href="https://doi.org/10.1136/jmg-2022-108618"
       style="text-decoration: none"
     >
