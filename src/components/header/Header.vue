@@ -25,16 +25,8 @@
                   The Project
                 </router-link>
               </li>
-              <li>
-                <router-link to="#" class="dropdown-item">
-                  Terminology
-                </router-link>
-              </li>
-              <li>
-                <router-link to="#" class="dropdown-item">
-                  Variant Filtering
-                </router-link>
-              </li>
+              <li><a class="dropdown-item" href="#">Terminology</a></li>
+              <li><a class="dropdown-item" href="#">Variant filtering</a></li>
               <li>
                 <router-link to="/publications" class="dropdown-item">Publications</router-link>
               </li>
