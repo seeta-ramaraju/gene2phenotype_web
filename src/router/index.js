@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePageView from "../views/HomePageView.vue";
 import PublicationsView from "../views/PublicationsView.vue";
+import AboutProjectView from "../views/AboutProjectView.vue";
 import GeneView from "../views/GeneView.vue";
 
 const router = createRouter({
@@ -15,6 +16,11 @@ const router = createRouter({
       path: "/publications",
       name: "publications",
       component: PublicationsView,
+    },
+    {
+      path: "/about/project",
+      name: "aboutproject",
+      component: AboutProjectView,
     },
     {
       path: "/gene/:symbol",
