@@ -64,6 +64,7 @@ export default {
         <div v-if="diseaseData && diseaseSummaryData">
             <h2 v-if="diseaseData.name">{{ diseaseData.name }} </h2>
             <h2 v-else class="text-muted">Not Available</h2>
+            <h3 v-for="item in diseaseData.ontology_terms">{{ item.description }}</h3>
             <!-- v.else is a directive to do if v-if is  not True -->
             <h4 v-if="diseaseData.mim">
                 <a :href="'https://omim.org/entry/' + diseaseData.mim" target="_blank">{{ diseaseData.mim }}</a>
@@ -114,6 +115,11 @@ export default {
             </div>
             <div class="container px-5 py-3">
                 <h4 v-if="diseaseData.ontology_terms">Disease Ontology terms associated with this disease</h4>
+                <h4 v-if="diseaseData.ontology_terms">
+                    <a :href="'http://purl.obolibrary.org/obo/' + diseaseData.ontology_terms.accession"
+                        target="_blank">{{
+                        diseaseData.ontology_terms.accession }}</a>
+                </h4>
             </div>
 
         </div>
