@@ -115,11 +115,11 @@ export default {
             </div>
             <div class="container px-5 py-3">
                 <h4 v-if="diseaseData.ontology_terms">Disease Ontology terms associated with this disease</h4>
-                <h4 v-if="diseaseData.ontology_terms">
-                    <a :href="'http://purl.obolibrary.org/obo/' + diseaseData.ontology_terms.accession"
-                        target="_blank">{{
-                        diseaseData.ontology_terms.accession }}</a>
-                </h4>
+                <p v-for="item in diseaseData.ontology_terms">
+                    <a :href="'http://purl.obolibrary.org/obo/' + item.accession.replace(/:/g, '_')" target="_blank">{{
+                        item.accession }}</a>
+                </p>
+
             </div>
 
         </div>
