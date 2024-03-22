@@ -83,21 +83,31 @@ export default {
                                 <th>Panels</th>
                             </tr>
                         </thead>
-                        <tbody v-for="item in diseaseSummaryData.records_summary">
+                        <tbody style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
+                            v-for="item in diseaseSummaryData.records_summary">
                             <a :href="'#' + item.stable_id">{{ item.stable_id }}</a>
                             <!-- This needs to be changed to route to the G2P stable id page -->
-                            <td> {{ item.genotype }} </td>
-                            <td v-if="Array.isArray(item.variant_consequence)">
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"> {{ item.genotype
+                                }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
+                                v-if="Array.isArray(item.variant_consequence)">
                                 {{ item.variant_consequence.join(",") }}
                             </td>
-                            <td v-else> {{ item.variant_consequence }} </td>
-                            <td v-if="Array.isArray(item.variant_type)"> {{ item.variant_type.join(",") }} </td>
-                            <td v-else> {{ item.variant_type }} </td>
-                            <td v-if="Array.isArray(item.molecular_mehanism)"> {{ item.molecular_mehanism.join(',') }}
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" v-else> {{
+            item.variant_consequence }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
+                                v-if="Array.isArray(item.variant_type)"> {{ item.variant_type.join(",") }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" v-else> {{
+            item.variant_type }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
+                                v-if="Array.isArray(item.molecular_mehanism)"> {{ item.molecular_mehanism.join(',') }}
                             </td>
-                            <td v-else> {{ item.molecular_mehanism }} </td>
-                            <td v-if="Array.isArray(item.panels)"> {{ item.panels.join(",") }} </td>
-                            <td v-else> {{ item.panels }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" v-else> {{
+            item.molecular_mehanism }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
+                                v-if="Array.isArray(item.panels)"> {{ item.panels.join(",") }} </td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;" v-else> {{
+            item.panels }} </td>
                         </tbody>
                     </table>
                 </div>
