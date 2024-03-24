@@ -114,12 +114,17 @@ export default {
                 </div>
             </div>
             <div class="container px-5 py-3">
-                <h4 v-if="diseaseData.ontology_terms">Disease Ontology terms associated with this disease</h4>
+                <h4 v-if="diseaseData.ontology_terms">Disease Ontology terms</h4>
                 <p v-for="item in diseaseData.ontology_terms">
                     <a :href="'http://purl.obolibrary.org/obo/' + item.accession.replace(/:/g, '_')" target="_blank">{{
-                        item.accession }}</a>
+            item.accession }}</a>
                 </p>
-
+                <h4 v-if="diseaseData.publications">Publications</h4>
+                <ul v-for="item in diseaseData.publications">
+                    <li> <a :href="'https://pubmed.ncbi.nlm.nih.gov/' + item.pmid" target="_blank"> {{ item.title }}</a>
+                    </li>
+                </ul>
+                <p> Date updated: {{ diseaseData.last_updated }} </p>
             </div>
 
         </div>
