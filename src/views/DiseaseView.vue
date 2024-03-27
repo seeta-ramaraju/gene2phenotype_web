@@ -87,7 +87,7 @@ export default {
                         <tbody style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
                             v-for="item in diseaseSummaryData.records_summary">
                             <a :href="'#' + item.stable_id">{{ item.stable_id }}</a>
-                            <!-- This needs to be changed to route to the G2P stable id page -->
+                            <!-- This needs to be changed to route to the G2P stable id (LGD) page -->
                             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"> {{ item.genotype
                                 }} </td>
                             <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;"
@@ -121,7 +121,8 @@ export default {
                 </p>
                 <h4 v-if="diseaseData.publications">Publications</h4>
                 <ul v-for="item in diseaseData.publications">
-                    <li> <a :href="'https://pubmed.ncbi.nlm.nih.gov/' + item.pmid" target="_blank"> {{ item.title }}</a>
+                    <li> <a :href="'https://pubmed.ncbi.nlm.nih.gov/' + item.pmid" target="_blank"> {{ item.title }}
+                        </a>
                     </li>
                 </ul>
                 <p> Date updated: {{ diseaseData.last_updated }} </p>
