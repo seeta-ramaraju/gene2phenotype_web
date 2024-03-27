@@ -111,6 +111,7 @@ export default {
             item.panels }} </td>
                         </tbody>
                     </table>
+                    <p v-else>No Records found</p>
                 </div>
             </div>
             <div class="container px-5 py-3">
@@ -119,13 +120,14 @@ export default {
                     <a :href="'http://purl.obolibrary.org/obo/' + item.accession.replace(/:/g, '_')" target="_blank">{{
             item.accession }}</a>
                 </p>
-                <h4 v-if="diseaseData.publications">Publications</h4>
+                <h4 v-if="diseaseData.publications && diseaseData.publications.length > 0">Publications</h4>
                 <ul v-for="item in diseaseData.publications">
                     <li> <a :href="'https://pubmed.ncbi.nlm.nih.gov/' + item.pmid" target="_blank"> {{ item.title }}
                         </a>
                     </li>
                 </ul>
-                <p> Date updated: {{ diseaseData.last_updated }} </p>
+                <p v-if="diseaseData.last_updated && diseaseData.last_updated != ''"> Date updated: {{
+                    diseaseData.last_updated }} </p>
             </div>
 
         </div>
