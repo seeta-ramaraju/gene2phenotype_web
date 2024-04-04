@@ -67,7 +67,7 @@ export default {
             <h3 v-for="item in diseaseData.ontology_terms">{{ item.description }}</h3>
             <!-- v.else is a directive to do if v-if is  not True -->
             <h4 v-if="diseaseData.mim">
-                <a :href="'https://omim.org/entry/' + diseaseData.mim" target="_blank">{{ diseaseData.mim }}</a>
+                <a :href=`https://omim.org/entry/${diseaseData.mim}` target="_blank">{{ diseaseData.mim }}</a>
             </h4>
             <div class="container px-5 py-3">
                 <h4 class="py-3">Records associated with this disease</h4>
