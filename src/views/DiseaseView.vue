@@ -70,7 +70,7 @@ export default {
                 <a :href="`https://omim.org/entry/${diseaseData.mim}`" target="_blank">{{ diseaseData.mim }}</a>
             </h4>
             <div class="container px-5 py-3">
-                <h4 class="py-3">Records associated with this disease</h4>
+                <h4 class="py-3">Latest Records</h4>
                 <div class="row mx-1">
                     <table class="table table-hover table-bordered"
                         v-if="diseaseSummaryData.records_summary && diseaseSummaryData.records_summary.length > 0">
@@ -130,7 +130,7 @@ export default {
                         <a :href="`https://pubmed.ncbi.nlm.nih.gov/${item.pmid}`" target="_blank">{{ item.title }}</a>
                     </li>
                 </ul>
-                <p v-if="diseaseData.last_updated && diseaseData.last_updated != ''"> Date updated: {{
+                <p v-if="diseaseData.last_updated && diseaseData.last_updated != ''">Last Update: {{
             diseaseData.last_updated }} </p>
             </div>
 
