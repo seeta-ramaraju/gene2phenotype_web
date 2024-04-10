@@ -3,7 +3,7 @@ export default {
     data() {
         return {
             isDataLoading: false,
-            CurationListData: null,
+            curationListData: null,
             errorMsg: null,
         };
 
@@ -51,8 +51,8 @@ export default {
 <template>
     <div class="container px-5 py-3">
         <div v-if="isDataLoading">Curation Entries is loading. Thank you for your patience</div>
-        <h2 v-else>Curation Entries</h2>
         <div v-if="CurationListData">
+            <h2 v-else>Curation Entries</h2>
             <table class="table table-hover table-bordered" v-if="CurationListData && CurationListData.count > 1">
                 <thead>
                     <tr>
@@ -60,11 +60,11 @@ export default {
                         <th>Session Name</th>
                         <th>Date Created</th>
                         <th>Date Last Updated</th>
-                        <th>G2P Stable ID</th>
+                        <th>Stable ID</th>
                     </tr>
                 </thead>
-                <tbody v-for="item in CurationListData.results">
-                    <tr>
+                <tbody>
+                    <tr v-for="item in CurationListData.results">
                         <td>{{ item.locus }}</td>
                         <td>{{ item.session_name }}</td>
                         <td>{{ item.created_on }}</td>
