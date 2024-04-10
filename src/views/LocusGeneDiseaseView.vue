@@ -294,8 +294,8 @@ export default {
                 <thead>
                   <tr>
                     <th style="width: 10%">PMID</th>
-                    <th style="width: 10%">Year</th>
                     <th style="width: 80%">Title</th>
+                    <th style="width: 10%">Year</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -309,11 +309,11 @@ export default {
                         {{ item.publication.pmid }}
                       </a>
                     </td>
-                    <td style="width: 10%">
-                      {{ item.publication.year }}
-                    </td>
                     <td style="width: 80%">
                       {{ item.publication.title }}
+                    </td>
+                    <td style="width: 10%">
+                      {{ item.publication.year }}
                     </td>
                   </tr>
                 </tbody>
@@ -452,7 +452,7 @@ export default {
 
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h6>MONDO ID</h6>
+              <h6>MONDO</h6>
             </td>
             <td>
               <a

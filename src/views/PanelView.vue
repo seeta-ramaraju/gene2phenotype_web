@@ -187,17 +187,79 @@ export default {
         >
           <thead>
             <tr>
-              <th style="width: 8%">Gene</th>
-              <th style="width: 10%">Disease</th>
-              <th style="width: 10%">Allelic Requirement</th>
-              <th style="width: 10%">Variant Consequence</th>
-              <th style="width: 10%">Variant Type</th>
-              <th style="width: 12%">Mechanism</th>
-              <th style="width: 12%">
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Gene
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Disease
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Allelic Requirement
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Variant Consequence
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Variant Type
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Mechanism
+              </th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
                 Confidence
                 <a href="#"><i class="bi bi-question-circle-fill"></i></a>
               </th>
-              <th style="width: 10%">Stable ID</th>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Stable ID
+              </th>
             </tr>
           </thead>
           <tbody>
