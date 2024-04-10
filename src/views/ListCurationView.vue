@@ -39,6 +39,7 @@ export default {
                 .catch((error) => {
                     this.isDataLoading = false;
                     this.errorMsg = error.message;
+                    console.log(error)
                 });
 
 
@@ -52,7 +53,6 @@ export default {
     <div class="container px-5 py-3">
         <div v-if="isDataLoading">Curation Entries is loading. Thank you for your patience</div>
         <div v-if="CurationListData">
-            <h2 v-else>Curation Entries</h2>
             <table class="table table-hover table-bordered" v-if="CurationListData && CurationListData.count > 1">
                 <thead>
                     <tr>
@@ -77,6 +77,8 @@ export default {
                 </tbody>
 
             </table>
+
+            <p class="text-danger" v-else>You do not have any saved drafts at this moment.</p>
 
         </div>
 
