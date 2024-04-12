@@ -25,7 +25,6 @@ export default {
             this.errorMsg = this.diseaseSummaryData = this.diseaseData = null; // initializing all the values to null
             this.isDataLoading = true;
             const diseaseID = this.$route.params.id;
-            console.log(diseaseID);
             Promise.all([
                 fetch(`/gene2phenotype/api/disease/${this.$route.params.id}/summary`),
                 fetch(`/gene2phenotype/api/disease/${this.$route.params.id}`),
@@ -131,7 +130,7 @@ export default {
                     </li>
                 </ul>
                 <p v-if="diseaseData.last_updated && diseaseData.last_updated != ''">Last Update: {{
-            diseaseData.last_updated }} </p>
+                    diseaseData.last_updated }} </p>
             </div>
 
         </div>

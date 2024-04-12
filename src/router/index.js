@@ -4,6 +4,7 @@ import PublicationsView from "../views/PublicationsView.vue";
 import AboutProjectView from "../views/AboutProjectView.vue";
 import GeneView from "../views/GeneView.vue";
 import DiseaseView from "../views/DiseaseView.vue";
+import ListCurationView from "../views/ListCurationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
       path: "/disease/:id", // to access the capture value in the component
       name: "diseaseid",
       component: DiseaseView,
+    },
+    {
+      path: "/curation/entries",
+      name: "curation-entries",
+      component: ListCurationView,
     },
   ],
 });
