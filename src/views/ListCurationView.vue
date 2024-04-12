@@ -21,7 +21,7 @@ export default {
     },
     methods: {
         fetchData() {
-            this.errorMsg = this.CurationListData = null;
+            this.errorMsg = this.curationListData = null;
             this.isDataLoading = true;
             //not using promise.all because it is one endpoint 
             fetch(`/gene2phenotype/api/curations`)
@@ -33,7 +33,7 @@ export default {
                     }
                 })
                 .then((responseJson) => {
-                    this.CurationListData = responseJson;
+                    this.curationListData = responseJson;
                     this.isDataLoading = false;
                 })
                 .catch((error) => {
@@ -52,8 +52,8 @@ export default {
 <template>
     <div class="container px-5 py-3">
         <div v-if="isDataLoading">Curation Entries is loading. Thank you for your patience</div>
-        <div v-if="CurationListData">
-            <table class="table table-hover table-bordered" v-if="CurationListData && CurationListData.count > 1">
+        <div v-if="curationListData">
+            <table class="table table-hover table-bordered" v-if="curationListData && curationListData.count > 1">
                 <thead>
                     <tr>
                         <th>Locus</th>
@@ -64,7 +64,7 @@ export default {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in CurationListData.results">
+                    <tr v-for="item in curationListData.results">
                         <td>{{ item.locus }}</td>
                         <td>{{ item.session_name }}</td>
                         <td>{{ item.created_on }}</td>
