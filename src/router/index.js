@@ -29,7 +29,7 @@ const router = createRouter({
     },
     {
       path: "/gene/:symbol",
-      name: "gene symbol",
+      name: "gene",
       component: GeneView,
     },
     {
