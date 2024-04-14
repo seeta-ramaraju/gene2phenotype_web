@@ -5,6 +5,7 @@ export default {
       isDataLoading: false,
       geneSummaryData: null,
       geneData: null,
+      geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: {
         definitive: "green",
@@ -28,10 +29,17 @@ export default {
   },
   methods: {
     fetchData() {
-      this.errorMsg = this.geneSummaryData = this.geneData = null;
+      this.errorMsg =
+        this.geneSummaryData =
+        this.geneFunctionData =
+        this.geneData =
+          null;
       this.isDataLoading = true;
       Promise.all([
         fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/summary/`),
+        fetch(
+          `/gene2phenotype/api/gene/${this.$route.params.symbol}/function/`
+        ),
         fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/`),
       ])
         .then((responseArr) => {
@@ -46,9 +54,10 @@ export default {
           );
         })
         .then((responseJsonArr) => {
-          const [geneSummaryData, geneData] = responseJsonArr;
+          const [geneSummaryData, geneFunctionData, geneData] = responseJsonArr;
           this.isDataLoading = false;
           this.geneData = geneData;
+          this.geneFunctionData = geneFunctionData;
           this.geneSummaryData = geneSummaryData;
         })
         .catch((error) => {
@@ -81,6 +90,13 @@ export default {
       <div class="row">
         <p v-if="geneData.synonyms && geneData.synonyms.length > 0">
           {{ geneData.synonyms.join(", ") }}
+        </p>
+        <p v-else class="text-muted">Not Available</p>
+      </div>
+      <h4 class="py-3">Gene Function</h4>
+      <div class="row">
+        <p v-if="geneFunctionData?.function?.protein_function">
+          {{ geneFunctionData.function.protein_function }}
         </p>
         <p v-else class="text-muted">Not Available</p>
       </div>
