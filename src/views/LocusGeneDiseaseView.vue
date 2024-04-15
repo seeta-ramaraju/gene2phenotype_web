@@ -336,7 +336,7 @@ export default {
                       :to="`/panel/${item.name}`"
                       style="text-decoration: none"
                     >
-                      {{ item.description }}
+                      {{ item.description ? item.description : item.name }}
                     </router-link>
                     ,
                   </span>
@@ -345,7 +345,7 @@ export default {
                     v-else
                     style="text-decoration: none"
                   >
-                    {{ item.description }}
+                    {{ item.description ? item.description : item.name }}
                   </router-link>
                 </span>
               </span>
@@ -400,6 +400,21 @@ export default {
                 {{ locusGeneDiseaseData.locus.end }} :
                 {{ locusGeneDiseaseData.locus.strand }}
               </p>
+            </td>
+          </tr>
+          <tr class="align-middle">
+            <td class="w-25 text-end">
+              <h6>OMIM</h6>
+            </td>
+            <td>
+              <a
+                v-bind:href="`https://www.omim.org/entry/${locusGeneDiseaseData.locus.ids.OMIM}`"
+                style="text-decoration: none"
+                v-if="locusGeneDiseaseData.locus.ids.OMIM"
+              >
+                {{ locusGeneDiseaseData.locus.ids.OMIM }}
+              </a>
+              <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
           <tr class="align-middle">

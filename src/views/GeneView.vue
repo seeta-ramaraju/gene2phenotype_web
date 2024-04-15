@@ -168,6 +168,15 @@ export default {
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
+          <li v-if="geneData.ids?.OMIM">
+            <a
+              v-bind:href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
+              style="text-decoration: none"
+            >
+              View this gene on OMIM website
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
           <li v-if="geneData.ids?.Ensembl">
             <a
               v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
