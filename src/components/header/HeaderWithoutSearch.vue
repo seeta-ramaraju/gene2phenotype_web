@@ -24,11 +24,6 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
-          <li class="nav-item">
-            <router-link to="/" class="nav-link active" aria-current="page">
-              Home
-            </router-link>
-          </li>
           <li class="nav-item dropdown">
             <span
               class="nav-link dropdown-toggle"
