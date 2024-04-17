@@ -195,6 +195,15 @@ export default {
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
+          <li v-if="geneFunctionData?.function?.uniprot_accession">
+            <a
+              v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+              style="text-decoration: none"
+            >
+              View this gene on UniProt website
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
         </ul>
       </div>
       <p>
