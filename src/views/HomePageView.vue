@@ -172,7 +172,7 @@ export default {
                 v-if="item.name"
                 style="text-decoration: none"
               >
-                {{ item.description }}
+                {{ item.description ? item.description : item.name }}
               </router-link>
             </td>
             <td>{{ item.stats?.total_records }}</td>
