@@ -13,7 +13,7 @@
       The project was established in 2014, focused on developmental disorders
       and has since been generalised to cover other disease areas. All data is
       made freely available. The initial paper is available
-      <a href="https://doi.org/10.1038/s41467-019-10016-3">here.</a>
+      <a href="https://doi.org/10.1038/s41467-019-10016-3">here</a>.
     </p>
     <p>We report:</p>
     <ul>
@@ -35,25 +35,31 @@
     </ul>
     <p>
       The full curation process is described here and terminology used is
-      described <a href="#">here</a>
+      described <a href="#">here</a>.
     </p>
     <p>
       The Ensembl VEP diagnostic variant filtering pipeline matches patient
       genotypes to allelic requirements and genes reported in the literature to
       identify likely causative genes and variants. Full information is
-      available <a href="#">here</a>
+      available <a href="#">here</a>.
     </p>
-    <a href="https://thegencc.org/">
-      <img
-        alt="GenCC logo"
-        src="../assets/GenCC.png"
-        width="20%"
-        height="auto"
-      />
-    </a>
-    <span>
-      G2P is a member of the Gene Curation Coalition which seeks to standardise
-      the curation and description of gene disease information
-    </span>
+    <div class="row">
+      <div class="col-3">
+        <a href="https://thegencc.org/">
+          <img
+            alt="GenCC logo"
+            src="../assets/GenCC.png"
+            width="100%"
+            height="auto"
+          />
+        </a>
+      </div>
+      <div class="col-9">
+        <p>
+          G2P is a member of the Gene Curation Coalition which seeks to
+          standardise the curation and description of gene disease information.
+        </p>
+      </div>
+    </div>
   </div>
 </template>
