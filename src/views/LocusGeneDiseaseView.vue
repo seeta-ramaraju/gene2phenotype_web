@@ -458,9 +458,13 @@ export default {
               <h6>Disease Name</h6>
             </td>
             <td>
-              <p v-if="locusGeneDiseaseData.disease.name">
+              <router-link
+                :to="`/disease/${locusGeneDiseaseData.disease.name}`"
+                v-if="locusGeneDiseaseData.disease.name"
+                style="text-decoration: none"
+              >
                 {{ locusGeneDiseaseData.disease.name }}
-              </p>
+              </router-link>
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
