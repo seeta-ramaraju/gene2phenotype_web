@@ -3,6 +3,9 @@ import HomePageView from "../views/HomePageView.vue";
 import PublicationsView from "../views/PublicationsView.vue";
 import AboutProjectView from "../views/AboutProjectView.vue";
 import GeneView from "../views/GeneView.vue";
+import PanelView from "../views/PanelView.vue";
+import LocusGeneDiseaseView from "../views/LocusGeneDiseaseView.vue";
+import SearchPageView from "../views/SearchPageView.vue";
 import DiseaseView from "../views/DiseaseView.vue";
 import ListCurationView from "../views/ListCurationView.vue";
 
@@ -26,8 +29,23 @@ const router = createRouter({
     },
     {
       path: "/gene/:symbol",
-      name: "gene symbol",
+      name: "gene",
       component: GeneView,
+    },
+    {
+      path: "/panel/:panel",
+      name: "panel",
+      component: PanelView,
+    },
+    {
+      path: "/lgd/:stableId",
+      name: "locus gene disease",
+      component: LocusGeneDiseaseView,
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: SearchPageView,
     },
     {
       path: "/disease/:id", // to access the capture value in the component
