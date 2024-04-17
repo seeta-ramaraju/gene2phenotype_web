@@ -104,7 +104,7 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P stable ID</th>
+              <th>G2P ID</th>
               <th>Genotype</th>
               <th>Variant Consequence</th>
               <th>Variant Type</th>

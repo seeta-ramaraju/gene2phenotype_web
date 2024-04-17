@@ -132,7 +132,7 @@ export default {
               <th>Disease</th>
               <th>Allelic Requirement</th>
               <th>Panels</th>
-              <th>Stable ID</th>
+              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody v-for="item in searchData.results">

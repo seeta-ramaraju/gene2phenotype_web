@@ -258,7 +258,7 @@ export default {
                   text-overflow: ellipsis;
                 "
               >
-                Stable ID
+                G2P ID
               </th>
             </tr>
           </thead>

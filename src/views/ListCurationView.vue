@@ -70,7 +70,7 @@ export default {
               <th>Session Name</th>
               <th>Date Created</th>
               <th>Date Last Updated</th>
-              <th>Stable ID</th>
+              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody>

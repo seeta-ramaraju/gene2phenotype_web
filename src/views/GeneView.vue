@@ -121,7 +121,7 @@ export default {
                 <a href="#"><i class="bi bi-question-circle-fill"></i></a>
               </th>
               <th>Panels</th>
-              <th>Stable ID</th>
+              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody>
