@@ -135,6 +135,7 @@ export default {
                         v-bind:href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
                         style="text-decoration: none"
                         v-if="item.accession"
+                        target="_blank"
                       >
                         {{ item.accession }}
                       </a>
@@ -241,6 +242,7 @@ export default {
                         v-bind:href="`https://hpo.jax.org/app/browse/term/${item.accession}`"
                         style="text-decoration: none"
                         v-if="item.accession"
+                        target="_blank"
                       >
                         {{ item.accession }}
                       </a>
@@ -305,6 +307,7 @@ export default {
                         v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
                         style="text-decoration: none"
                         v-if="item.publication.pmid"
+                        target="_blank"
                       >
                         {{ item.publication.pmid }}
                       </a>
@@ -411,6 +414,7 @@ export default {
                 v-bind:href="`https://www.omim.org/entry/${locusGeneDiseaseData.locus.ids.OMIM}`"
                 style="text-decoration: none"
                 v-if="locusGeneDiseaseData.locus.ids.OMIM"
+                target="_blank"
               >
                 {{ locusGeneDiseaseData.locus.ids.OMIM }}
               </a>
@@ -426,6 +430,7 @@ export default {
                 v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${locusGeneDiseaseData.locus.ids.Ensembl}`"
                 style="text-decoration: none"
                 v-if="locusGeneDiseaseData.locus.ids.Ensembl"
+                target="_blank"
               >
                 {{ locusGeneDiseaseData.locus.ids.Ensembl }}
               </a>
@@ -441,6 +446,7 @@ export default {
                 v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${locusGeneDiseaseData.locus.ids.HGNC}`"
                 style="text-decoration: none"
                 v-if="locusGeneDiseaseData.locus.ids.HGNC"
+                target="_blank"
               >
                 {{ locusGeneDiseaseData.locus.ids.HGNC }}
               </a>
@@ -481,6 +487,7 @@ export default {
                   locusGeneDiseaseData.disease.ontology_terms &&
                   locusGeneDiseaseData.disease.ontology_terms.length > 0
                 "
+                target="_blank"
               >
                 {{ locusGeneDiseaseData.disease.ontology_terms[0].accession }}
               </a>
@@ -496,6 +503,7 @@ export default {
                 v-bind:href="`https://www.omim.org/entry/${locusGeneDiseaseData.disease.mim}`"
                 style="text-decoration: none"
                 v-if="locusGeneDiseaseData.disease.mim"
+                target="_blank"
               >
                 {{ locusGeneDiseaseData.disease.mim }}
               </a>

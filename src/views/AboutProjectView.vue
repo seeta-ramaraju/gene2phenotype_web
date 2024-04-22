@@ -13,7 +13,9 @@
       The project was established in 2014, focused on developmental disorders
       and has since been generalised to cover other disease areas. All data is
       made freely available. The initial paper is available
-      <a href="https://doi.org/10.1038/s41467-019-10016-3">here</a>.
+      <a href="https://doi.org/10.1038/s41467-019-10016-3" target="_blank">
+        here </a
+      >.
     </p>
     <p>We report:</p>
     <ul>
@@ -45,7 +47,7 @@
     </p>
     <div class="row">
       <div class="col-3">
-        <a href="https://thegencc.org/">
+        <a href="https://thegencc.org/" target="_blank">
           <img
             alt="GenCC logo"
             src="../assets/GenCC.png"

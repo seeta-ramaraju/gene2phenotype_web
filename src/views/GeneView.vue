@@ -163,6 +163,7 @@ export default {
             <a
               v-bind:href="`https://www.deciphergenomics.org/gene/${geneData.gene_symbol}`"
               style="text-decoration: none"
+              target="_blank"
             >
               View this gene or submit patient variants via DECIPHER
               <i class="bi bi-box-arrow-up-right"></i>
@@ -172,6 +173,7 @@ export default {
             <a
               v-bind:href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
               style="text-decoration: none"
+              target="_blank"
             >
               View this gene on OMIM website
               <i class="bi bi-box-arrow-up-right"></i>
@@ -181,6 +183,7 @@ export default {
             <a
               v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
               style="text-decoration: none"
+              target="_blank"
             >
               View this gene on Ensembl website
               <i class="bi bi-box-arrow-up-right"></i>
@@ -190,6 +193,7 @@ export default {
             <a
               v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${geneData.ids.HGNC}`"
               style="text-decoration: none"
+              target="_blank"
             >
               View this gene on HGNC website
               <i class="bi bi-box-arrow-up-right"></i>
@@ -199,6 +203,7 @@ export default {
             <a
               v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
               style="text-decoration: none"
+              target="_blank"
             >
               View this gene on UniProt website
               <i class="bi bi-box-arrow-up-right"></i>

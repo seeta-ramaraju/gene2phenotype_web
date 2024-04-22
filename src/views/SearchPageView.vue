@@ -66,11 +66,9 @@ export default {
           if (isSearchDataFound) {
             this.isDataLoading = false;
             this.searchData = responseJson;
-            console.log(responseJson);
           } else {
             this.isDataLoading = false;
             this.searchDataNotFoundMsg = responseJson.message;
-            console.log(responseJson.message);
           }
         })
         .catch((error) => {

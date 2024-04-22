@@ -67,7 +67,7 @@
             <div class="col-4 mb-3">
               <p>Funded by Wellcome.</p>
               <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                <a href="https://wellcome.org/">
+                <a href="https://wellcome.org/" target="_blank">
                   <img
                     alt="WELLCOME logo"
                     src="../../assets/WELLCOME-logo.png"
@@ -80,7 +80,7 @@
             <div class="col-7 mb-3">
               <p>G2P is part of the PARADIGM initiative.</p>
               <div class="d-flex flex-column flex-sm-row w-100 gap-2">
-                <a href="https://paradigmgenomics.org/">
+                <a href="https://paradigmgenomics.org/" target="_blank">
                   <img
                     alt="PARADIGM logo"
                     src="../../assets/PARADIGM-logo.png"
@@ -97,7 +97,7 @@
         class="d-flex flex-column flex-sm-row pt-3 pb-2 mt-3 mb-2 border-top"
       >
         <p style="margin-right: 12px">&copy; EMBL-EBI 2024</p>
-        <a href="https://www.ebi.ac.uk/">
+        <a href="https://www.ebi.ac.uk/" target="_blank">
           <img
             alt="EMBL-EBI logo"
             src="../../assets/EMBL-EBI-logo.png"
