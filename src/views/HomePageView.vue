@@ -8,10 +8,8 @@ export default {
       panelData: null,
       errorMsg: null,
       searchInput: "",
-      selectedSearchType: "",
-      selectedSearchPanel: "",
-      defaultSearchType: "all",
-      defaultSearchPanel: "all",
+      selectedSearchType: "all",
+      selectedSearchPanel: "all",
     };
   },
   created() {
@@ -48,27 +46,21 @@ export default {
           console.log(error);
         });
     },
-    searchClickHandler(event) {
+    searchClickHandler() {
       if (this.searchInput) {
-        let searchType = this.selectedSearchType
-          ? this.selectedSearchType
-          : this.defaultSearchType;
-        let searchPanel = this.selectedSearchPanel
-          ? this.selectedSearchPanel
-          : this.defaultSearchPanel;
         let routeQuery = {
           query: this.searchInput,
-          type: searchType === "all" ? undefined : searchType,
-          panel: searchPanel === "all" ? undefined : searchPanel,
+          type:
+            this.selectedSearchType === "all"
+              ? undefined
+              : this.selectedSearchType,
+          panel:
+            this.selectedSearchPanel === "all"
+              ? undefined
+              : this.selectedSearchPanel,
         };
         router.push({ path: "/search", query: routeQuery });
       }
-    },
-    searchTypeChangeHandler(event) {
-      this.selectedSearchType = event.target.value;
-    },
-    searchPanelChangeHandler(event) {
-      this.selectedSearchPanel = event.target.value;
     },
   },
 };
@@ -105,7 +97,7 @@ export default {
         class="form-select"
         aria-label="Select search type"
         style="max-width: 18%"
-        @change="searchTypeChangeHandler"
+        v-model="selectedSearchType"
         id="select-search-type"
       >
         <option value="all">Search by All Types</option>
@@ -117,7 +109,7 @@ export default {
         class="form-select"
         aria-label="Select search panel"
         style="max-width: 18%"
-        @change="searchPanelChangeHandler"
+        v-model="selectedSearchPanel"
         v-if="panelData && panelData.results && panelData.results.length > 0"
         id="select-search-panel"
       >

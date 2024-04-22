@@ -8,10 +8,8 @@ export default {
       panelData: null,
       errorMsg: null,
       searchInput: "",
-      selectedSearchType: "",
-      selectedSearchPanel: "",
-      defaultSearchType: "all",
-      defaultSearchPanel: "all",
+      selectedSearchType: "all",
+      selectedSearchPanel: "all",
     };
   },
   created() {
@@ -48,27 +46,21 @@ export default {
           console.log(error);
         });
     },
-    searchClickHandler(event) {
+    searchClickHandler() {
       if (this.searchInput) {
-        let searchType = this.selectedSearchType
-          ? this.selectedSearchType
-          : this.defaultSearchType;
-        let searchPanel = this.selectedSearchPanel
-          ? this.selectedSearchPanel
-          : this.defaultSearchPanel;
         let routeQuery = {
           query: this.searchInput,
-          type: searchType === "all" ? undefined : searchType,
-          panel: searchPanel === "all" ? undefined : searchPanel,
+          type:
+            this.selectedSearchType === "all"
+              ? undefined
+              : this.selectedSearchType,
+          panel:
+            this.selectedSearchPanel === "all"
+              ? undefined
+              : this.selectedSearchPanel,
         };
         router.push({ path: "/search", query: routeQuery });
       }
-    },
-    searchTypeChangeHandler(event) {
-      this.selectedSearchType = event.target.value;
-    },
-    searchPanelChangeHandler(event) {
-      this.selectedSearchPanel = event.target.value;
     },
   },
 };
@@ -170,9 +162,9 @@ export default {
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#">Add new G2P record</a></li>
               <li>
-                <router-link to="/curation/entries" class="dropdown-item"
-                  >Saved Drafts</router-link
-                >
+                <router-link to="/curation/entries" class="dropdown-item">
+                  Saved Drafts
+                </router-link>
               </li>
             </ul>
           </li>
@@ -190,7 +182,7 @@ export default {
             class="form-select"
             aria-label="Select search type"
             style="max-width: 22%"
-            @change="searchTypeChangeHandler"
+            v-model="selectedSearchType"
             id="header-select-search-type"
           >
             <option value="all">Search by All Types</option>
@@ -202,7 +194,7 @@ export default {
             class="form-select"
             aria-label="Select search panel"
             style="max-width: 22%"
-            @change="searchPanelChangeHandler"
+            v-model="selectedSearchPanel"
             :disabled="
               !(panelData && panelData.results && panelData.results.length > 0)
             "
