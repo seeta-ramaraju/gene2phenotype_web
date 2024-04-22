@@ -7,6 +7,7 @@
       <a
         href="https://www.ebi.ac.uk/gene2phenotype"
         style="text-decoration: none"
+        target="_blank"
       >
         website
       </a>
@@ -15,6 +16,7 @@
     <a
       href="https://doi.org/10.1038/s41467-019-10016-3"
       style="text-decoration: none"
+      target="_blank"
     >
       <h6>
         Flexible and scalable diagnostic filtering of genomic variants using G2P
@@ -32,6 +34,7 @@
     <a
       href="https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1"
       style="text-decoration: none"
+      target="_blank"
     >
       <h6>Curating genomic disease-gene relationships with Gene2Phenotype.</h6>
     </a>
@@ -47,6 +50,7 @@
     <a
       href="https://doi.org/10.1136/jmg-2022-108618"
       style="text-decoration: none"
+      target="_blank"
     >
       <h6>
         EyeG2P: an automated variant filtering approach improves efficiency of
@@ -64,6 +68,7 @@
     <a
       href="https://doi.org/10.1186/s13073-023-01246-8"
       style="text-decoration: none"
+      target="_blank"
     >
       <h6>
         Beyond gene-disease validity: capturing structured data on inheritance,
