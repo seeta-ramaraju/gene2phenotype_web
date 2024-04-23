@@ -89,7 +89,7 @@ export default {
         type="text"
         class="form-control"
         aria-label="Search text input"
-        placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
+        placeholder="Search Text (Eg: CRYBA1 or Severe Neurodevelopmental Syndrome)"
         v-model="searchInput"
         id="search-input"
       />
