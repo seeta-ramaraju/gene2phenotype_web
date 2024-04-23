@@ -174,7 +174,7 @@ export default {
             type="text"
             class="form-control"
             aria-label="Search text input"
-            placeholder="Search Text"
+            placeholder="Search G2P"
             v-model="searchInput"
             id="header-search-input"
           />
