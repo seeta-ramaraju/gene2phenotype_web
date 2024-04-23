@@ -78,13 +78,13 @@ export default {
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
       <div class="pt-3">
-        <h4 v-for="item in diseaseData.ontology_terms">
+        <p v-for="item in diseaseData.ontology_terms">
           {{ item.description }}
-        </h4>
+        </p>
       </div>
       <!-- v.else is a directive to do if v-if is  not True -->
-      <h4 v-if="diseaseData.mim" class="pt-3">
-        OMIM:
+      <p v-if="diseaseData.mim" class="pt-3">
+        <strong>OMIM: </strong>
         <a
           :href="`https://omim.org/entry/${diseaseData.mim}`"
           target="_blank"
@@ -92,7 +92,7 @@ export default {
         >
           {{ diseaseData.mim }}
         </a>
-      </h4>
+      </p>
       <h4 class="py-3">Latest Records</h4>
       <div class="row mx-1">
         <table
@@ -224,7 +224,12 @@ export default {
         </table>
         <p v-else>No Records found</p>
       </div>
-      <h4 v-if="diseaseData.ontology_terms" class="py-3">
+      <h4
+        v-if="
+          diseaseData.ontology_terms && diseaseData.ontology_terms.length > 0
+        "
+        class="py-3"
+      >
         Disease Ontology Terms
       </h4>
       <p
@@ -261,8 +266,12 @@ export default {
           </a>
         </li>
       </ul>
-      <p v-if="diseaseData.last_updated && diseaseData.last_updated != ''">
-        Last Update: {{ diseaseData.last_updated }}
+      <p>
+        <strong>Last Update: </strong>
+        <span v-if="diseaseData.last_updated && diseaseData.last_updated != ''">
+          {{ diseaseData.last_updated }}
+        </span>
+        <span v-else class="text-muted">Not Available</span>
       </p>
     </div>
   </div>
