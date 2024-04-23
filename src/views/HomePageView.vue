@@ -66,7 +66,7 @@ export default {
 };
 </script>
 <template>
-  <div class="container px-5 py-3">
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <div class="row py-3">
       <div class="col-2">
         <img
