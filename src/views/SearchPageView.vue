@@ -87,7 +87,7 @@ export default {
 };
 </script>
 <template>
-  <div class="container px-5 py-3">
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>
       Search results
       <span v-if="routeQuery?.type || routeQuery?.query"> for </span>

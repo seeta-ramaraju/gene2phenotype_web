@@ -1,5 +1,5 @@
 <template>
-  <div class="container px-5 py-3">
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>Publications</h2>
     <h4 class="pb-2">Citing G2P</h4>
     <h6 class="pb-2">

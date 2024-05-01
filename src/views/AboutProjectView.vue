@@ -1,5 +1,5 @@
 <template>
-  <div class="container px-5 py-3">
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>The Project</h2>
     <p>
       The G2P project shares detailed, evidence-based gene-disease models,

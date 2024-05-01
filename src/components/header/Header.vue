@@ -169,12 +169,12 @@ export default {
             </ul>
           </li>
         </ul>
-        <div class="input-group ms-auto me-auto" style="max-width: 75%">
+        <div class="input-group ms-auto me-auto" style="max-width: 73%">
           <input
             type="text"
             class="form-control"
             aria-label="Search text input"
-            placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
+            placeholder="Search G2P"
             v-model="searchInput"
             id="header-search-input"
           />
