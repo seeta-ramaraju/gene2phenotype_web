@@ -160,7 +160,11 @@ export default {
               Curate</a
             >
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Add new G2P record</a></li>
+              <li>
+                <router-link to="/lgd/add" class="dropdown-item">
+                  Add New G2P Record
+                </router-link>
+              </li>
               <li>
                 <router-link to="/curation/entries" class="dropdown-item">
                   Saved Drafts
