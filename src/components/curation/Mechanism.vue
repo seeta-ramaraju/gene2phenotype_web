@@ -502,7 +502,7 @@ export default {
                   class="form-control"
                   :id="`evidence-type-description-input-${index}`"
                   rows="3"
-                  v-model="mechanismEvidence[item.pmid].description"
+                  v-model.trim="mechanismEvidence[item.pmid].description"
                 >
                 </textarea>
               </div>

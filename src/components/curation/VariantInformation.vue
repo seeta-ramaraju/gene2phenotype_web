@@ -398,7 +398,7 @@ export default {
                           class="form-control"
                           id="frameshift_variant-comment-input"
                           rows="2"
-                          v-model="
+                          v-model.trim="
                             variantTypes.protein_changing.frameshift_variant
                               .comment
                           "
@@ -496,7 +496,7 @@ export default {
                           class="form-control"
                           id="stop_gained-comment-input"
                           rows="2"
-                          v-model="
+                          v-model.trim="
                             variantTypes.protein_changing.stop_gained.comment
                           "
                         >
@@ -575,7 +575,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="missense_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.protein_changing.missense_variant
                               .comment
                           "
@@ -656,7 +656,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="inframe_insertion-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.protein_changing.inframe_insertion
                               .comment
                           "
@@ -737,7 +737,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="inframe_deletion-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.protein_changing.inframe_deletion
                               .comment
                           "
@@ -851,7 +851,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="splice_region_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.splice_variants.splice_region_variant
                               .comment
                           "
@@ -950,7 +950,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="splice_acceptor_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.splice_variants.splice_acceptor_variant
                               .comment
                           "
@@ -1049,7 +1049,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="splice_donor_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.splice_variants.splice_donor_variant
                               .comment
                           "
@@ -1145,7 +1145,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="five_prime_UTR_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.regulatory_variants
                               .five_prime_UTR_variant.comment
                           "
@@ -1226,7 +1226,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="three_prime_UTR_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.regulatory_variants
                               .three_prime_UTR_variant.comment
                           "
@@ -1307,7 +1307,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="regulatory_region_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.regulatory_variants
                               .regulatory_region_variant.comment
                           "
@@ -1403,7 +1403,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="intergenic_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants.intergenic_variant
                               .comment
                           "
@@ -1483,7 +1483,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="intron_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants.intron_variant.comment
                           "
                           rows="2"
@@ -1563,7 +1563,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="synonymous_variant-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants.synonymous_variant
                               .comment
                           "
@@ -1642,7 +1642,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="stop_loss-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants.stop_loss.comment
                           "
                           rows="2"
@@ -1722,7 +1722,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="whole_partial_gene_deletion-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants
                               .whole_partial_gene_deletion.comment
                           "
@@ -1805,7 +1805,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="whole_partial_gene_duplication-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants
                               .whole_partial_gene_duplication.comment
                           "
@@ -1886,7 +1886,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="short_tandem_repeat_change-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants
                               .short_tandem_repeat_change.comment
                           "
@@ -1965,7 +1965,7 @@ export default {
                         <textarea
                           class="form-control"
                           id="start_lost-comment-input"
-                          v-model="
+                          v-model.trim="
                             variantTypes.other_variants.start_lost.comment
                           "
                           rows="2"
@@ -2041,7 +2041,9 @@ export default {
                         <textarea
                           class="form-control"
                           id="ncRNA-comment-input"
-                          v-model="variantTypes.other_variants.ncRNA.comment"
+                          v-model.trim="
+                            variantTypes.other_variants.ncRNA.comment
+                          "
                           rows="2"
                         >
                         </textarea>
@@ -2087,7 +2089,7 @@ export default {
                 <input
                   class="form-control"
                   :id="`variant-description-input-${index}`"
-                  v-model="variantDescriptions[item.pmid].description"
+                  v-model.trim="variantDescriptions[item.pmid].description"
                 />
               </div>
             </div>

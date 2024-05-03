@@ -174,7 +174,6 @@ export default {
         });
     },
     saveDraft() {
-      console.log(this.input);
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
@@ -224,7 +223,7 @@ export default {
         <input
           class="form-control"
           id="gene-symbol-input"
-          v-model="input.locus"
+          v-model.trim="input.locus"
         />
       </div>
       <div class="col-auto">

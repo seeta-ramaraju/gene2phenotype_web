@@ -88,7 +88,7 @@ export default {
                   class="form-control"
                   id="disease-name-input"
                   type="text"
-                  v-model="diseaseName"
+                  v-model.trim="diseaseName"
                 />
               </div>
             </div>

@@ -83,7 +83,7 @@ export default {
                 class="form-control"
                 id="clinical-phenotype-input"
                 rows="3"
-                v-model="phenotype[item.pmid].summary"
+                v-model.trim="phenotype[item.pmid].summary"
               >
               </textarea>
             </div>

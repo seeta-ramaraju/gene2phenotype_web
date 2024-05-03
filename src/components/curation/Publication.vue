@@ -80,7 +80,7 @@ export default {
               <textarea
                 class="form-control"
                 id="publications-input"
-                v-model="inputPmids"
+                v-model.trim="inputPmids"
                 rows="3"
               >
               </textarea>
@@ -280,7 +280,7 @@ export default {
                           type="text"
                           class="form-control"
                           :id="`publication-ancestries-input-${item.pmid}`"
-                          v-model="publications[item.pmid].ancestries"
+                          v-model.trim="publications[item.pmid].ancestries"
                         />
                       </div>
                       <div class="col-12">
@@ -294,7 +294,7 @@ export default {
                           class="form-control"
                           :id="`publication-comment-input-${item.pmid}`"
                           rows="3"
-                          v-model="publications[item.pmid].comment"
+                          v-model.trim="publications[item.pmid].comment"
                         ></textarea>
                       </div>
                     </div>

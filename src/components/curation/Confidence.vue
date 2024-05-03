@@ -71,7 +71,6 @@ export default {
               </table>
             </div>
           </div>
-
           <form>
             <strong><p class="mb-0 pt-3">Confidence</p></strong>
             <div class="row g-3 pt-4">
@@ -87,7 +86,9 @@ export default {
                   rows="3"
                   type="text"
                   :value="justification"
-                  @input="$emit('update:justification', $event.target.value)"
+                  @input="
+                    $emit('update:justification', $event.target.value.trim())
+                  "
                 >
                 </textarea>
               </div>
