@@ -92,7 +92,7 @@ export default {
       Search results
       <span v-if="routeQuery?.type || routeQuery?.query"> for </span>
       <span v-if="routeQuery?.type">
-        <i>{{ routeQuery.type }}</i>
+        <i>{{ routeQuery.type === "g2p_id" ? "G2P ID" : routeQuery.type }}</i>
       </span>
       <span v-if="routeQuery?.query"> '{{ routeQuery.query }}'</span>
       <span v-if="routeQuery?.panel">

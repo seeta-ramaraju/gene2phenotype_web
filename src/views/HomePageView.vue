@@ -104,6 +104,7 @@ export default {
         <option value="gene">Search by Gene</option>
         <option value="disease">Search by Disease</option>
         <option value="phenotype">Search by Phenotype</option>
+        <option value="g2p_id">Search by G2P ID</option>
       </select>
       <select
         class="form-select"
