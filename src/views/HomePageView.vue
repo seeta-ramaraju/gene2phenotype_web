@@ -148,13 +148,12 @@ export default {
       class="pb-4"
       v-if="panelData && panelData.results && panelData.results.length > 0"
     >
-      <table class="table table-hover table-bordered w-75 mx-auto">
+      <table class="table table-hover table-bordered w-50 mx-auto">
         <thead>
           <tr>
             <th scope="col">Disorder Panel</th>
             <th scope="col">Total Records</th>
             <th scope="col">Total Genes</th>
-            <th scope="col">Total Diseases</th>
           </tr>
         </thead>
         <tbody>
@@ -170,7 +169,6 @@ export default {
             </td>
             <td>{{ item.stats?.total_records }}</td>
             <td>{{ item.stats?.total_genes }}</td>
-            <td>{{ item.stats?.total_diseases }}</td>
           </tr>
         </tbody>
       </table>
