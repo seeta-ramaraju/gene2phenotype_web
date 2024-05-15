@@ -233,13 +233,13 @@ export default {
                 class="btn btn-primary"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#collapsibleTable"
+                data-bs-target="#collapsibleTablepheno"
                 aria-expanded="false"
-                aria-controls="collapsibleTable"
+                aria-controls="collapsibleTablepheno"
               >
                 View phenotypes
               </button>
-              <div class="collapse" id="collapsibleTable">
+              <div class="collapse" id="collapsibleTablepheno">
                 <table
                   class="table table-bordered"
                   v-if="
@@ -312,42 +312,54 @@ export default {
               <h6>Publications</h6>
             </td>
             <td class="w-75">
-              <table
-                class="table table-bordered"
-                v-if="
-                  locusGeneDiseaseData.publications &&
-                  locusGeneDiseaseData.publications.length > 0
-                "
+              <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsibleTablepub"
+                aria-expanded="false"
+                aria-controls="collapsibleTablepub"
               >
-                <thead>
-                  <tr>
-                    <th style="width: 10%">PMID</th>
-                    <th style="width: 80%">Title</th>
-                    <th style="width: 10%">Year</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in locusGeneDiseaseData.publications">
-                    <td style="width: 10%">
-                      <a
-                        v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
-                        style="text-decoration: none"
-                        v-if="item.publication.pmid"
-                        target="_blank"
-                      >
-                        {{ item.publication.pmid }}
-                      </a>
-                    </td>
-                    <td style="width: 80%">
-                      {{ item.publication.title }}
-                    </td>
-                    <td style="width: 10%">
-                      {{ item.publication.year }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <p v-else class="text-muted">Not Available</p>
+                View publications
+              </button>
+              <div class="collapse" id="collapsibleTablepub">
+                <table
+                  class="table table-bordered"
+                  v-if="
+                    locusGeneDiseaseData.publications &&
+                    locusGeneDiseaseData.publications.length > 0
+                  "
+                >
+                  <thead>
+                    <tr>
+                      <th style="width: 10%">PMID</th>
+                      <th style="width: 80%">Title</th>
+                      <th style="width: 10%">Year</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in locusGeneDiseaseData.publications">
+                      <td style="width: 10%">
+                        <a
+                          v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
+                          style="text-decoration: none"
+                          v-if="item.publication.pmid"
+                          target="_blank"
+                        >
+                          {{ item.publication.pmid }}
+                        </a>
+                      </td>
+                      <td style="width: 80%">
+                        {{ item.publication.title }}
+                      </td>
+                      <td style="width: 10%">
+                        {{ item.publication.year }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p v-else class="text-muted">Not Available</p>
+              </div>
             </td>
           </tr>
           <tr class="align-middle">
