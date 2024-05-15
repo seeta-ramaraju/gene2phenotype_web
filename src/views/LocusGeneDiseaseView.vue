@@ -64,7 +64,10 @@ export default {
       </div>
     </div>
     <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
-      <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ errorMsg }}
+      </div>
     </div>
     <div v-if="locusGeneDiseaseData">
       <h2 v-if="locusGeneDiseaseData.disease?.name">
@@ -186,7 +189,9 @@ export default {
             </td>
           </tr>
           <tr>
-            <td class="w-25 text-end"><h4>Mechanism</h4></td>
+            <td class="w-25 text-end">
+              <h4>Mechanism</h4>
+            </td>
             <td class="w-75">
               <table
                 class="table table-bordered"
@@ -220,40 +225,57 @@ export default {
             </td>
           </tr>
           <tr>
-            <td class="w-25 text-end"><h4>Phenotypes</h4></td>
+            <td class="w-25 text-end">
+              <h4>Phenotypes</h4>
+            </td>
             <td class="w-75">
-              <table
-                class="table table-bordered"
-                v-if="
-                  locusGeneDiseaseData.phenotypes &&
-                  locusGeneDiseaseData.phenotypes.length > 0
-                "
+              <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsiblePhenotypesTable"
+                aria-expanded="false"
+                aria-controls="collapsiblePhenotypesTable"
               >
-                <thead>
-                  <tr>
-                    <th style="width: 20%">Accesssion</th>
-                    <th style="width: 80%">Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in locusGeneDiseaseData.phenotypes">
-                    <td style="width: 20%">
-                      <a
-                        v-bind:href="`https://hpo.jax.org/app/browse/term/${item.accession}`"
-                        style="text-decoration: none"
-                        v-if="item.accession"
-                        target="_blank"
-                      >
-                        {{ item.accession }}
-                      </a>
-                    </td>
-                    <td style="width: 80%">
-                      {{ item.name }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <p v-else class="text-muted">Not Available</p>
+                View phenotypes
+              </button>
+              <div class="collapse" id="collapsiblePhenotypesTable">
+                <table
+                  class="table table-bordered mt-2"
+                  v-if="
+                    locusGeneDiseaseData.phenotypes &&
+                    locusGeneDiseaseData.phenotypes.length > 0
+                  "
+                >
+                  <thead>
+                    <tr>
+                      <th style="width: 20%">Accession</th>
+                      <th style="width: 80%">Name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="item in locusGeneDiseaseData.phenotypes"
+                      :key="item.accession"
+                    >
+                      <td style="width: 20%">
+                        <a
+                          :href="`https://hpo.jax.org/app/browse/term/${item.accession}`"
+                          style="text-decoration: none"
+                          v-if="item.accession"
+                          target="_blank"
+                        >
+                          {{ item.accession }}
+                        </a>
+                      </td>
+                      <td style="width: 80%">
+                        {{ item.name }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p v-else class="text-muted">Not Available</p>
+              </div>
             </td>
           </tr>
           <tr class="align-middle">
@@ -280,52 +302,70 @@ export default {
             </td>
           </tr>
           <tr>
-            <td class="w-25 text-end"><h4>Evidence</h4></td>
+            <td class="w-25 text-end">
+              <h4>Evidence</h4>
+            </td>
             <td></td>
           </tr>
           <tr>
-            <td class="w-25 text-end"><h6>Publications</h6></td>
+            <td class="w-25 text-end">
+              <h6>Publications</h6>
+            </td>
             <td class="w-75">
-              <table
-                class="table table-bordered"
-                v-if="
-                  locusGeneDiseaseData.publications &&
-                  locusGeneDiseaseData.publications.length > 0
-                "
+              <button
+                class="btn btn-primary"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsiblePublicationsTable"
+                aria-expanded="false"
+                aria-controls="collapsiblePublicationsTable"
               >
-                <thead>
-                  <tr>
-                    <th style="width: 10%">PMID</th>
-                    <th style="width: 80%">Title</th>
-                    <th style="width: 10%">Year</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in locusGeneDiseaseData.publications">
-                    <td style="width: 10%">
-                      <a
-                        v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
-                        style="text-decoration: none"
-                        v-if="item.publication.pmid"
-                        target="_blank"
-                      >
-                        {{ item.publication.pmid }}
-                      </a>
-                    </td>
-                    <td style="width: 80%">
-                      {{ item.publication.title }}
-                    </td>
-                    <td style="width: 10%">
-                      {{ item.publication.year }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <p v-else class="text-muted">Not Available</p>
+                View publications
+              </button>
+              <div class="collapse" id="collapsiblePublicationsTable">
+                <table
+                  class="table table-bordered mt-2"
+                  v-if="
+                    locusGeneDiseaseData.publications &&
+                    locusGeneDiseaseData.publications.length > 0
+                  "
+                >
+                  <thead>
+                    <tr>
+                      <th style="width: 10%">PMID</th>
+                      <th style="width: 80%">Title</th>
+                      <th style="width: 10%">Year</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in locusGeneDiseaseData.publications">
+                      <td style="width: 10%">
+                        <a
+                          v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
+                          style="text-decoration: none"
+                          v-if="item.publication.pmid"
+                          target="_blank"
+                        >
+                          {{ item.publication.pmid }}
+                        </a>
+                      </td>
+                      <td style="width: 80%">
+                        {{ item.publication.title }}
+                      </td>
+                      <td style="width: 10%">
+                        {{ item.publication.year }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p v-else class="text-muted">Not Available</p>
+              </div>
             </td>
           </tr>
           <tr class="align-middle">
-            <td class="w-25 text-end"><h4>Panels</h4></td>
+            <td class="w-25 text-end">
+              <h4>Panels</h4>
+            </td>
             <td class="w-75">
               <span
                 v-if="
@@ -398,9 +438,12 @@ export default {
             </td>
             <td>
               <p>
-                {{ locusGeneDiseaseData.locus.sequence }} :
-                {{ locusGeneDiseaseData.locus.start }} -
-                {{ locusGeneDiseaseData.locus.end }} :
+                {{ locusGeneDiseaseData.locus.sequence }}
+                :
+                {{ locusGeneDiseaseData.locus.start }}
+                -
+                {{ locusGeneDiseaseData.locus.end }}
+                :
                 {{ locusGeneDiseaseData.locus.strand }}
               </p>
             </td>
@@ -511,13 +554,17 @@ export default {
             </td>
           </tr>
           <tr class="align-middle">
-            <td class="w-25 text-end"><h4>Curators</h4></td>
+            <td class="w-25 text-end">
+              <h4>Curators</h4>
+            </td>
             <td class="w-75">
               <p class="text-muted">Not Available</p>
             </td>
           </tr>
           <tr class="align-middle">
-            <td class="w-25 text-end"><h4>Created On</h4></td>
+            <td class="w-25 text-end">
+              <h4>Created On</h4>
+            </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.date_created">
                 {{ locusGeneDiseaseData.date_created }}
@@ -545,6 +592,7 @@ export default {
 h6 {
   font-weight: bold;
 }
+
 h4,
 h6,
 p {
