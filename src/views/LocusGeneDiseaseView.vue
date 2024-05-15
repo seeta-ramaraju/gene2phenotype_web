@@ -239,9 +239,9 @@ export default {
               >
                 View phenotypes
               </button>
-              <div class="collapse" id="collapsibleTablepheno">
+              <div class="collapse" id="collapsiblePhenotypesTable">
                 <table
-                  class="table table-bordered"
+                  class="table table-bordered mt-2"
                   v-if="
                     locusGeneDiseaseData.phenotypes &&
                     locusGeneDiseaseData.phenotypes.length > 0
@@ -322,9 +322,9 @@ export default {
               >
                 View publications
               </button>
-              <div class="collapse" id="collapsibleTablepub">
+              <div class="collapse" id="collapsiblePublicationsTable">
                 <table
-                  class="table table-bordered"
+                  class="table table-bordered mt-2"
                   v-if="
                     locusGeneDiseaseData.publications &&
                     locusGeneDiseaseData.publications.length > 0
