@@ -233,9 +233,9 @@ export default {
                 class="btn btn-primary"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#collapsibleTablepheno"
+                data-bs-target="#collapsiblePhenotypesTable"
                 aria-expanded="false"
-                aria-controls="collapsibleTablepheno"
+                aria-controls="collapsiblePhenotypesTable"
               >
                 View phenotypes
               </button>
@@ -316,9 +316,9 @@ export default {
                 class="btn btn-primary"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#collapsibleTablepub"
+                data-bs-target="#collapsiblePublicationsTable"
                 aria-expanded="false"
-                aria-controls="collapsibleTablepub"
+                aria-controls="collapsiblePublicationsTable"
               >
                 View publications
               </button>
