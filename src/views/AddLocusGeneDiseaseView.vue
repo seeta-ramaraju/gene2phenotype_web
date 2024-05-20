@@ -33,6 +33,9 @@ export default {
           level: "",
         },
       },
+      inputValidation: {
+        isLocusValid: true,
+      },
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
@@ -63,10 +66,15 @@ export default {
     SaveDraftModal,
   },
   methods: {
-    fetchInitialData() {
-      this.fetchGeneInformation();
-      this.fetchGeneDiseaseInformation();
-      this.fetchPanels();
+    geneSearchBtnClickHandler() {
+      if (this.input.locus !== "") {
+        this.inputValidation.isLocusValid = true;
+        this.fetchGeneInformation();
+        this.fetchGeneDiseaseInformation();
+        this.fetchPanels();
+      } else {
+        this.inputValidation.isLocusValid = false;
+      }
     },
     fetchGeneInformation() {
       this.geneErrorMsg =
@@ -151,9 +159,11 @@ export default {
     fetchPublications(inputPmids) {
       this.publicationsErrorMsg = this.publicationsData = null;
       this.isPublicationsDataLoading = true;
-      let pmidList = inputPmids.split(";").join(",");
-      pmidList = pmidList.substring(0, pmidList.length - 1);
-      fetch(`/gene2phenotype/api/publication/${pmidList}/`)
+      let pmidListStr = inputPmids
+        .split(";")
+        .filter((item) => item)
+        .join(",");
+      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -173,13 +183,42 @@ export default {
           console.log(error);
         });
     },
+    filterMechanismEvidence(input) {
+      let filteredInput = { ...input };
+      for (
+        let index = 0;
+        index < filteredInput.mechanism_evidence.length;
+        index++
+      ) {
+        filteredInput.mechanism_evidence[index].evidence_types =
+          filteredInput.mechanism_evidence[index].evidence_types.filter(
+            (evidenceTypeItem) => evidenceTypeItem.secondary_type.length > 0
+          );
+      }
+      filteredInput.mechanism_evidence =
+        filteredInput.mechanism_evidence.filter(
+          (inputItem) =>
+            inputItem.description !== "" || inputItem.evidence_types.length > 0
+        );
+      return filteredInput;
+    },
+    filterPhenotypes(input) {
+      let filteredInput = { ...input };
+      filteredInput.phenotypes = filteredInput.phenotypes.filter(
+        (inputItem) => inputItem.summary !== ""
+      );
+      return filteredInput;
+    },
     saveDraft() {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
+      let filteredInput = this.filterMechanismEvidence(this.input);
+      filteredInput = this.filterPhenotypes(filteredInput);
       const requestBody = {
-        json_data: this.input,
+        json_data: filteredInput,
       };
+      let responseStatus = null;
       fetch("/gene2phenotype/api/add/curation/", {
         method: "POST",
         body: JSON.stringify(requestBody),
@@ -189,19 +228,29 @@ export default {
         },
       })
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(new Error("Unable to submit data"));
-          }
+          responseStatus = response.status;
+          return response.json();
         })
-        .then(() => {
+        .then((responseJson) => {
           this.isSubmitDataLoading = false;
-          this.isSubmitSuccess = true;
+          if (responseStatus === 200) {
+            this.isSubmitSuccess = true;
+          } else {
+            let errorMsg = "Unable to submit data. Please try again later.";
+            if (
+              responseJson.errors?.message &&
+              responseJson.errors?.message.length > 0
+            ) {
+              errorMsg = "Error: " + responseJson.errors.message[0];
+            }
+            this.submitErrorMsg = errorMsg;
+            console.log(errorMsg);
+          }
         })
         .catch((error) => {
           this.isSubmitDataLoading = false;
-          this.submitErrorMsg = error.message;
+          this.submitErrorMsg =
+            "Unable to submit data. Please try again later.";
           console.log(error);
         });
     },
@@ -213,7 +262,7 @@ export default {
     <h2>Add New G2P Record</h2>
     <form
       class="row g-3 pt-3 pb-1"
-      @submit.prevent="fetchInitialData"
+      @submit.prevent="geneSearchBtnClickHandler"
       v-if="!isSubmitSuccess"
     >
       <div class="col-auto">
@@ -221,10 +270,18 @@ export default {
       </div>
       <div class="col-3">
         <input
-          class="form-control"
+          :class="
+            inputValidation.isLocusValid
+              ? 'form-control'
+              : 'form-control is-invalid'
+          "
           id="gene-symbol-input"
           v-model.trim="input.locus"
+          aria-describedby="invalid-gene-symbol-input-feedback"
         />
+        <div id="invalid-gene-symbol-input-feedback" class="invalid-feedback">
+          Please enter a valid Gene.
+        </div>
       </div>
       <div class="col-auto">
         <button type="submit" class="btn btn-primary mb-3">Search</button>

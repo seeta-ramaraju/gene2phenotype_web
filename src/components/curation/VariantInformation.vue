@@ -45,11 +45,15 @@ export default {
       deep: true,
     },
     publicationsData(newPublicationsData) {
-      newPublicationsData.results.forEach((item) => {
-        this.variantDescriptions[item.pmid] = {
-          description: "",
-        };
-      });
+      if (newPublicationsData && newPublicationsData.results) {
+        let newVariantDescriptions = {};
+        newPublicationsData.results.forEach((item) => {
+          newVariantDescriptions[item.pmid] = {
+            description: "",
+          };
+        });
+        this.variantDescriptions = newVariantDescriptions;
+      }
     },
     variantDescriptions: {
       handler(newVariantDescriptions) {
@@ -2082,7 +2086,7 @@ export default {
                   :for="`variant-description-input-${index}`"
                   class="col-form-label"
                 >
-                  Description
+                  Description (HGVS)
                 </label>
               </div>
               <div class="col-6">
@@ -2090,7 +2094,18 @@ export default {
                   class="form-control"
                   :id="`variant-description-input-${index}`"
                   v-model.trim="variantDescriptions[item.pmid].description"
+                  placeholder="Eg. ENST00000641515:c.4A>C"
                 />
+                <div class="form-text" id="publications-input-help-text">
+                  Please follow
+                  <a
+                    href="https://hgvs-nomenclature.org/stable/"
+                    target="_blank"
+                    style="text-decoration: none"
+                  >
+                    HGVS Nomenclature
+                  </a>
+                </div>
               </div>
             </div>
             <div class="row g-3 px-3 py-3">

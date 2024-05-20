@@ -11,11 +11,15 @@ export default {
   emits: ["updateClinicalPhenotype"],
   watch: {
     publicationsData(newPublicationsData) {
-      newPublicationsData.results.forEach((item) => {
-        this.phenotype[item.pmid] = {
-          summary: "",
-        };
-      });
+      if (newPublicationsData && newPublicationsData.results) {
+        let updatedPhenotype = {};
+        newPublicationsData.results.forEach((item) => {
+          updatedPhenotype[item.pmid] = {
+            summary: "",
+          };
+        });
+        this.phenotype = updatedPhenotype;
+      }
     },
     phenotype: {
       handler(newPhenotype) {
@@ -43,13 +47,6 @@ export default {
           data-bs-target="#clinical-phenotype-section-body"
           aria-expanded="false"
           aria-controls="clinical-phenotype-section-body"
-          :disabled="
-            !(
-              publicationsData &&
-              publicationsData.results &&
-              publicationsData.results.length > 0
-            )
-          "
         >
           Clinical Phenotype
         </button>
@@ -87,6 +84,12 @@ export default {
               >
               </textarea>
             </div>
+          </div>
+          <div class="row g-3 px-3 py-3" v-else>
+            <p>
+              <i class="bi bi-info-circle"></i> Please enter Publication(s) to
+              fill this section.
+            </p>
           </div>
         </div>
       </div>

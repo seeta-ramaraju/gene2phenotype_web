@@ -28,17 +28,21 @@ export default {
   ],
   watch: {
     publicationsData(newPublicationsData) {
-      newPublicationsData.results.forEach((item) => {
-        this.mechanismEvidence[item.pmid] = {
-          description: "",
-          evidence_types: {
-            Function: [],
-            "Functional Alteration": [],
-            Models: [],
-            Rescue: [],
-          },
-        };
-      });
+      if (newPublicationsData && newPublicationsData.results) {
+        let updatedMechanismEvidence = {};
+        newPublicationsData.results.forEach((item) => {
+          updatedMechanismEvidence[item.pmid] = {
+            description: "",
+            evidence_types: {
+              Function: [],
+              "Functional Alteration": [],
+              Models: [],
+              Rescue: [],
+            },
+          };
+        });
+        this.mechanismEvidence = updatedMechanismEvidence;
+      }
     },
     molecularMechanism: {
       handler(newMolecularMechanism) {
@@ -102,39 +106,39 @@ export default {
                 >
               </div>
               <div class="col-md-3">
-                <label for="gain-of-function-input" class="form-label"
-                  >Gain of Function</label
-                >
+                <label for="gain-of-function-input" class="form-label">
+                  Gain of Function
+                </label>
                 <input
                   type="email"
                   class="form-control"
                   id="gain-of-function-input"
                   disabled
-                  value="0.610"
+                  value="Not Available"
                 />
               </div>
               <div class="col-md-3">
-                <label for="loss-of-function-input" class="form-label"
-                  >Loss of Function</label
-                >
+                <label for="loss-of-function-input" class="form-label">
+                  Loss of Function
+                </label>
                 <input
                   type="email"
                   class="form-control"
                   id="loss-of-function-input"
                   disabled
-                  value="0.242"
+                  value="Not Available"
                 />
               </div>
               <div class="col-md-3">
-                <label for="dominant-negative-input" class="form-label"
-                  >Dominant Negative</label
-                >
+                <label for="dominant-negative-input" class="form-label">
+                  Dominant Negative
+                </label>
                 <input
                   type="email"
                   class="form-control"
                   id="dominant-negative-input"
                   disabled
-                  value="0.777"
+                  value="Not Available"
                 />
               </div>
             </div>

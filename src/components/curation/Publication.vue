@@ -2,7 +2,8 @@
 export default {
   data() {
     return {
-      inputPmids: null,
+      inputPmids: "",
+      isInputPmidsValid: true,
       publications: {},
     };
   },
@@ -23,15 +24,20 @@ export default {
   emits: ["updatePublications"],
   watch: {
     publicationsData(newPublicationsData) {
-      newPublicationsData.results.forEach((item) => {
-        this.publications[item.pmid] = {
-          families: null,
-          affectedIndividuals: null,
-          consanguineous: "unknown",
-          ancestries: "",
-          comment: "",
-        };
-      });
+      if (newPublicationsData && newPublicationsData.results) {
+        let updatedPublications = {};
+        newPublicationsData.results.forEach((item) => {
+          updatedPublications[item.pmid] = {
+            families: null,
+            affectedIndividuals: null,
+            consanguineous: "unknown",
+            ancestries: "",
+            comment: "",
+            source: item.source,
+          };
+        });
+        this.publications = updatedPublications;
+      }
     },
     publications: {
       handler(newPublications) {
@@ -48,7 +54,12 @@ export default {
   },
   methods: {
     fetchInputPublications() {
-      this.fetchPublications(this.inputPmids);
+      if (this.inputPmids !== "") {
+        this.isInputPmidsValid = true;
+        this.fetchPublications(this.inputPmids);
+      } else {
+        this.isInputPmidsValid = false;
+      }
     },
   },
 };
@@ -72,20 +83,29 @@ export default {
         <div class="accordion-body">
           <div class="row g-3 py-3">
             <div class="col-auto">
-              <label for="publications-input" class="col-form-label"
-                >Publication(s)</label
-              >
+              <label for="publications-input" class="col-form-label">
+                Publication(s)
+              </label>
             </div>
             <div class="col-4">
               <textarea
-                class="form-control"
+                :class="
+                  isInputPmidsValid ? 'form-control' : 'form-control is-invalid'
+                "
                 id="publications-input"
                 v-model.trim="inputPmids"
                 rows="3"
+                aria-describedby="invalid-publications-input-feedback"
               >
               </textarea>
-              <div class="form-text" id="basic-addon4">
-                Enter multiple entries separated by semicolon
+              <div
+                id="invalid-publications-input-feedback"
+                class="invalid-feedback"
+              >
+                Please enter valid Publication(s).
+              </div>
+              <div class="form-text" id="publications-input-help-text">
+                For multiple entries, separate by semicolon
               </div>
             </div>
             <div class="col-auto">
