@@ -61,7 +61,15 @@ export default {
             </div>
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
-                {{ geneFunctionData.function.protein_function }}
+                {{ geneFunctionData.function.protein_function }} <br />
+                <b>Source:</b>
+                <a
+                  v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+                  style="text-decoration: none"
+                  target="_blank"
+                >
+                  UniProt
+                </a>
               </p>
               <p v-else class="text-muted">Not Available</p>
             </div>
