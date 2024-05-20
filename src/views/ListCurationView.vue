@@ -22,7 +22,7 @@ export default {
       this.errorMsg = this.curationListData = null;
       this.isDataLoading = true;
       //not using promise.all because it is one endpoint
-      fetch(`/gene2phenotype/api/curations`)
+      fetch("/gene2phenotype/api/curations")
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -66,19 +66,17 @@ export default {
         >
           <thead>
             <tr>
-              <th>Locus</th>
               <th>Session Name</th>
+              <th>Locus</th>
+              <th>G2P ID</th>
               <th>Date Created</th>
               <th>Date Last Updated</th>
-              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in curationListData.results">
-              <td>{{ item.locus }}</td>
               <td>{{ item.session_name }}</td>
-              <td>{{ item.created_on }}</td>
-              <td>{{ item.last_updated }}</td>
+              <td>{{ item.locus }}</td>
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
@@ -88,6 +86,8 @@ export default {
                   {{ item.stable_id }}
                 </router-link>
               </td>
+              <td>{{ item.created_on }}</td>
+              <td>{{ item.last_updated }}</td>
             </tr>
           </tbody>
         </table>
