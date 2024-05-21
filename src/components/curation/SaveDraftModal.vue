@@ -51,10 +51,10 @@ export default {
         <div class="modal-footer">
           <button
             type="button"
-            class="btn btn-secondary"
+            class="btn btn-outline-danger"
             data-bs-dismiss="modal"
           >
-            Close
+            <i class="bi bi-x-circle-fill"></i> Close
           </button>
           <button
             type="button"
@@ -62,7 +62,7 @@ export default {
             @click="$emit('savedraft')"
             data-bs-dismiss="modal"
           >
-            Save Draft
+            <i class="bi bi-floppy-fill"></i> Save Draft
           </button>
         </div>
       </div>

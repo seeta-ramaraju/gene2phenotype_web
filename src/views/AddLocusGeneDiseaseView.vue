@@ -9,6 +9,11 @@ import Disease from "../components/curation/Disease.vue";
 import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
 import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
+import {
+  filterPhenotypes,
+  filterMechanismEvidence,
+} from "../utility/CurationUtility.js";
+import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
 export default {
   data() {
@@ -64,6 +69,7 @@ export default {
     Panel,
     Confidence,
     SaveDraftModal,
+    SaveSuccessAlert,
   },
   methods: {
     geneSearchBtnClickHandler() {
@@ -183,38 +189,12 @@ export default {
           console.log(error);
         });
     },
-    filterMechanismEvidence(input) {
-      let filteredInput = { ...input };
-      for (
-        let index = 0;
-        index < filteredInput.mechanism_evidence.length;
-        index++
-      ) {
-        filteredInput.mechanism_evidence[index].evidence_types =
-          filteredInput.mechanism_evidence[index].evidence_types.filter(
-            (evidenceTypeItem) => evidenceTypeItem.secondary_type.length > 0
-          );
-      }
-      filteredInput.mechanism_evidence =
-        filteredInput.mechanism_evidence.filter(
-          (inputItem) =>
-            inputItem.description !== "" || inputItem.evidence_types.length > 0
-        );
-      return filteredInput;
-    },
-    filterPhenotypes(input) {
-      let filteredInput = { ...input };
-      filteredInput.phenotypes = filteredInput.phenotypes.filter(
-        (inputItem) => inputItem.summary !== ""
-      );
-      return filteredInput;
-    },
     saveDraft() {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
-      let filteredInput = this.filterMechanismEvidence(this.input);
-      filteredInput = this.filterPhenotypes(filteredInput);
+      let filteredInput = filterMechanismEvidence(this.input);
+      filteredInput = filterPhenotypes(filteredInput);
       const requestBody = {
         json_data: filteredInput,
       };
@@ -284,7 +264,9 @@ export default {
         </div>
       </div>
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-3">Search</button>
+        <button type="submit" class="btn btn-primary mb-3">
+          <i class="bi bi-search"></i> Search
+        </button>
       </div>
     </form>
     <p v-if="!geneData">
@@ -392,35 +374,13 @@ export default {
         data-bs-toggle="modal"
         data-bs-target="#save-draft-modal"
       >
-        Save Draft
+        <i class="bi bi-floppy-fill"></i> Save Draft
       </button>
-      <button class="btn btn-primary">Publish</button>
+      <button class="btn btn-primary">
+        <i class="bi bi-send-fill"></i> Publish
+      </button>
     </div>
-    <div
-      class="alert alert-success mx-auto col-6"
-      style="margin-top: 50px"
-      role="alert"
-      v-if="isSubmitSuccess"
-    >
-      <h4 class="alert-heading">
-        <i
-          class="bi bi-check-circle-fill"
-          style="color: green; margin-right: 10px"
-        >
-        </i>
-        Success
-      </h4>
-      <p>Curation Entry saved as draft.</p>
-      <hr />
-      <div class="d-flex justify-content-between">
-        <router-link to="/curation/entries" class="btn btn-primary me-3">
-          View All Saved Drafts
-        </router-link>
-        <router-link to="/lgd/add" class="btn btn-primary">
-          Add Another G2P Record
-        </router-link>
-      </div>
-    </div>
+    <SaveSuccessAlert v-if="isSubmitSuccess" />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"

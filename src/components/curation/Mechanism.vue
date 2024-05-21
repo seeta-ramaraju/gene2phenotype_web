@@ -208,6 +208,23 @@ export default {
             <div
               class="row g-3 px-3 pt-3"
               v-if="
+                !(
+                  publicationsData &&
+                  publicationsData.results &&
+                  publicationsData.results.length > 0
+                ) &&
+                (molecularMechanism.support === 'evidence' ||
+                  mechanismSynopsis.support === 'evidence')
+              "
+            >
+              <p>
+                <i class="bi bi-info-circle"></i> Please enter Publication(s) to
+                provide information on evidence.
+              </p>
+            </div>
+            <div
+              class="row g-3 px-3 pt-3"
+              v-if="
                 publicationsData &&
                 publicationsData.results &&
                 publicationsData.results.length > 0 &&

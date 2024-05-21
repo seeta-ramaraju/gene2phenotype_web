@@ -273,6 +273,21 @@ export default {
           <form>
             <div class="row g-3 px-3 pt-3">
               <div class="col-12"><h5>Variant Types</h5></div>
+              <div
+                class="col-12"
+                v-if="
+                  !(
+                    publicationsData &&
+                    publicationsData.results &&
+                    publicationsData.results.length > 0
+                  )
+                "
+              >
+                <p>
+                  <i class="bi bi-info-circle"></i> Please enter Publication(s)
+                  to select supporting papers for Variant Types.
+                </p>
+              </div>
               <div class="col-12">
                 <table class="table table-bordered">
                   <thead>
@@ -2058,54 +2073,58 @@ export default {
               </div>
             </div>
             <div
-              class="row g-3 px-3 pt-3"
               v-if="
                 publicationsData &&
                 publicationsData.results &&
                 publicationsData.results.length > 0
               "
             >
-              <div class="col-12"><h5>Variant Description</h5></div>
-            </div>
-            <div
-              class="row g-3 px-3 py-3"
-              v-if="
-                publicationsData &&
-                publicationsData.results &&
-                publicationsData.results.length > 0
-              "
-              v-for="(item, index) in publicationsData.results"
-            >
-              <div class="col-12">
-                <strong>
-                  <p class="mb-0">Publication (PMID: {{ item.pmid }})</p>
-                </strong>
+              <div class="row g-3 px-3 pt-3">
+                <div class="col-12"><h5>Variant Description</h5></div>
               </div>
-              <div class="col-auto">
-                <label
-                  :for="`variant-description-input-${index}`"
-                  class="col-form-label"
-                >
-                  Description (HGVS)
-                </label>
-              </div>
-              <div class="col-6">
-                <input
-                  class="form-control"
-                  :id="`variant-description-input-${index}`"
-                  v-model.trim="variantDescriptions[item.pmid].description"
-                  placeholder="Eg. ENST00000641515:c.4A>C"
-                />
-                <div class="form-text" id="publications-input-help-text">
-                  Please follow
-                  <a
-                    href="https://hgvs-nomenclature.org/stable/"
-                    target="_blank"
-                    style="text-decoration: none"
-                  >
-                    HGVS Nomenclature
-                  </a>
+              <div
+                class="row g-3 px-3 py-3"
+                v-for="(item, index) in publicationsData.results"
+              >
+                <div class="col-12">
+                  <strong>
+                    <p class="mb-0">Publication (PMID: {{ item.pmid }})</p>
+                  </strong>
                 </div>
+                <div class="col-auto">
+                  <label
+                    :for="`variant-description-input-${index}`"
+                    class="col-form-label"
+                  >
+                    Description (HGVS)
+                  </label>
+                </div>
+                <div class="col-6">
+                  <input
+                    class="form-control"
+                    :id="`variant-description-input-${index}`"
+                    v-model.trim="variantDescriptions[item.pmid].description"
+                    placeholder="Eg. ENST00000641515:c.4A>C"
+                  />
+                  <div class="form-text" id="publications-input-help-text">
+                    Please follow
+                    <a
+                      href="https://hgvs-nomenclature.org/stable/"
+                      target="_blank"
+                      style="text-decoration: none"
+                    >
+                      HGVS Nomenclature
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="row g-3 px-3 pt-3">
+              <div class="col-12">
+                <p>
+                  <i class="bi bi-info-circle"></i> Please enter Publication(s)
+                  to fill Variant Description section.
+                </p>
               </div>
             </div>
             <div class="row g-3 px-3 py-3">

@@ -114,7 +114,7 @@ export default {
                 class="btn btn-primary mb-3"
                 @click="fetchInputPublications"
               >
-                Look Up
+                <i class="bi bi-search"></i> Look Up
               </button>
             </div>
           </div>
