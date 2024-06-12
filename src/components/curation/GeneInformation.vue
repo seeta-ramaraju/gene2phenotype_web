@@ -1,14 +1,8 @@
 <script>
 export default {
   props: {
-    geneData: {
-      type: Object,
-      required: true,
-    },
-    geneFunctionData: {
-      type: Object,
-      required: true,
-    },
+    geneData: Object,
+    geneFunctionData: Object,
   },
 };
 </script>

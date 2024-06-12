@@ -1,12 +1,10 @@
 <script>
 export default {
   props: {
-    attributesData: {
-      type: Object,
-    },
+    attributesData: Object,
     justification: String,
     level: String,
-    inputPublications: Array,
+    inputPublications: Object,
   },
   emits: ["update:justification", "update:level"],
 };
@@ -37,13 +35,15 @@ export default {
                 <tbody>
                   <tr>
                     <th width="50%">Total Papers</th>
-                    <td width="50%">{{ inputPublications.length }}</td>
+                    <td width="50%">
+                      {{ Object.keys(inputPublications).length }}
+                    </td>
                   </tr>
                   <tr>
                     <th width="50%">Total Families</th>
                     <td width="50%">
                       {{
-                        inputPublications.reduce(
+                        Object.values(inputPublications).reduce(
                           (accumulator, currentValue) =>
                             currentValue.families
                               ? accumulator + currentValue.families
@@ -57,7 +57,7 @@ export default {
                     <th width="50%">Total Cases</th>
                     <td width="50%">
                       {{
-                        inputPublications.reduce(
+                        Object.values(inputPublications).reduce(
                           (accumulator, currentValue) =>
                             currentValue.affectedIndividuals
                               ? accumulator + currentValue.affectedIndividuals

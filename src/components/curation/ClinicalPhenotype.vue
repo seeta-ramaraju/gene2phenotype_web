@@ -1,37 +1,14 @@
 <script>
 export default {
-  data() {
-    return { phenotype: {} };
-  },
   props: {
-    publicationsData: {
-      type: Object,
-    },
+    clinicalPhenotype: Object,
   },
-  emits: ["updateClinicalPhenotype"],
-  watch: {
-    publicationsData(newPublicationsData) {
-      if (newPublicationsData && newPublicationsData.results) {
-        let updatedPhenotype = {};
-        newPublicationsData.results.forEach((item) => {
-          updatedPhenotype[item.pmid] = {
-            summary: "",
-          };
-        });
-        this.phenotype = updatedPhenotype;
-      }
-    },
-    phenotype: {
-      handler(newPhenotype) {
-        let phenotypeArray = [];
-        for (const [key, value] of Object.entries(newPhenotype)) {
-          let phenotypeObj = { ...value };
-          phenotypeObj.pmid = key;
-          phenotypeArray.push(phenotypeObj);
-        }
-        this.$emit("updateClinicalPhenotype", phenotypeArray);
-      },
-      deep: true,
+  emits: ["update:clinicalPhenotype"],
+  methods: {
+    inputHandler(pmid, inputValue) {
+      let updateClinicalPhenotype = { ...this.clinicalPhenotype };
+      updateClinicalPhenotype[pmid].summary = inputValue;
+      this.$emit("update:clinicalPhenotype", updateClinicalPhenotype);
     },
   },
 };
@@ -58,29 +35,31 @@ export default {
         <div class="accordion-body">
           <div
             class="row g-3 px-3 py-3"
-            v-for="item in publicationsData.results"
+            v-for="pmid in Object.keys(clinicalPhenotype)"
             v-if="
-              publicationsData &&
-              publicationsData.results &&
-              publicationsData.results.length > 0
+              clinicalPhenotype && Object.keys(clinicalPhenotype).length > 0
             "
           >
             <div class="col-12">
               <strong
-                ><p class="mb-0">Publication (PMID: {{ item.pmid }})</p></strong
+                ><p class="mb-0">Publication (PMID: {{ pmid }})</p></strong
               >
             </div>
             <div class="col-1">
-              <label for="clinical-phenotype-input" class="col-form-label">
+              <label
+                :for="`clinical-phenotype-input-${pmid}`"
+                class="col-form-label"
+              >
                 Summary
               </label>
             </div>
             <div class="col-4">
               <textarea
                 class="form-control"
-                id="clinical-phenotype-input"
+                :id="`clinical-phenotype-input-${pmid}`"
                 rows="3"
-                v-model.trim="phenotype[item.pmid].summary"
+                :value="clinicalPhenotype[pmid].summary"
+                @input="inputHandler(pmid, $event.target.value.trim())"
               >
               </textarea>
             </div>

@@ -1,0 +1,256 @@
+<script>
+import { VariantTypesAttribs } from "../../utility/CurationConstants";
+export default {
+  props: {
+    publicationsData: Object,
+    variantTypes: Object,
+  },
+  emits: ["updateVariantTypes"],
+  methods: {
+    variantTypesSingleCheckboxHandler(
+      primaryType,
+      secondaryType,
+      key,
+      checked
+    ) {
+      let updatedVariantTypes = { ...this.variantTypes };
+      if (checked) {
+        updatedVariantTypes[primaryType][secondaryType][key] = true;
+      } else {
+        updatedVariantTypes[primaryType][secondaryType][key] = false;
+      }
+      this.$emit("updateVariantTypes", updatedVariantTypes);
+    },
+    variantTypesMultiCheckboxHandler(
+      primaryType,
+      secondaryType,
+      key,
+      checked,
+      value
+    ) {
+      let updatedVariantTypes = { ...this.variantTypes };
+      if (checked) {
+        updatedVariantTypes[primaryType][secondaryType][key].push(value);
+      } else {
+        updatedVariantTypes[primaryType][secondaryType][key].splice(
+          updatedVariantTypes[primaryType][secondaryType][key].indexOf(value),
+          1
+        );
+      }
+      this.$emit("updateVariantTypes", updatedVariantTypes);
+    },
+    variantTypesInputHandler(primaryType, secondaryType, key, inputValue) {
+      let updatedVariantTypes = { ...this.variantTypes };
+      updatedVariantTypes[primaryType][secondaryType][key] = inputValue;
+      this.$emit("updateVariantTypes", updatedVariantTypes);
+    },
+  },
+  data() {
+    return {
+      variantTypesAttribs: [...VariantTypesAttribs],
+    };
+  },
+  computed: {
+    isPublicationsDataAvailable() {
+      return (
+        this.publicationsData &&
+        this.publicationsData.results &&
+        this.publicationsData.results.length > 0
+      );
+    },
+  },
+};
+</script>
+<template>
+  <div class="row g-3 px-3 pt-3">
+    <div class="col-12"><h5>Variant Types</h5></div>
+    <div class="col-12" v-if="!isPublicationsDataAvailable">
+      <p>
+        <i class="bi bi-info-circle"></i> Please enter Publication(s) to select
+        supporting papers for Variant Types.
+      </p>
+    </div>
+    <div class="col-12">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 20%">Types</th>
+            <th style="width: 15%"></th>
+            <th style="width: 10%">De Novo</th>
+            <th style="width: 10%">Inherited</th>
+            <th style="width: 10%">Unknown Inheritance</th>
+            <th style="width: 15%" v-if="isPublicationsDataAvailable">
+              Supporting Papers
+            </th>
+            <th style="width: 35%">Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="item in variantTypesAttribs">
+            <tr>
+              <td>
+                <strong>{{ item.primaryType.labelText }}</strong>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td v-if="isPublicationsDataAvailable"></td>
+              <td></td>
+            </tr>
+            <tr v-for="secondaryTypeItem in item.secondaryType">
+              <td>{{ secondaryTypeItem.labelText }}</td>
+              <td>
+                <div
+                  class="form-check"
+                  v-if="secondaryTypeItem.displayNmdEscape"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    :id="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-nmd_escape`"
+                    :checked="
+                      variantTypes[item.primaryType.inputKey][
+                        secondaryTypeItem.inputKey
+                      ].nmd_escape
+                    "
+                    @input="
+                      variantTypesSingleCheckboxHandler(
+                        item.primaryType.inputKey,
+                        secondaryTypeItem.inputKey,
+                        'nmd_escape',
+                        $event.target.checked
+                      )
+                    "
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-nmd_escape`"
+                  >
+                    NMD_escape
+                  </label>
+                </div>
+              </td>
+              <td>
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    :id="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-de_novo`"
+                    :checked="
+                      variantTypes[item.primaryType.inputKey][
+                        secondaryTypeItem.inputKey
+                      ].de_novo
+                    "
+                    @input="
+                      variantTypesSingleCheckboxHandler(
+                        item.primaryType.inputKey,
+                        secondaryTypeItem.inputKey,
+                        'de_novo',
+                        $event.target.checked
+                      )
+                    "
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    :id="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-inherited`"
+                    :checked="
+                      variantTypes[item.primaryType.inputKey][
+                        secondaryTypeItem.inputKey
+                      ].inherited
+                    "
+                    @input="
+                      variantTypesSingleCheckboxHandler(
+                        item.primaryType.inputKey,
+                        secondaryTypeItem.inputKey,
+                        'inherited',
+                        $event.target.checked
+                      )
+                    "
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="form-check">
+                  <input
+                    type="checkbox"
+                    :id="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-unknown_inheritance`"
+                    :checked="
+                      variantTypes[item.primaryType.inputKey][
+                        secondaryTypeItem.inputKey
+                      ].unknown_inheritance
+                    "
+                    @input="
+                      variantTypesSingleCheckboxHandler(
+                        item.primaryType.inputKey,
+                        secondaryTypeItem.inputKey,
+                        'unknown_inheritance',
+                        $event.target.checked
+                      )
+                    "
+                  />
+                </div>
+              </td>
+              <td v-if="isPublicationsDataAvailable">
+                <div
+                  class="form-check"
+                  v-for="publicationItem in publicationsData.results"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    :id="`input-${publicationItem.pmid}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
+                    :checked="
+                      variantTypes[item.primaryType.inputKey][
+                        secondaryTypeItem.inputKey
+                      ].supporting_papers.includes(publicationItem.pmid)
+                    "
+                    @input="
+                      variantTypesMultiCheckboxHandler(
+                        item.primaryType.inputKey,
+                        secondaryTypeItem.inputKey,
+                        'supporting_papers',
+                        $event.target.checked,
+                        publicationItem.pmid
+                      )
+                    "
+                  />
+                  <label
+                    class="form-check-label"
+                    :for="`input-${publicationItem.pmid}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
+                  >
+                    {{ publicationItem.pmid }}
+                  </label>
+                </div>
+              </td>
+              <td>
+                <textarea
+                  class="form-control"
+                  :id="`input-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-comment`"
+                  rows="2"
+                  :value="
+                    variantTypes[item.primaryType.inputKey][
+                      secondaryTypeItem.inputKey
+                    ].comment
+                  "
+                  @input="
+                    variantTypesInputHandler(
+                      item.primaryType.inputKey,
+                      secondaryTypeItem.inputKey,
+                      'comment',
+                      $event.target.value.trim()
+                    )
+                  "
+                >
+                </textarea>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>

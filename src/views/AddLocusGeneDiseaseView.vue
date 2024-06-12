@@ -10,34 +10,16 @@ import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
 import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
 import {
-  filterPhenotypes,
-  filterMechanismEvidence,
+  getInitialInputForNewCuration,
+  updateInputWithPublicationsData,
+  prepareInputForDataSubmission,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
 export default {
   data() {
     return {
-      input: {
-        locus: "",
-        session_name: "",
-        publications: [],
-        phenotypes: [],
-        allelic_requirement: "",
-        cross_cutting_modifier: [],
-        variant_types: [],
-        variant_descriptions: [],
-        variant_consequences: [],
-        molecular_mechanism: {},
-        mechanism_synopsis: {},
-        mechanism_evidence: [],
-        disease: { disease_name: "", cross_references: [] },
-        panels: [],
-        confidence: {
-          justification: "",
-          level: "",
-        },
-      },
+      input: getInitialInputForNewCuration(),
       inputValidation: {
         isLocusValid: true,
       },
@@ -182,6 +164,12 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           this.publicationsData = responseJson;
+          if (this.publicationsData && this.publicationsData.results) {
+            this.input = updateInputWithPublicationsData(
+              this.input,
+              this.publicationsData
+            );
+          }
         })
         .catch((error) => {
           this.isPublicationsDataLoading = false;
@@ -193,10 +181,9 @@ export default {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
-      let filteredInput = filterMechanismEvidence(this.input);
-      filteredInput = filterPhenotypes(filteredInput);
+      const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = {
-        json_data: filteredInput,
+        json_data: preparedInput,
       };
       let responseStatus = null;
       fetch("/gene2phenotype/api/add/curation/", {
@@ -300,44 +287,37 @@ export default {
         :publicationsData="publicationsData"
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
-        @update-publications="(valueArray) => (input.publications = valueArray)"
+        v-model:publications="input.publications"
       />
-      <ClinicalPhenotype
-        :publicationsData="publicationsData"
-        @update-clinical-phenotype="
-          (valueArray) => (input.phenotypes = valueArray)
-        "
-      />
+      <ClinicalPhenotype v-model:clinical-phenotype="input.phenotypes" />
       <Genotype
         :attributesData="attributesData"
         v-model:allelic-requirement="input.allelic_requirement"
-        @update-cross-cutting-modifiers="
-          (valueArray) => (input.cross_cutting_modifier = valueArray)
-        "
+        v-model:cross-cutting-modifiers="input.cross_cutting_modifier"
       />
       <VariantInformation
         :publicationsData="publicationsData"
+        :variantTypes="input.variant_types"
         @update-variant-types="
-          (valueArray) => (input.variant_types = valueArray)
+          (updatedVariantTypes) => (input.variant_types = updatedVariantTypes)
         "
-        @update-variant-descriptions="
-          (valueArray) => (input.variant_descriptions = valueArray)
-        "
+        v-model:variant-descriptions="input.variant_descriptions"
+        :variantConsequences="input.variant_consequences"
         @update-variant-consequences="
-          (valueArray) => (input.variant_consequences = valueArray)
+          (updatedVariantConsequences) =>
+            (input.variant_consequences = updatedVariantConsequences)
         "
       />
       <Mechanism
-        :publicationsData="publicationsData"
         :attributesData="attributesData"
-        @update-molecular-mechanism="
-          (valueObj) => (input.molecular_mechanism = valueObj)
-        "
-        @update-mechanism-synopsis="
-          (valueObj) => (input.mechanism_synopsis = valueObj)
-        "
+        v-model:molecular-mechanism="input.molecular_mechanism.name"
+        v-model:molecular-mechanism-support="input.molecular_mechanism.support"
+        v-model:mechanism-synopsis="input.mechanism_synopsis.name"
+        v-model:mechanism-synopsis-support="input.mechanism_synopsis.support"
+        :mechanismEvidence="input.mechanism_evidence"
         @update-mechanism-evidence="
-          (valueArray) => (input.mechanism_evidence = valueArray)
+          (updatedMechanismEvidence) =>
+            (input.mechanism_evidence = updatedMechanismEvidence)
         "
       />
       <Disease
@@ -345,13 +325,14 @@ export default {
         :geneDiseaseData="geneDiseaseData"
         :isGeneDiseaseDataLoading="isGeneDiseaseDataLoading"
         :geneDiseaseErrorMsg="geneDiseaseErrorMsg"
-        @update-disease="(valueObj) => (input.disease = valueObj)"
+        v-model:disease-name="input.disease.disease_name"
+        v-model:disease-cross-references="input.disease.cross_references"
       />
       <Panel
         :panelData="panelData"
         :isPanelDataLoading="isPanelDataLoading"
         :panelErrorMsg="panelErrorMsg"
-        @update-panels="(valueArray) => (input.panels = valueArray)"
+        v-model:panels="input.panels"
       />
       <Confidence
         :attributesData="attributesData"

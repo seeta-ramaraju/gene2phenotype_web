@@ -1,21 +1,26 @@
 <script>
+import { convertStringToKebabCase } from "../../utility/CurationUtility";
 export default {
   props: {
-    attributesData: {
-      type: Object,
-    },
+    attributesData: Object,
     allelicRequirement: String,
+    crossCuttingModifiers: Array,
   },
-  emits: ["update:allelicRequirement", "updateCrossCuttingModifiers"],
-  watch: {
-    crossCuttingModifiers(newCrossCuttingModifiers) {
-      this.$emit("updateCrossCuttingModifiers", newCrossCuttingModifiers);
+  emits: ["update:allelicRequirement", "update:crossCuttingModifiers"],
+  methods: {
+    checkboxHandler(crossCuttingModifier, checked) {
+      let updatedCrossCuttingModifiers = [...this.crossCuttingModifiers];
+      if (checked) {
+        updatedCrossCuttingModifiers.push(crossCuttingModifier);
+      } else {
+        updatedCrossCuttingModifiers.splice(
+          updatedCrossCuttingModifiers.indexOf(crossCuttingModifier),
+          1
+        );
+      }
+      this.$emit("update:crossCuttingModifiers", updatedCrossCuttingModifiers);
     },
-  },
-  data() {
-    return {
-      crossCuttingModifiers: [],
-    };
+    convertStringToKebabCase,
   },
 };
 </script>
@@ -39,13 +44,13 @@ export default {
           <form class="row g-3">
             <div class="row g-3">
               <div class="col-auto">
-                <label for="allelic-requiremnt-input" class="col-form-label">
+                <label for="allelic-requirement-input" class="col-form-label">
                   Allelic Requirement
                 </label>
               </div>
               <div class="col-3">
                 <select
-                  id="allelic-requiremnt-input"
+                  id="allelic-requirement-input"
                   class="form-select"
                   :value="allelicRequirement"
                   @input="
@@ -72,13 +77,17 @@ export default {
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="cross-cutting-modifiers-input"
-                    :value="item"
-                    v-model="crossCuttingModifiers"
+                    :id="`cross-cutting-modifiers-input-${convertStringToKebabCase(
+                      item
+                    )}`"
+                    :checked="crossCuttingModifiers.includes(item)"
+                    @input="checkboxHandler(item, $event.target.checked)"
                   />
                   <label
                     class="form-check-label"
-                    for="cross-cutting-modifiers-input"
+                    :for="`cross-cutting-modifiers-input-${convertStringToKebabCase(
+                      item
+                    )}`"
                   >
                     {{ item }}
                   </label>

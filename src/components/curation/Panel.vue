@@ -1,26 +1,24 @@
 <script>
+import { convertStringToKebabCase } from "../../utility/CurationUtility";
 export default {
   props: {
-    panelData: {
-      type: Object,
-    },
-    isPanelDataLoading: {
-      type: Boolean,
-    },
-    panelErrorMsg: {
-      type: String,
-    },
+    panelData: Object,
+    isPanelDataLoading: Boolean,
+    panelErrorMsg: String,
+    panels: Array,
   },
-  emits: ["updatePanels"],
-  watch: {
-    panels(newPanels) {
-      this.$emit("updatePanels", newPanels);
+  emits: ["update:panels"],
+  methods: {
+    checkboxHandler(panel, checked) {
+      let updatedPanels = [...this.panels];
+      if (checked) {
+        updatedPanels.push(panel);
+      } else {
+        updatedPanels.splice(updatedPanels.indexOf(panel), 1);
+      }
+      this.$emit("update:panels", updatedPanels);
     },
-  },
-  data() {
-    return {
-      panels: [],
-    };
+    convertStringToKebabCase,
   },
 };
 </script>
@@ -72,11 +70,20 @@ export default {
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    id="panel-input"
-                    :value="item.description"
-                    v-model="panels"
+                    :id="`panel-input-${convertStringToKebabCase(
+                      item.description
+                    )}`"
+                    :checked="panels.includes(item.description)"
+                    @input="
+                      checkboxHandler(item.description, $event.target.checked)
+                    "
                   />
-                  <label class="form-check-label" for="panel-input">
+                  <label
+                    class="form-check-label"
+                    :for="`panel-input-${convertStringToKebabCase(
+                      item.description
+                    )}`"
+                  >
                     {{ item.description }}
                   </label>
                 </div>

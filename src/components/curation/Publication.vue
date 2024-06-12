@@ -1,57 +1,13 @@
 <script>
 export default {
-  data() {
-    return {
-      inputPmids: "",
-      isInputPmidsValid: true,
-      publications: {},
-    };
-  },
   props: {
-    fetchPublications: {
-      type: Function,
-    },
-    publicationsData: {
-      type: Object,
-    },
-    isPublicationsDataLoading: {
-      type: Boolean,
-    },
-    publicationsErrorMsg: {
-      type: String,
-    },
+    fetchPublications: Function,
+    publicationsData: Object,
+    isPublicationsDataLoading: Boolean,
+    publicationsErrorMsg: String,
+    publications: Object,
   },
-  emits: ["updatePublications"],
-  watch: {
-    publicationsData(newPublicationsData) {
-      if (newPublicationsData && newPublicationsData.results) {
-        let updatedPublications = {};
-        newPublicationsData.results.forEach((item) => {
-          updatedPublications[item.pmid] = {
-            families: null,
-            affectedIndividuals: null,
-            consanguineous: "unknown",
-            ancestries: "",
-            comment: "",
-            source: item.source,
-          };
-        });
-        this.publications = updatedPublications;
-      }
-    },
-    publications: {
-      handler(newPublications) {
-        let publicationsArray = [];
-        for (const [key, value] of Object.entries(newPublications)) {
-          let publicationObj = { ...value };
-          publicationObj.pmid = key;
-          publicationsArray.push(publicationObj);
-        }
-        this.$emit("updatePublications", publicationsArray);
-      },
-      deep: true,
-    },
-  },
+  emits: ["update:publications"],
   methods: {
     fetchInputPublications() {
       if (this.inputPmids !== "") {
@@ -61,6 +17,17 @@ export default {
         this.isInputPmidsValid = false;
       }
     },
+    inputHandler(key, pmid, inputValue) {
+      let updatedPublications = { ...this.publications };
+      updatedPublications[pmid][key] = inputValue;
+      this.$emit("update:publications", updatedPublications);
+    },
+  },
+  data() {
+    return {
+      inputPmids: "",
+      isInputPmidsValid: true,
+    };
   },
 };
 </script>
@@ -143,13 +110,9 @@ export default {
             </div>
             <div
               class="accordion py-1"
-              :id="`parent-accordion-${item.pmid}`"
-              v-if="
-                publicationsData &&
-                publicationsData.results &&
-                publicationsData.results.length > 0
-              "
-              v-for="item in publicationsData.results"
+              :id="`parent-accordion-${pmid}`"
+              v-if="publications && Object.keys(publications).length > 0"
+              v-for="pmid in Object.keys(publications)"
             >
               <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -157,25 +120,25 @@ export default {
                     class="accordion-button"
                     type="button"
                     data-bs-toggle="collapse"
-                    :data-bs-target="`#inner-accordion-${item.pmid}`"
+                    :data-bs-target="`#inner-accordion-${pmid}`"
                     aria-expanded="true"
-                    :aria-controls="`inner-accordion-${item.pmid}`"
+                    :aria-controls="`inner-accordion-${pmid}`"
                   >
-                    PMID: {{ item.pmid }}
+                    PMID: {{ pmid }}
                   </button>
                 </h2>
                 <div
-                  :id="`inner-accordion-${item.pmid}`"
+                  :id="`inner-accordion-${pmid}`"
                   class="accordion-collapse collapse show"
-                  :data-bs-parent="`parent-accordion-${item.pmid}`"
+                  :data-bs-parent="`parent-accordion-${pmid}`"
                 >
                   <div class="accordion-body">
                     <div class="row g-3">
                       <div class="col-12">
                         <a
-                          v-bind:href="`https://europepmc.org/article/MED/${item.pmid}`"
+                          v-bind:href="`https://europepmc.org/article/MED/${pmid}`"
                           style="text-decoration: none"
-                          v-if="item.pmid"
+                          v-if="pmid"
                           target="_blank"
                         >
                           View Publication
@@ -184,7 +147,7 @@ export default {
                       </div>
                       <div class="col-6">
                         <label
-                          :for="`publication-pmid-input-${item.pmid}`"
+                          :for="`publication-pmid-input-${pmid}`"
                           class="form-label"
                         >
                           PMID
@@ -192,30 +155,31 @@ export default {
                         <input
                           class="form-control"
                           type="text"
-                          v-bind:value="item.pmid"
+                          :value="pmid"
                           aria-label="readonly input example"
-                          :id="`publication-pmid-input-${item.pmid}`"
+                          :id="`publication-pmid-input-${pmid}`"
                           disabled
                         />
                       </div>
                       <div class="col-6">
                         <label
-                          :for="`publication-year-input-${item.pmid}`"
+                          :for="`publication-year-input-${pmid}`"
                           class="form-label"
-                          >Year</label
                         >
+                          Year
+                        </label>
                         <input
                           class="form-control"
                           type="text"
-                          :id="`publication-year-input-${item.pmid}`"
-                          v-bind:value="item.year"
+                          :id="`publication-year-input-${pmid}`"
+                          :value="publications[pmid].year"
                           aria-label="readonly input example"
                           disabled
                         />
                       </div>
                       <div class="col-12">
                         <label
-                          :for="`publication-title-input-${item.pmid}`"
+                          :for="`publication-title-input-${pmid}`"
                           class="form-label"
                         >
                           Title
@@ -223,15 +187,15 @@ export default {
                         <input
                           class="form-control"
                           type="text"
-                          :id="`publication-title-input-${item.pmid}`"
-                          v-bind:value="item.title"
+                          :id="`publication-title-input-${pmid}`"
+                          :value="publications[pmid].title"
                           aria-label="readonly input example"
                           disabled
                         />
                       </div>
                       <div class="col-12">
                         <label
-                          :for="`publication-authors-input-${item.pmid}`"
+                          :for="`publication-authors-input-${pmid}`"
                           class="form-label"
                         >
                           Authors
@@ -239,15 +203,15 @@ export default {
                         <input
                           class="form-control"
                           type="text"
-                          :id="`publication-authors-input-${item.pmid}`"
-                          v-bind:value="item.authors"
+                          :id="`publication-authors-input-${pmid}`"
+                          :value="publications[pmid].authors"
                           aria-label="readonly input example"
                           disabled
                         />
                       </div>
                       <div class="col-md-3">
                         <label
-                          :for="`publication-families-input-${item.pmid}`"
+                          :for="`publication-families-input-${pmid}`"
                           class="form-label"
                         >
                           Number of Families
@@ -255,13 +219,20 @@ export default {
                         <input
                           type="number"
                           class="form-control"
-                          :id="`publication-families-input-${item.pmid}`"
-                          v-model="publications[item.pmid].families"
+                          :id="`publication-families-input-${pmid}`"
+                          :value="publications[pmid].families"
+                          @input="
+                            inputHandler(
+                              'families',
+                              pmid,
+                              Number($event.target.value)
+                            )
+                          "
                         />
                       </div>
                       <div class="col-md-3">
                         <label
-                          :for="`publication-affected-individuals-input-${item.pmid}`"
+                          :for="`publication-affected-individuals-input-${pmid}`"
                           class="form-label"
                         >
                           Affected Individuals
@@ -269,20 +240,34 @@ export default {
                         <input
                           type="number"
                           class="form-control"
-                          :id="`publication-affected-individuals-input-${item.pmid}`"
-                          v-model="publications[item.pmid].affectedIndividuals"
+                          :id="`publication-affected-individuals-input-${pmid}`"
+                          :value="publications[pmid].affectedIndividuals"
+                          @input="
+                            inputHandler(
+                              'affectedIndividuals',
+                              pmid,
+                              Number($event.target.value)
+                            )
+                          "
                         />
                       </div>
                       <div class="col-md-3">
                         <label
-                          :for="`publication-consanguineous-input-${item.pmid}`"
+                          :for="`publication-consanguineous-input-${pmid}`"
                           class="form-label"
                           >Consanguineous</label
                         >
                         <select
-                          :id="`publication-consanguineous-input-${item.pmid}`"
+                          :id="`publication-consanguineous-input-${pmid}`"
                           class="form-select"
-                          v-model="publications[item.pmid].consanguineous"
+                          :value="publications[pmid].consanguineous"
+                          @input="
+                            inputHandler(
+                              'consanguineous',
+                              pmid,
+                              $event.target.value
+                            )
+                          "
                         >
                           <option value="unknown">Unknown</option>
                           <option value="yes">Yes</option>
@@ -291,7 +276,7 @@ export default {
                       </div>
                       <div class="col-md-3">
                         <label
-                          :for="`publication-ancestries-input-${item.pmid}`"
+                          :for="`publication-ancestries-input-${pmid}`"
                           class="form-label"
                         >
                           Ancestries
@@ -299,22 +284,36 @@ export default {
                         <input
                           type="text"
                           class="form-control"
-                          :id="`publication-ancestries-input-${item.pmid}`"
-                          v-model.trim="publications[item.pmid].ancestries"
+                          :id="`publication-ancestries-input-${pmid}`"
+                          :value="publications[pmid].ancestries"
+                          @input="
+                            inputHandler(
+                              'ancestries',
+                              pmid,
+                              $event.target.value.trim()
+                            )
+                          "
                         />
                       </div>
                       <div class="col-12">
                         <label
-                          :for="`publication-comment-input-${item.pmid}`"
+                          :for="`publication-comment-input-${pmid}`"
                           class="form-label"
                         >
                           Comment
                         </label>
                         <textarea
                           class="form-control"
-                          :id="`publication-comment-input-${item.pmid}`"
+                          :id="`publication-comment-input-${pmid}`"
                           rows="3"
-                          v-model.trim="publications[item.pmid].comment"
+                          :value="publications[pmid].comment"
+                          @input="
+                            inputHandler(
+                              'comment',
+                              pmid,
+                              $event.target.value.trim()
+                            )
+                          "
                         ></textarea>
                       </div>
                     </div>

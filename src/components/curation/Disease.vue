@@ -1,49 +1,40 @@
 <script>
 export default {
   props: {
-    inputGeneSymbol: {
-      type: String,
-    },
-    geneDiseaseData: {
-      type: Object,
-    },
-    isGeneDiseaseDataLoading: {
-      type: Boolean,
-    },
-    geneDiseaseErrorMsg: {
-      type: String,
-    },
+    inputGeneSymbol: String,
+    geneDiseaseData: Object,
+    isGeneDiseaseDataLoading: Boolean,
+    geneDiseaseErrorMsg: String,
+    diseaseName: String,
+    diseaseCrossReferences: Array,
   },
-  emits: ["updateDisease"],
+  emits: ["update:diseaseName", "update:diseaseCrossReferences"],
   watch: {
-    pickedDiseaseName(newPickedDiseaseName) {
-      this.diseaseName = newPickedDiseaseName.disease_name;
-    },
-    diseaseName(newDiseaseName) {
-      const fullDiseaseName = `${this.inputGeneSymbol.toUpperCase()}-related ${newDiseaseName}`;
-      const diseaseObj = {
-        disease_name: fullDiseaseName,
-        cross_references: this.diseaseCrossReferences,
-      };
-      this.$emit("updateDisease", diseaseObj);
-    },
-    diseaseCrossReferences(newDiseaseCrossReferences) {
-      const fullDiseaseName = `${this.inputGeneSymbol.toUpperCase()}-related ${
-        this.diseaseName
-      }`;
-      const diseaseObj = {
-        disease_name: fullDiseaseName,
-        cross_references: newDiseaseCrossReferences,
-      };
-      this.$emit("updateDisease", diseaseObj);
+    selectedDiseaseObj(newSelectedDiseaseObj) {
+      this.$emit("update:diseaseName", newSelectedDiseaseObj.disease_name);
     },
   },
   data() {
     return {
-      diseaseName: "",
-      pickedDiseaseName: "",
-      diseaseCrossReferences: [],
+      selectedDiseaseObj: {},
     };
+  },
+  methods: {
+    checkboxHandler(diseaseCrossReference, checked) {
+      let updatedDiseaseCrossReferences = [...this.diseaseCrossReferences];
+      if (checked) {
+        updatedDiseaseCrossReferences.push(diseaseCrossReference);
+      } else {
+        const indexToBeRemoved = updatedDiseaseCrossReferences.findIndex(
+          (item) => item.disease_name === diseaseCrossReference.disease_name
+        );
+        updatedDiseaseCrossReferences.splice(indexToBeRemoved, 1);
+      }
+      this.$emit(
+        "update:diseaseCrossReferences",
+        updatedDiseaseCrossReferences
+      );
+    },
   },
 };
 </script>
@@ -88,7 +79,10 @@ export default {
                   class="form-control"
                   id="disease-name-input"
                   type="text"
-                  v-model.trim="diseaseName"
+                  :value="diseaseName"
+                  @input="
+                    $emit('update:diseaseName', $event.target.value.trim())
+                  "
                 />
               </div>
             </div>
@@ -124,15 +118,21 @@ export default {
                         type="radio"
                         :id="`disease-name-use-input-${index}`"
                         :value="item"
-                        v-model="pickedDiseaseName"
+                        v-model="selectedDiseaseObj"
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
                         :id="`disease-name-link-input-${index}`"
-                        :value="item"
-                        v-model="diseaseCrossReferences"
+                        :checked="
+                          diseaseCrossReferences.indexOf(
+                            (diseaseCrossReference) =>
+                              diseaseCrossReference.disease_name ===
+                              item.disease_name
+                          ) !== -1
+                        "
+                        @input="checkboxHandler(item, $event.target.checked)"
                       />
                     </td>
                     <td>{{ item.disease_name }}</td>
