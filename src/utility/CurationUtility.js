@@ -202,10 +202,10 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.variant_types = variantTypesArray;
 
-  // convert variant descriptions from object to array of objects
+  // convert variant descriptions from object to array of objects and include variant descriptions that have non empty description
   preparedInput.variant_descriptions = convertObjectWithPmidToArrayOfObjects(
     preparedInput.variant_descriptions
-  );
+  ).filter((item) => item.description !== "");
 
   // convert variant consequences from object to array of objects and include variant consequence that have non empty support
   let variantConsequencesArray = [];
