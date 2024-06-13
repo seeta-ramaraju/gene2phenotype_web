@@ -80,9 +80,7 @@ export default {
                   id="disease-name-input"
                   type="text"
                   :value="diseaseName"
-                  @input="
-                    $emit('update:diseaseName', $event.target.value.trim())
-                  "
+                  @input="$emit('update:diseaseName', $event.target.value)"
                 />
               </div>
             </div>

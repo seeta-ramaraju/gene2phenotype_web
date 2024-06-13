@@ -128,9 +128,7 @@ export default {
           :id="`evidence-type-input-${pmid}-description`"
           rows="3"
           :value="mechanismEvidence[pmid].description"
-          @input="
-            mechanismEvidenceInputHandler(pmid, $event.target.value.trim())
-          "
+          @input="mechanismEvidenceInputHandler(pmid, $event.target.value)"
         >
         </textarea>
       </div>

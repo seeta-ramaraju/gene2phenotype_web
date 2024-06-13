@@ -39,7 +39,7 @@ export default {
                 class="form-control"
                 id="session-name-input"
                 :value="sessionname"
-                @input="$emit('update:sessionname', $event.target.value.trim())"
+                @input="$emit('update:sessionname', $event.target.value)"
               />
             </div>
             <p>

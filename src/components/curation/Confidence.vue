@@ -86,9 +86,7 @@ export default {
                   rows="3"
                   type="text"
                   :value="justification"
-                  @input="
-                    $emit('update:justification', $event.target.value.trim())
-                  "
+                  @input="$emit('update:justification', $event.target.value)"
                 >
                 </textarea>
               </div>

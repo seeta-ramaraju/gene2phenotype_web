@@ -241,7 +241,7 @@ export default {
                       item.primaryType.inputKey,
                       secondaryTypeItem.inputKey,
                       'comment',
-                      $event.target.value.trim()
+                      $event.target.value
                     )
                   "
                 >

@@ -59,7 +59,7 @@ export default {
                 :id="`clinical-phenotype-input-${pmid}`"
                 rows="3"
                 :value="clinicalPhenotype[pmid].summary"
-                @input="inputHandler(pmid, $event.target.value.trim())"
+                @input="inputHandler(pmid, $event.target.value)"
               >
               </textarea>
             </div>

@@ -290,7 +290,7 @@ export default {
                             inputHandler(
                               'ancestries',
                               pmid,
-                              $event.target.value.trim()
+                              $event.target.value
                             )
                           "
                         />
@@ -308,11 +308,7 @@ export default {
                           rows="3"
                           :value="publications[pmid].comment"
                           @input="
-                            inputHandler(
-                              'comment',
-                              pmid,
-                              $event.target.value.trim()
-                            )
+                            inputHandler('comment', pmid, $event.target.value)
                           "
                         ></textarea>
                       </div>
