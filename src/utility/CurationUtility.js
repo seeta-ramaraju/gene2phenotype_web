@@ -222,11 +222,8 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.variant_consequences = variantConsequencesArray;
 
-  if (preparedInput.disease.disease_name === "") {
-    // if disease name is empty then set it to null
-    preparedInput.disease.disease_name = null;
-  } else {
-    // else prefix locus to disease name
+  // if disease name is not empty then prefix locus to disease name
+  if (preparedInput.disease.disease_name !== "") {
     preparedInput.disease.disease_name = `${preparedInput.locus.toUpperCase()}-related ${
       preparedInput.disease.disease_name
     }`;
