@@ -25,10 +25,10 @@ export default {
       if (checked) {
         updatedDiseaseCrossReferences.push(diseaseCrossReference);
       } else {
-        const indexToBeRemoved = updatedDiseaseCrossReferences.findIndex(
+        const elementIndexToBeRemoved = updatedDiseaseCrossReferences.findIndex(
           (item) => item.disease_name === diseaseCrossReference.disease_name
         );
-        updatedDiseaseCrossReferences.splice(indexToBeRemoved, 1);
+        updatedDiseaseCrossReferences.splice(elementIndexToBeRemoved, 1);
       }
       this.$emit(
         "update:diseaseCrossReferences",
