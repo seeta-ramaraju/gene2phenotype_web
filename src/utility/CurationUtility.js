@@ -15,10 +15,6 @@ const convertObjectWithPmidToArrayOfObjects = (inputObj) => {
   return outputArray;
 };
 
-export const convertStringToKebabCase = (str) => {
-  return str.toLowerCase().split(" ").join("-");
-};
-
 export const getInitialInputForNewCuration = () => {
   let input = {
     locus: "",

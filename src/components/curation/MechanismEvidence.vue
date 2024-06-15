@@ -1,6 +1,6 @@
 <script>
 import { EvidenceTypesAttribs } from "../../utility/CurationConstants";
-import { convertStringToKebabCase } from "../../utility/CurationUtility";
+import kebabCase from "lodash/kebabCase";
 export default {
   props: {
     molecularMechanismSupport: String,
@@ -28,7 +28,7 @@ export default {
       updatedMechanismEvidence[pmid].description = inputValue;
       this.$emit("updateMechanismEvidence", updatedMechanismEvidence);
     },
-    convertStringToKebabCase,
+    kebabCase,
   },
   data() {
     return {
@@ -82,9 +82,9 @@ export default {
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    :id="`evidence-type-input-${pmid}-${convertStringToKebabCase(
+                    :id="`evidence-type-input-${pmid}-${kebabCase(
                       item.primaryType
-                    )}-${convertStringToKebabCase(secondaryTypeItem)}`"
+                    )}-${kebabCase(secondaryTypeItem)}`"
                     :checked="
                       mechanismEvidence[pmid].evidence_types[
                         item.primaryType
@@ -101,9 +101,9 @@ export default {
                   />
                   <label
                     class="form-check-label"
-                    :for="`evidence-type-input-${pmid}-${convertStringToKebabCase(
+                    :for="`evidence-type-input-${pmid}-${kebabCase(
                       item.primaryType
-                    )}-${convertStringToKebabCase(secondaryTypeItem)}`"
+                    )}-${kebabCase(secondaryTypeItem)}`"
                   >
                     {{ secondaryTypeItem }}
                   </label>

@@ -1,5 +1,5 @@
 <script>
-import { convertStringToKebabCase } from "../../utility/CurationUtility";
+import kebabCase from "lodash/kebabCase";
 export default {
   props: {
     panelData: Object,
@@ -18,7 +18,7 @@ export default {
       }
       this.$emit("update:panels", updatedPanels);
     },
-    convertStringToKebabCase,
+    kebabCase,
   },
 };
 </script>
@@ -70,9 +70,7 @@ export default {
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    :id="`panel-input-${convertStringToKebabCase(
-                      item.description
-                    )}`"
+                    :id="`panel-input-${kebabCase(item.description)}`"
                     :checked="panels.includes(item.description)"
                     @input="
                       checkboxHandler(item.description, $event.target.checked)
@@ -80,9 +78,7 @@ export default {
                   />
                   <label
                     class="form-check-label"
-                    :for="`panel-input-${convertStringToKebabCase(
-                      item.description
-                    )}`"
+                    :for="`panel-input-${kebabCase(item.description)}`"
                   >
                     {{ item.description }}
                   </label>

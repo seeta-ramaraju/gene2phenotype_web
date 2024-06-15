@@ -1,5 +1,5 @@
 <script>
-import { convertStringToKebabCase } from "../../utility/CurationUtility";
+import kebabCase from "lodash/kebabCase";
 export default {
   props: {
     attributesData: Object,
@@ -20,7 +20,7 @@ export default {
       }
       this.$emit("update:crossCuttingModifiers", updatedCrossCuttingModifiers);
     },
-    convertStringToKebabCase,
+    kebabCase,
   },
 };
 </script>
@@ -77,17 +77,13 @@ export default {
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    :id="`cross-cutting-modifiers-input-${convertStringToKebabCase(
-                      item
-                    )}`"
+                    :id="`cross-cutting-modifiers-input-${kebabCase(item)}`"
                     :checked="crossCuttingModifiers.includes(item)"
                     @input="checkboxHandler(item, $event.target.checked)"
                   />
                   <label
                     class="form-check-label"
-                    :for="`cross-cutting-modifiers-input-${convertStringToKebabCase(
-                      item
-                    )}`"
+                    :for="`cross-cutting-modifiers-input-${kebabCase(item)}`"
                   >
                     {{ item }}
                   </label>
