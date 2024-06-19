@@ -5,16 +5,6 @@ import {
 } from "./CurationConstants";
 import cloneDeep from "lodash/cloneDeep";
 
-const convertObjectWithPmidToArrayOfObjects = (inputObj) => {
-  let outputArray = [];
-  for (const [key, value] of Object.entries(inputObj)) {
-    let outputObject = { ...value };
-    outputObject.pmid = key;
-    outputArray.push(outputObject);
-  }
-  return outputArray;
-};
-
 export const getInitialInputForNewCuration = () => {
   let input = {
     locus: "",
@@ -121,29 +111,40 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 export const prepareInputForDataSubmission = (input) => {
   let preparedInput = cloneDeep(input);
 
-  // convert publications from object to array of objects
-  preparedInput.publications = convertObjectWithPmidToArrayOfObjects(
+  // convert publications from object to array of objects and remove some keys and trim some key values
+  let publicationsArray = [];
+  for (const [pmidKey, valueObj] of Object.entries(
     preparedInput.publications
-  );
-
-  // remove keys from publication object
-  const keysToRemove = ["authors", "year", "title"];
-  for (let index = 0; index < preparedInput.publications.length; index++) {
-    let updatedPublicationObj = {};
-    for (const [key, value] of Object.entries(
-      preparedInput.publications[index]
-    )) {
+  )) {
+    let publicationObj = { pmid: pmidKey };
+    const keysToRemove = ["authors", "year", "title"];
+    const keysToTrimValues = ["ancestries", "comment"];
+    for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
-        updatedPublicationObj[key] = value;
+        if (keysToTrimValues.includes(key)) {
+          publicationObj[key] = value.trim();
+        } else {
+          publicationObj[key] = value;
+        }
       }
     }
-    preparedInput.publications[index] = updatedPublicationObj;
+    publicationsArray.push(publicationObj);
   }
+  preparedInput.publications = publicationsArray;
 
   // convert phenotypes from object to array of objects and include phenotypes that have non empty summary
-  preparedInput.phenotypes = convertObjectWithPmidToArrayOfObjects(
-    preparedInput.phenotypes
-  ).filter((item) => item.summary !== "");
+  let phenotypesArray = [];
+  for (const [pmidKey, valueObj] of Object.entries(preparedInput.phenotypes)) {
+    if (valueObj.summary.trim() !== "") {
+      let phenotypeObj = {
+        ...valueObj,
+        pmid: pmidKey,
+        summary: valueObj.summary.trim(), // trim summary value
+      };
+      phenotypesArray.push(phenotypeObj);
+    }
+  }
+  preparedInput.phenotypes = phenotypesArray;
 
   // convert mechanism evidence from object to array of objects and include evidence that have non empty description or non empty evidence types
   let mechanismEvidenceArray = [];
@@ -162,10 +163,10 @@ export const prepareInputForDataSubmission = (input) => {
         evidenceTypesArray.push(evidenceTypeObj);
       }
     }
-    if (valueObj.description !== "" || evidenceTypesArray.length > 0) {
+    if (valueObj.description.trim() !== "" || evidenceTypesArray.length > 0) {
       let mechanismEvidenceObj = {
         pmid: publicationPmid,
-        description: valueObj.description,
+        description: valueObj.description.trim(), // trim description value
         evidence_types: evidenceTypesArray,
       };
       mechanismEvidenceArray.push(mechanismEvidenceObj);
@@ -175,23 +176,26 @@ export const prepareInputForDataSubmission = (input) => {
 
   // convert variant types from object to array of objects and include variant types that have any non empty field data
   let variantTypesArray = [];
-  for (const [primaryType, primaryTypeValue] of Object.entries(
+  for (const [primaryType, primaryTypeValueObj] of Object.entries(
     preparedInput.variant_types
   )) {
-    for (const [secondaryType, secondaryTypeValue] of Object.entries(
-      primaryTypeValue
+    for (const [secondaryType, secondaryTypeValueObj] of Object.entries(
+      primaryTypeValueObj
     )) {
       if (
-        secondaryTypeValue.de_novo ||
-        secondaryTypeValue.inherited ||
-        secondaryTypeValue.nmd_escape ||
-        secondaryTypeValue.unknown_inheritance ||
-        secondaryTypeValue.comment !== "" ||
-        secondaryTypeValue.supporting_papers.length > 0
+        secondaryTypeValueObj.de_novo ||
+        secondaryTypeValueObj.inherited ||
+        secondaryTypeValueObj.nmd_escape ||
+        secondaryTypeValueObj.unknown_inheritance ||
+        secondaryTypeValueObj.comment.trim() !== "" ||
+        secondaryTypeValueObj.supporting_papers.length > 0
       ) {
-        let variantTypesObj = { ...secondaryTypeValue };
-        variantTypesObj.primary_type = primaryType;
-        variantTypesObj.secondary_type = secondaryType;
+        let variantTypesObj = {
+          ...secondaryTypeValueObj,
+          primary_type: primaryType,
+          secondary_type: secondaryType,
+          comment: secondaryTypeValueObj.comment.trim(), // trim comment value
+        };
         variantTypesArray.push(variantTypesObj);
       }
     }
@@ -199,9 +203,20 @@ export const prepareInputForDataSubmission = (input) => {
   preparedInput.variant_types = variantTypesArray;
 
   // convert variant descriptions from object to array of objects and include variant descriptions that have non empty description
-  preparedInput.variant_descriptions = convertObjectWithPmidToArrayOfObjects(
+  let variantDescriptionsArray = [];
+  for (const [pmidKey, valueObj] of Object.entries(
     preparedInput.variant_descriptions
-  ).filter((item) => item.description !== "");
+  )) {
+    if (valueObj.description.trim() !== "") {
+      let variantDescriptionObj = {
+        ...valueObj,
+        pmid: pmidKey,
+        description: valueObj.description.trim(), // trim description value
+      };
+      variantDescriptionsArray.push(variantDescriptionObj);
+    }
+  }
+  preparedInput.variant_descriptions = variantDescriptionsArray;
 
   // convert variant consequences from object to array of objects and include variant consequence that have non empty support
   let variantConsequencesArray = [];
@@ -218,12 +233,23 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.variant_consequences = variantConsequencesArray;
 
+  // trim disease name
+  preparedInput.disease.disease_name =
+    preparedInput.disease.disease_name.trim();
+
   // if disease name is not empty then prefix locus to disease name
   if (preparedInput.disease.disease_name !== "") {
     preparedInput.disease.disease_name = `${preparedInput.locus.toUpperCase()}-related ${
       preparedInput.disease.disease_name
     }`;
   }
+
+  // trim session name
+  preparedInput.session_name = preparedInput.session_name.trim();
+
+  // trim confidence justification
+  preparedInput.confidence.justification =
+    preparedInput.confidence.justification.trim();
 
   return preparedInput;
 };
