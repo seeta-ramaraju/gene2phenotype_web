@@ -93,6 +93,7 @@ export default {
                     $emit('update:molecularMechanism', $event.target.value)
                   "
                 >
+                  <option disabled value="">Select</option>
                   <option
                     v-for="item in attributesData.mechanism"
                     :value="item"

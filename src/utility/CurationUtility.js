@@ -17,7 +17,7 @@ export const getInitialInputForNewCuration = () => {
     variant_descriptions: {},
     variant_consequences: {},
     molecular_mechanism: {
-      name: "undetermined",
+      name: "",
       support: "inferred",
     },
     mechanism_synopsis: {
