@@ -93,10 +93,18 @@ export default {
         </p>
         <p v-else class="text-muted">Not Available</p>
       </div>
-      <h4 class="py-3">Gene Function</h4>
+      <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          {{ geneFunctionData.function.protein_function }}
+          {{ geneFunctionData.function.protein_function }} <br />
+          <b>Source:</b>
+          <a
+            v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+            style="text-decoration: none"
+            target="_blank"
+          >
+            UniProt
+          </a>
         </p>
         <p v-else class="text-muted">Not Available</p>
       </div>

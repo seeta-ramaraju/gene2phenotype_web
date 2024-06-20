@@ -126,8 +126,8 @@ export default {
         {{ panelData.description }} panel ({{ panelData.name }})
       </h2>
       <h2 v-else>Not Available</h2>
-      <div class="row pt-3">
-        <div class="col">
+      <div class="row pt-3 justify-content-md-center">
+        <div class="col-4">
           <div class="card">
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">Total Records</h6>
@@ -140,25 +140,12 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col">
+        <div class="col-4">
           <div class="card">
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">Total Genes</h6>
               <h4 class="card-title" v-if="panelData.stats?.total_genes">
                 {{ panelData.stats.total_genes.toLocaleString() }}
-              </h4>
-              <h4 class="card-title" v-else style="color: grey">
-                Not Available
-              </h4>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">Total Diseases</h6>
-              <h4 class="card-title" v-if="panelData.stats?.total_diseases">
-                {{ panelData.stats.total_diseases.toLocaleString() }}
               </h4>
               <h4 class="card-title" v-else style="color: grey">
                 Not Available

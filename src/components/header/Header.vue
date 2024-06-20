@@ -160,7 +160,11 @@ export default {
               Curate</a
             >
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Add new G2P record</a></li>
+              <li>
+                <router-link to="/lgd/add" class="dropdown-item">
+                  Add New G2P Record
+                </router-link>
+              </li>
               <li>
                 <router-link to="/curation/entries" class="dropdown-item">
                   Saved Drafts
@@ -189,6 +193,7 @@ export default {
             <option value="gene">Search by Gene</option>
             <option value="disease">Search by Disease</option>
             <option value="phenotype">Search by Phenotype</option>
+            <option value="g2p_id">Search by G2P ID</option>
           </select>
           <select
             class="form-select"
