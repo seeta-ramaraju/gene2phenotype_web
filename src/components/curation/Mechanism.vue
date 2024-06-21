@@ -1,8 +1,11 @@
 <script>
 import MechanismEvidence from "./MechanismEvidence.vue";
+import {
+  MechanismAttribs,
+  MechanismSynopsisAttribs,
+} from "../../utility/CurationConstants";
 export default {
   props: {
-    attributesData: Object,
     molecularMechanism: String,
     molecularMechanismSupport: String,
     mechanismSynopsis: String,
@@ -17,6 +20,12 @@ export default {
     "updateMechanismEvidence",
   ],
   components: { MechanismEvidence },
+  data() {
+    return {
+      mechanismAttribs: [...MechanismAttribs],
+      mechanismSynopsisAttribs: [...MechanismSynopsisAttribs],
+    };
+  },
 };
 </script>
 <template>
@@ -94,10 +103,7 @@ export default {
                   "
                 >
                   <option disabled value="">Select</option>
-                  <option
-                    v-for="item in attributesData.mechanism"
-                    :value="item"
-                  >
+                  <option v-for="item in mechanismAttribs" :value="item">
                     {{ item }}
                   </option>
                 </select>
@@ -136,7 +142,7 @@ export default {
                 >
                   <option disabled value="">Select</option>
                   <option
-                    v-for="item in attributesData.mechanism_synopsis"
+                    v-for="item in mechanismSynopsisAttribs"
                     :value="item"
                   >
                     {{ item }}

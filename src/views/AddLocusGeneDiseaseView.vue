@@ -309,7 +309,6 @@ export default {
         "
       />
       <Mechanism
-        :attributesData="attributesData"
         v-model:molecular-mechanism="input.molecular_mechanism.name"
         v-model:molecular-mechanism-support="input.molecular_mechanism.support"
         v-model:mechanism-synopsis="input.mechanism_synopsis.name"
