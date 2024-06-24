@@ -253,3 +253,61 @@ export const prepareInputForDataSubmission = (input) => {
 
   return preparedInput;
 };
+
+export const prepareInputForUpdating = (input) => {
+  let deprepare_input = cloneDeep(input);
+
+  return {
+    locus: deprepare_input.locus,
+    // publications: this.arrayToObject(deprepare_input.publications, "pmid"),
+    // phenotypes: this.arrayToObject(deprepare_input.phenotypes, "pmid"),
+    // allelic_requirement: deprepare_input.allelic_requirement,
+    // cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
+    // variant_types: this.arrayToObject(
+    //  deprepare_input.variant_types,
+    // "primary_type",
+    // "secondary_type"
+    //),
+    // variant_descriptions: this.arrayToObject(
+    // deprepare_input.variant_descriptions,
+    // "pmid"
+    // ),
+    // variant_consequences: arrayToObject(
+    //  deprepare_input.variant_consequences,
+    //  "name"
+    // ),
+    //molecular_mechanism: this.arrayToObject(deprepare_input.molecular_mechanism, 'name'), // is it always inferred except if evidence is given
+    //mechanism_synopsis: {this.arrayToObject(deprepare_input.mechanism_synopsis, 'name'),
+    // mechanism_evidence: this.arrayToObject(
+    //   deprepare_input.mechanism_evidence,
+    //   "pmid"
+    //),
+    disease: {
+      disease_name: deprepare_input.disease_name,
+      cross_references: deprepare_input.cross_references,
+    },
+    panels: deprepare_input.panels,
+    confidence: {
+      justification: deprepare_input.justification,
+      level: deprepare_input.level,
+    },
+  };
+};
+
+// this function is to turn array of objects to objects so it can be displayed on the website for updating
+export const arrayToObject = (array, keyField, subKeyField) => {
+  return array.reduce((obj, item) => {
+    const key = item[keyField];
+    if (subKeyField && item[subKeyField]) {
+      if (!obj[key]) {
+        obj[key] = {};
+      }
+      item[subKeyField].forEach((element) => {
+        obj[key][element] = item;
+      });
+    } else {
+      obj[key] = item;
+    }
+    return obj;
+  }, {});
+};
