@@ -10,6 +10,7 @@ import DiseaseView from "../views/DiseaseView.vue";
 import ListCurationView from "../views/ListCurationView.vue";
 import AddLocusGeneDiseaseView from "../views/AddLocusGeneDiseaseView.vue";
 import CuratorsView from "../views/CuratorsView.vue";
+import DisclaimerView from "../views/DisclaimerView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +69,11 @@ const router = createRouter({
       path: "/curators",
       name: "curators",
       component: CuratorsView,
+    },
+    {
+      path: "/disclaimer",
+      name: "disclaimer",
+      component: DisclaimerView,
     },
   ],
 });
