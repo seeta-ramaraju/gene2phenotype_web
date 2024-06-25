@@ -79,6 +79,7 @@ export default {
         .then((responseJson) => {
           const responseData = responseJson.data;
           this.oldJSON = prepareInputForUpdating(responseData);
+          console.log(this.oldJSON.allelic_requirement);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -119,7 +120,6 @@ export default {
           this.geneData = geneData;
           this.geneFunctionData = geneFunctionData;
           this.attributesData = attributesData;
-          console.log(this.geneData);
         })
         .catch((error) => {
           this.isGeneDataLoading = false;
@@ -171,39 +171,7 @@ export default {
           console.log(error);
         });
     },
-    fetchPublications(inputPmids) {
-      this.publicationsErrorMsg = this.publicationsData = null;
-      this.isPublicationsDataLoading = true;
-      let pmidListStr = inputPmids
-        .split(";")
-        .filter((item) => item)
-        .join(",");
-      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch publications data")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.isPublicationsDataLoading = false;
-          this.publicationsData = responseJson;
-          if (this.publicationsData && this.publicationsData.results) {
-            this.input = updateInputWithPublicationsData(
-              this.input,
-              this.publicationsData
-            );
-          }
-        })
-        .catch((error) => {
-          this.isPublicationsDataLoading = false;
-          this.publicationsErrorMsg = error.message;
-          console.log(error);
-        });
-    },
+
     saveDraft() {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
@@ -252,10 +220,22 @@ export default {
 };
 </script>
 <template>
-  <div id="curation-form-section" v-if="geneData">
-    <GeneInformation
-      :geneData="geneData"
-      :geneFunctionData="geneFunctionData"
-    />
+  <div
+    class="container px-5 py-3"
+    style="min-height: 60vh"
+    id="curation-form-section"
+  >
+    <h2>Update G2P Record</h2>
+    <div v-if="geneData">
+      <GeneInformation
+        :geneData="geneData"
+        :geneFunctionData="geneFunctionData"
+      />
+      <Genotype
+        :attributesData="attributesData"
+        v-model:allelic-requirement="oldJSON.allelic_requirement"
+        v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
+      />
+    </div>
   </div>
 </template>
