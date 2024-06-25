@@ -18,14 +18,21 @@ import {
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
 export default {
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.oldJsoninformation();
+      },
+      { immediate: true }
+    );
+  },
   data() {
     return {
       input: prepareInputForDataSubmission,
       issDataLoading: false,
-      oldinputData: null,
-      inputValidation: {
-        isLocusValid: true,
-      },
+      oldJSON: null,
+      errorMsg: null,
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
@@ -56,40 +63,32 @@ export default {
     SaveDraftModal,
     SaveSuccessAlert,
   },
-  created() {
-    this.oldJsoninformation();
-  },
   methods: {
-    async oldJsoninformation() {
-      console.log(this.stableID);
+    oldJsoninformation() {
       this.issDataLoading = true;
+      this.oldJSON = null;
       const stableID = this.$route.params.stableID;
-      try {
-        const response = await fetch(
-          `/gene2phenotype/api/curation/${stableID}`
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const json = await response.json();
-        const oldJSON = prepareInputForUpdating(json.data);
-        console.log(oldJSON);
-        return oldJSON;
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      } finally {
-        this.issDataLoading = false;
-      }
-    },
-    geneSearchBtnClickHandler() {
-      if (this.oldJSON && this.oldJSON.locus !== "") {
-        this.inputValidation.isLocusValid = true;
-        this.fetchGeneInformation();
-        this.fetchGeneDiseaseInformation();
-        this.fetchPanels();
-      } else {
-        this.inputValidation.isLocusValid = false;
-      }
+      fetch(`/gene2phenotype/api/curation/${stableID}`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Unable to fetch curation information");
+          }
+        })
+        .then((responseJson) => {
+          const responseData = responseJson.data;
+          this.oldJSON = prepareInputForUpdating(responseData);
+          this.fetchGeneInformation();
+          this.fetchGeneDiseaseInformation();
+          this.fetchPanels();
+          this.issDataLoading = false;
+        })
+        .catch((error) => {
+          this.issDataLoading = false;
+          this.errorMsg = error.message;
+          console.log(error);
+        });
     },
     fetchGeneInformation() {
       this.geneErrorMsg =
@@ -100,7 +99,7 @@ export default {
       this.isGeneDataLoading = true;
       Promise.all([
         fetch(`/gene2phenotype/api/gene/${this.oldJSON.locus}/function/`),
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`),
+        fetch(`/gene2phenotype/api/gene/${this.oldJSON.locus}/`),
         fetch("/gene2phenotype/api/attribs/"),
       ])
         .then((responseArr) => {
@@ -120,6 +119,7 @@ export default {
           this.geneData = geneData;
           this.geneFunctionData = geneFunctionData;
           this.attributesData = attributesData;
+          console.log(this.geneData);
         })
         .catch((error) => {
           this.isGeneDataLoading = false;
@@ -130,7 +130,7 @@ export default {
     fetchGeneDiseaseInformation() {
       this.geneDiseaseErrorMsg = this.geneDiseaseData = null;
       this.isGeneDiseaseDataLoading = true;
-      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`)
+      fetch(`/gene2phenotype/api/gene/${this.oldJSON.locus}/disease`)
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -251,4 +251,11 @@ export default {
   },
 };
 </script>
-<template></template>
+<template>
+  <div id="curation-form-section" v-if="geneData">
+    <GeneInformation
+      :geneData="geneData"
+      :geneFunctionData="geneFunctionData"
+    />
+  </div>
+</template>
