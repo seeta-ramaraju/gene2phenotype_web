@@ -261,8 +261,8 @@ export const prepareInputForUpdating = (input) => {
     locus: deprepare_input.locus,
     // publications: this.arrayToObject(deprepare_input.publications, "pmid"),
     // phenotypes: this.arrayToObject(deprepare_input.phenotypes, "pmid"),
-    // allelic_requirement: deprepare_input.allelic_requirement,
-    // cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
+    allelic_requirement: deprepare_input.allelic_requirement,
+    cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
     // variant_types: this.arrayToObject(
     //  deprepare_input.variant_types,
     // "primary_type",
@@ -283,13 +283,16 @@ export const prepareInputForUpdating = (input) => {
     //   "pmid"
     //),
     disease: {
-      disease_name: deprepare_input.disease_name,
-      cross_references: deprepare_input.cross_references,
+      disease_name: deprepare_input.disease.disease_name,
+      cross_references: arrayToObject(
+        deprepare_input.disease.cross_references,
+        "original_disease_name"
+      ),
     },
     panels: deprepare_input.panels,
     confidence: {
-      justification: deprepare_input.justification,
-      level: deprepare_input.level,
+      justification: deprepare_input.confidence.justification,
+      level: deprepare_input.confidence.level,
     },
   };
 };

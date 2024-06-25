@@ -79,7 +79,7 @@ export default {
         .then((responseJson) => {
           const responseData = responseJson.data;
           this.oldJSON = prepareInputForUpdating(responseData);
-          console.log(this.oldJSON.allelic_requirement);
+          console.log(this.oldJSON.disease);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -235,6 +235,26 @@ export default {
         :attributesData="attributesData"
         v-model:allelic-requirement="oldJSON.allelic_requirement"
         v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
+      />
+      <Disease
+        :inputGeneSymbol="oldJSON.locus"
+        :geneDiseaseData="geneDiseaseData.results"
+        :isGeneDiseaseDataLoading="isGeneDiseaseDataLoading"
+        :geneDiseaseErrorMsg="geneDiseaseErrorMsg"
+        v-model:disease-name="oldJSON.disease.disease_name"
+        v-model:disease-cross-references="oldJSON.disease.cross_references"
+      />
+      <Panel
+        :panelData="panelData"
+        :isPanelDataLoading="isPanelDataLoading"
+        :panelErrorMsg="panelErrorMsg"
+        v-model:panels="oldJSON.panels"
+      />
+      <Confidence
+        :attributesData="attributesData"
+        :inputPublications="oldJSON.cross_cutting_modifier"
+        v-model:justification="oldJSON.confidence.justification"
+        v-model:level="oldJSON.confidence.level"
       />
     </div>
   </div>
