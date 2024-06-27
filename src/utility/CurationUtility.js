@@ -108,6 +108,17 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
+export const DeConstructJSONWithPublications = (arraydata) => {
+  let publicationsObj = {};
+
+  arraydata.forEach((publication) => {
+    const { pmid, ...rest } = publication;
+    publicationsObj[pmid] = rest;
+  });
+
+  return publicationsObj;
+};
+
 export const prepareInputForDataSubmission = (input) => {
   let preparedInput = cloneDeep(input);
 
@@ -259,10 +270,11 @@ export const prepareInputForUpdating = (input) => {
 
   return {
     locus: deprepare_input.locus,
-    // publications: this.arrayToObject(deprepare_input.publications, "pmid"),
+    publications: DeConstructJSONWithPublications(deprepare_input.publications),
     // phenotypes: this.arrayToObject(deprepare_input.phenotypes, "pmid"),
     allelic_requirement: deprepare_input.allelic_requirement,
     cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
+    session_name: deprepare_input.session_name,
     // variant_types: this.arrayToObject(
     //  deprepare_input.variant_types,
     // "primary_type",
@@ -284,10 +296,7 @@ export const prepareInputForUpdating = (input) => {
     //),
     disease: {
       disease_name: deprepare_input.disease.disease_name,
-      cross_references: arrayToObject(
-        deprepare_input.disease.cross_references,
-        "original_disease_name"
-      ),
+      cross_references: deprepare_input.disease.cross_references,
     },
     panels: deprepare_input.panels,
     confidence: {
@@ -313,4 +322,24 @@ export const arrayToObject = (array, keyField, subKeyField) => {
     }
     return obj;
   }, {});
+};
+
+export const appendObjectToPublications = (publications, pubDict) => {
+  // publications is the new added publications
+  // pubDict is the existing publication
+
+  let new_publications = publications.results;
+  //accessing the publications because it is received as an array
+  new_publications.forEach((pub) => {
+    const { pmid, ...rest } = pub;
+    if (pubDict[pub.pmid]) {
+      console.log("Publications with pmid ${pub.pmid} already exists");
+      return pubDict.pmid;
+    } else {
+      //Append the new publications to the pubDict
+      pubDict[pmid] = { rest };
+    }
+  });
+
+  return pubDict;
 };

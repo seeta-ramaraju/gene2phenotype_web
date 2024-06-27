@@ -14,6 +14,7 @@ import {
   prepareInputForDataSubmission,
   getInitialInputForNewCuration,
   prepareInputForUpdating,
+  appendObjectToPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
@@ -78,8 +79,9 @@ export default {
         })
         .then((responseJson) => {
           const responseData = responseJson.data;
+          const session_name = responseJson.session_name;
+          this.session = session_name;
           this.oldJSON = prepareInputForUpdating(responseData);
-          console.log(this.oldJSON.disease);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -171,17 +173,50 @@ export default {
           console.log(error);
         });
     },
-
+    fetchPublications(inputPmids) {
+      this.publicationsErrorMsg = this.publicationsData = null;
+      this.isPublicationsDataLoading = true;
+      let pmidListStr = inputPmids
+        .split(";")
+        .filter((item) => item)
+        .join(",");
+      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            return Promise.reject(
+              new Error("Unable to fetch publications data")
+            );
+          }
+        })
+        .then((responseJson) => {
+          this.isPublicationsDataLoading = false;
+          this.publicationsData = responseJson;
+          if (this.publicationsData && this.publicationsData.results) {
+            this.oldJSON.publications = appendObjectToPublications(
+              this.publicationsData,
+              this.oldJSON.publications
+            );
+          }
+        })
+        .catch((error) => {
+          this.isPublicationsDataLoading = false;
+          this.publicationsErrorMsg = error.message;
+          console.log(error);
+        });
+    },
     saveDraft() {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
-      const preparedInput = prepareInputForDataSubmission(this.input);
+      const preparedInput = prepareInputForDataSubmission(this.oldJSON);
+      const stableID = this.$route.params.stableID;
       const requestBody = {
         json_data: preparedInput,
       };
       let responseStatus = null;
-      fetch("/gene2phenotype/api/add/curation/", {
+      fetch("/gene2phenotype/api/curation/${stableID}/update", {
         method: "POST",
         body: JSON.stringify(requestBody),
         headers: {
@@ -236,9 +271,16 @@ export default {
         v-model:allelic-requirement="oldJSON.allelic_requirement"
         v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
       />
+      <Publication
+        :fetchPublications="fetchPublications"
+        :publicationsData="publicationsData"
+        :isPublicationsDataLoading="isPublicationsDataLoading"
+        :publicationsErrorMsg="publicationsErrorMsg"
+        v-model:publications="oldJSON.publications"
+      />
       <Disease
         :inputGeneSymbol="oldJSON.locus"
-        :geneDiseaseData="geneDiseaseData.results"
+        :geneDiseaseData="geneDiseaseData"
         :isGeneDiseaseDataLoading="isGeneDiseaseDataLoading"
         :geneDiseaseErrorMsg="geneDiseaseErrorMsg"
         v-model:disease-name="oldJSON.disease.disease_name"
@@ -257,5 +299,35 @@ export default {
         v-model:level="oldJSON.confidence.level"
       />
     </div>
+    <div class="alert alert-danger mt-3" role="alert" v-if="submitErrorMsg">
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i> {{ submitErrorMsg }}
+      </div>
+    </div>
+    <div
+      class="d-flex justify-content-between py-3"
+      v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
+    >
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#save-draft-modal"
+      >
+        <i class="bi bi-floppy-fill"></i> Save Draft
+      </button>
+      <button class="btn btn-primary">
+        <i class="bi bi-send-fill"></i> Publish
+      </button>
+    </div>
+    <SaveSuccessAlert v-if="isSubmitSuccess" />
+    <SaveDraftModal v-model:sessionname="session" @savedraft="saveDraft" />
   </div>
 </template>
+<style scoped>
+h5 {
+  font-weight: bold;
+}
+h6 {
+  font-weight: bold;
+}
+</style>
