@@ -193,10 +193,17 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           this.publicationsData = responseJson;
+          let publications_array = [];
           if (this.publicationsData && this.publicationsData.results) {
-            this.oldJSON.publications = appendObjectToPublications(
+            publications_array = appendObjectToPublications(
               this.publicationsData,
               this.oldJSON.publications
+            );
+          }
+          if (publications_array) {
+            this.oldJSON = updateInputWithPublicationsData(
+              this.oldJSON,
+              publications_array
             );
           }
         })
@@ -278,6 +285,7 @@ export default {
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="oldJSON.publications"
       />
+      <ClinicalPhenotype v-model:clinical-phenotype="oldJSON.phenotypes" />
       <Disease
         :inputGeneSymbol="oldJSON.locus"
         :geneDiseaseData="geneDiseaseData"

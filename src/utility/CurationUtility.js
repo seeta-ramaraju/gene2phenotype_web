@@ -112,8 +112,24 @@ export const DeConstructJSONWithPublications = (arraydata) => {
   let publicationsObj = {};
 
   arraydata.forEach((publication) => {
-    const { pmid, ...rest } = publication;
-    publicationsObj[pmid] = rest;
+    const {
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      pmid,
+      source,
+    } = publication;
+    publicationsObj[pmid] = {
+      pmid,
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      source,
+    };
   });
 
   return publicationsObj;
@@ -271,7 +287,7 @@ export const prepareInputForUpdating = (input) => {
   return {
     locus: deprepare_input.locus,
     publications: DeConstructJSONWithPublications(deprepare_input.publications),
-    // phenotypes: this.arrayToObject(deprepare_input.phenotypes, "pmid"),
+    phenotypes: deprepare_input.phenotypes,
     allelic_requirement: deprepare_input.allelic_requirement,
     cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
     session_name: deprepare_input.session_name,
@@ -307,39 +323,27 @@ export const prepareInputForUpdating = (input) => {
 };
 
 // this function is to turn array of objects to objects so it can be displayed on the website for updating
-export const arrayToObject = (array, keyField, subKeyField) => {
-  return array.reduce((obj, item) => {
-    const key = item[keyField];
-    if (subKeyField && item[subKeyField]) {
-      if (!obj[key]) {
-        obj[key] = {};
-      }
-      item[subKeyField].forEach((element) => {
-        obj[key][element] = item;
-      });
-    } else {
-      obj[key] = item;
-    }
-    return obj;
-  }, {});
-};
-
 export const appendObjectToPublications = (publications, pubDict) => {
-  // publications is the new added publications
-  // pubDict is the existing publication
+  // Initialize a new array to hold the combined objects
+  let combinedArray = [];
 
+  // Check if publications.results is an array
   let new_publications = publications.results;
-  //accessing the publications because it is received as an array
+
+  // Iterate through the new publications
   new_publications.forEach((pub) => {
-    const { pmid, ...rest } = pub;
-    if (pubDict[pub.pmid]) {
-      console.log("Publications with pmid ${pub.pmid} already exists");
-      return pubDict.pmid;
+    const { pmid, authors, source, title, year } = pub;
+    if (pubDict[pmid]) {
+      console.log(`Publication with pmid ${pmid} already exists`);
     } else {
-      //Append the new publications to the pubDict
-      pubDict[pmid] = { rest };
+      // Append the new publication to the pubDict
+      pubDict[pmid] = { pmid, authors, source, title, year };
     }
   });
 
-  return pubDict;
+  // Convert pubDict to an array of its values
+  combinedArray = Object.values(pubDict);
+
+  // Return the combined array within an object that contains the results key
+  return { results: combinedArray, count: combinedArray.length };
 };
