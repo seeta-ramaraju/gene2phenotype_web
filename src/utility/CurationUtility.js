@@ -118,21 +118,70 @@ export const DeConstructJSONWithPublications = (arraydata) => {
       consanguineous,
       ancestries,
       comment,
-      pmid,
       source,
+      year,
+      title,
+      authors,
+      pmid,
     } = publication;
     publicationsObj[pmid] = {
-      pmid,
       families,
       affectedIndividuals,
       consanguineous,
       ancestries,
       comment,
       source,
+      year,
+      title,
+      authors,
+      pmid,
     };
   });
 
   return publicationsObj;
+};
+
+export const DeConstructJSONWithVariantTypes = (arraydata) => {
+  let variantTypesObj = {};
+
+  arraydata.forEach((varianttypes) => {
+    const {
+      comment,
+      de_novo,
+      inherited,
+      nmd_escape,
+      primary_type,
+      secondary_type,
+      supporting_papers,
+      unknown_inheritance,
+    } = varianttypes;
+
+    // Ensure the primary_type key exists
+    if (!variantTypesObj[primary_type]) {
+      variantTypesObj[primary_type] = {};
+    }
+
+    variantTypesObj[primary_type][secondary_type] = {
+      comment,
+      de_novo,
+      inherited,
+      nmd_escape,
+      supporting_papers,
+      unknown_inheritance,
+    };
+  });
+  return variantTypesObj;
+};
+
+export const DeConstructJSONwithVariantDesc = (arraydata) => {
+  let variantDescription = {};
+
+  arraydata.forEach((variantDes) => {
+    const { description, pmid } = variantDes;
+    variantDescription[pmid] = description;
+  });
+
+  return variantDescription;
 };
 
 export const prepareInputForDataSubmission = (input) => {
@@ -291,25 +340,15 @@ export const prepareInputForUpdating = (input) => {
     allelic_requirement: deprepare_input.allelic_requirement,
     cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
     session_name: deprepare_input.session_name,
-    // variant_types: this.arrayToObject(
-    //  deprepare_input.variant_types,
-    // "primary_type",
-    // "secondary_type"
-    //),
-    // variant_descriptions: this.arrayToObject(
-    // deprepare_input.variant_descriptions,
-    // "pmid"
-    // ),
-    // variant_consequences: arrayToObject(
-    //  deprepare_input.variant_consequences,
-    //  "name"
-    // ),
-    //molecular_mechanism: this.arrayToObject(deprepare_input.molecular_mechanism, 'name'), // is it always inferred except if evidence is given
-    //mechanism_synopsis: {this.arrayToObject(deprepare_input.mechanism_synopsis, 'name'),
-    // mechanism_evidence: this.arrayToObject(
-    //   deprepare_input.mechanism_evidence,
-    //   "pmid"
-    //),
+    variant_types: DeConstructJSONWithVariantTypes(
+      deprepare_input.variant_types
+    ),
+    variant_descriptions: deprepare_input.variant_descriptions,
+    // variant_consequences: deprepare_input.variant_consequences,
+    //molecular_mechanism: deprepare_input.molecular_mechanism, // is it always inferred except if evidence is given
+    //mechanism_synopsis: deprepare_input.mechanism_synopsis,
+    //mechanism_evidence: deprepare_input.mechanism_evidence,
+    //mechanism_evidence: deprepare_input.mechanism_evidence,
     disease: {
       disease_name: deprepare_input.disease.disease_name,
       cross_references: deprepare_input.disease.cross_references,
@@ -332,12 +371,35 @@ export const appendObjectToPublications = (publications, pubDict) => {
 
   // Iterate through the new publications
   new_publications.forEach((pub) => {
-    const { pmid, authors, source, title, year } = pub;
+    const {
+      families = null,
+      affectedIndividuals = null,
+      consanguineous = "unknown",
+      ancestries = "",
+      comment = "",
+      source,
+      year,
+      title,
+      authors,
+      pmid,
+    } = pub;
     if (pubDict[pmid]) {
       console.log(`Publication with pmid ${pmid} already exists`);
     } else {
       // Append the new publication to the pubDict
-      pubDict[pmid] = { pmid, authors, source, title, year };
+      pubDict[pmid] = {
+        families,
+        affectedIndividuals,
+        consanguineous,
+        ancestries,
+        comment,
+        source,
+        year,
+        title,
+        authors,
+        year,
+        pmid,
+      };
     }
   });
 

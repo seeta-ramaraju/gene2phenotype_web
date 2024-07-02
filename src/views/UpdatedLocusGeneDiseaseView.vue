@@ -82,6 +82,7 @@ export default {
           const session_name = responseJson.session_name;
           this.session = session_name;
           this.oldJSON = prepareInputForUpdating(responseData);
+          console.log(this.oldJSON);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -195,15 +196,10 @@ export default {
           this.publicationsData = responseJson;
           let publications_array = [];
           if (this.publicationsData && this.publicationsData.results) {
+            //appending the new object (publications) to the publications object and returning an array
             publications_array = appendObjectToPublications(
               this.publicationsData,
               this.oldJSON.publications
-            );
-          }
-          if (publications_array) {
-            this.oldJSON = updateInputWithPublicationsData(
-              this.oldJSON,
-              publications_array
             );
           }
         })
@@ -273,11 +269,6 @@ export default {
         :geneData="geneData"
         :geneFunctionData="geneFunctionData"
       />
-      <Genotype
-        :attributesData="attributesData"
-        v-model:allelic-requirement="oldJSON.allelic_requirement"
-        v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
-      />
       <Publication
         :fetchPublications="fetchPublications"
         :publicationsData="publicationsData"
@@ -286,6 +277,24 @@ export default {
         v-model:publications="oldJSON.publications"
       />
       <ClinicalPhenotype v-model:clinical-phenotype="oldJSON.phenotypes" />
+      <Genotype
+        :attributesData="attributesData"
+        v-model:allelic-requirement="oldJSON.allelic_requirement"
+        v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
+      />
+      <!-- <VariantInformation
+        :publicationsData="publicationsData"
+        :variantTypes="oldJSON.variant_types"
+        @update-variant-types="
+          (updatedVariantTypes) => (oldJSON.variant_types = updatedVariantTypes)
+        "
+        v-model:variant-descriptions="oldJSON.variant_descriptions"
+        :variantConsequences="oldJSON.variant_consequences"
+        @update-variant-consequences="
+          (updatedVariantConsequences) =>
+            (oldJSON.variant_consequences = updatedVariantConsequences)
+        "
+      /> -->
       <Disease
         :inputGeneSymbol="oldJSON.locus"
         :geneDiseaseData="geneDiseaseData"
