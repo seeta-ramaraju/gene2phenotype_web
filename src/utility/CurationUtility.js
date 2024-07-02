@@ -144,6 +144,20 @@ export const DeConstructJSONWithPublications = (arraydata) => {
 export const DeConstructJSONWithVariantTypes = (arraydata) => {
   let variantTypesObj = {};
 
+  for (const item of VariantTypesAttribs) {
+    variantTypesObj[item.primaryType.inputKey] = {};
+    for (const secondaryTypeObj of item.secondaryType) {
+      variantTypesObj[item.primaryType.inputKey][secondaryTypeObj.inputKey] = {
+        nmd_escape: false,
+        de_novo: false,
+        inherited: false,
+        unknown_inheritance: false,
+        supporting_papers: [],
+        comment: "",
+      };
+    }
+  }
+
   arraydata.forEach((varianttypes) => {
     const {
       comment,
@@ -157,31 +171,39 @@ export const DeConstructJSONWithVariantTypes = (arraydata) => {
     } = varianttypes;
 
     // Ensure the primary_type key exists
-    if (!variantTypesObj[primary_type]) {
-      variantTypesObj[primary_type] = {};
+    if (variantTypesObj[primary_type][secondary_type]) {
+      variantTypesObj[primary_type][secondary_type] = {
+        comment,
+        de_novo,
+        inherited,
+        nmd_escape,
+        supporting_papers,
+        unknown_inheritance,
+      };
     }
-
-    variantTypesObj[primary_type][secondary_type] = {
-      comment,
-      de_novo,
-      inherited,
-      nmd_escape,
-      supporting_papers,
-      unknown_inheritance,
-    };
   });
+
   return variantTypesObj;
 };
 
-export const DeConstructJSONwithVariantDesc = (arraydata) => {
-  let variantDescription = {};
+// export const DeConstructJSONwithVariantDesc = (arraydata) => {
+//   let variantDescription = {};
 
-  arraydata.forEach((variantDes) => {
-    const { description, pmid } = variantDes;
-    variantDescription[pmid] = description;
+//   arraydata.forEach((variantDes) => {
+//     const { description, pmid } = variantDes;
+//     variantDescription[pmid] = description;
+//   });
+
+//   return variantDescription;
+// };
+
+export const DeConstructJSONWithVariantCon = (arraydata) => {
+  let variantConObj = {};
+
+  VariantConsequencesAttribs.forEach((item) => {
+    variantConObj[item.inputKey] = "";
   });
-
-  return variantDescription;
+  return variantConObj;
 };
 
 export const prepareInputForDataSubmission = (input) => {
@@ -344,7 +366,9 @@ export const prepareInputForUpdating = (input) => {
       deprepare_input.variant_types
     ),
     variant_descriptions: deprepare_input.variant_descriptions,
-    // variant_consequences: deprepare_input.variant_consequences,
+    variant_consequences: DeConstructJSONWithVariantCon(
+      deprepare_input.variant_consequences
+    ),
     //molecular_mechanism: deprepare_input.molecular_mechanism, // is it always inferred except if evidence is given
     //mechanism_synopsis: deprepare_input.mechanism_synopsis,
     //mechanism_evidence: deprepare_input.mechanism_evidence,

@@ -288,7 +288,7 @@ export default {
         v-model:allelic-requirement="oldJSON.allelic_requirement"
         v-model:cross-cutting-modifiers="oldJSON.cross_cutting_modifier"
       />
-      <!-- <VariantInformation
+      <VariantInformation
         :publicationsData="publicationsData"
         :variantTypes="oldJSON.variant_types"
         @update-variant-types="
@@ -300,7 +300,7 @@ export default {
           (updatedVariantConsequences) =>
             (oldJSON.variant_consequences = updatedVariantConsequences)
         "
-      /> -->
+      />
       <Disease
         :inputGeneSymbol="oldJSON.locus"
         :geneDiseaseData="geneDiseaseData"
