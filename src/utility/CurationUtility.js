@@ -203,6 +203,14 @@ export const DeConstructJSONWithVariantCon = (arraydata) => {
   VariantConsequencesAttribs.forEach((item) => {
     variantConObj[item.inputKey] = "";
   });
+
+  arraydata.forEach((variantCon) => {
+    const { name, support } = variantCon;
+
+    if (variantConObj[name]) {
+      variantConObj[name] = { support };
+    }
+  });
   return variantConObj;
 };
 
