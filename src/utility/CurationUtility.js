@@ -71,11 +71,11 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 
   publicationsData.results.forEach((item) => {
     updatedPublicationsObj[item.pmid] = {
-      families: null,
-      affectedIndividuals: null,
-      consanguineous: "unknown",
-      ancestries: "",
-      comment: "",
+      families: item.families,
+      affectedIndividuals: item.affectedIndividuals,
+      consanguineous: item.consanguineous,
+      ancestries: item.ancestries,
+      comment: item.comment,
       source: item.source,
       year: item.year,
       title: item.title,
