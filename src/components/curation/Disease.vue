@@ -21,6 +21,16 @@ export default {
   },
   methods: {
     checkboxHandler(diseaseCrossReference, checked) {
+      for (let item of this.geneDiseaseData.results) {
+        console.log(item.disease_name);
+        console.log(
+          this.diseaseCrossReferences.indexOf(
+            (diseaseCrossReference1) =>
+              diseaseCrossReference1.disease_name ==
+              "mpi-congenital disorder of glycosylation"
+          )
+        );
+      }
       let updatedDiseaseCrossReferences = [...this.diseaseCrossReferences];
       if (checked) {
         updatedDiseaseCrossReferences.push(diseaseCrossReference);
@@ -124,7 +134,7 @@ export default {
                         type="checkbox"
                         :id="`disease-name-link-input-${index}`"
                         :checked="
-                          diseaseCrossReferences.indexOf(
+                          diseaseCrossReferences.findIndex(
                             (diseaseCrossReference) =>
                               diseaseCrossReference.disease_name ===
                               item.disease_name
