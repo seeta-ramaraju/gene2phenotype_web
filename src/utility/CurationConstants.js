@@ -189,3 +189,26 @@ export const EvidenceTypesAttribs = [
     ],
   },
 ];
+
+export const MechanismAttribs = [
+  "dominant negative",
+  "gain of function",
+  "loss of function",
+  "undetermined",
+  "undetermined non-loss-of-function",
+];
+
+export const MechanismSynopsisAttribs = [
+  "assembly-mediated dominant negative",
+  "assembly-mediated GOF",
+  "competitive dominant-negative",
+  "destabilising LOF",
+  "interaction-disrupting LOF",
+  "local LOF leading to overall GOF",
+  "LOF due to protein mislocalisation",
+  "loss of activity LOF",
+  "other GOF",
+  "protein aggregation",
+];
+
+export const MechanismSupportAttribs = ["inferred", "evidence"];
