@@ -108,51 +108,6 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
-export const DeConstructJSONWithVariantTypes = (arraydata) => {
-  let variantTypesObj = {};
-
-  for (const item of VariantTypesAttribs) {
-    variantTypesObj[item.primaryType.inputKey] = {};
-    for (const secondaryTypeObj of item.secondaryType) {
-      variantTypesObj[item.primaryType.inputKey][secondaryTypeObj.inputKey] = {
-        nmd_escape: false,
-        de_novo: false,
-        inherited: false,
-        unknown_inheritance: false,
-        supporting_papers: [],
-        comment: "",
-      };
-    }
-  }
-
-  arraydata.forEach((varianttypes) => {
-    const {
-      comment,
-      de_novo,
-      inherited,
-      nmd_escape,
-      primary_type,
-      secondary_type,
-      supporting_papers,
-      unknown_inheritance,
-    } = varianttypes;
-
-    // Ensure the primary_type key exists
-    if (variantTypesObj[primary_type][secondary_type]) {
-      variantTypesObj[primary_type][secondary_type] = {
-        comment,
-        de_novo,
-        inherited,
-        nmd_escape,
-        supporting_papers,
-        unknown_inheritance,
-      };
-    }
-  });
-
-  return variantTypesObj;
-};
-
 export const DeConstructJSONWithVariantCon = (arraydata) => {
   let variantConObj = {};
 
@@ -387,6 +342,48 @@ export const prepareInputForUpdating = (input) => {
     }
   });
 
+  let variantTypesObj = {};
+  let variantTypes = deprepare_input.variant_types;
+  let pub_data = Object.keys(publicationsObj);
+  for (const item of VariantTypesAttribs) {
+    variantTypesObj[item.primaryType.inputKey] = {};
+    for (const secondaryTypeObj of item.secondaryType) {
+      variantTypesObj[item.primaryType.inputKey][secondaryTypeObj.inputKey] = {
+        nmd_escape: false,
+        de_novo: false,
+        inherited: false,
+        unknown_inheritance: false,
+        supporting_papers: pub_data,
+        comment: "",
+      };
+    }
+  }
+
+  variantTypes.forEach((varianttypes) => {
+    const {
+      comment,
+      de_novo,
+      inherited,
+      nmd_escape,
+      primary_type,
+      secondary_type,
+      supporting_papers,
+      unknown_inheritance,
+    } = varianttypes;
+
+    // Ensure the primary_type key exists
+    if (variantTypesObj[primary_type][secondary_type]) {
+      variantTypesObj[primary_type][secondary_type] = {
+        comment,
+        de_novo,
+        inherited,
+        nmd_escape,
+        supporting_papers,
+        unknown_inheritance,
+      };
+    }
+  });
+
   return {
     locus: deprepare_input.locus,
     publications: publicationsObj,
@@ -394,9 +391,7 @@ export const prepareInputForUpdating = (input) => {
     allelic_requirement: deprepare_input.allelic_requirement,
     cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
     session_name: deprepare_input.session_name,
-    variant_types: DeConstructJSONWithVariantTypes(
-      deprepare_input.variant_types
-    ),
+    variant_types: variantTypesObj,
     variant_descriptions: variantDescObj,
     variant_consequences: DeConstructJSONWithVariantCon(
       deprepare_input.variant_consequences
@@ -415,53 +410,4 @@ export const prepareInputForUpdating = (input) => {
       level: deprepare_input.confidence.level,
     },
   };
-};
-
-// this function is to turn array of objects to objects so it can be displayed on the website for updating
-export const appendObjectToPublications = (publications, pubDict) => {
-  // Initialize a new array to hold the combined objects
-  let combinedArray = [];
-
-  // Check if publications.results is an array
-  let new_publications = publications.results;
-
-  // Iterate through the new publications
-  new_publications.forEach((pub) => {
-    const {
-      families = null,
-      affectedIndividuals = null,
-      consanguineous = "unknown",
-      ancestries = "",
-      comment = "",
-      source,
-      year,
-      title,
-      authors,
-      pmid,
-    } = pub;
-    if (pubDict[pmid]) {
-      console.log(`Publication with pmid ${pmid} already exists`);
-    } else {
-      // Append the new publication to the pubDict
-      pubDict[pmid] = {
-        families,
-        affectedIndividuals,
-        consanguineous,
-        ancestries,
-        comment,
-        source,
-        year,
-        title,
-        authors,
-        year,
-        pmid,
-      };
-    }
-  });
-
-  // Convert pubDict to an array of its values
-  combinedArray = Object.values(pubDict);
-
-  // Return the combined array within an object that contains the results key
-  return { results: combinedArray, count: combinedArray.length };
 };

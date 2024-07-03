@@ -86,7 +86,9 @@ export default {
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
-          console.log(this.oldJSON);
+          this.fetchPublications(
+            Object.keys(this.oldJSON.publications).join(";")
+          );
           this.issDataLoading = false;
         })
         .catch((error) => {
@@ -197,16 +199,9 @@ export default {
           let publications_array = [];
           this.publicationsData = responseJson;
           if (this.publicationsData && this.publicationsData.results) {
-            //appending the new object (publications) to the publications object and returning an array
-            publications_array = appendObjectToPublications(
-              this.publicationsData,
-              this.oldJSON.publications
-            );
-          }
-          if (publications_array) {
             this.oldJSON = updateInputWithPublicationsData(
               this.oldJSON,
-              publications_array
+              this.publicationsData
             );
           }
         })
