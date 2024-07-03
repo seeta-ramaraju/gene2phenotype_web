@@ -33,6 +33,7 @@ export default {
       input: prepareInputForDataSubmission,
       issDataLoading: false,
       oldJSON: null,
+      session: null,
       errorMsg: null,
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
@@ -192,8 +193,8 @@ export default {
         })
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
-          this.publicationsData = responseJson;
           let publications_array = [];
+          this.publicationsData = responseJson;
           if (this.publicationsData && this.publicationsData.results) {
             //appending the new object (publications) to the publications object and returning an array
             publications_array = appendObjectToPublications(
@@ -207,7 +208,6 @@ export default {
               publications_array
             );
           }
-          console.log(this.oldJSON);
         })
         .catch((error) => {
           this.isPublicationsDataLoading = false;
