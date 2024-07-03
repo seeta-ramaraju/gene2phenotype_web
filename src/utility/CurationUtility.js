@@ -1,7 +1,11 @@
+import { flatMap } from "lodash";
 import {
   VariantTypesAttribs,
   VariantConsequencesAttribs,
   EvidenceTypesAttribs,
+  MechanismAttribs,
+  MechanismSynopsisAttribs,
+  MechanismSupportAttribs,
 } from "./CurationConstants";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -384,6 +388,38 @@ export const prepareInputForUpdating = (input) => {
     }
   });
 
+  let MechanismNameObj = {};
+  let mechanism_name = deprepare_input.molecular_mechanism;
+
+  MechanismAttribs.forEach((item) => {
+    MechanismNameObj[item] = MechanismSupportAttribs;
+  });
+  if (mechanism_name.name) {
+    MechanismNameObj[mechanism_name.name] = mechanism.support;
+  }
+
+  let MechanismSynopsisObj = {};
+  let mechanismSynopsis = deprepare_input.mechanism_synopsis;
+
+  MechanismSynopsisAttribs.forEach((item) => {
+    MechanismSynopsisObj[item] = MechanismSupportAttribs;
+  });
+
+  if (mechanismSynopsis.name) {
+    MechanismSynopsisObj[mechanismSynopsis.name] = mechanismSynopsis.support;
+  }
+
+  let MechanismEvidenceObj = {};
+  let MechanismEvidence = deprepare_input.mechanism_evidence;
+
+  for (const item of EvidenceTypesAttribs) {
+    MechanismEvidenceObj[item.primaryType] = item.secondaryType;
+  }
+  if (MechanismEvidence.primaryType) {
+    MechanismEvidenceObj[MechanismEvidence.primaryType] =
+      MechanismEvidence.secondaryType;
+  }
+
   return {
     locus: deprepare_input.locus,
     publications: publicationsObj,
@@ -396,10 +432,9 @@ export const prepareInputForUpdating = (input) => {
     variant_consequences: DeConstructJSONWithVariantCon(
       deprepare_input.variant_consequences
     ),
-    //molecular_mechanism: deprepare_input.molecular_mechanism, // is it always inferred except if evidence is given
-    //mechanism_synopsis: deprepare_input.mechanism_synopsis,
-    //mechanism_evidence: deprepare_input.mechanism_evidence,
-    //mechanism_evidence: deprepare_input.mechanism_evidence,
+    molecular_mechanism: MechanismNameObj, // is it always inferred except if evidence is given
+    mechanism_synopsis: MechanismSynopsisObj,
+    mechanism_evidence: MechanismEvidenceObj,
     disease: {
       disease_name: deprepare_input.disease.disease_name,
       cross_references: deprepare_input.disease.cross_references,
