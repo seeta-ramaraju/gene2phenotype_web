@@ -86,6 +86,7 @@ export default {
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
+          console.log(this.oldJSON);
           this.issDataLoading = false;
         })
         .catch((error) => {

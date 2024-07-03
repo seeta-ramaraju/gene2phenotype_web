@@ -108,39 +108,6 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
-export const DeConstructJSONWithPublications = (arraydata) => {
-  let publicationsObj = {};
-
-  arraydata.forEach((publication) => {
-    const {
-      families,
-      affectedIndividuals,
-      consanguineous,
-      ancestries,
-      comment,
-      source,
-      year,
-      title,
-      authors,
-      pmid,
-    } = publication;
-    publicationsObj[pmid] = {
-      families,
-      affectedIndividuals,
-      consanguineous,
-      ancestries,
-      comment,
-      source,
-      year,
-      title,
-      authors,
-      pmid,
-    };
-  });
-
-  return publicationsObj;
-};
-
 export const DeConstructJSONWithVariantTypes = (arraydata) => {
   let variantTypesObj = {};
 
@@ -185,17 +152,6 @@ export const DeConstructJSONWithVariantTypes = (arraydata) => {
 
   return variantTypesObj;
 };
-
-// export const DeConstructJSONwithVariantDesc = (arraydata) => {
-//   let variantDescription = {};
-
-//   arraydata.forEach((variantDes) => {
-//     const { description, pmid } = variantDes;
-//     variantDescription[pmid] = description;
-//   });
-
-//   return variantDescription;
-// };
 
 export const DeConstructJSONWithVariantCon = (arraydata) => {
   let variantConObj = {};
@@ -363,17 +319,85 @@ export const prepareInputForDataSubmission = (input) => {
 export const prepareInputForUpdating = (input) => {
   let deprepare_input = cloneDeep(input);
 
+  let publicationsObj = {};
+  let publications = deprepare_input.publications;
+
+  publications.forEach((publication) => {
+    const {
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      source,
+      year,
+      title,
+      authors,
+      pmid,
+    } = publication;
+    publicationsObj[pmid] = {
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      source,
+      year,
+      title,
+      authors,
+      pmid,
+    };
+  });
+
+  let phenotypesObj = {};
+  let phenotypes = deprepare_input.phenotypes;
+
+  for (const key of Object.keys(publicationsObj)) {
+    phenotypesObj[key] = {
+      summary: "",
+    };
+  }
+
+  phenotypes.forEach((phenotype) => {
+    const { pmid, summary } = phenotype;
+
+    if (phenotypesObj[pmid]) {
+      phenotypesObj[pmid] = {
+        summary,
+      };
+    }
+  });
+
+  let variantDescObj = {};
+  let variantDesc = deprepare_input.variant_descriptions;
+
+  for (const key of Object.keys(publicationsObj)) {
+    variantDescObj[key] = {
+      description: "",
+    };
+  }
+
+  variantDesc.forEach((variant) => {
+    const { description, pmid } = variant;
+
+    if (variantDescObj[pmid]) {
+      variantDescObj[pmid] = {
+        description,
+      };
+    }
+  });
+
   return {
     locus: deprepare_input.locus,
-    publications: DeConstructJSONWithPublications(deprepare_input.publications),
-    phenotypes: deprepare_input.phenotypes,
+    publications: publicationsObj,
+    phenotypes: phenotypesObj,
     allelic_requirement: deprepare_input.allelic_requirement,
     cross_cutting_modifier: deprepare_input.cross_cutting_modifier,
     session_name: deprepare_input.session_name,
     variant_types: DeConstructJSONWithVariantTypes(
       deprepare_input.variant_types
     ),
-    variant_descriptions: deprepare_input.variant_descriptions,
+    variant_descriptions: variantDescObj,
     variant_consequences: DeConstructJSONWithVariantCon(
       deprepare_input.variant_consequences
     ),
