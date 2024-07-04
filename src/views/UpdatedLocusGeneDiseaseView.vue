@@ -88,7 +88,6 @@ export default {
           this.fetchPublications(
             Object.keys(this.oldJSON.publications).join(";")
           );
-          console.log(this.oldJSON);
           this.issDataLoading = false;
         })
         .catch((error) => {
@@ -216,7 +215,6 @@ export default {
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
       const preparedInput = prepareInputForDataSubmission(this.oldJSON);
-      console.log(preparedInput);
       const stableID = this.$route.params.stableID;
       const requestBody = {
         json_data: preparedInput,
