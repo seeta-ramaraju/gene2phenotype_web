@@ -143,7 +143,7 @@ export const prepareInputForDataSubmission = (input) => {
     for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
         if (keysToTrimValues.includes(key)) {
-          publicationObj[key] = value.trim();
+          publicationObj[key] = value;
         } else {
           publicationObj[key] = value;
         }
@@ -391,36 +391,71 @@ export const prepareInputForUpdating = (input) => {
     }
   });
 
-  let MechanismNameObj = {};
+  let MechanismNameObj = {
+    name: "",
+    support: "",
+  };
   let mechanism_name = deprepare_input.molecular_mechanism;
 
-  MechanismAttribs.forEach((item) => {
-    MechanismNameObj[item] = MechanismSupportAttribs;
-  });
   if (mechanism_name.name) {
-    MechanismNameObj[mechanism_name.name] = mechanism_name.support;
+    (MechanismNameObj.name = mechanism_name.name),
+      (MechanismNameObj.support = mechanism_name.support);
   }
 
-  let MechanismSynopsisObj = {};
+  let MechanismSynopsisObj = {
+    name: "",
+    support: "",
+  };
   let mechanismSynopsis = deprepare_input.mechanism_synopsis;
 
-  MechanismSynopsisAttribs.forEach((item) => {
-    MechanismSynopsisObj[item] = MechanismSupportAttribs;
-  });
-
   if (mechanismSynopsis.name) {
-    MechanismSynopsisObj[mechanismSynopsis.name] = mechanismSynopsis.support;
+    (MechanismSynopsisObj.name = mechanismSynopsis.name),
+      (MechanismSynopsisObj.support = mechanismSynopsis.support);
   }
 
   let MechanismEvidenceObj = {};
   let MechanismEvidence = deprepare_input.mechanism_evidence;
-
-  for (const item of EvidenceTypesAttribs) {
-    MechanismEvidenceObj[item.primaryType] = item.secondaryType;
+  if (MechanismEvidence) {
   }
-  if (MechanismEvidence.primaryType) {
-    MechanismEvidenceObj[MechanismEvidence.primaryType] =
-      MechanismEvidence.secondaryType;
+
+  for (const key of Object.keys(publicationsObj)) {
+    MechanismEvidenceObj[key] = {
+      description: "",
+      evidence_types: {},
+    };
+  }
+
+  // Populate the evidence_types for each key
+  for (const key of Object.keys(MechanismEvidenceObj)) {
+    for (const item of EvidenceTypesAttribs) {
+      if (!MechanismEvidenceObj[key].evidence_types[item.primaryType]) {
+        MechanismEvidenceObj[key].evidence_types[item.primaryType] = [];
+      }
+      MechanismEvidenceObj[key].evidence_types[item.primaryType].push(
+        item.secondaryType
+      );
+    }
+  }
+
+  if (MechanismEvidence) {
+    MechanismEvidence.forEach((evidence) => {
+      const pmid = evidence.pmid;
+
+      if (pmid) {
+        MechanismEvidenceObj[pmid] = {
+          description: evidence.description,
+          evidence_types: {},
+        };
+
+        if (!MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType]) {
+          MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType] = [];
+        }
+
+        MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType].push(
+          evidence.secondaryType
+        );
+      }
+    });
   }
 
   //cleaning the disease name
