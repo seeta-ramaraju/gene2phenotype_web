@@ -14,7 +14,6 @@ import {
   prepareInputForDataSubmission,
   getInitialInputForNewCuration,
   prepareInputForUpdating,
-  appendObjectToPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
@@ -89,6 +88,7 @@ export default {
           this.fetchPublications(
             Object.keys(this.oldJSON.publications).join(";")
           );
+          console.log(this.oldJSON);
           this.issDataLoading = false;
         })
         .catch((error) => {
@@ -297,6 +297,19 @@ export default {
             (oldJSON.variant_consequences = updatedVariantConsequences)
         "
       />
+      <Mechanism
+        v-model:molecular-mechanism="oldJSON.molecular_mechanism.name"
+        v-model:molecular-mechanism-support="
+          oldJSON.molecular_mechanism.support
+        "
+        v-model:mechanism-synopsis="oldJSON.mechanism_synopsis.name"
+        v-model:mechanism-synopsis-support="oldJSON.mechanism_synopsis.support"
+        :mechanismEvidence="oldJSON.mechanism_evidence"
+        @update-mechanism-evidence="
+          (updatedMechanismEvidence) =>
+            (oldJSON.mechanism_evidence = updatedMechanismEvidence)
+        "
+      />
       <Disease
         :inputGeneSymbol="oldJSON.locus"
         :geneDiseaseData="geneDiseaseData"
@@ -313,7 +326,7 @@ export default {
       />
       <Confidence
         :attributesData="attributesData"
-        :inputPublications="oldJSON.cross_cutting_modifier"
+        :inputPublications="oldJSON.publications"
         v-model:justification="oldJSON.confidence.justification"
         v-model:level="oldJSON.confidence.level"
       />
