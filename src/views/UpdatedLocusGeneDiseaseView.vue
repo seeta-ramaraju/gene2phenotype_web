@@ -222,7 +222,7 @@ export default {
         json_data: preparedInput,
       };
       let responseStatus = null;
-      fetch(`/gene2phenotype/api/curation/${stableID}/update`, {
+      fetch(`/gene2phenotype/api/curation/${stableID}/update/`, {
         method: "POST",
         body: JSON.stringify(requestBody),
         headers: {
