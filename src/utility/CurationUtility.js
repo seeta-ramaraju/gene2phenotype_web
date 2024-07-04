@@ -276,8 +276,10 @@ export const prepareInputForDataSubmission = (input) => {
 };
 
 export const prepareInputForUpdating = (input) => {
+  //preparing the input to be used to clean
   let deprepare_input = cloneDeep(input);
 
+  //publicationsObj needs to be empty because the publication array needs to be deconstructed to become Object of keys
   let publicationsObj = {};
   let publications = deprepare_input.publications;
 
@@ -308,6 +310,7 @@ export const prepareInputForUpdating = (input) => {
     };
   });
 
+  //deconstructing the phenotype array to be an Object of keys using the publicationObj keys
   let phenotypesObj = {};
   let phenotypes = deprepare_input.phenotypes;
 
@@ -395,7 +398,7 @@ export const prepareInputForUpdating = (input) => {
     MechanismNameObj[item] = MechanismSupportAttribs;
   });
   if (mechanism_name.name) {
-    MechanismNameObj[mechanism_name.name] = mechanism.support;
+    MechanismNameObj[mechanism_name.name] = mechanism_name.support;
   }
 
   let MechanismSynopsisObj = {};
@@ -420,6 +423,11 @@ export const prepareInputForUpdating = (input) => {
       MechanismEvidence.secondaryType;
   }
 
+  //cleaning the disease name
+  let disease_name = deprepare_input.disease.disease_name;
+  let string_to_remove = deprepare_input.locus + "-related";
+  disease_name = disease_name.replace(string_to_remove, "");
+
   return {
     locus: deprepare_input.locus,
     publications: publicationsObj,
@@ -436,7 +444,7 @@ export const prepareInputForUpdating = (input) => {
     mechanism_synopsis: MechanismSynopsisObj,
     mechanism_evidence: MechanismEvidenceObj,
     disease: {
-      disease_name: deprepare_input.disease.disease_name,
+      disease_name: disease_name,
       cross_references: deprepare_input.disease.cross_references,
     },
     panels: deprepare_input.panels,
