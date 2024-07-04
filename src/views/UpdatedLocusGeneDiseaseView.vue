@@ -223,7 +223,7 @@ export default {
       };
       let responseStatus = null;
       fetch(`/gene2phenotype/api/curation/${stableID}/update/`, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(requestBody),
         headers: {
           Accept: "application/json",
