@@ -71,11 +71,11 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 
   publicationsData.results.forEach((item) => {
     updatedPublicationsObj[item.pmid] = {
-      families: item.families,
-      affectedIndividuals: item.affectedIndividuals,
-      consanguineous: item.consanguineous,
-      ancestries: item.ancestries,
-      comment: item.comment,
+      families: null,
+      affectedIndividuals: null,
+      consanguineous: "unknown",
+      ancestries: "",
+      comment: "",
       source: item.source,
       year: item.year,
       title: item.title,
@@ -139,7 +139,7 @@ export const prepareInputForDataSubmission = (input) => {
     for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
         if (keysToTrimValues.includes(key)) {
-          publicationObj[key] = value.trim;
+          publicationObj[key] = value.trim();
         } else {
           publicationObj[key] = value;
         }
@@ -423,18 +423,28 @@ export const prepareInputForUpdating = (previousInput) => {
       const pmid = evidence.pmid;
 
       if (pmid) {
-        MechanismEvidenceObj[pmid] = {
-          description: evidence.description,
-          evidence_types: {},
-        };
-
-        if (!MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType]) {
-          MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType] = [];
+        // Initialize the entry for the given pmid if it doesn't exist
+        if (!MechanismEvidenceObj[pmid]) {
+          MechanismEvidenceObj[pmid] = {
+            description: evidence.description,
+            evidence_types: {},
+          };
         }
 
-        MechanismEvidenceObj[pmid].evidence_types[evidence.primaryType].push(
-          evidence.secondaryType
-        );
+        // Iterate over the evidence_types array
+        evidence.evidence_types.forEach((evidenceType) => {
+          const primaryType = evidenceType.primary_type;
+          const secondaryTypes = evidenceType.secondary_type;
+
+          if (!MechanismEvidenceObj[pmid].evidence_types[primaryType]) {
+            MechanismEvidenceObj[pmid].evidence_types[primaryType] = [];
+          }
+
+          // Add the secondary types to the array
+          MechanismEvidenceObj[pmid].evidence_types[primaryType].push(
+            ...secondaryTypes
+          );
+        });
       }
     });
   }
