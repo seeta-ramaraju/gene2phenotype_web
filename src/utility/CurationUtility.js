@@ -1,11 +1,7 @@
-import { flatMap } from "lodash";
 import {
   VariantTypesAttribs,
   VariantConsequencesAttribs,
   EvidenceTypesAttribs,
-  MechanismAttribs,
-  MechanismSynopsisAttribs,
-  MechanismSupportAttribs,
 } from "./CurationConstants";
 import cloneDeep from "lodash/cloneDeep";
 
@@ -112,21 +108,21 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
-export const DeConstructJSONWithVariantCon = (arraydata) => {
-  let variantConObj = {};
+const DeConstructJSONWithVariantCon = (arraydata) => {
+  let variantConsequenceObj = {};
 
   VariantConsequencesAttribs.forEach((item) => {
-    variantConObj[item.inputKey] = "";
+    variantConsequenceObj[item.inputKey] = "";
   });
 
   arraydata.forEach((variantCon) => {
     const { name, support } = variantCon;
 
-    if (variantConObj[name]) {
-      variantConObj[name] = { support };
+    if (variantConsequenceObj[name]) {
+      variantConsequenceObj[name] = support;
     }
   });
-  return variantConObj;
+  return variantConsequenceObj;
 };
 
 export const prepareInputForDataSubmission = (input) => {
@@ -143,7 +139,7 @@ export const prepareInputForDataSubmission = (input) => {
     for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
         if (keysToTrimValues.includes(key)) {
-          publicationObj[key] = value;
+          publicationObj[key] = value.trim;
         } else {
           publicationObj[key] = value;
         }
@@ -275,9 +271,9 @@ export const prepareInputForDataSubmission = (input) => {
   return preparedInput;
 };
 
-export const prepareInputForUpdating = (input) => {
+export const prepareInputForUpdating = (previousInput) => {
   //preparing the input to be used to clean
-  let deprepare_input = cloneDeep(input);
+  let deprepare_input = cloneDeep(previousInput);
 
   //publicationsObj needs to be empty because the publication array needs to be deconstructed to become Object of keys
   let publicationsObj = {};
@@ -366,7 +362,7 @@ export const prepareInputForUpdating = (input) => {
     }
   }
 
-  variantTypes.forEach((varianttypes) => {
+  variantTypes.forEach((varianttype) => {
     const {
       comment,
       de_novo,
@@ -376,7 +372,7 @@ export const prepareInputForUpdating = (input) => {
       secondary_type,
       supporting_papers,
       unknown_inheritance,
-    } = varianttypes;
+    } = varianttype;
 
     // Ensure the primary_type key exists
     if (variantTypesObj[primary_type][secondary_type]) {
@@ -392,31 +388,17 @@ export const prepareInputForUpdating = (input) => {
   });
 
   let MechanismNameObj = {
-    name: "",
-    support: "",
+    name: deprepare_input.molecular_mechanism.name,
+    support: deprepare_input.molecular_mechanism.support,
   };
-  let mechanism_name = deprepare_input.molecular_mechanism;
-
-  if (mechanism_name.name) {
-    (MechanismNameObj.name = mechanism_name.name),
-      (MechanismNameObj.support = mechanism_name.support);
-  }
 
   let MechanismSynopsisObj = {
-    name: "",
-    support: "",
+    name: deprepare_input.mechanism_synopsis.name,
+    support: deprepare_input.mechanism_synopsis.support,
   };
-  let mechanismSynopsis = deprepare_input.mechanism_synopsis;
-
-  if (mechanismSynopsis.name) {
-    (MechanismSynopsisObj.name = mechanismSynopsis.name),
-      (MechanismSynopsisObj.support = mechanismSynopsis.support);
-  }
 
   let MechanismEvidenceObj = {};
   let MechanismEvidence = deprepare_input.mechanism_evidence;
-  if (MechanismEvidence) {
-  }
 
   for (const key of Object.keys(publicationsObj)) {
     MechanismEvidenceObj[key] = {
@@ -459,9 +441,11 @@ export const prepareInputForUpdating = (input) => {
   }
 
   //cleaning the disease name
-  let disease_name = deprepare_input.disease.disease_name;
-  let string_to_remove = deprepare_input.locus + "-related";
-  disease_name = disease_name.replace(string_to_remove, "");
+  let prefix_to_remove = deprepare_input.locus + "-related";
+  let disease_name = deprepare_input.disease.disease_name.replace(
+    prefix_to_remove,
+    ""
+  );
 
   return {
     locus: deprepare_input.locus,
@@ -475,7 +459,7 @@ export const prepareInputForUpdating = (input) => {
     variant_consequences: DeConstructJSONWithVariantCon(
       deprepare_input.variant_consequences
     ),
-    molecular_mechanism: MechanismNameObj, // is it always inferred except if evidence is given
+    molecular_mechanism: MechanismNameObj,
     mechanism_synopsis: MechanismSynopsisObj,
     mechanism_evidence: MechanismEvidenceObj,
     disease: {
@@ -511,19 +495,23 @@ export const appendObjectToPublications = (publications, pubDict) => {
 
       // Update the publication fields except for year, title, and authors
       pub.families =
-        pubData.families !== undefined ? pubData.families : pub.families;
+        pubData.families !== undefined
+          ? String(pubData.families)
+          : pub.families;
       pub.affectedIndividuals =
         pubData.affectedIndividuals !== undefined
-          ? pubData.affectedIndividuals
+          ? String(pubData.affectedIndividuals)
           : pub.affectedIndividuals;
       pub.consanguineous =
         pubData.consanguineous !== undefined
-          ? pubData.consanguineous
+          ? String(pubData.consanguineous)
           : pub.consanguineous;
       pub.ancestries =
-        pubData.ancestries !== undefined ? pubData.ancestries : pub.ancestries;
+        pubData.ancestries !== undefined
+          ? String(pubData.ancestries)
+          : pub.ancestries;
       pub.comment =
-        pubData.comment !== undefined ? pubData.comment : pub.comment;
+        pubData.comment !== undefined ? String(pubData.comment) : pub.comment;
       pub.source = pubData.source !== undefined ? pubData.source : pub.source;
       // pmid is the same, so no need to update it
     }
