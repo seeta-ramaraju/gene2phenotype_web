@@ -12,7 +12,6 @@ import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
 import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
-  getInitialInputForNewCuration,
   prepareInputForUpdating,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
@@ -22,7 +21,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.oldJsoninformation();
+        this.fetchPreviousCurationInput();
       },
       { immediate: true }
     );
@@ -30,7 +29,7 @@ export default {
   data() {
     return {
       input: prepareInputForDataSubmission,
-      issDataLoading: false,
+      isPreviousInputDataLoading: false,
       oldJSON: null,
       session: null,
       errorMsg: null,
@@ -65,8 +64,8 @@ export default {
     SaveSuccessAlert,
   },
   methods: {
-    oldJsoninformation() {
-      this.issDataLoading = true;
+    fetchPreviousCurationInput() {
+      this.isPreviousInputDataLoading = true;
       this.oldJSON = null;
       const stableID = this.$route.params.stableID;
       fetch(`/gene2phenotype/api/curation/${stableID}`)
@@ -88,10 +87,10 @@ export default {
           this.fetchPublications(
             Object.keys(this.oldJSON.publications).join(";")
           );
-          this.issDataLoading = false;
+          this.isPreviousInputDataLoading = false;
         })
         .catch((error) => {
-          this.issDataLoading = false;
+          this.isPreviousInputDataLoading = false;
           this.errorMsg = error.message;
           console.log(error);
         });
@@ -195,7 +194,6 @@ export default {
         })
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
-          let publications_array = [];
           this.publicationsData = responseJson;
           if (this.publicationsData && this.publicationsData.results) {
             this.oldJSON = updateInputWithPublicationsData(
