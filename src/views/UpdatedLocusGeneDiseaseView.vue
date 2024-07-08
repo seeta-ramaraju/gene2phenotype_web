@@ -82,7 +82,6 @@ export default {
           const session_name = responseJson.session_name;
           this.session = session_name;
           this.oldJSON = prepareInputForUpdating(responseData);
-          console.log(this.oldJSON);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -201,7 +200,6 @@ export default {
             this.publicationsData,
             this.oldJSON.publications
           );
-          console.log(this.publicationsData);
           if (this.publicationsData && this.publicationsData.results) {
             this.oldJSON = updateInputWithPublicationsData(
               this.oldJSON,
