@@ -347,7 +347,6 @@ export const prepareInputForUpdating = (previousInput) => {
 
   let variantTypesObj = {};
   let variantTypes = deprepare_input.variant_types;
-  let pub_data = Object.keys(publicationsObj);
   for (const item of VariantTypesAttribs) {
     variantTypesObj[item.primaryType.inputKey] = {};
     for (const secondaryTypeObj of item.secondaryType) {
@@ -356,7 +355,7 @@ export const prepareInputForUpdating = (previousInput) => {
         de_novo: false,
         inherited: false,
         unknown_inheritance: false,
-        supporting_papers: pub_data,
+        supporting_papers: [],
         comment: "",
       };
     }
