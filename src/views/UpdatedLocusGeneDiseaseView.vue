@@ -13,6 +13,7 @@ import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
   prepareInputForUpdating,
+  appendObjectToPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
@@ -81,6 +82,7 @@ export default {
           const session_name = responseJson.session_name;
           this.session = session_name;
           this.oldJSON = prepareInputForUpdating(responseData);
+          console.log(this.oldJSON);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -195,6 +197,11 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           this.publicationsData = responseJson;
+          this.publicationsData = appendObjectToPublications(
+            this.publicationsData,
+            this.oldJSON.publications
+          );
+          console.log(this.publicationsData);
           if (this.publicationsData && this.publicationsData.results) {
             this.oldJSON = updateInputWithPublicationsData(
               this.oldJSON,

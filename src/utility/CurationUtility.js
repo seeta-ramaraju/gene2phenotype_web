@@ -489,3 +489,45 @@ export const prepareInputForUpdating = (input) => {
     },
   };
 };
+
+// this function is to turn array of objects to objects so it can be displayed on the website for updating
+export const appendObjectToPublications = (publications, pubDict) => {
+  //publications is the new publication
+  //pubDict is the old JSON
+  // updating the information from pubDict to the new publications
+  // Initialize a new array to hold the combined objects
+  let combinedArray = [];
+
+  // Check if publications.results is an array
+  let new_publications = publications.results;
+
+  // Iterate through the new publications
+  new_publications.forEach((pub) => {
+    const { pmid } = pub;
+
+    // If pubDict contains the pmid, update the publication data
+    if (pubDict[pmid]) {
+      const pubData = pubDict[pmid];
+
+      // Update the publication fields except for year, title, and authors
+      pub.families =
+        pubData.families !== undefined ? pubData.families : pub.families;
+      pub.affectedIndividuals =
+        pubData.affectedIndividuals !== undefined
+          ? pubData.affectedIndividuals
+          : pub.affectedIndividuals;
+      pub.consanguineous =
+        pubData.consanguineous !== undefined
+          ? pubData.consanguineous
+          : pub.consanguineous;
+      pub.ancestries =
+        pubData.ancestries !== undefined ? pubData.ancestries : pub.ancestries;
+      pub.comment =
+        pubData.comment !== undefined ? pubData.comment : pub.comment;
+      pub.source = pubData.source !== undefined ? pubData.source : pub.source;
+      // pmid is the same, so no need to update it
+    }
+  });
+
+  return publications;
+};
