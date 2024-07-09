@@ -108,6 +108,21 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
+const DeConstructJSONWithVariantCon = (arraydata) => {
+  let variantConsequenceObj = {};
+
+  VariantConsequencesAttribs.forEach((item) => {
+    variantConsequenceObj[item.inputKey] = "";
+  });
+
+  arraydata.forEach((variantCon) => {
+    const { name, support } = variantCon;
+
+    variantConsequenceObj[name] = support;
+  });
+  return variantConsequenceObj;
+};
+
 export const prepareInputForDataSubmission = (input) => {
   let preparedInput = cloneDeep(input);
 
@@ -389,11 +404,6 @@ export const prepareInputForUpdating = (previousInput) => {
     };
   }
 
-  let VariantConsequenceObj = {
-    name: deprepare_input.variant_consequences.name,
-    support: deprepare_input.variant_consequences.support,
-  };
-
   // Populate the evidence_types for each key
   for (const key of Object.keys(MechanismEvidenceObj)) {
     for (const item of EvidenceTypesAttribs) {
@@ -453,7 +463,9 @@ export const prepareInputForUpdating = (previousInput) => {
     session_name: deprepare_input.session_name,
     variant_types: variantTypesObj,
     variant_descriptions: variantDescObj,
-    variant_consequences: VariantConsequenceObj,
+    variant_consequences: DeConstructJSONWithVariantCon(
+      deprepare_input.variant_consequences
+    ),
     molecular_mechanism: MechanismNameObj,
     mechanism_synopsis: MechanismSynopsisObj,
     mechanism_evidence: MechanismEvidenceObj,
