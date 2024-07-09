@@ -104,7 +104,7 @@ export default {
               {{ publicationsErrorMsg }}
             </div>
           </div>
-          <div v-if="publicationsData">
+          <div v-if="publicationsData || publications">
             <div>
               <strong><p>Enter Publications Data</p></strong>
             </div>
