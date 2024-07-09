@@ -71,11 +71,11 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 
   publicationsData.results.forEach((item) => {
     updatedPublicationsObj[item.pmid] = {
-      families: item.families || null,
-      affectedIndividuals: item.affectedIndividuals || null,
-      consanguineous: item.consanguineous || "unknown",
-      ancestries: item.ancestries || "",
-      comment: item.commemt || "",
+      families: null,
+      affectedIndividuals: null,
+      consanguineous: "unknown",
+      ancestries: "",
+      comment: "",
       source: item.source,
       year: item.year,
       title: item.title,
@@ -134,7 +134,7 @@ export const prepareInputForDataSubmission = (input) => {
     preparedInput.publications
   )) {
     let publicationObj = { pmid: pmidKey };
-    const keysToRemove = ["authors", "year", "title"];
+    const keysToRemove = [];
     const keysToTrimValues = ["ancestries", "comment"];
     for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
@@ -481,50 +481,4 @@ export const prepareInputForUpdating = (previousInput) => {
       level: deprepare_input.confidence.level,
     },
   };
-};
-
-// this function is to turn array of objects to objects so it can be displayed on the website for updating
-export const appendObjectToPublications = (publications, pubDict) => {
-  //publications is the new publication
-  //pubDict is the old JSON
-  // updating the information from pubDict to the new publications
-  // Initialize a new array to hold the combined objects
-  let combinedArray = [];
-
-  // Check if publications.results is an array
-  let new_publications = publications.results;
-
-  // Iterate through the new publications
-  new_publications.forEach((pub) => {
-    const { pmid } = pub;
-
-    // If pubDict contains the pmid, update the publication data
-    if (pubDict[pmid]) {
-      const pubData = pubDict[pmid];
-
-      // Update the publication fields except for year, title, and authors
-      pub.families =
-        pubData.families !== undefined
-          ? String(pubData.families)
-          : pub.families;
-      pub.affectedIndividuals =
-        pubData.affectedIndividuals !== undefined
-          ? String(pubData.affectedIndividuals)
-          : pub.affectedIndividuals;
-      pub.consanguineous =
-        pubData.consanguineous !== undefined
-          ? String(pubData.consanguineous)
-          : pub.consanguineous;
-      pub.ancestries =
-        pubData.ancestries !== undefined
-          ? String(pubData.ancestries)
-          : pub.ancestries;
-      pub.comment =
-        pubData.comment !== undefined ? String(pubData.comment) : pub.comment;
-      pub.source = pubData.source !== undefined ? pubData.source : pub.source;
-      // pmid is the same, so no need to update it
-    }
-  });
-
-  return publications;
 };
