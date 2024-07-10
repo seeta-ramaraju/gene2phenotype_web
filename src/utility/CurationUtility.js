@@ -418,30 +418,22 @@ export const prepareInputForUpdating = (previousInput) => {
 
   if (MechanismEvidence) {
     MechanismEvidence.forEach((evidence) => {
-      const pmid = evidence.pmid;
+      const { pmid, description, evidence_types } = evidence;
 
-      if (pmid) {
-        // Initialize the entry for the given pmid if it doesn't exist
-        if (!MechanismEvidenceObj[pmid]) {
-          MechanismEvidenceObj[pmid] = {
-            description: evidence.description,
-            evidence_types: {},
-          };
-        }
-
-        // Iterate over the evidence_types array
-        evidence.evidence_types.forEach((evidenceType) => {
-          const primaryType = evidenceType.primary_type;
-          const secondaryTypes = evidenceType.secondary_type;
-
-          if (!MechanismEvidenceObj[pmid].evidence_types[primaryType]) {
-            MechanismEvidenceObj[pmid].evidence_types[primaryType] = [];
+      if (MechanismEvidenceObj[pmid]) {
+        MechanismEvidenceObj[pmid].description = description;
+        //evidence_types is an array so need to loop through it and
+        //check for MechanismEvidenceObj has the property and then assign the secondary type
+        evidence_types.forEach((types) => {
+          const { primary_type, secondary_type } = types;
+          if (
+            MechanismEvidenceObj[pmid].evidence_types.hasOwnProperty(
+              primary_type
+            )
+          ) {
+            MechanismEvidenceObj[pmid].evidence_types[primary_type] =
+              secondary_type;
           }
-
-          // Add the secondary types to the array
-          MechanismEvidenceObj[pmid].evidence_types[primaryType].push(
-            ...secondaryTypes
-          );
         });
       }
     });
