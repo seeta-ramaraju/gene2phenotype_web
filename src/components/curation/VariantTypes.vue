@@ -52,11 +52,7 @@ export default {
   },
   computed: {
     isPublicationsDataAvailable() {
-      return (
-        this.publicationsData &&
-        this.publicationsData.results &&
-        this.publicationsData.results.length > 0
-      );
+      return this.publicationsData && this.publicationsData.length > 0;
     },
   },
 };
@@ -197,16 +193,16 @@ export default {
               <td v-if="isPublicationsDataAvailable">
                 <div
                   class="form-check"
-                  v-for="publicationItem in publicationsData.results"
+                  v-for="publicationItem in publicationsData"
                 >
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    :id="`input-${publicationItem.pmid}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
+                    :id="`input-${publicationItem}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
                     :checked="
                       variantTypes[item.primaryType.inputKey][
                         secondaryTypeItem.inputKey
-                      ].supporting_papers.includes(publicationItem.pmid)
+                      ].supporting_papers.includes(publicationItem)
                     "
                     @input="
                       variantTypesMultiCheckboxHandler(
@@ -214,15 +210,15 @@ export default {
                         secondaryTypeItem.inputKey,
                         'supporting_papers',
                         $event.target.checked,
-                        publicationItem.pmid
+                        publicationItem
                       )
                     "
                   />
                   <label
                     class="form-check-label"
-                    :for="`input-${publicationItem.pmid}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
+                    :for="`input-${publicationItem}-${item.primaryType.inputKey}-${secondaryTypeItem.inputKey}-supporting_papers`"
                   >
-                    {{ publicationItem.pmid }}
+                    {{ publicationItem }}
                   </label>
                 </div>
               </td>

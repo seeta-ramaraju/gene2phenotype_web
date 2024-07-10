@@ -296,7 +296,7 @@ export default {
         v-model:cross-cutting-modifiers="input.cross_cutting_modifier"
       />
       <VariantInformation
-        :publicationsData="publicationsData"
+        :publicationsData="Object.keys(input.publications)"
         :variantTypes="input.variant_types"
         @update-variant-types="
           (updatedVariantTypes) => (input.variant_types = updatedVariantTypes)
