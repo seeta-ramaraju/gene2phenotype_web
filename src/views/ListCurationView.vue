@@ -32,7 +32,6 @@ export default {
         })
         .then((responseJson) => {
           this.curationListData = responseJson;
-          console.log(this.curationListData);
           this.isDataLoading = false;
         })
         .catch((error) => {
