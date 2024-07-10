@@ -410,9 +410,6 @@ export const prepareInputForUpdating = (previousInput) => {
       if (!MechanismEvidenceObj[key].evidence_types[item.primaryType]) {
         MechanismEvidenceObj[key].evidence_types[item.primaryType] = [];
       }
-      MechanismEvidenceObj[key].evidence_types[item.primaryType].push(
-        item.secondaryType
-      );
     }
   }
 
@@ -438,7 +435,6 @@ export const prepareInputForUpdating = (previousInput) => {
       }
     });
   }
-
   //cleaning the disease name
   let prefix_to_remove = clonedpreviousInput.locus + "-related";
   let disease_name = clonedpreviousInput.disease.disease_name.replace(
