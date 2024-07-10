@@ -79,7 +79,7 @@ export default {
               <td>{{ item.locus }}</td>
               <td>
                 <router-link
-                  :to="`/lgd/${item.stable_id}`"
+                  :to="`/lgd/update/${item.stable_id}`"
                   style="text-decoration: none"
                   v-if="item.stable_id"
                 >
@@ -87,7 +87,7 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.created_on }}</td>
-              <td>{{ item.last_updated }}</td>
+              <td>{{ item.last_update }}</td>
             </tr>
           </tbody>
         </table>

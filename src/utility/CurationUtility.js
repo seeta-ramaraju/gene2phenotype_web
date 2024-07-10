@@ -108,6 +108,21 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
+const DeConstructJSONWithVariantCon = (arraydata) => {
+  let variantConsequenceObj = {};
+
+  VariantConsequencesAttribs.forEach((item) => {
+    variantConsequenceObj[item.inputKey] = "";
+  });
+
+  arraydata.forEach((variantConsequence) => {
+    const { name, support } = variantConsequence;
+
+    variantConsequenceObj[name] = support;
+  });
+  return variantConsequenceObj;
+};
+
 export const prepareInputForDataSubmission = (input) => {
   let preparedInput = cloneDeep(input);
 
@@ -117,7 +132,7 @@ export const prepareInputForDataSubmission = (input) => {
     preparedInput.publications
   )) {
     let publicationObj = { pmid: pmidKey };
-    const keysToRemove = ["authors", "year", "title"];
+    const keysToRemove = [];
     const keysToTrimValues = ["ancestries", "comment"];
     for (const [key, value] of Object.entries(valueObj)) {
       if (!keysToRemove.includes(key)) {
@@ -252,4 +267,204 @@ export const prepareInputForDataSubmission = (input) => {
     preparedInput.confidence.justification.trim();
 
   return preparedInput;
+};
+
+export const prepareInputForUpdating = (previousInput) => {
+  //preparing the input to be used to clean
+  let clonedpreviousInput = cloneDeep(previousInput);
+
+  //publicationsObj needs to be empty because the publication array needs to be deconstructed to become Object of keys
+  let publicationsObj = {};
+  let publications = clonedpreviousInput.publications;
+
+  publications.forEach((publication) => {
+    const {
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      source,
+      year,
+      title,
+      authors,
+      pmid,
+    } = publication;
+    publicationsObj[pmid] = {
+      families,
+      affectedIndividuals,
+      consanguineous,
+      ancestries,
+      comment,
+      source,
+      year,
+      title,
+      authors,
+      pmid,
+    };
+  });
+
+  //deconstructing the phenotype array to be an Object of keys using the publicationObj keys
+  let phenotypesObj = {};
+  let phenotypes = clonedpreviousInput.phenotypes;
+
+  for (const key of Object.keys(publicationsObj)) {
+    phenotypesObj[key] = {
+      summary: "",
+    };
+  }
+
+  phenotypes.forEach((phenotype) => {
+    const { pmid, summary } = phenotype;
+
+    if (phenotypesObj[pmid]) {
+      phenotypesObj[pmid] = {
+        summary,
+      };
+    }
+  });
+
+  let variantDescObj = {};
+  let variantDesc = clonedpreviousInput.variant_descriptions;
+
+  for (const key of Object.keys(publicationsObj)) {
+    variantDescObj[key] = {
+      description: "",
+    };
+  }
+
+  variantDesc.forEach((variant) => {
+    const { description, pmid } = variant;
+
+    if (variantDescObj[pmid]) {
+      variantDescObj[pmid] = {
+        description,
+      };
+    }
+  });
+
+  let variantTypesObj = {};
+  let variantTypes = clonedpreviousInput.variant_types;
+  for (const item of VariantTypesAttribs) {
+    variantTypesObj[item.primaryType.inputKey] = {};
+    for (const secondaryTypeObj of item.secondaryType) {
+      variantTypesObj[item.primaryType.inputKey][secondaryTypeObj.inputKey] = {
+        nmd_escape: false,
+        de_novo: false,
+        inherited: false,
+        unknown_inheritance: false,
+        supporting_papers: [],
+        comment: "",
+      };
+    }
+  }
+
+  variantTypes.forEach((varianttype) => {
+    const {
+      comment,
+      de_novo,
+      inherited,
+      nmd_escape,
+      primary_type,
+      secondary_type,
+      supporting_papers,
+      unknown_inheritance,
+    } = varianttype;
+
+    // Ensure the primary_type key exists
+    if (variantTypesObj[primary_type][secondary_type]) {
+      variantTypesObj[primary_type][secondary_type] = {
+        comment,
+        de_novo,
+        inherited,
+        nmd_escape,
+        supporting_papers,
+        unknown_inheritance,
+      };
+    }
+  });
+
+  let MechanismNameObj = {
+    name: clonedpreviousInput.molecular_mechanism.name,
+    support: clonedpreviousInput.molecular_mechanism.support,
+  };
+
+  let MechanismSynopsisObj = {
+    name: clonedpreviousInput.mechanism_synopsis.name,
+    support: clonedpreviousInput.mechanism_synopsis.support,
+  };
+
+  let MechanismEvidenceObj = {};
+  let MechanismEvidence = clonedpreviousInput.mechanism_evidence;
+
+  for (const key of Object.keys(publicationsObj)) {
+    MechanismEvidenceObj[key] = {
+      description: "",
+      evidence_types: {},
+    };
+  }
+
+  // Populate the evidence_types for each key
+  for (const key of Object.keys(MechanismEvidenceObj)) {
+    for (const item of EvidenceTypesAttribs) {
+      if (!MechanismEvidenceObj[key].evidence_types[item.primaryType]) {
+        MechanismEvidenceObj[key].evidence_types[item.primaryType] = [];
+      }
+    }
+  }
+
+  if (MechanismEvidence) {
+    MechanismEvidence.forEach((evidence) => {
+      const { pmid, description, evidence_types } = evidence;
+
+      if (MechanismEvidenceObj[pmid]) {
+        MechanismEvidenceObj[pmid].description = description;
+        //evidence_types is an array so need to loop through it and
+        //check for MechanismEvidenceObj has the property and then assign the secondary type
+        evidence_types.forEach((types) => {
+          const { primary_type, secondary_type } = types;
+          if (
+            MechanismEvidenceObj[pmid].evidence_types.hasOwnProperty(
+              primary_type
+            )
+          ) {
+            MechanismEvidenceObj[pmid].evidence_types[primary_type] =
+              secondary_type;
+          }
+        });
+      }
+    });
+  }
+  //cleaning the disease name
+  let prefix_to_remove = clonedpreviousInput.locus + "-related";
+  let disease_name = clonedpreviousInput.disease.disease_name.replace(
+    prefix_to_remove,
+    ""
+  );
+
+  return {
+    locus: clonedpreviousInput.locus,
+    publications: publicationsObj,
+    phenotypes: phenotypesObj,
+    allelic_requirement: clonedpreviousInput.allelic_requirement,
+    cross_cutting_modifier: clonedpreviousInput.cross_cutting_modifier,
+    session_name: clonedpreviousInput.session_name,
+    variant_types: variantTypesObj,
+    variant_descriptions: variantDescObj,
+    variant_consequences: DeConstructJSONWithVariantCon(
+      clonedpreviousInput.variant_consequences
+    ),
+    molecular_mechanism: MechanismNameObj,
+    mechanism_synopsis: MechanismSynopsisObj,
+    mechanism_evidence: MechanismEvidenceObj,
+    disease: {
+      disease_name: disease_name,
+      cross_references: clonedpreviousInput.disease.cross_references,
+    },
+    panels: clonedpreviousInput.panels,
+    confidence: {
+      justification: clonedpreviousInput.confidence.justification,
+      level: clonedpreviousInput.confidence.level,
+    },
+  };
 };

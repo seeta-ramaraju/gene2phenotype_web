@@ -10,19 +10,28 @@ import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
 import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
 import {
-  getInitialInputForNewCuration,
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
+  prepareInputForUpdating,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
 export default {
+  created() {
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.fetchPreviousCurationInput();
+      },
+      { immediate: true }
+    );
+  },
   data() {
     return {
-      input: getInitialInputForNewCuration(),
-      inputValidation: {
-        isLocusValid: true,
-      },
+      isPreviousInputDataLoading: false,
+      previousInput: null,
+      session: null,
+      errorMsg: null,
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
@@ -54,15 +63,33 @@ export default {
     SaveSuccessAlert,
   },
   methods: {
-    geneSearchBtnClickHandler() {
-      if (this.input.locus !== "") {
-        this.inputValidation.isLocusValid = true;
-        this.fetchGeneInformation();
-        this.fetchGeneDiseaseInformation();
-        this.fetchPanels();
-      } else {
-        this.inputValidation.isLocusValid = false;
-      }
+    fetchPreviousCurationInput() {
+      this.isPreviousInputDataLoading = true;
+      this.previousInput = null;
+      const stableID = this.$route.params.stableID;
+      fetch(`/gene2phenotype/api/curation/${stableID}`)
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Unable to fetch curation information");
+          }
+        })
+        .then((responseJson) => {
+          this.isPreviousInputDataLoading = false;
+          const responseData = responseJson.data;
+          const session_name = responseJson.session_name;
+          this.session = session_name;
+          this.previousInput = prepareInputForUpdating(responseData);
+          this.fetchGeneInformation();
+          this.fetchGeneDiseaseInformation();
+          this.fetchPanels();
+        })
+        .catch((error) => {
+          this.isPreviousInputDataLoading = false;
+          this.errorMsg = error.message;
+          console.log(error);
+        });
     },
     fetchGeneInformation() {
       this.geneErrorMsg =
@@ -72,8 +99,8 @@ export default {
           null;
       this.isGeneDataLoading = true;
       Promise.all([
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/function/`),
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`),
+        fetch(`/gene2phenotype/api/gene/${this.previousInput.locus}/function/`),
+        fetch(`/gene2phenotype/api/gene/${this.previousInput.locus}/`),
         fetch("/gene2phenotype/api/attribs/"),
       ])
         .then((responseArr) => {
@@ -103,7 +130,7 @@ export default {
     fetchGeneDiseaseInformation() {
       this.geneDiseaseErrorMsg = this.geneDiseaseData = null;
       this.isGeneDiseaseDataLoading = true;
-      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`)
+      fetch(`/gene2phenotype/api/gene/${this.previousInput.locus}/disease`)
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -165,8 +192,8 @@ export default {
           this.isPublicationsDataLoading = false;
           this.publicationsData = responseJson;
           if (this.publicationsData && this.publicationsData.results) {
-            this.input = updateInputWithPublicationsData(
-              this.input,
+            this.previousInput = updateInputWithPublicationsData(
+              this.previousInput,
               this.publicationsData
             );
           }
@@ -181,13 +208,16 @@ export default {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
-      const preparedInput = prepareInputForDataSubmission(this.input);
+      const preparedUpdatedInput = prepareInputForDataSubmission(
+        this.previousInput
+      );
+      const stableID = this.$route.params.stableID;
       const requestBody = {
-        json_data: preparedInput,
+        json_data: preparedUpdatedInput,
       };
       let responseStatus = null;
-      fetch("/gene2phenotype/api/add/curation/", {
-        method: "POST",
+      fetch(`/gene2phenotype/api/curation/${stableID}/update/`, {
+        method: "PUT",
         body: JSON.stringify(requestBody),
         headers: {
           Accept: "application/json",
@@ -225,59 +255,34 @@ export default {
 };
 </script>
 <template>
-  <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>Add New G2P Record</h2>
-    <form
-      class="row g-3 pt-3 pb-1"
-      @submit.prevent="geneSearchBtnClickHandler"
-      v-if="!isSubmitSuccess"
-    >
-      <div class="col-auto">
-        <label for="gene-symbol-input" class="col-form-label">Gene</label>
-      </div>
-      <div class="col-3">
-        <input
-          :class="
-            inputValidation.isLocusValid
-              ? 'form-control'
-              : 'form-control is-invalid'
-          "
-          id="gene-symbol-input"
-          v-model.trim="input.locus"
-          aria-describedby="invalid-gene-symbol-input-feedback"
-        />
-        <div id="invalid-gene-symbol-input-feedback" class="invalid-feedback">
-          Please enter a valid Gene.
-        </div>
-      </div>
-      <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-3">
-          <i class="bi bi-search"></i> Search
-        </button>
-      </div>
-    </form>
-    <p v-if="!geneData">
-      <i class="bi bi-info-circle"></i> Please enter Gene and click Search to
-      proceed further.
-    </p>
+  <div
+    class="container px-5 py-3"
+    style="min-height: 60vh"
+    id="curation-form-section"
+  >
+    <h2>Update G2P Record</h2>
     <div
       class="d-flex justify-content-center"
-      v-if="isGeneDataLoading || isSubmitDataLoading"
+      v-if="
+        isPreviousInputDataLoading || isGeneDataLoading || isSubmitDataLoading
+      "
       style="margin-top: 250px; margin-bottom: 250px"
     >
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="geneErrorMsg">
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-if="errorMsg || geneErrorMsg"
+    >
       <div>
-        <i class="bi bi-exclamation-circle-fill"></i> {{ geneErrorMsg }}
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ errorMsg ? errorMsg : geneErrorMsg }}
       </div>
     </div>
-    <div
-      id="curation-form-section"
-      v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
-    >
+    <div v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess">
       <GeneInformation
         :geneData="geneData"
         :geneFunctionData="geneFunctionData"
@@ -287,57 +292,66 @@ export default {
         :publicationsData="publicationsData"
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
-        v-model:publications="input.publications"
+        v-model:publications="previousInput.publications"
       />
-      <ClinicalPhenotype v-model:clinical-phenotype="input.phenotypes" />
+      <ClinicalPhenotype
+        v-model:clinical-phenotype="previousInput.phenotypes"
+      />
       <Genotype
         :attributesData="attributesData"
-        v-model:allelic-requirement="input.allelic_requirement"
-        v-model:cross-cutting-modifiers="input.cross_cutting_modifier"
+        v-model:allelic-requirement="previousInput.allelic_requirement"
+        v-model:cross-cutting-modifiers="previousInput.cross_cutting_modifier"
       />
       <VariantInformation
-        :publicationsData="Object.keys(input.publications)"
-        :variantTypes="input.variant_types"
+        :publicationsData="Object.keys(previousInput.publications)"
+        :variantTypes="previousInput.variant_types"
         @update-variant-types="
-          (updatedVariantTypes) => (input.variant_types = updatedVariantTypes)
+          (updatedVariantTypes) =>
+            (previousInput.variant_types = updatedVariantTypes)
         "
-        v-model:variant-descriptions="input.variant_descriptions"
-        :variantConsequences="input.variant_consequences"
+        v-model:variant-descriptions="previousInput.variant_descriptions"
+        :variantConsequences="previousInput.variant_consequences"
         @update-variant-consequences="
           (updatedVariantConsequences) =>
-            (input.variant_consequences = updatedVariantConsequences)
+            (previousInput.variant_consequences = updatedVariantConsequences)
         "
       />
       <Mechanism
-        v-model:molecular-mechanism="input.molecular_mechanism.name"
-        v-model:molecular-mechanism-support="input.molecular_mechanism.support"
-        v-model:mechanism-synopsis="input.mechanism_synopsis.name"
-        v-model:mechanism-synopsis-support="input.mechanism_synopsis.support"
-        :mechanismEvidence="input.mechanism_evidence"
+        v-model:molecular-mechanism="previousInput.molecular_mechanism.name"
+        v-model:molecular-mechanism-support="
+          previousInput.molecular_mechanism.support
+        "
+        v-model:mechanism-synopsis="previousInput.mechanism_synopsis.name"
+        v-model:mechanism-synopsis-support="
+          previousInput.mechanism_synopsis.support
+        "
+        :mechanismEvidence="previousInput.mechanism_evidence"
         @update-mechanism-evidence="
           (updatedMechanismEvidence) =>
-            (input.mechanism_evidence = updatedMechanismEvidence)
+            (previousInput.mechanism_evidence = updatedMechanismEvidence)
         "
       />
       <Disease
-        :inputGeneSymbol="input.locus"
+        :inputGeneSymbol="previousInput.locus"
         :geneDiseaseData="geneDiseaseData"
         :isGeneDiseaseDataLoading="isGeneDiseaseDataLoading"
         :geneDiseaseErrorMsg="geneDiseaseErrorMsg"
-        v-model:disease-name="input.disease.disease_name"
-        v-model:disease-cross-references="input.disease.cross_references"
+        v-model:disease-name="previousInput.disease.disease_name"
+        v-model:disease-cross-references="
+          previousInput.disease.cross_references
+        "
       />
       <Panel
         :panelData="panelData"
         :isPanelDataLoading="isPanelDataLoading"
         :panelErrorMsg="panelErrorMsg"
-        v-model:panels="input.panels"
+        v-model:panels="previousInput.panels"
       />
       <Confidence
         :attributesData="attributesData"
-        :inputPublications="input.publications"
-        v-model:justification="input.confidence.justification"
-        v-model:level="input.confidence.level"
+        :inputPublications="previousInput.publications"
+        v-model:justification="previousInput.confidence.justification"
+        v-model:level="previousInput.confidence.level"
       />
     </div>
     <div class="alert alert-danger mt-3" role="alert" v-if="submitErrorMsg">
@@ -361,10 +375,7 @@ export default {
       </button>
     </div>
     <SaveSuccessAlert v-if="isSubmitSuccess" />
-    <SaveDraftModal
-      v-model:sessionname="input.session_name"
-      @savedraft="saveDraft"
-    />
+    <SaveDraftModal v-model:sessionname="session" @savedraft="saveDraft" />
   </div>
 </template>
 <style scoped>

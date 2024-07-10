@@ -124,7 +124,7 @@ export default {
                         type="checkbox"
                         :id="`disease-name-link-input-${index}`"
                         :checked="
-                          diseaseCrossReferences.indexOf(
+                          diseaseCrossReferences.findIndex(
                             (diseaseCrossReference) =>
                               diseaseCrossReference.disease_name ===
                               item.disease_name
