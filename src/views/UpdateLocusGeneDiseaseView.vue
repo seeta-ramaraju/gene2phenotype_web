@@ -28,7 +28,6 @@ export default {
   },
   data() {
     return {
-      input: prepareInputForDataSubmission,
       isPreviousInputDataLoading: false,
       previousInput: null,
       session: null,
@@ -77,6 +76,7 @@ export default {
           }
         })
         .then((responseJson) => {
+          this.isPreviousInputDataLoading = false;
           const responseData = responseJson.data;
           const session_name = responseJson.session_name;
           this.session = session_name;
@@ -84,7 +84,6 @@ export default {
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
-          this.isPreviousInputDataLoading = false;
         })
         .catch((error) => {
           this.isPreviousInputDataLoading = false;
@@ -262,7 +261,28 @@ export default {
     id="curation-form-section"
   >
     <h2>Update G2P Record</h2>
-    <div v-if="geneData">
+    <div
+      class="d-flex justify-content-center"
+      v-if="
+        isPreviousInputDataLoading || isGeneDataLoading || isSubmitDataLoading
+      "
+      style="margin-top: 250px; margin-bottom: 250px"
+    >
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-if="errorMsg || geneErrorMsg"
+    >
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ errorMsg ? errorMsg : geneErrorMsg }}
+      </div>
+    </div>
+    <div v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess">
       <GeneInformation
         :geneData="geneData"
         :geneFunctionData="geneFunctionData"
@@ -283,7 +303,7 @@ export default {
         v-model:cross-cutting-modifiers="previousInput.cross_cutting_modifier"
       />
       <VariantInformation
-        :publicationsData="publicationsData"
+        :publicationsData="Object.keys(previousInput.publications)"
         :variantTypes="previousInput.variant_types"
         @update-variant-types="
           (updatedVariantTypes) =>
