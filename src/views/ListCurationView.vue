@@ -32,6 +32,7 @@ export default {
         })
         .then((responseJson) => {
           this.curationListData = responseJson;
+          console.log(this.curationListData);
           this.isDataLoading = false;
         })
         .catch((error) => {
@@ -87,7 +88,7 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.created_on }}</td>
-              <td>{{ item.last_updated }}</td>
+              <td>{{ item.last_update }}</td>
             </tr>
           </tbody>
         </table>
