@@ -108,18 +108,19 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
-const DeConstructJSONWithVariantCon = (arraydata) => {
+const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   let variantConsequenceObj = {};
 
   VariantConsequencesAttribs.forEach((item) => {
     variantConsequenceObj[item.inputKey] = "";
   });
 
-  arraydata.forEach((variantConsequence) => {
-    const { name, support } = variantConsequence;
+  variantConsequencesArray.forEach((variantConsequence) => {
+    const { variant_consequence, support } = variantConsequence;
 
-    variantConsequenceObj[name] = support;
+    variantConsequenceObj[variant_consequence] = support;
   });
+
   return variantConsequenceObj;
 };
 
@@ -240,7 +241,7 @@ export const prepareInputForDataSubmission = (input) => {
   )) {
     if (value !== "") {
       let variantConsequencesObj = {
-        name: key,
+        variant_consequence: key,
         support: value,
       };
       variantConsequencesArray.push(variantConsequencesObj);
@@ -359,7 +360,7 @@ export const prepareInputForUpdating = (previousInput) => {
     }
   }
 
-  variantTypes.forEach((varianttype) => {
+  variantTypes.forEach((variantType) => {
     const {
       comment,
       de_novo,
@@ -369,7 +370,7 @@ export const prepareInputForUpdating = (previousInput) => {
       secondary_type,
       supporting_papers,
       unknown_inheritance,
-    } = varianttype;
+    } = variantType;
 
     // Ensure the primary_type key exists
     if (variantTypesObj[primary_type][secondary_type]) {
@@ -451,7 +452,7 @@ export const prepareInputForUpdating = (previousInput) => {
     session_name: clonedpreviousInput.session_name,
     variant_types: variantTypesObj,
     variant_descriptions: variantDescObj,
-    variant_consequences: DeConstructJSONWithVariantCon(
+    variant_consequences: convertVariantConsequencesArrayToObject(
       clonedpreviousInput.variant_consequences
     ),
     molecular_mechanism: MechanismNameObj,
