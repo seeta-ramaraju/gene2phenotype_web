@@ -30,7 +30,6 @@ export default {
     return {
       isPreviousInputDataLoading: false,
       previousInput: null,
-      session: null,
       errorMsg: null,
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
@@ -77,10 +76,7 @@ export default {
         })
         .then((responseJson) => {
           this.isPreviousInputDataLoading = false;
-          const responseData = responseJson.data;
-          const session_name = responseJson.session_name;
-          this.session = session_name;
-          this.previousInput = prepareInputForUpdating(responseData);
+          this.previousInput = prepareInputForUpdating(responseJson.data);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -363,11 +359,7 @@ export default {
       class="d-flex justify-content-between py-3"
       v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
     >
-      <button
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#save-draft-modal"
-      >
+      <button type="button" class="btn btn-primary" @click="saveDraft">
         <i class="bi bi-floppy-fill"></i> Save Draft
       </button>
       <button class="btn btn-primary">
@@ -375,7 +367,6 @@ export default {
       </button>
     </div>
     <SaveSuccessAlert v-if="isSubmitSuccess" />
-    <SaveDraftModal v-model:sessionname="session" @savedraft="saveDraft" />
   </div>
 </template>
 <style scoped>
