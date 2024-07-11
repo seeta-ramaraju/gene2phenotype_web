@@ -151,29 +151,35 @@ export default {
         .split(";")
         .filter((item) => item)
         .join(",");
+      let responseStatus = null;
       fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch publications data")
-            );
-          }
+          responseStatus = response.status;
+          return response.json();
         })
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
-          this.publicationsData = responseJson;
-          if (this.publicationsData && this.publicationsData.results) {
-            this.input = updateInputWithPublicationsData(
-              this.input,
-              this.publicationsData
-            );
+          if (responseStatus === 200) {
+            this.publicationsData = responseJson;
+            if (this.publicationsData && this.publicationsData.results) {
+              this.input = updateInputWithPublicationsData(
+                this.input,
+                this.publicationsData
+              );
+            }
+          } else if (responseStatus === 404) {
+            this.publicationsErrorMsg = responseJson.detail
+              ? responseJson.detail
+              : "Unable to fetch publications data.";
+            console.log(this.publicationsErrorMsg);
+          } else {
+            this.publicationsErrorMsg = "Unable to fetch publications data.";
+            console.log(this.publicationsErrorMsg);
           }
         })
         .catch((error) => {
           this.isPublicationsDataLoading = false;
-          this.publicationsErrorMsg = error.message;
+          this.publicationsErrorMsg = "Unable to fetch publications data.";
           console.log(error);
         });
     },
