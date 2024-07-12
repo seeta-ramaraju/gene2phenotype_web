@@ -105,6 +105,14 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   updatedInput.variant_descriptions = updatedVariantDescriptionsObj;
   updatedInput.mechanism_evidence = updatedMechanismEvidenceObj;
 
+  for (let primaryTypeKey in updatedInput.variant_types) {
+    for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
+      updatedInput.variant_types[primaryTypeKey][
+        secondaryTypeKey
+      ].supporting_papers = [];
+    }
+  }
+
   return updatedInput;
 };
 
