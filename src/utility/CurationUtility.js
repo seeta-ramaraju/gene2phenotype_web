@@ -275,11 +275,12 @@ export const prepareInputForDataSubmission = (input) => {
   preparedInput.disease.disease_name =
     preparedInput.disease.disease_name.trim();
 
+  // convert locus to uppercase
+  preparedInput.locus = preparedInput.locus.toUpperCase();
+
   // if disease name is not empty then prefix locus to disease name
   if (preparedInput.disease.disease_name !== "") {
-    preparedInput.disease.disease_name = `${preparedInput.locus.toUpperCase()}-related ${
-      preparedInput.disease.disease_name
-    }`;
+    preparedInput.disease.disease_name = `${preparedInput.locus}-related ${preparedInput.disease.disease_name}`;
   }
 
   // trim session name
