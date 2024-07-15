@@ -341,7 +341,6 @@ export default {
       />
       <Publication
         :fetchPublications="fetchPublications"
-        :publicationsData="publicationsData"
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="input.publications"

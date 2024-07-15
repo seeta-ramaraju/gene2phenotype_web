@@ -2,7 +2,6 @@
 export default {
   props: {
     fetchPublications: Function,
-    publicationsData: Object,
     isPublicationsDataLoading: Boolean,
     publicationsErrorMsg: String,
     publications: Object,
@@ -104,14 +103,13 @@ export default {
               {{ publicationsErrorMsg }}
             </div>
           </div>
-          <div v-if="publicationsData || publications">
+          <div v-if="publications && Object.keys(publications).length > 0">
             <div>
               <strong><p>Enter Publications Data</p></strong>
             </div>
             <div
               class="accordion py-1"
               :id="`parent-accordion-${pmid}`"
-              v-if="publications && Object.keys(publications).length > 0"
               v-for="pmid in Object.keys(publications)"
             >
               <div class="accordion-item">

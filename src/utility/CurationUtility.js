@@ -155,15 +155,12 @@ export const prepareInputForDataSubmission = (input) => {
     preparedInput.publications
   )) {
     let publicationObj = { pmid: pmidKey };
-    const keysToRemove = [];
     const keysToTrimValues = ["ancestries", "comment"];
     for (const [key, value] of Object.entries(valueObj)) {
-      if (!keysToRemove.includes(key)) {
-        if (keysToTrimValues.includes(key)) {
-          publicationObj[key] = value.trim();
-        } else {
-          publicationObj[key] = value;
-        }
+      if (keysToTrimValues.includes(key)) {
+        publicationObj[key] = value.trim();
+      } else {
+        publicationObj[key] = value;
       }
     }
     publicationsArray.push(publicationObj);
