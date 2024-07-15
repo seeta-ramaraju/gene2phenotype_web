@@ -13,6 +13,7 @@ import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
   prepareInputForUpdating,
+  updateHpoTermsInputHelperWithPublicationsData,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
@@ -34,6 +35,7 @@ export default {
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
+      hpoTermsInputHelper: {},
       geneData: null,
       geneFunctionData: null,
       attributesData: null,
@@ -77,6 +79,9 @@ export default {
         .then((responseJson) => {
           this.isPreviousInputDataLoading = false;
           this.previousInput = prepareInputForUpdating(responseJson.data);
+          let pmidList = Object.keys(this.previousInput.publications);
+          this.hpoTermsInputHelper =
+            updateHpoTermsInputHelperWithPublicationsData(pmidList);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -189,6 +194,11 @@ export default {
                 this.previousInput,
                 this.publicationsData
               );
+              let pmidList = this.publicationsData.results.map(
+                (item) => item.pmid
+              );
+              this.hpoTermsInputHelper =
+                updateHpoTermsInputHelperWithPublicationsData(pmidList);
             }
           } else if (responseStatus === 404) {
             this.publicationsErrorMsg = responseJson.detail
@@ -203,6 +213,51 @@ export default {
         .catch((error) => {
           this.isPublicationsDataLoading = false;
           this.publicationsErrorMsg = "Unable to fetch publications data.";
+          console.log(error);
+        });
+    },
+    fetchHpoTerms(pmid) {
+      // if hpoTermsInput is empty then set isHpoTermsValid to false and dont continue further
+      if (this.hpoTermsInputHelper[pmid].hpoTermsInput.trim() === "") {
+        this.hpoTermsInputHelper[pmid].isHpoTermsValid = false;
+        return;
+      }
+      // if hpoTermsInput is not empty then continue further
+      this.hpoTermsInputHelper[pmid].isHpoTermsValid = true;
+      this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg = "";
+      this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = true;
+      let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
+        .trim()
+        .split(";")
+        .filter((item) => item)
+        .join(",");
+      let responseStatus = null;
+      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
+        .then((response) => {
+          responseStatus = response.status;
+          return response.json();
+        })
+        .then((responseJson) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          if (responseStatus === 200 && responseJson && responseJson.results) {
+            this.previousInput.phenotypes[pmid].hpo_terms =
+              responseJson.results;
+          } else if (responseStatus === 404) {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              responseJson.detail
+                ? responseJson.detail
+                : "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          } else {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          }
+        })
+        .catch((error) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+            "Unable to fetch hpo terms";
           console.log(error);
         });
     },
@@ -297,7 +352,9 @@ export default {
         v-model:publications="previousInput.publications"
       />
       <ClinicalPhenotype
+        :fetchHpoTerms="fetchHpoTerms"
         v-model:clinical-phenotype="previousInput.phenotypes"
+        v-model:hpo-terms-input-helper="hpoTermsInputHelper"
       />
       <Genotype
         :attributesData="attributesData"

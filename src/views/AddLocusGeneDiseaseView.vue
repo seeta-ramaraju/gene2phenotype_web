@@ -13,6 +13,7 @@ import {
   getInitialInputForNewCuration,
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
+  updateHpoTermsInputHelperWithPublicationsData,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 
@@ -23,6 +24,7 @@ export default {
       inputValidation: {
         isLocusValid: true,
       },
+      hpoTermsInputHelper: {},
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
@@ -166,6 +168,11 @@ export default {
                 this.input,
                 this.publicationsData
               );
+              let pmidList = this.publicationsData.results.map(
+                (item) => item.pmid
+              );
+              this.hpoTermsInputHelper =
+                updateHpoTermsInputHelperWithPublicationsData(pmidList);
             }
           } else if (responseStatus === 404) {
             this.publicationsErrorMsg = responseJson.detail
@@ -180,6 +187,50 @@ export default {
         .catch((error) => {
           this.isPublicationsDataLoading = false;
           this.publicationsErrorMsg = "Unable to fetch publications data.";
+          console.log(error);
+        });
+    },
+    fetchHpoTerms(pmid) {
+      // if hpoTermsInput is empty then set isHpoTermsValid to false and dont continue further
+      if (this.hpoTermsInputHelper[pmid].hpoTermsInput.trim() === "") {
+        this.hpoTermsInputHelper[pmid].isHpoTermsValid = false;
+        return;
+      }
+      // if hpoTermsInput is not empty then continue further
+      this.hpoTermsInputHelper[pmid].isHpoTermsValid = true;
+      this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg = "";
+      this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = true;
+      let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
+        .trim()
+        .split(";")
+        .filter((item) => item)
+        .join(",");
+      let responseStatus = null;
+      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
+        .then((response) => {
+          responseStatus = response.status;
+          return response.json();
+        })
+        .then((responseJson) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          if (responseStatus === 200 && responseJson && responseJson.results) {
+            this.input.phenotypes[pmid].hpo_terms = responseJson.results;
+          } else if (responseStatus === 404) {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              responseJson.detail
+                ? responseJson.detail
+                : "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          } else {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          }
+        })
+        .catch((error) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+            "Unable to fetch hpo terms";
           console.log(error);
         });
     },
@@ -295,7 +346,11 @@ export default {
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="input.publications"
       />
-      <ClinicalPhenotype v-model:clinical-phenotype="input.phenotypes" />
+      <ClinicalPhenotype
+        :fetchHpoTerms="fetchHpoTerms"
+        v-model:clinical-phenotype="input.phenotypes"
+        v-model:hpo-terms-input-helper="hpoTermsInputHelper"
+      />
       <Genotype
         :attributesData="attributesData"
         v-model:allelic-requirement="input.allelic_requirement"

@@ -84,6 +84,7 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 
     updatedPhenotypesObj[item.pmid] = {
       summary: "",
+      hpo_terms: [],
     };
 
     updatedVariantDescriptionsObj[item.pmid] = {
@@ -132,6 +133,19 @@ const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   return variantConsequenceObj;
 };
 
+export const updateHpoTermsInputHelperWithPublicationsData = (pmidList) => {
+  let hpoTermsInputHelper = {};
+  pmidList.forEach((pmid) => {
+    hpoTermsInputHelper[pmid] = {
+      isHpoTermsDataLoading: false,
+      hpoTermsErrorMsg: "",
+      isHpoTermsValid: true,
+      hpoTermsInput: "",
+    };
+  });
+  return hpoTermsInputHelper;
+};
+
 export const prepareInputForDataSubmission = (input) => {
   let preparedInput = cloneDeep(input);
 
@@ -156,14 +170,14 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.publications = publicationsArray;
 
-  // convert phenotypes from object to array of objects and include phenotypes that have non empty summary
+  // convert phenotypes from object to array of objects and include phenotypes that have non empty hpo terms
   let phenotypesArray = [];
   for (const [pmidKey, valueObj] of Object.entries(preparedInput.phenotypes)) {
-    if (valueObj.summary.trim() !== "") {
+    if (valueObj.hpo_terms && valueObj.hpo_terms.length > 0) {
       let phenotypeObj = {
-        ...valueObj,
         pmid: pmidKey,
         summary: valueObj.summary.trim(), // trim summary value
+        hpo_terms: valueObj.hpo_terms,
       };
       phenotypesArray.push(phenotypeObj);
     }
@@ -320,15 +334,17 @@ export const prepareInputForUpdating = (previousInput) => {
   for (const key of Object.keys(publicationsObj)) {
     phenotypesObj[key] = {
       summary: "",
+      hpo_terms: [],
     };
   }
 
   phenotypes.forEach((phenotype) => {
-    const { pmid, summary } = phenotype;
+    const { pmid, summary, hpo_terms } = phenotype;
 
     if (phenotypesObj[pmid]) {
       phenotypesObj[pmid] = {
         summary,
+        hpo_terms,
       };
     }
   });
