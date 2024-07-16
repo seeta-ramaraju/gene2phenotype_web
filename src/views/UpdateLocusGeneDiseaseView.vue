@@ -16,6 +16,7 @@ import {
   updateHpoTermsInputHelperWithPublicationsData,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
+import AlertModal from "../components/curation/AlertModal.vue";
 
 export default {
   created() {
@@ -45,6 +46,8 @@ export default {
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       publicationsData: null,
+      inputPmids: "",
+      isInputPmidsValid: true,
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
@@ -62,6 +65,7 @@ export default {
     Confidence,
     SaveDraftModal,
     SaveSuccessAlert,
+    AlertModal,
   },
   methods: {
     fetchPreviousCurationInput() {
@@ -172,10 +176,18 @@ export default {
           console.log(error);
         });
     },
-    fetchPublications(inputPmids) {
+    fetchPublications() {
+      // if inputPmids is empty then set isInputPmidsValid to false and dont continue further
+      if (this.inputPmids.trim() === "") {
+        this.isInputPmidsValid = false;
+        return;
+      }
+      // if inputPmids is not empty then continue further
+      this.isInputPmidsValid = true;
       this.publicationsErrorMsg = this.publicationsData = null;
       this.isPublicationsDataLoading = true;
-      let pmidListStr = inputPmids
+      let pmidListStr = this.inputPmids
+        .trim()
         .split(";")
         .filter((item) => item)
         .join(",");
@@ -349,6 +361,8 @@ export default {
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="previousInput.publications"
+        v-model:input-pmids="inputPmids"
+        :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
         :fetchHpoTerms="fetchHpoTerms"
@@ -429,6 +443,11 @@ export default {
       </button>
     </div>
     <SaveSuccessAlert v-if="isSubmitSuccess" />
+    <AlertModal
+      modalId="publications-input-alert-modal"
+      alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"
+      @confirm-click-handler="fetchPublications"
+    />
   </div>
 </template>
 <style scoped>

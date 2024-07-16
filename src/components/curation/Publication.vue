@@ -5,28 +5,16 @@ export default {
     isPublicationsDataLoading: Boolean,
     publicationsErrorMsg: String,
     publications: Object,
+    inputPmids: String,
+    isInputPmidsValid: Boolean,
   },
-  emits: ["update:publications"],
+  emits: ["update:publications", "update:inputPmids"],
   methods: {
-    fetchInputPublications() {
-      if (this.inputPmids !== "") {
-        this.isInputPmidsValid = true;
-        this.fetchPublications(this.inputPmids);
-      } else {
-        this.isInputPmidsValid = false;
-      }
-    },
     inputHandler(key, pmid, inputValue) {
       let updatedPublications = { ...this.publications };
       updatedPublications[pmid][key] = inputValue;
       this.$emit("update:publications", updatedPublications);
     },
-  },
-  data() {
-    return {
-      inputPmids: "",
-      isInputPmidsValid: true,
-    };
   },
 };
 </script>
@@ -59,7 +47,8 @@ export default {
                   isInputPmidsValid ? 'form-control' : 'form-control is-invalid'
                 "
                 id="publications-input"
-                v-model.trim="inputPmids"
+                :value="inputPmids"
+                @input="$emit('update:inputPmids', $event.target.value)"
                 rows="3"
                 aria-describedby="invalid-publications-input-feedback"
               >
@@ -76,9 +65,19 @@ export default {
             </div>
             <div class="col-auto">
               <button
+                v-if="publications && Object.keys(publications).length > 0"
                 type="button"
                 class="btn btn-primary mb-3"
-                @click="fetchInputPublications"
+                data-bs-toggle="modal"
+                data-bs-target="#publications-input-alert-modal"
+              >
+                <i class="bi bi-search"></i> Look Up
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btn btn-primary mb-3"
+                @click="fetchPublications"
               >
                 <i class="bi bi-search"></i> Look Up
               </button>

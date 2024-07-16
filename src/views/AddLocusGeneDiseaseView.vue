@@ -16,6 +16,7 @@ import {
   updateHpoTermsInputHelperWithPublicationsData,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
+import AlertModal from "../components/curation/AlertModal.vue";
 
 export default {
   data() {
@@ -37,6 +38,8 @@ export default {
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       publicationsData: null,
+      inputPmids: "",
+      isInputPmidsValid: true,
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
@@ -54,6 +57,7 @@ export default {
     Confidence,
     SaveDraftModal,
     SaveSuccessAlert,
+    AlertModal,
   },
   methods: {
     geneSearchBtnClickHandler() {
@@ -146,10 +150,18 @@ export default {
           console.log(error);
         });
     },
-    fetchPublications(inputPmids) {
+    fetchPublications() {
+      // if inputPmids is empty then set isInputPmidsValid to false and dont continue further
+      if (this.inputPmids.trim() === "") {
+        this.isInputPmidsValid = false;
+        return;
+      }
+      // if inputPmids is not empty then continue further
+      this.isInputPmidsValid = true;
       this.publicationsErrorMsg = this.publicationsData = null;
       this.isPublicationsDataLoading = true;
-      let pmidListStr = inputPmids
+      let pmidListStr = this.inputPmids
+        .trim()
         .split(";")
         .filter((item) => item)
         .join(",");
@@ -284,11 +296,7 @@ export default {
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>Add New G2P Record</h2>
-    <form
-      class="row g-3 pt-3 pb-1"
-      @submit.prevent="geneSearchBtnClickHandler"
-      v-if="!isSubmitSuccess"
-    >
+    <div class="row g-3 pt-3 pb-1" v-if="!isSubmitSuccess">
       <div class="col-auto">
         <label for="gene-symbol-input" class="col-form-label">Gene</label>
       </div>
@@ -308,11 +316,25 @@ export default {
         </div>
       </div>
       <div class="col-auto">
-        <button type="submit" class="btn btn-primary mb-3">
+        <button
+          v-if="geneData"
+          type="button"
+          class="btn btn-primary mb-3"
+          data-bs-toggle="modal"
+          data-bs-target="#all-input-alert-modal"
+        >
+          <i class="bi bi-search"></i> Search
+        </button>
+        <button
+          v-else
+          type="button"
+          class="btn btn-primary mb-3"
+          @click="geneSearchBtnClickHandler"
+        >
           <i class="bi bi-search"></i> Search
         </button>
       </div>
-    </form>
+    </div>
     <p v-if="!geneData">
       <i class="bi bi-info-circle"></i> Please enter Gene and click Search to
       proceed further.
@@ -344,6 +366,8 @@ export default {
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="input.publications"
+        v-model:input-pmids="inputPmids"
+        :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
         :fetchHpoTerms="fetchHpoTerms"
@@ -424,6 +448,16 @@ export default {
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
+    />
+    <AlertModal
+      modalId="all-input-alert-modal"
+      alertText="The data you have input will be lost. Are you sure you want to proceed?"
+      @confirm-click-handler="geneSearchBtnClickHandler"
+    />
+    <AlertModal
+      modalId="publications-input-alert-modal"
+      alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"
+      @confirm-click-handler="fetchPublications"
     />
   </div>
 </template>
