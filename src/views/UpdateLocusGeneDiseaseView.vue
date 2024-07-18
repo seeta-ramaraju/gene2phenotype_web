@@ -43,6 +43,7 @@ export default {
       geneErrorMsg: null,
       submitErrorMsg: null,
       isSubmitSuccess: false,
+      submitSuccessMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       publicationsData: null,
@@ -274,7 +275,7 @@ export default {
         });
     },
     saveDraft() {
-      this.submitErrorMsg = null;
+      this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
       const preparedUpdatedInput = prepareInputForDataSubmission(
@@ -301,6 +302,7 @@ export default {
           this.isSubmitDataLoading = false;
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
+            this.submitSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to submit data. Please try again later.";
             if (
@@ -442,7 +444,7 @@ export default {
         <i class="bi bi-send-fill"></i> Publish
       </button>
     </div>
-    <SaveSuccessAlert v-if="isSubmitSuccess" />
+    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
     <AlertModal
       modalId="publications-input-alert-modal"
       alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"

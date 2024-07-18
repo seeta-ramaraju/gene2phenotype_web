@@ -35,6 +35,7 @@ export default {
       geneErrorMsg: null,
       submitErrorMsg: null,
       isSubmitSuccess: false,
+      submitSuccessMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       publicationsData: null,
@@ -247,7 +248,7 @@ export default {
         });
     },
     saveDraft() {
-      this.submitErrorMsg = null;
+      this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
       const preparedInput = prepareInputForDataSubmission(this.input);
@@ -271,6 +272,7 @@ export default {
           this.isSubmitDataLoading = false;
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
+            this.submitSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to submit data. Please try again later.";
             if (
@@ -444,7 +446,7 @@ export default {
         <i class="bi bi-send-fill"></i> Publish
       </button>
     </div>
-    <SaveSuccessAlert v-if="isSubmitSuccess" />
+    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
