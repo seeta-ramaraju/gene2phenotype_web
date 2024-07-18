@@ -46,7 +46,6 @@ export default {
       submitSuccessMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
-      publicationsData: null,
       inputPmids: "",
       isInputPmidsValid: true,
       panelErrorMsg: null,
@@ -185,7 +184,7 @@ export default {
       }
       // if inputPmids is not empty then continue further
       this.isInputPmidsValid = true;
-      this.publicationsErrorMsg = this.publicationsData = null;
+      this.publicationsErrorMsg = null;
       this.isPublicationsDataLoading = true;
       let pmidListStr = this.inputPmids
         .trim()
@@ -201,15 +200,13 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
-            this.publicationsData = responseJson;
-            if (this.publicationsData && this.publicationsData.results) {
+            const publicationsData = responseJson;
+            if (publicationsData && publicationsData.results) {
               this.previousInput = updateInputWithPublicationsData(
                 this.previousInput,
-                this.publicationsData
+                publicationsData
               );
-              let pmidList = this.publicationsData.results.map(
-                (item) => item.pmid
-              );
+              let pmidList = publicationsData.results.map((item) => item.pmid);
               this.hpoTermsInputHelper =
                 updateHpoTermsInputHelperWithPublicationsData(pmidList);
             }
