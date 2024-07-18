@@ -22,9 +22,7 @@ export default {
   data() {
     return {
       input: getInitialInputForNewCuration(),
-      inputValidation: {
-        isLocusValid: true,
-      },
+      isInputLocusValid: true,
       hpoTermsInputHelper: {},
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
@@ -62,12 +60,12 @@ export default {
   methods: {
     geneSearchBtnClickHandler() {
       if (this.input.locus !== "") {
-        this.inputValidation.isLocusValid = true;
+        this.isInputLocusValid = true;
         this.fetchGeneInformation();
         this.fetchGeneDiseaseInformation();
         this.fetchPanels();
       } else {
-        this.inputValidation.isLocusValid = false;
+        this.isInputLocusValid = false;
       }
     },
     fetchGeneInformation() {
@@ -302,9 +300,7 @@ export default {
       <div class="col-3">
         <input
           :class="
-            inputValidation.isLocusValid
-              ? 'form-control'
-              : 'form-control is-invalid'
+            isInputLocusValid ? 'form-control' : 'form-control is-invalid'
           "
           id="gene-symbol-input"
           v-model.trim="input.locus"
