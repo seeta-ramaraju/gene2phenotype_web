@@ -91,9 +91,7 @@ export default {
             </tr>
           </tbody>
         </table>
-        <p class="text-danger" v-else>
-          You do not have any saved drafts at this moment.
-        </p>
+        <p class="text-danger" v-else>You currently have no saved drafts.</p>
       </div>
     </div>
   </div>
