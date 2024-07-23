@@ -211,7 +211,8 @@ export default {
       let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
         .trim()
         .split(";")
-        .filter((item) => item)
+        .filter((item) => item.trim())
+        .map((item) => item.trim())
         .join(",");
       let responseStatus = null;
       fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
