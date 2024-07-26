@@ -13,8 +13,10 @@ import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
   prepareInputForUpdating,
+  updateHpoTermsInputHelperWithPublicationsData,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
+import AlertModal from "../components/curation/AlertModal.vue";
 
 export default {
   created() {
@@ -30,20 +32,22 @@ export default {
     return {
       isPreviousInputDataLoading: false,
       previousInput: null,
-      session: null,
       errorMsg: null,
       isGeneDataLoading: false,
       isGeneDiseaseDataLoading: false,
       isSubmitDataLoading: false,
+      hpoTermsInputHelper: {},
       geneData: null,
       geneFunctionData: null,
       attributesData: null,
       geneErrorMsg: null,
       submitErrorMsg: null,
       isSubmitSuccess: false,
+      submitSuccessMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
-      publicationsData: null,
+      inputPmids: "",
+      isInputPmidsValid: true,
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
@@ -61,11 +65,12 @@ export default {
     Confidence,
     SaveDraftModal,
     SaveSuccessAlert,
+    AlertModal,
   },
   methods: {
     fetchPreviousCurationInput() {
       this.isPreviousInputDataLoading = true;
-      this.previousInput = null;
+      this.previousInput = this.errorMsg = null;
       const stableID = this.$route.params.stableID;
       fetch(`/gene2phenotype/api/curation/${stableID}`)
         .then((response) => {
@@ -77,10 +82,10 @@ export default {
         })
         .then((responseJson) => {
           this.isPreviousInputDataLoading = false;
-          const responseData = responseJson.data;
-          const session_name = responseJson.session_name;
-          this.session = session_name;
-          this.previousInput = prepareInputForUpdating(responseData);
+          this.previousInput = prepareInputForUpdating(responseJson.data);
+          let pmidList = Object.keys(this.previousInput.publications);
+          this.hpoTermsInputHelper =
+            updateHpoTermsInputHelperWithPublicationsData(pmidList);
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -171,41 +176,104 @@ export default {
           console.log(error);
         });
     },
-    fetchPublications(inputPmids) {
-      this.publicationsErrorMsg = this.publicationsData = null;
+    fetchPublications() {
+      // if inputPmids is empty then set isInputPmidsValid to false and dont continue further
+      if (this.inputPmids.trim() === "") {
+        this.isInputPmidsValid = false;
+        return;
+      }
+      // if inputPmids is not empty then continue further
+      this.isInputPmidsValid = true;
+      this.publicationsErrorMsg = null;
       this.isPublicationsDataLoading = true;
-      let pmidListStr = inputPmids
+      let pmidListStr = this.inputPmids
+        .trim()
         .split(";")
         .filter((item) => item)
         .join(",");
+      let responseStatus = null;
       fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch publications data")
-            );
-          }
+          responseStatus = response.status;
+          return response.json();
         })
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
-          this.publicationsData = responseJson;
-          if (this.publicationsData && this.publicationsData.results) {
-            this.previousInput = updateInputWithPublicationsData(
-              this.previousInput,
-              this.publicationsData
-            );
+          if (responseStatus === 200) {
+            const publicationsData = responseJson;
+            if (publicationsData && publicationsData.results) {
+              this.previousInput = updateInputWithPublicationsData(
+                this.previousInput,
+                publicationsData
+              );
+              let pmidList = publicationsData.results.map((item) => item.pmid);
+              this.hpoTermsInputHelper =
+                updateHpoTermsInputHelperWithPublicationsData(pmidList);
+            }
+          } else if (responseStatus === 404) {
+            this.publicationsErrorMsg = responseJson.detail
+              ? responseJson.detail
+              : "Unable to fetch publications data.";
+            console.log(this.publicationsErrorMsg);
+          } else {
+            this.publicationsErrorMsg = "Unable to fetch publications data.";
+            console.log(this.publicationsErrorMsg);
           }
         })
         .catch((error) => {
           this.isPublicationsDataLoading = false;
-          this.publicationsErrorMsg = error.message;
+          this.publicationsErrorMsg = "Unable to fetch publications data.";
+          console.log(error);
+        });
+    },
+    fetchHpoTerms(pmid) {
+      // if hpoTermsInput is empty then set isHpoTermsValid to false and dont continue further
+      if (this.hpoTermsInputHelper[pmid].hpoTermsInput.trim() === "") {
+        this.hpoTermsInputHelper[pmid].isHpoTermsValid = false;
+        return;
+      }
+      // if hpoTermsInput is not empty then continue further
+      this.hpoTermsInputHelper[pmid].isHpoTermsValid = true;
+      this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg = "";
+      this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = true;
+      let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
+        .trim()
+        .split(";")
+        .filter((item) => item.trim())
+        .map((item) => item.trim())
+        .join(",");
+      let responseStatus = null;
+      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
+        .then((response) => {
+          responseStatus = response.status;
+          return response.json();
+        })
+        .then((responseJson) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          if (responseStatus === 200 && responseJson && responseJson.results) {
+            this.previousInput.phenotypes[pmid].hpo_terms =
+              responseJson.results;
+          } else if (responseStatus === 404) {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              responseJson.detail
+                ? responseJson.detail
+                : "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          } else {
+            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+              "Unable to fetch hpo terms";
+            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
+          }
+        })
+        .catch((error) => {
+          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
+          this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
+            "Unable to fetch hpo terms";
           console.log(error);
         });
     },
     saveDraft() {
-      this.submitErrorMsg = null;
+      this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
       this.isSubmitDataLoading = true;
       const preparedUpdatedInput = prepareInputForDataSubmission(
@@ -232,6 +300,7 @@ export default {
           this.isSubmitDataLoading = false;
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
+            this.submitSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to submit data. Please try again later.";
             if (
@@ -289,13 +358,16 @@ export default {
       />
       <Publication
         :fetchPublications="fetchPublications"
-        :publicationsData="publicationsData"
         :isPublicationsDataLoading="isPublicationsDataLoading"
         :publicationsErrorMsg="publicationsErrorMsg"
         v-model:publications="previousInput.publications"
+        v-model:input-pmids="inputPmids"
+        :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
+        :fetchHpoTerms="fetchHpoTerms"
         v-model:clinical-phenotype="previousInput.phenotypes"
+        v-model:hpo-terms-input-helper="hpoTermsInputHelper"
       />
       <Genotype
         :attributesData="attributesData"
@@ -363,19 +435,19 @@ export default {
       class="d-flex justify-content-between py-3"
       v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
     >
-      <button
-        class="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#save-draft-modal"
-      >
+      <button type="button" class="btn btn-primary" @click="saveDraft">
         <i class="bi bi-floppy-fill"></i> Save Draft
       </button>
       <button class="btn btn-primary">
         <i class="bi bi-send-fill"></i> Publish
       </button>
     </div>
-    <SaveSuccessAlert v-if="isSubmitSuccess" />
-    <SaveDraftModal v-model:sessionname="session" @savedraft="saveDraft" />
+    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
+    <AlertModal
+      modalId="publications-input-alert-modal"
+      alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"
+      @confirm-click-handler="fetchPublications"
+    />
   </div>
 </template>
 <style scoped>

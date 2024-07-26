@@ -26,7 +26,7 @@ export default {
         updatedDiseaseCrossReferences.push(diseaseCrossReference);
       } else {
         const elementIndexToBeRemoved = updatedDiseaseCrossReferences.findIndex(
-          (item) => item.disease_name === diseaseCrossReference.disease_name
+          (item) => item.identifier === diseaseCrossReference.identifier
         );
         updatedDiseaseCrossReferences.splice(elementIndexToBeRemoved, 1);
       }
@@ -126,8 +126,8 @@ export default {
                         :checked="
                           diseaseCrossReferences.findIndex(
                             (diseaseCrossReference) =>
-                              diseaseCrossReference.disease_name ===
-                              item.disease_name
+                              diseaseCrossReference.identifier ===
+                              item.identifier
                           ) !== -1
                         "
                         @input="checkboxHandler(item, $event.target.checked)"

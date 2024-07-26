@@ -84,6 +84,7 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
 
     updatedPhenotypesObj[item.pmid] = {
       summary: "",
+      hpo_terms: [],
     };
 
     updatedVariantDescriptionsObj[item.pmid] = {
@@ -105,22 +106,44 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   updatedInput.variant_descriptions = updatedVariantDescriptionsObj;
   updatedInput.mechanism_evidence = updatedMechanismEvidenceObj;
 
+  for (let primaryTypeKey in updatedInput.variant_types) {
+    for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
+      updatedInput.variant_types[primaryTypeKey][
+        secondaryTypeKey
+      ].supporting_papers = [];
+    }
+  }
+
   return updatedInput;
 };
 
-const DeConstructJSONWithVariantCon = (arraydata) => {
+const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   let variantConsequenceObj = {};
 
   VariantConsequencesAttribs.forEach((item) => {
     variantConsequenceObj[item.inputKey] = "";
   });
 
-  arraydata.forEach((variantConsequence) => {
-    const { name, support } = variantConsequence;
+  variantConsequencesArray.forEach((variantConsequence) => {
+    const { variant_consequence, support } = variantConsequence;
 
-    variantConsequenceObj[name] = support;
+    variantConsequenceObj[variant_consequence] = support;
   });
+
   return variantConsequenceObj;
+};
+
+export const updateHpoTermsInputHelperWithPublicationsData = (pmidList) => {
+  let hpoTermsInputHelper = {};
+  pmidList.forEach((pmid) => {
+    hpoTermsInputHelper[pmid] = {
+      isHpoTermsDataLoading: false,
+      hpoTermsErrorMsg: "",
+      isHpoTermsValid: true,
+      hpoTermsInput: "",
+    };
+  });
+  return hpoTermsInputHelper;
 };
 
 export const prepareInputForDataSubmission = (input) => {
@@ -132,29 +155,26 @@ export const prepareInputForDataSubmission = (input) => {
     preparedInput.publications
   )) {
     let publicationObj = { pmid: pmidKey };
-    const keysToRemove = [];
     const keysToTrimValues = ["ancestries", "comment"];
     for (const [key, value] of Object.entries(valueObj)) {
-      if (!keysToRemove.includes(key)) {
-        if (keysToTrimValues.includes(key)) {
-          publicationObj[key] = value.trim();
-        } else {
-          publicationObj[key] = value;
-        }
+      if (keysToTrimValues.includes(key)) {
+        publicationObj[key] = value.trim();
+      } else {
+        publicationObj[key] = value;
       }
     }
     publicationsArray.push(publicationObj);
   }
   preparedInput.publications = publicationsArray;
 
-  // convert phenotypes from object to array of objects and include phenotypes that have non empty summary
+  // convert phenotypes from object to array of objects and include phenotypes that have non empty hpo terms
   let phenotypesArray = [];
   for (const [pmidKey, valueObj] of Object.entries(preparedInput.phenotypes)) {
-    if (valueObj.summary.trim() !== "") {
+    if (valueObj.hpo_terms && valueObj.hpo_terms.length > 0) {
       let phenotypeObj = {
-        ...valueObj,
         pmid: pmidKey,
         summary: valueObj.summary.trim(), // trim summary value
+        hpo_terms: valueObj.hpo_terms,
       };
       phenotypesArray.push(phenotypeObj);
     }
@@ -240,7 +260,7 @@ export const prepareInputForDataSubmission = (input) => {
   )) {
     if (value !== "") {
       let variantConsequencesObj = {
-        name: key,
+        variant_consequence: key,
         support: value,
       };
       variantConsequencesArray.push(variantConsequencesObj);
@@ -252,11 +272,12 @@ export const prepareInputForDataSubmission = (input) => {
   preparedInput.disease.disease_name =
     preparedInput.disease.disease_name.trim();
 
+  // convert locus to uppercase
+  preparedInput.locus = preparedInput.locus.toUpperCase();
+
   // if disease name is not empty then prefix locus to disease name
   if (preparedInput.disease.disease_name !== "") {
-    preparedInput.disease.disease_name = `${preparedInput.locus.toUpperCase()}-related ${
-      preparedInput.disease.disease_name
-    }`;
+    preparedInput.disease.disease_name = `${preparedInput.locus}-related ${preparedInput.disease.disease_name}`;
   }
 
   // trim session name
@@ -311,15 +332,17 @@ export const prepareInputForUpdating = (previousInput) => {
   for (const key of Object.keys(publicationsObj)) {
     phenotypesObj[key] = {
       summary: "",
+      hpo_terms: [],
     };
   }
 
   phenotypes.forEach((phenotype) => {
-    const { pmid, summary } = phenotype;
+    const { pmid, summary, hpo_terms } = phenotype;
 
     if (phenotypesObj[pmid]) {
       phenotypesObj[pmid] = {
         summary,
+        hpo_terms,
       };
     }
   });
@@ -359,7 +382,7 @@ export const prepareInputForUpdating = (previousInput) => {
     }
   }
 
-  variantTypes.forEach((varianttype) => {
+  variantTypes.forEach((variantType) => {
     const {
       comment,
       de_novo,
@@ -369,7 +392,7 @@ export const prepareInputForUpdating = (previousInput) => {
       secondary_type,
       supporting_papers,
       unknown_inheritance,
-    } = varianttype;
+    } = variantType;
 
     // Ensure the primary_type key exists
     if (variantTypesObj[primary_type][secondary_type]) {
@@ -451,7 +474,7 @@ export const prepareInputForUpdating = (previousInput) => {
     session_name: clonedpreviousInput.session_name,
     variant_types: variantTypesObj,
     variant_descriptions: variantDescObj,
-    variant_consequences: DeConstructJSONWithVariantCon(
+    variant_consequences: convertVariantConsequencesArrayToObject(
       clonedpreviousInput.variant_consequences
     ),
     molecular_mechanism: MechanismNameObj,

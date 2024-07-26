@@ -1,5 +1,8 @@
 <script>
 export default {
+  props: {
+    successMsg: String,
+  },
   methods: {
     refreshCurrentPage() {
       this.$router.go(); // Reloads current route
@@ -21,7 +24,7 @@ export default {
       </i>
       Success
     </h4>
-    <p>Curation Entry saved as draft.</p>
+    <p>{{ successMsg }}</p>
     <hr />
     <div class="d-flex justify-content-between">
       <router-link to="/curation/entries" class="btn btn-primary me-3">

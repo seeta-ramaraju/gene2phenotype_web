@@ -41,7 +41,11 @@
                 </router-link>
               </li>
               <li><a class="dropdown-item" href="#">Terminology</a></li>
-              <li><a class="dropdown-item" href="#">Variant filtering</a></li>
+              <li>
+                <router-link to="/variant-filtering" class="dropdown-item">
+                  Variant filtering
+                </router-link>
+              </li>
               <li>
                 <router-link to="/publications" class="dropdown-item"
                   >Publications</router-link
