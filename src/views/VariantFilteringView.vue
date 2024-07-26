@@ -399,4 +399,7 @@ code {
   font-family: courier, monospace;
   padding: 0 3px;
 }
+h6 {
+  font-weight: bold;
+}
 </style>
