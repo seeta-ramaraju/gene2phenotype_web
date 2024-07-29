@@ -1,9 +1,8 @@
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2 class="pb-2">G2P variant filtering</h2>
-    <h4 class="pb-2">
+    <h2 class="pb-2">
       Variant filtering using the G2P Ensembl Variant Effect Predictor plugin
-    </h4>
+    </h2>
     <p>
       The Ensembl Variant Effect Predictor (<a
         href="https://www.ensembl.org/info/docs/tools/vep/index.html"
