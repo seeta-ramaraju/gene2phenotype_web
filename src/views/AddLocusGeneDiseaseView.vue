@@ -17,6 +17,7 @@ import {
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 import AlertModal from "../components/curation/AlertModal.vue";
+import PublishModal from "../components/curation/PublishModal.vue";
 
 export default {
   data() {
@@ -41,6 +42,7 @@ export default {
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
+      stableId: null,
     };
   },
   components: {
@@ -266,6 +268,7 @@ export default {
         })
         .then((responseJson) => {
           this.isSubmitDataLoading = false;
+          this.stableId = responseJson.result;
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
             this.submitSuccessMsg = responseJson.message;
@@ -284,6 +287,48 @@ export default {
         .catch((error) => {
           this.isSubmitDataLoading = false;
           this.submitErrorMsg =
+            "Unable to submit data. Please try again later.";
+          console.log(error);
+        });
+    },
+    publishEntry() {
+      this.publishErrorMsg = this.publishSucessMsg = null;
+      this.isPublishSuccess = false;
+      this.isPublishDataLoading = true;
+      this.saveDraft();
+      let responseStatus = null;
+      fetch(`gene2phenotype/api/curation/publish/${stableId}/`, {
+        method: "POST",
+        body: JSON.stringify(requestBody),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          responseStatus = response.status;
+          return response.json();
+        })
+        .then((responseJson) => {
+          this.isPublishDataLoading = false;
+          if (responseStatus === 200) {
+            this.isPublishSuccess = true;
+            this.submitSuccessMsg = responseJson.message;
+          } else {
+            let errorMsg = "Unable to submit data. Please try again later";
+            if (
+              responseJson.errors?.message &&
+              responseJson.errors?.message.lenght > 0
+            ) {
+              errorMsg = "Error: " + responseJson.errors.message[0];
+            }
+            this.publishErrorMsg = errorMsg;
+            console.log(errorMsg);
+          }
+        })
+        .catch((error) => {
+          this.isPublishDataLoading = false;
+          this.publishErrorMsg =
             "Unable to submit data. Please try again later.";
           console.log(error);
         });
@@ -436,8 +481,12 @@ export default {
       >
         <i class="bi bi-floppy-fill"></i> Save Draft
       </button>
-      <button class="btn btn-primary">
-        <i class="bi bi-send-fill"></i> Publish
+      <button
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="publish-entry-modal"
+      >
+        <i class="bi bi-send-fill"></i> Save and Publish
       </button>
     </div>
     <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
@@ -445,6 +494,7 @@ export default {
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
     />
+    <PublishModal @publish="publishEntry" />
     <AlertModal
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
