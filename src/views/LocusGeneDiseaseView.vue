@@ -437,15 +437,17 @@ export default {
               <h6>Location</h6>
             </td>
             <td>
-              <p>
-                {{ locusGeneDiseaseData.locus.sequence }}
-                :
-                {{ locusGeneDiseaseData.locus.start }}
-                -
-                {{ locusGeneDiseaseData.locus.end }}
-                :
-                {{ locusGeneDiseaseData.locus.strand }}
-              </p>
+              <a
+                v-bind:href="`https://www.ensembl.org/Homo_sapiens/Location/View?r=${locusGeneDiseaseData.locus.sequence}:${locusGeneDiseaseData.locus.start}-${locusGeneDiseaseData.locus.end}`"
+                style="text-decoration: none"
+                target="_blank"
+              >
+                {{ locusGeneDiseaseData.locus.sequence }}:{{
+                  locusGeneDiseaseData.locus.start
+                }}-{{ locusGeneDiseaseData.locus.end }}:{{
+                  locusGeneDiseaseData.locus.strand
+                }}
+              </a>
             </td>
           </tr>
           <tr class="align-middle">
