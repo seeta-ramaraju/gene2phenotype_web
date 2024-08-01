@@ -1,13 +1,13 @@
 <script>
 export default {
-  emits: "publish",
+  emits: ["publish"],
 };
 </script>
 <template>
   <div
-    class="modal-fade"
+    class="modal fade"
     id="publish-entry-modal"
-    tabindex="1"
+    tabindex="-1"
     aria-labelledby="publish-entry-modal-label"
     aria-hidden="true"
   >

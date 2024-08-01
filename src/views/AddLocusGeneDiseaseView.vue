@@ -9,6 +9,7 @@ import Disease from "../components/curation/Disease.vue";
 import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
 import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
+import PublishModal from "../components/curation/PublishModal.vue";
 import {
   getInitialInputForNewCuration,
   updateInputWithPublicationsData,
@@ -17,7 +18,6 @@ import {
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 import AlertModal from "../components/curation/AlertModal.vue";
-import PublishModal from "../components/curation/PublishModal.vue";
 
 export default {
   data() {
@@ -56,6 +56,7 @@ export default {
     Panel,
     Confidence,
     SaveDraftModal,
+    PublishModal,
     SaveSuccessAlert,
     AlertModal,
   },
@@ -268,7 +269,9 @@ export default {
         })
         .then((responseJson) => {
           this.isSubmitDataLoading = false;
+          this.stableId = null;
           this.stableId = responseJson.result;
+          console.log(responseJson);
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
             this.submitSuccessMsg = responseJson.message;
@@ -291,47 +294,87 @@ export default {
           console.log(error);
         });
     },
-    publishEntry() {
-      this.publishErrorMsg = this.publishSucessMsg = null;
-      this.isPublishSuccess = false;
-      this.isPublishDataLoading = true;
-      this.saveDraft();
-      let responseStatus = null;
-      fetch(`gene2phenotype/api/curation/publish/${stableId}/`, {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
+    async publishEntry() {
+      this.publishErrorMsg =
+        this.publishSucessMsg =
+        this.submitErrorMsg =
+        this.submitSuccessMsg =
+          null;
+      this.isPublishSuccess = this.isSubmitSuccess = false;
+      this.isPublishDataLoading = this.isSubmitDataLoading = true;
+      this.stableId = null;
+
+      const preparedInput = prepareInputForDataSubmission(this.input);
+      const requestBody = { json_data: preparedInput };
+
+      try {
+        // Submitting Data
+        const submitResponse = await fetch(
+          "/gene2phenotype/api/add/curation/",
+          {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const submitResponseJson = await submitResponse.json();
+        this.isSubmitDataLoading = false;
+
+        if (submitResponse.status === 200) {
+          this.isSubmitSuccess = true;
+          this.submitSuccessMsg = submitResponseJson.message;
+          this.stableId = submitResponseJson.result;
+        } else {
+          let errorMsg = "Unable to submit data. Please try again later.";
+          if (
+            submitResponse.errors?.message &&
+            submitResponseJson.errors?.message.length > 0
+          ) {
+            errorMsg = "Error: " + submitResponseJson.errors.message[0];
+          }
+          this.submitErrorMsg = errorMsg;
+          console.log(errorMsg);
+        }
+
+        // Publishing Data
+        if ((this.submitSuccess = true && this.stableId)) {
+          const publishResponse = await fetch(
+            `/gene2phenotype/api/curation/publish/${this.stableId}/`,
+            {
+              method: "POST",
+              body: JSON.stringify(requestBody),
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const publishResponseJson = await publishResponse.json();
           this.isPublishDataLoading = false;
-          if (responseStatus === 200) {
+
+          if (publishResponse.status === 200) {
             this.isPublishSuccess = true;
-            this.submitSuccessMsg = responseJson.message;
+            this.publishSuccessMsg = publishResponseJson.message;
           } else {
-            let errorMsg = "Unable to submit data. Please try again later";
-            if (
-              responseJson.errors?.message &&
-              responseJson.errors?.message.lenght > 0
-            ) {
-              errorMsg = "Error: " + responseJson.errors.message[0];
+            let errorMsg = "Unable to publish data. Please try again later.";
+            if (publishResponseJson.errors?.message?.length > 0) {
+              errorMsg = "Error: " + publishResponseJson.errors.message[0];
             }
             this.publishErrorMsg = errorMsg;
-            console.log(errorMsg);
+            console.log("Publish Error:", errorMsg);
           }
-        })
-        .catch((error) => {
-          this.isPublishDataLoading = false;
-          this.publishErrorMsg =
-            "Unable to submit data. Please try again later.";
-          console.log(error);
-        });
+        }
+      } catch (error) {
+        this.isSubmitDataLoading = this.isPublishDataLoading = false;
+        this.submitErrorMsg = this.publishErrorMsg =
+          "Unable to submit data. Please try again later.";
+        console.log("Error:", error);
+      }
     },
   },
 };
@@ -484,12 +527,15 @@ export default {
       <button
         class="btn btn-primary"
         data-bs-toggle="modal"
-        data-bs-target="publish-entry-modal"
+        data-bs-target="#publish-entry-modal"
       >
-        <i class="bi bi-send-fill"></i> Save and Publish
+        <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
-    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
+    <!-- <SaveSuccessAlert
+      v-if="isSubmitSuccess && !isPublishSuccess"
+      :successMsg="submitSuccessMsg"
+    /> -->
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"

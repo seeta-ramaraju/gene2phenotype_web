@@ -145,8 +145,8 @@ export const VariantConsequencesAttribs = [
     hierarchyLevel: 2,
   },
   {
-    labelText: "Absent_gene_product_level SO:0002317",
-    inputKey: "absent_gene_product_level",
+    labelText: "Absent_gene_product SO:0002317",
+    inputKey: "absent_gene_product",
     hierarchyLevel: 3,
   },
   {
