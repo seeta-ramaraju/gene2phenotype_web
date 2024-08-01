@@ -555,9 +555,15 @@ export default {
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
+          <tr>
+            <td class="w-25 text-end">
+              <h4>Curation Information</h4>
+            </td>
+            <td></td>
+          </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h4>Curators</h4>
+              <h6>Curators</h6>
             </td>
             <td class="w-75">
               <p class="text-muted">Not Available</p>
@@ -565,7 +571,7 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h4>Created On</h4>
+              <h6>Created On</h6>
             </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.date_created">
@@ -576,7 +582,7 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h4>Last Updated On</h4>
+              <h6>Last Updated On</h6>
             </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.last_updated">
