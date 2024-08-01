@@ -35,6 +35,8 @@ export default {
       submitErrorMsg: null,
       isSubmitSuccess: false,
       submitSuccessMsg: null,
+      isPublishSuccess: false,
+      publishSuccessMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       inputPmids: "",
@@ -357,12 +359,15 @@ export default {
           const publishResponseJson = await publishResponse.json();
           this.isPublishDataLoading = false;
 
-          if (publishResponse.status === 200) {
+          if (publishResponse.status === 201) {
             this.isPublishSuccess = true;
             this.publishSuccessMsg = publishResponseJson.message;
           } else {
             let errorMsg = "Unable to publish data. Please try again later.";
-            if (publishResponseJson.errors?.message?.length > 0) {
+            if (
+              publishResponse.errors?.message &&
+              publishResponseJson.errors?.message?.length > 0
+            ) {
               errorMsg = "Error: " + publishResponseJson.errors.message[0];
             }
             this.publishErrorMsg = errorMsg;
@@ -532,10 +537,10 @@ export default {
         <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
-    <!-- <SaveSuccessAlert
+    <SaveSuccessAlert
       v-if="isSubmitSuccess && !isPublishSuccess"
       :successMsg="submitSuccessMsg"
-    /> -->
+    />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
