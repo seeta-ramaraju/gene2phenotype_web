@@ -10,6 +10,8 @@ import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
 import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
 import PublishModal from "../components/curation/PublishModal.vue";
+import PublishSuccessAlert from "../components/curation/PublishSuccessAlert.vue";
+import SaveNotPublishSuccessAlert from "../components/curation/SaveNotPublishSuccessAlert.vue";
 import {
   getInitialInputForNewCuration,
   updateInputWithPublicationsData,
@@ -37,6 +39,7 @@ export default {
       submitSuccessMsg: null,
       isPublishSuccess: false,
       publishSuccessMsg: null,
+      publishErrorMsg: null,
       publicationsErrorMsg: null,
       isPublicationsDataLoading: false,
       inputPmids: "",
@@ -59,6 +62,8 @@ export default {
     Confidence,
     SaveDraftModal,
     PublishModal,
+    PublishSuccessAlert,
+    SaveNotPublishSuccessAlert,
     SaveSuccessAlert,
     AlertModal,
   },
@@ -342,6 +347,7 @@ export default {
           console.log(errorMsg);
         }
 
+        this.isSubmitSuccess = false; // so it does not go to save modal alert
         // Publishing Data
         if ((this.submitSuccess = true && this.stableId)) {
           const publishResponse = await fetch(
@@ -358,12 +364,13 @@ export default {
 
           const publishResponseJson = await publishResponse.json();
           this.isPublishDataLoading = false;
-
+          console.log(publishResponse.status);
           if (publishResponse.status === 201) {
             this.isPublishSuccess = true;
             this.publishSuccessMsg = publishResponseJson.message;
           } else {
             let errorMsg = "Unable to publish data. Please try again later.";
+            console.log(publishResponse.errors.message[0]);
             if (
               publishResponse.errors?.message &&
               publishResponseJson.errors?.message?.length > 0
@@ -537,15 +544,18 @@ export default {
         <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
-    <SaveSuccessAlert
-      v-if="isSubmitSuccess && !isPublishSuccess"
-      :successMsg="submitSuccessMsg"
-    />
+    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
     />
     <PublishModal @publish="publishEntry" />
+    <PublishSuccessAlert
+      v-if="isPublishSuccess"
+      :successMsg="publishSuccessMsg"
+      :stableId="stableId"
+    />
+    <SaveNotPublishSuccessAlert v-if="!isPublishSuccess" :stableId="stableId" />
     <AlertModal
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
