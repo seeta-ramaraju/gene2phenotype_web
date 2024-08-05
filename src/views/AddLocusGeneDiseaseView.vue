@@ -347,7 +347,7 @@ export default {
           console.log(errorMsg);
         }
 
-        this.isSubmitSuccess = false; // so it does not go to save modal alert
+        this.isSubmitSuccess = false;
         // Publishing Data
         if ((this.submitSuccess = true && this.stableId)) {
           const publishResponse = await fetch(
@@ -364,21 +364,14 @@ export default {
 
           const publishResponseJson = await publishResponse.json();
           this.isPublishDataLoading = false;
-          console.log(publishResponse.status);
           if (publishResponse.status === 201) {
             this.isPublishSuccess = true;
             this.publishSuccessMsg = publishResponseJson.message;
           } else {
-            let errorMsg = "Unable to publish data. Please try again later.";
-            console.log(publishResponse.errors.message[0]);
-            if (
-              publishResponse.errors?.message &&
-              publishResponseJson.errors?.message?.length > 0
-            ) {
-              errorMsg = "Error: " + publishResponseJson.errors.message[0];
-            }
+            let errorMsg = "Unable to publish data.";
+            errorMsg += publishResponseJson.message;
             this.publishErrorMsg = errorMsg;
-            console.log("Publish Error:", errorMsg);
+            this.isSubmitSuccess = true;
           }
         }
       } catch (error) {
@@ -544,6 +537,11 @@ export default {
         <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
+    <SaveNotPublishSuccessAlert
+      v-if="isSubmitSuccess && !isPublishSuccess"
+      :errorMsg="publishErrorMsg"
+      :stableId="stableId"
+    />
     <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
@@ -555,7 +553,6 @@ export default {
       :successMsg="publishSuccessMsg"
       :stableId="stableId"
     />
-    <SaveNotPublishSuccessAlert v-if="!isPublishSuccess" :stableId="stableId" />
     <AlertModal
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
