@@ -278,7 +278,6 @@ export default {
           this.isSubmitDataLoading = false;
           this.stableId = null;
           this.stableId = responseJson.result;
-          console.log(responseJson);
           if (responseStatus === 200) {
             this.isSubmitSuccess = true;
             this.submitSuccessMsg = responseJson.message;
@@ -371,7 +370,6 @@ export default {
             let errorMsg = "Unable to publish data.";
             errorMsg += publishResponseJson.message;
             this.publishErrorMsg = errorMsg;
-            this.isSubmitSuccess = true;
           }
         }
       } catch (error) {
@@ -538,7 +536,7 @@ export default {
       </button>
     </div>
     <SaveNotPublishSuccessAlert
-      v-if="isSubmitSuccess && !isPublishSuccess"
+      v-if="submitSuccessMsg && !isPublishSuccess"
       :errorMsg="publishErrorMsg"
       :stableId="stableId"
     />

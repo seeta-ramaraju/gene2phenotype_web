@@ -16,7 +16,7 @@ export default {
 </script>
 <template>
   <div
-    class="alert alert-primary mx-auto col-6"
+    class="alert alert-danger mx-auto col-6"
     style="margin-top: 50px"
     role="alert"
   >
