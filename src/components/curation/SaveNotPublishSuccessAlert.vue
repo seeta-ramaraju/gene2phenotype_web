@@ -9,7 +9,7 @@ export default {
       this.$router.go();
     },
     redirectToPage() {
-      this.$router.push(`/lgd/update/${stableID}`);
+      this.$router.push(`/lgd/update/${this.stableId}`);
     },
   },
 };
@@ -29,7 +29,7 @@ export default {
     </h4>
     <p>{{ errorMsg }}</p>
     <hr />
-    <div ckass="d-flex jystify-content-between">
+    <div ckass="d-flex justify-content-between">
       <button class="btn btn-primary me-3" @click="redirectToPage">
         Update Current Record
       </button>
