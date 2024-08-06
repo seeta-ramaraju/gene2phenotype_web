@@ -15,7 +15,7 @@ export default {
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal=title" id="publish-entry-modal-label">
-            Publish Record
+            <strong>Publish Record</strong>
           </h5>
           <button
             type="button"
@@ -26,7 +26,7 @@ export default {
         </div>
         <div class="modal-body">
           <div class="row g-3 py-3">
-            <p>Publish this record</p>
+            <p>You are about to publish this record?</p>
           </div>
         </div>
         <div class="modal-footer">
