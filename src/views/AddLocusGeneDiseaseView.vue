@@ -353,10 +353,8 @@ export default {
             `/gene2phenotype/api/curation/publish/${this.stableId}/`,
             {
               method: "POST",
-              body: JSON.stringify(requestBody),
               headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
+                "Content-Length": 0,
               },
             }
           );

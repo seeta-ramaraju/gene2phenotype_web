@@ -57,7 +57,7 @@ export default {
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
-      stableId: null,
+      stableID: null,
     };
   },
   components: {
@@ -382,10 +382,8 @@ export default {
             `/gene2phenotype/api/curation/publish/${this.stableID}/`,
             {
               method: "POST",
-              body: JSON.stringify(requestBody),
               headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
+                "Content-Length": 0,
               },
             }
           );
@@ -537,14 +535,14 @@ export default {
     <SaveNotPublishSuccessAlert
       v-if="submitSuccessMsg && !isPublishSuccess"
       :errorMsg="publishErrorMsg"
-      :stableId="stableId"
+      :stableId="stableID"
     />
     <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
     <PublishModal @publish="publishEntry" />
     <PublishSuccessAlert
       v-if="isPublishSuccess"
       :successMsg="publishSuccessMsg"
-      :stableId="stableId"
+      :stableId="stableID"
     />
     <AlertModal
       modalId="publications-input-alert-modal"
