@@ -534,7 +534,7 @@ export default {
       </button>
     </div>
     <SaveNotPublishSuccessAlert
-      v-if="submitSuccessMsg && !isPublishSuccess"
+      v-if="submitSuccessMsg && publishErrorMsg"
       :errorMsg="publishErrorMsg"
       :stableId="stableId"
     />
