@@ -529,7 +529,7 @@ export default {
         data-bs-toggle="modal"
         data-bs-target="#publish-entry-modal"
       >
-        <i class="bi bi-floppy-fill"></i> Update and Publish
+        <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
     <SaveNotPublishSuccessAlert
