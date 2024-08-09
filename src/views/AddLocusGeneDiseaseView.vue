@@ -268,6 +268,7 @@ export default {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
         },
       })
         .then((response) => {
@@ -348,7 +349,7 @@ export default {
 
         this.isSubmitSuccess = false;
         // Publishing Data
-        if ((this.submitSuccess = true && this.stableId)) {
+        if (this.stableId) {
           const publishResponse = await fetch(
             `/gene2phenotype/api/curation/publish/${this.stableId}/`,
             {
@@ -365,7 +366,7 @@ export default {
             this.isPublishSuccess = true;
             this.publishSuccessMsg = publishResponseJson.message;
           } else {
-            let errorMsg = "Unable to publish data.";
+            let errorMsg = "Unable to publish data. ";
             errorMsg += publishResponseJson.message;
             this.publishErrorMsg = errorMsg;
           }
