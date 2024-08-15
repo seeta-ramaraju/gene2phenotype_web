@@ -2,7 +2,7 @@
 export default {
   props: {
     successMsg: String,
-    stableId: String
+    stableId: String,
   },
   methods: {
     refreshCurrentPage() {
@@ -11,6 +11,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div
     class="alert alert-success mx-auto col-6"
@@ -21,18 +22,19 @@ export default {
       <i
         class="bi bi-check-circle-fill"
         style="color: green; margin-right: 10px"
-      ></i>
+      >
+      </i>
       Success
     </h4>
     <p>{{ successMsg }}</p>
-    </hr>
+    <hr />
     <div class="d-flex justify-content-between">
-        <router-link :to="`/lgd/${stableId}`" class="btn btn-primary me-3">
-            View New G2P Record
-        </router-link>
-        <button class="btn btn-primary" @click="refreshCurrentPage">
-            Add Another G2P Record
-        </button>
+      <router-link :to="`/lgd/${stableId}`" class="btn btn-primary me-3">
+        View New G2P Record
+      </router-link>
+      <button class="btn btn-primary" @click="refreshCurrentPage">
+        Add Another G2P Record
+      </button>
     </div>
   </div>
 </template>
