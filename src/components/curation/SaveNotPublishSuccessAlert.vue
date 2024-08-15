@@ -6,7 +6,7 @@ export default {
   },
   methods: {
     refreshCurrentPage() {
-      this.$router.go();
+      this.$router.push(`/lgd/add`);
     },
     redirectToPage() {
       this.$router.push(`/lgd/update/${this.stableId}`);
