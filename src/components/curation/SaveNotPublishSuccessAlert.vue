@@ -20,16 +20,9 @@ export default {
     style="margin-top: 50px"
     role="alert"
   >
-    <h4 class="alert-heading">
-      <i
-        class="bi bi-check-circle-fill"
-        style="color: blue; margin-right: 10px"
-      ></i>
-      Info
-    </h4>
     <p>{{ errorMsg }}</p>
     <hr />
-    <div ckass="d-flex justify-content-between">
+    <div class="d-flex justify-content-between">
       <button class="btn btn-primary me-3" @click="redirectToPage">
         Update Current Record
       </button>
