@@ -96,7 +96,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2 class="pb-2">Download G2P data by panel</h2>
+    <h2 class="pb-2">Download G2P data by disorder panel</h2>
     <div
       class="d-flex justify-content-center"
       v-if="isDataLoading"
