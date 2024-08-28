@@ -31,9 +31,12 @@
               <h5>Data</h5>
               <ul class="nav flex-column">
                 <li class="nav-item mb-2">
-                  <a href="#" class="nav-link p-0 text-body-secondary">
+                  <router-link
+                    to="/download"
+                    class="nav-link p-0 text-body-secondary"
+                  >
                     Downloads
-                  </a>
+                  </router-link>
                 </li>
               </ul>
             </div>

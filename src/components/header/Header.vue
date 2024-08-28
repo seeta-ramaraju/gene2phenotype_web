@@ -123,6 +123,11 @@ export default {
                   Curators
                 </router-link>
               </li>
+              <li>
+                <router-link to="/download" class="dropdown-item">
+                  Downloads
+                </router-link>
+              </li>
               <li><a class="dropdown-item" href="#">Announcements</a></li>
             </ul>
           </li>
