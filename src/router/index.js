@@ -13,6 +13,7 @@ import CuratorsView from "../views/CuratorsView.vue";
 import DisclaimerView from "../views/DisclaimerView.vue";
 import UpdateLocusGeneDiseaseView from "../views/UpdateLocusGeneDiseaseView.vue";
 import VariantFilteringView from "../views/VariantFilteringView.vue";
+import DataDownloadView from "../views/DataDownloadView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -86,6 +87,11 @@ const router = createRouter({
       path: "/variant-filtering",
       name: "variant filtering",
       component: VariantFilteringView,
+    },
+    {
+      path: "/download",
+      name: "download",
+      component: DataDownloadView,
     },
   ],
 });
