@@ -119,6 +119,7 @@ export default {
         >
           <thead>
             <tr>
+              <th>G2P ID</th>
               <th>Disease</th>
               <th>Genotype</th>
               <th>Variant Consequence</th>
@@ -129,11 +130,19 @@ export default {
                 <a href="#"><i class="bi bi-question-circle-fill"></i></a>
               </th>
               <th>Panels</th>
-              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in geneSummaryData.records_summary">
+              <td>
+                <router-link
+                  :to="`/lgd/${item.stable_id}`"
+                  style="text-decoration: none"
+                  v-if="item.stable_id"
+                >
+                  {{ item.stable_id }}
+                </router-link>
+              </td>
               <td>
                 <router-link
                   :to="`/disease/${item.disease}`"
@@ -169,15 +178,6 @@ export default {
                     {{ panelName }} </router-link
                   ><span v-if="index < item.panels.length - 1">, </span>
                 </span>
-              </td>
-              <td>
-                <router-link
-                  :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
-                  v-if="item.stable_id"
-                >
-                  {{ item.stable_id }}
-                </router-link>
               </td>
             </tr>
           </tbody>

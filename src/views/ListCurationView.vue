@@ -67,8 +67,8 @@ export default {
           <thead>
             <tr>
               <th>Session Name</th>
-              <th>Locus</th>
               <th>G2P ID</th>
+              <th>Locus</th>
               <th>Date Created</th>
               <th>Date Last Updated</th>
             </tr>
@@ -76,7 +76,6 @@ export default {
           <tbody>
             <tr v-for="item in curationListData.results">
               <td>{{ item.session_name }}</td>
-              <td>{{ item.locus }}</td>
               <td>
                 <router-link
                   :to="`/lgd/update/${item.stable_id}`"
@@ -86,6 +85,7 @@ export default {
                   {{ item.stable_id }}
                 </router-link>
               </td>
+              <td>{{ item.locus }}</td>
               <td>{{ item.created_on }}</td>
               <td>{{ item.last_update }}</td>
             </tr>
