@@ -82,14 +82,22 @@ export default {
           Accelerating diagnostic variant filtering with high-confidence
           evidence-based gene-disease models
         </h5>
+        <p class="pt-2">
+          Browse, search and download detailed gene-disease associations with
+          information on allelic requirement, observed variant classes and
+          disease mechanism.
+        </p>
       </div>
+    </div>
+    <div class="row pb-4" v-if="!isDataLoading">
+      <h4>Search G2P</h4>
     </div>
     <div class="input-group" v-if="!isDataLoading">
       <input
         type="text"
         class="form-control"
         aria-label="Search text input"
-        placeholder="Search G2P (Eg: CRYBA1 or Severe Neurodevelopmental Syndrome)"
+        placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
         v-model="searchInput"
         id="search-input"
       />
