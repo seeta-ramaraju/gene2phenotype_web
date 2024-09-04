@@ -229,61 +229,71 @@ export default {
               <h4>Phenotypic Features</h4>
             </td>
             <td class="w-75">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapsiblePhenotypicFeaturesTable"
-                aria-expanded="false"
-                aria-controls="collapsiblePhenotypicFeaturesTable"
+              <div
+                v-if="
+                  locusGeneDiseaseData.phenotypes &&
+                  locusGeneDiseaseData.phenotypes.length > 0
+                "
+                class="accordion accordion-flush"
+                id="accordionPhenotypicFeatures"
               >
-                View Phenotypic Features
-              </button>
-              <div class="collapse" id="collapsiblePhenotypicFeaturesTable">
-                <table
-                  class="table table-bordered mt-2"
-                  v-if="
-                    locusGeneDiseaseData.phenotypes &&
-                    locusGeneDiseaseData.phenotypes.length > 0
-                  "
-                >
-                  <thead>
-                    <tr>
-                      <th style="width: 20%">Accession</th>
-                      <th style="width: 80%">Name</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="item in locusGeneDiseaseData.phenotypes"
-                      :key="item.accession"
+                <div class="accordion-item">
+                  <h2 class="accordion-header border">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapsiblePhenotypicFeaturesTable"
+                      aria-expanded="false"
+                      aria-controls="collapsiblePhenotypicFeaturesTable"
                     >
-                      <td style="width: 20%">
-                        <a
-                          :href="`https://hpo.jax.org/app/browse/term/${item.accession}`"
-                          style="text-decoration: none"
-                          v-if="item.accession"
-                          target="_blank"
-                        >
-                          {{ item.accession }}
-                        </a>
-                      </td>
-                      <td style="width: 80%">
-                        {{ item.name }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <p v-else class="text-muted">Not Available</p>
+                      Phenotypic Features
+                    </button>
+                  </h2>
+                  <div
+                    id="collapsiblePhenotypicFeaturesTable"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionPhenotypicFeatures"
+                  >
+                    <div class="accordion-body p-0">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <tr>
+                            <th style="width: 20%">Accession</th>
+                            <th style="width: 80%">Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="item in locusGeneDiseaseData.phenotypes"
+                            :key="item.accession"
+                          >
+                            <td style="width: 20%">
+                              <a
+                                :href="`https://hpo.jax.org/app/browse/term/${item.accession}`"
+                                style="text-decoration: none"
+                                v-if="item.accession"
+                                target="_blank"
+                              >
+                                {{ item.accession }}
+                              </a>
+                            </td>
+                            <td style="width: 80%">
+                              {{ item.name }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h4>
-                Confidence
-                <a href="#"><i class="bi bi-question-circle-fill"></i></a>
-              </h4>
+              <h4>Confidence</h4>
             </td>
             <td class="w-75">
               <p
@@ -312,54 +322,67 @@ export default {
               <h6>Publications</h6>
             </td>
             <td class="w-75">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapsiblePublicationsTable"
-                aria-expanded="false"
-                aria-controls="collapsiblePublicationsTable"
+              <div
+                v-if="
+                  locusGeneDiseaseData.publications &&
+                  locusGeneDiseaseData.publications.length > 0
+                "
+                class="accordion accordion-flush"
+                id="accordionPublications"
               >
-                View publications
-              </button>
-              <div class="collapse" id="collapsiblePublicationsTable">
-                <table
-                  class="table table-bordered mt-2"
-                  v-if="
-                    locusGeneDiseaseData.publications &&
-                    locusGeneDiseaseData.publications.length > 0
-                  "
-                >
-                  <thead>
-                    <tr>
-                      <th style="width: 10%">PMID</th>
-                      <th style="width: 80%">Title</th>
-                      <th style="width: 10%">Year</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in locusGeneDiseaseData.publications">
-                      <td style="width: 10%">
-                        <a
-                          v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
-                          style="text-decoration: none"
-                          v-if="item.publication.pmid"
-                          target="_blank"
-                        >
-                          {{ item.publication.pmid }}
-                        </a>
-                      </td>
-                      <td style="width: 80%">
-                        {{ item.publication.title }}
-                      </td>
-                      <td style="width: 10%">
-                        {{ item.publication.year }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <p v-else class="text-muted">Not Available</p>
+                <div class="accordion-item">
+                  <h2 class="accordion-header border">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapsiblePublicationsTable"
+                      aria-expanded="false"
+                      aria-controls="collapsiblePublicationsTable"
+                    >
+                      Publications
+                    </button>
+                  </h2>
+                  <div
+                    id="collapsiblePublicationsTable"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionPublications"
+                  >
+                    <div class="accordion-body p-0">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <tr>
+                            <th style="width: 10%">PMID</th>
+                            <th style="width: 80%">Title</th>
+                            <th style="width: 10%">Year</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="item in locusGeneDiseaseData.publications">
+                            <td style="width: 10%">
+                              <a
+                                v-bind:href="`https://europepmc.org/article/MED/${item.publication.pmid}`"
+                                style="text-decoration: none"
+                                v-if="item.publication.pmid"
+                                target="_blank"
+                              >
+                                {{ item.publication.pmid }}
+                              </a>
+                            </td>
+                            <td style="width: 80%">
+                              {{ item.publication.title }}
+                            </td>
+                            <td style="width: 10%">
+                              {{ item.publication.year }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
           <tr class="align-middle">
