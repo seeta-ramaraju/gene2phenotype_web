@@ -111,7 +111,7 @@ export default {
       <h4 class="py-3">Latest Records</h4>
       <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="
             geneSummaryData.records_summary &&
             geneSummaryData.records_summary.length > 0
@@ -125,10 +125,7 @@ export default {
               <th>Variant Consequence</th>
               <th>Variant Type</th>
               <th>Mechanism</th>
-              <th>
-                Confidence
-                <a href="#"><i class="bi bi-question-circle-fill"></i></a>
-              </th>
+              <th>Confidence</th>
               <th>Panels</th>
             </tr>
           </thead>

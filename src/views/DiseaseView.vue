@@ -22,7 +22,7 @@ export default {
   //adding methods
   methods: {
     fetchData() {
-      this.errorMsg = this.diseaseSummaryData = this.diseaseData = null; // initializing all the values to null
+      this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
       this.isDataLoading = true;
       const diseaseID = this.$route.params.id;
       Promise.all([
@@ -73,7 +73,6 @@ export default {
     <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
-    <!-- v.if is a directive to check the if the value is true or False -->
     <div v-if="diseaseData && diseaseSummaryData">
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
@@ -82,7 +81,6 @@ export default {
           {{ item.description }}
         </p>
       </div>
-      <!-- v.else is a directive to do if v-if is  not True -->
       <p v-if="diseaseData.mim" class="pt-3">
         <strong>OMIM: </strong>
         <a
@@ -96,7 +94,7 @@ export default {
       <h4 class="py-3">Latest Records</h4>
       <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="
             diseaseSummaryData.records_summary &&
             diseaseSummaryData.records_summary.length > 0
@@ -232,7 +230,7 @@ export default {
         Cross references
       </h4>
       <table
-        class="table table-bordered w-50"
+        class="table table-bordered w-50 shadow-sm"
         v-if="
           diseaseData.ontology_terms && diseaseData.ontology_terms.length > 0
         "
