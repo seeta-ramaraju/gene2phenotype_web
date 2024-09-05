@@ -180,7 +180,7 @@ export default {
         {{ panelData.description }} panel ({{ panelData.name }})
       </h2>
       <h2 v-else>Not Available</h2>
-      <div class="row pt-3 justify-content-md-center">
+      <div class="row pt-4 justify-content-md-center">
         <div class="col-4">
           <div class="card">
             <div class="card-body">
@@ -216,7 +216,7 @@ export default {
           </div>
         </div>
       </div>
-      <h4 class="py-3">Records Per Confidence Class</h4>
+      <h5 class="pt-5 text-center">Records per confidence class</h5>
       <div>
         <BarChart
           :chartData="chartData"
@@ -225,7 +225,7 @@ export default {
           class="w-50 mx-auto"
         />
       </div>
-      <h4 class="py-3">Latest Records</h4>
+      <h3 class="pt-5 pb-2">Latest records</h3>
       <div class="d-flex justify-content-end mb-2">
         <button
           v-if="!isDownloadAllDataLoading"
@@ -233,7 +233,7 @@ export default {
           class="btn btn-outline-primary"
           @click="downloadAllData"
         >
-          <i class="bi bi-cloud-arrow-down"></i> Download all data
+          <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
         </button>
         <button v-else disabled class="btn btn-outline-primary" type="button">
           <span
@@ -256,7 +256,7 @@ export default {
       </div>
       <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="
             panelSummaryData.records_summary &&
             panelSummaryData.records_summary.length > 0
@@ -335,7 +335,6 @@ export default {
                 "
               >
                 Confidence
-                <a href="#"><i class="bi bi-question-circle-fill"></i></a>
               </th>
             </tr>
           </thead>
@@ -389,7 +388,7 @@ export default {
         </table>
         <p v-else style="color: grey">Not Available</p>
       </div>
-      <h4 class="py-3">Curators</h4>
+      <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
         <ul v-if="panelData.curators && panelData.curators.length > 0">
           <li v-for="curator in panelData.curators">
