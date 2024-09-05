@@ -6,9 +6,12 @@
           <h5>Information</h5>
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary">
+              <router-link
+                to="/variant-filtering"
+                class="nav-link p-0 text-body-secondary"
+              >
                 Documentation
-              </a>
+              </router-link>
             </li>
             <li class="nav-item mb-2">
               <router-link
