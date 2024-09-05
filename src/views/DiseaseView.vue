@@ -230,7 +230,7 @@ export default {
         Cross references
       </h4>
       <table
-        class="table table-bordered w-50 shadow-sm"
+        class="table table-bordered table-hover w-50 shadow-sm"
         v-if="
           diseaseData.ontology_terms && diseaseData.ontology_terms.length > 0
         "
