@@ -5,7 +5,7 @@
     </h2>
     <p>
       The Ensembl Variant Effect Predictor (<a
-        href="https://www.ensembl.org/info/docs/tools/vep/index.html"
+        v-bind:href="vep"
         target="_blank"
         style="text-decoration: none"
         >Ensembl VEP</a
@@ -26,34 +26,19 @@
     <p>
       By default VEP-G2P checks for known genomic variants that are colocated
       with the input variants and switches on the following Ensembl VEP options:
-      <a
-        href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_individual"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="individual" target="_blank" style="text-decoration: none"
         >individual information</a
       >,
-      <a
-        href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="symbol" target="_blank" style="text-decoration: none"
         >gene symbol</a
       >,
-      <a
-        href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="frequency" target="_blank" style="text-decoration: none"
         >global allele frequency from 1000 Genomes Phase 3</a
       >,
-      <a
-        href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_sift"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="sift" target="_blank" style="text-decoration: none"
         >SIFT predictions</a
       >,
-      <a
-        href="https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_polyphen"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="polyphen" target="_blank" style="text-decoration: none"
         >PolyPhen-2 predictions</a
       >.
     </p>
@@ -116,24 +101,15 @@
     <h6 class="pb-2">Installing and running VEP-G2P</h6>
     <p>
       Please refer to the Ensembl VEP
-      <a
-        href="http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="vep_options" target="_blank" style="text-decoration: none"
         >documentation</a
       >
       for information on how to install and run Ensembl VEP locally. Using the
-      <a
-        href="http://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="docker" target="_blank" style="text-decoration: none"
         >Docker</a
       >
       image is the simplest approach. Plugins including
-      <a
-        href="https://github.com/Ensembl/VEP_plugins/blob/main/G2P.pm"
-        target="_blank"
-        style="text-decoration: none"
+      <a v-bind:href="g2p" target="_blank" style="text-decoration: none"
         >VEP-G2P</a
       >
       are present in the Docker image or installed in the interactive
@@ -322,10 +298,7 @@
         installation process.
       </li>
       <li>
-        <a
-          href="http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster"
-          target="_blank"
-          style="text-decoration: none"
+        <a v-bind:href="vep_other" target="_blank" style="text-decoration: none"
           >More ways to make sure that your Ensembl VEP installation is running
           as fast as possible.</a
         >
@@ -402,3 +375,28 @@ h6 {
   font-weight: bold;
 }
 </style>
+<script>
+export default {
+  data() {
+    return {
+      vep: "https://www.ensembl.org/info/docs/tools/vep/index.html",
+      individual:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_individual",
+      symbol:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol",
+      frequency:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af",
+      sift: "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_sift",
+      polyphen:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_polyphen",
+      vep_options:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html",
+      docker:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker",
+      g2p: "https://github.com/Ensembl/VEP_plugins/blob/main/G2P.pm",
+      vep_other:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster",
+    };
+  },
+};
+</script>

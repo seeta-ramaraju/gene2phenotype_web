@@ -14,7 +14,7 @@
       and has since been generalised to cover other disease areas. All data is
       made freely available. The initial paper is available
       <a
-        href="https://doi.org/10.1038/s41467-019-10016-3"
+        v-bind:href="initialpaper"
         target="_blank"
         style="text-decoration: none"
         >here</a
@@ -53,7 +53,7 @@
     </p>
     <div class="row">
       <div class="col-3">
-        <a href="https://thegencc.org/" target="_blank">
+        <a v-bind:href="gencc" target="_blank">
           <img
             alt="GenCC logo"
             src="../assets/GenCC.png"
@@ -71,3 +71,13 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      gencc: "https://thegencc.org/",
+      initialpaper: "https://doi.org/10.1038/s41467-019-10016-3",
+    };
+  },
+};
+</script>
