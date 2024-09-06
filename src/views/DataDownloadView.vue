@@ -119,7 +119,7 @@ export default {
         panelData.results.length > 0
       "
     >
-      <ul>
+      <ul class="list-unstyled">
         <li v-for="item in panelData.results">
           <button
             @click="downloadPanelData(item.name)"
@@ -127,6 +127,7 @@ export default {
             class="btn btn-link"
             style="margin: 0; padding: 0; text-decoration: none"
           >
+            <i class="bi bi-cloud-arrow-down-fill fs-5"></i>
             {{ item.description ? item.description : item.name }} gene-disease
             pairs and attributes
           </button>

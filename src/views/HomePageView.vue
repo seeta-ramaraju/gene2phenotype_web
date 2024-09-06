@@ -6,7 +6,9 @@ export default {
     return {
       isDataLoading: false,
       panelData: null,
+      activeDownloadPanelName: null,
       errorMsg: null,
+      dataDownloadErrorMsg: null,
       searchInput: "",
       selectedSearchType: "all",
       selectedSearchPanel: "all",
@@ -17,7 +19,7 @@ export default {
     this.$watch(
       () => this.$route.params,
       () => {
-        this.fetchData();
+        this.fetchPanelData();
       },
       // fetch the data when the view is created and the data is
       // already being observed
@@ -25,7 +27,7 @@ export default {
     );
   },
   methods: {
-    fetchData() {
+    fetchPanelData() {
       this.errorMsg = this.panelData = null;
       this.isDataLoading = true;
       fetch("/gene2phenotype/api/panels/")
@@ -33,7 +35,9 @@ export default {
           if (response.status === 200) {
             return response.json();
           } else {
-            return Promise.reject(new Error("Unable to fetch panel data"));
+            return Promise.reject(
+              new Error("Unable to fetch panel data. Please try again later.")
+            );
           }
         })
         .then((responseJson) => {
@@ -62,69 +66,85 @@ export default {
         router.push({ path: "/search", query: routeQuery });
       }
     },
+    downloadPanelData(panelName) {
+      let responseContentDisposition = null;
+      this.dataDownloadErrorMsg = null;
+      // before fetching panel data for download, activeDownloadPanelName is set to panelName
+      // after fetching data, it is set to null
+      this.activeDownloadPanelName = panelName;
+      fetch(`/gene2phenotype/api/panel/${panelName}/download`, {
+        method: "GET",
+        headers: {
+          "content-type": "text/csv;charset=UTF-8",
+        },
+      })
+        .then((response) => {
+          responseContentDisposition = response.headers.get(
+            "Content-Disposition"
+          );
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            return Promise.reject(
+              new Error("Unable to download data. Please try again later.")
+            );
+          }
+        })
+        .then((responseText) => {
+          this.activeDownloadPanelName = null;
+          // get csv file name from response Content-Disposition header
+          const regexMatch = responseContentDisposition.match(
+            /attachment; filename="([^"]+)"/
+          ); // Ex responseContentDisposition value: attachment; filename="some_file_name.csv"
+          let csvFileName = "data.csv"; //default csv file name
+          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+            csvFileName = regexMatch[1];
+          }
+          // download csv data to file
+          const csvDataText = responseText;
+          const anchor = document.createElement("a");
+          anchor.href =
+            "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
+          anchor.target = "_blank";
+          anchor.download = csvFileName;
+          anchor.click();
+        })
+        .catch((error) => {
+          this.activeDownloadPanelName = null;
+          this.dataDownloadErrorMsg = error.message;
+          console.log(error);
+        });
+    },
   },
 };
 </script>
 <template>
-  <div class="container px-5 py-3" style="min-height: 60vh">
-    <div class="row py-3">
-      <div class="col-2">
-        <img
-          alt="G2P logo"
-          src="../assets/G2P-logo.png"
-          width="80%"
-          height="auto"
-        />
+  <div style="min-height: 60vh">
+    <div class="container col-xxl-8 px-4">
+      <div class="row flex-lg-row align-items-center py-5">
+        <div class="col-10 col-sm-8 col-lg-4">
+          <img
+            src="../assets/G2P-logo.png"
+            class="d-block mx-lg-auto img-fluid"
+            alt="G2P logo"
+            width="280"
+            height="auto"
+            loading="lazy"
+          />
+        </div>
+        <div class="col-lg-8">
+          <h1 class="display-5 fw-bold lh-1 mb-3">Gene2Phenotype (G2P)</h1>
+          <h5 class="fw-bold lh-1 mb-3">
+            Accelerating diagnostic variant filtering with high-confidence
+            evidence-based gene-disease models
+          </h5>
+          <p class="lead">
+            Browse, search and download detailed gene-disease associations with
+            information on allelic requirement, observed variant classes and
+            disease mechanism.
+          </p>
+        </div>
       </div>
-      <div class="col-10" style="vertical-align: middle">
-        <h1>Gene2Phenotype (G2P)</h1>
-        <h5>
-          Accelerating diagnostic variant filtering with high-confidence
-          evidence-based gene-disease models
-        </h5>
-      </div>
-    </div>
-    <div class="input-group" v-if="!isDataLoading">
-      <input
-        type="text"
-        class="form-control"
-        aria-label="Search text input"
-        placeholder="Search G2P (Eg: CRYBA1 or Severe Neurodevelopmental Syndrome)"
-        v-model="searchInput"
-        id="search-input"
-      />
-      <select
-        class="form-select"
-        aria-label="Select search type"
-        style="max-width: 18%"
-        v-model="selectedSearchType"
-        id="select-search-type"
-      >
-        <option value="all">Search by All Types</option>
-        <option value="gene">Search by Gene</option>
-        <option value="disease">Search by Disease</option>
-        <option value="phenotype">Search by Phenotype</option>
-        <option value="g2p_id">Search by G2P ID</option>
-      </select>
-      <select
-        class="form-select"
-        aria-label="Select search panel"
-        style="max-width: 18%"
-        v-model="selectedSearchPanel"
-        v-if="panelData && panelData.results && panelData.results.length > 0"
-        id="select-search-panel"
-      >
-        <option value="all">Search All Panels</option>
-        <option
-          v-for="item in panelData.results"
-          :value="item.name.toLowerCase()"
-        >
-          Search {{ item.description }} panel
-        </option>
-      </select>
-      <button type="button" class="btn btn-primary" @click="searchClickHandler">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
     <div
       class="d-flex justify-content-center"
@@ -135,51 +155,237 @@ export default {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
-      <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
-    </div>
-    <div
-      class="row py-4"
-      v-if="panelData && panelData.results && panelData.results.length > 0"
-    >
-      <h4>Explore by Disorder Panel</h4>
-    </div>
-    <div
-      class="pb-4"
-      v-if="panelData && panelData.results && panelData.results.length > 0"
-    >
-      <table class="table table-hover table-bordered w-50 mx-auto">
-        <thead>
-          <tr>
-            <th scope="col" width="40%">Disorder Panel</th>
-            <th scope="col" width="35%">
-              Total LGMDE Records
-              <span class="bi bi-info-circle custom-tooltip">
-                <span class="custom-tooltip-text">
-                  G2P records are Locus-Genotype-Mechanism-Disease-Evidence
-                  (LGMDE) threads describing gene-disease associations
-                </span>
-              </span>
-            </th>
-            <th scope="col" width="25%">Total Genes</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in panelData.results">
-            <td>
-              <router-link
-                :to="`/panel/${item.name}`"
-                v-if="item.name"
-                style="text-decoration: none"
+    <div v-else>
+      <div class="p-5 text-center bg-body-tertiary">
+        <div class="container pt-0 px-3 pb-3">
+          <h1 class="pb-5">Search G2P</h1>
+          <div class="col-lg-8 mx-auto">
+            <div class="input-group shadow-sm">
+              <input
+                type="text"
+                class="form-control"
+                aria-label="Search text input"
+                placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
+                v-model="searchInput"
+                id="search-input"
+              />
+              <button
+                class="btn btn-primary dropdown-toggle"
+                style="border-right: solid"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                {{ item.description ? item.description : item.name }}
-              </router-link>
-            </td>
-            <td>{{ item.stats?.total_records }}</td>
-            <td>{{ item.stats?.total_genes }}</td>
-          </tr>
-        </tbody>
-      </table>
+                Filter
+              </button>
+              <div class="dropdown-menu dropdown-menu-end p-3">
+                <p class="fw-bold mb-1">Filter by type</p>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="all"
+                    v-model="selectedSearchType"
+                    id="filter-input-type-all"
+                  />
+                  <label class="form-check-label" for="filter-input-type-all">
+                    All
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="gene"
+                    v-model="selectedSearchType"
+                    id="filter-input-type-gene"
+                  />
+                  <label class="form-check-label" for="filter-input-type-gene">
+                    Gene
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="disease"
+                    v-model="selectedSearchType"
+                    id="filter-input-type-disease"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="filter-input-type-disease"
+                  >
+                    Disease
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="phenotype"
+                    v-model="selectedSearchType"
+                    id="filter-input-type-phenotype"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="filter-input-type-phenotype"
+                  >
+                    Phenotype
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="g2p_id"
+                    v-model="selectedSearchType"
+                    id="filter-input-type-g2p-id"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="filter-input-type-g2p-id"
+                  >
+                    G2P ID
+                  </label>
+                </div>
+                <div
+                  v-if="
+                    panelData &&
+                    panelData.results &&
+                    panelData.results.length > 0
+                  "
+                >
+                  <hr class="dropdown-divider" />
+                  <p class="fw-bold mb-1">Filter by panel</p>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      value="all"
+                      v-model="selectedSearchPanel"
+                      id="filter-input-panel-all"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="filter-input-panel-all"
+                    >
+                      All
+                    </label>
+                  </div>
+                  <div class="form-check" v-for="item in panelData.results">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      :value="item.name.toLowerCase()"
+                      v-model="selectedSearchPanel"
+                      :id="`filter-input-panel-${item.name}`"
+                    />
+                    <label
+                      class="form-check-label"
+                      :for="`filter-input-panel-${item.name}`"
+                    >
+                      {{ item.description ? item.description : item.name }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click="searchClickHandler"
+              >
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container p-5">
+        <h1 class="pb-5 text-center">Browse disorder panels</h1>
+        <div
+          class="alert alert-danger mx-auto col-lg-6"
+          role="alert"
+          v-if="errorMsg || dataDownloadErrorMsg"
+        >
+          <div>
+            <i class="bi bi-exclamation-circle-fill"></i>
+            {{ errorMsg || dataDownloadErrorMsg }}
+          </div>
+        </div>
+        <div
+          v-if="panelData && panelData.results && panelData.results.length > 0"
+          class="col-lg-6 mx-auto"
+        >
+          <table class="table table-hover table-bordered shadow-sm">
+            <thead>
+              <tr>
+                <th scope="col" width="35%">Disorder Panel</th>
+                <th scope="col" width="37%">
+                  Total LGMDE Records
+                  <span
+                    class="bi bi-info-circle custom-tooltip"
+                    style="color: #0d6efd"
+                  >
+                    <span class="custom-tooltip-text">
+                      G2P records are Locus-Genotype-Mechanism-Disease-Evidence
+                      (LGMDE) threads describing gene-disease associations
+                    </span>
+                  </span>
+                </th>
+                <th scope="col" width="20%">Total Genes</th>
+                <th scope="col" width="8%">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in panelData.results">
+                <td>
+                  <router-link
+                    :to="`/panel/${item.name}`"
+                    v-if="item.name"
+                    style="text-decoration: none"
+                  >
+                    {{ item.description ? item.description : item.name }}
+                  </router-link>
+                </td>
+                <td>{{ item.stats?.total_records }}</td>
+                <td>{{ item.stats?.total_genes }}</td>
+                <td class="p-0">
+                  <div class="d-flex justify-content-center">
+                    <button
+                      v-if="
+                        activeDownloadPanelName &&
+                        activeDownloadPanelName === item.name
+                      "
+                      disabled
+                      class="btn btn-link p-0 mt-2"
+                      type="button"
+                    >
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                    </button>
+                    <button
+                      v-else
+                      type="button"
+                      class="btn btn-link p-0"
+                      @click="downloadPanelData(item.name)"
+                      :disabled="
+                        activeDownloadPanelName &&
+                        activeDownloadPanelName !== item.name
+                      "
+                    >
+                      <i class="bi bi-cloud-arrow-down-fill fs-4"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
