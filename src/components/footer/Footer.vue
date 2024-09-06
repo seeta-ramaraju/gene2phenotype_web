@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer mt-auto py-3 bg-body-tertiary">
+  <footer class="footer mt-auto py-3 footer-bg-color">
     <div class="container">
       <div class="row">
         <div class="col-md-2 mb-3">
@@ -121,3 +121,8 @@
     </div>
   </footer>
 </template>
+<style scoped>
+.footer-bg-color {
+  background-color: #f1f1f2;
+}
+</style>
