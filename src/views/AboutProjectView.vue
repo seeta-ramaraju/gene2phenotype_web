@@ -51,24 +51,15 @@
       identify likely causative genes and variants. Full information is
       available <a href="#" style="text-decoration: none">here</a>.
     </p>
-    <div class="row">
-      <div class="col-3">
-        <a v-bind:href="gencc" target="_blank">
-          <img
-            alt="GenCC logo"
-            src="../assets/GenCC.png"
-            width="100%"
-            height="auto"
-          />
-        </a>
-      </div>
-      <div class="col-9">
-        <p>
-          G2P is a member of the Gene Curation Coalition which seeks to
-          standardise the curation and description of gene disease information.
-        </p>
-      </div>
-    </div>
+    <p>
+      G2P is a member of the Gene Curation Coalition (<a
+        v-bind:href="gencc"
+        target="_blank"
+        style="text-decoration: none"
+        >Gen CC</a
+      >) which seeks to standardise the curation and description of gene disease
+      information.
+    </p>
   </div>
 </template>
 <script>

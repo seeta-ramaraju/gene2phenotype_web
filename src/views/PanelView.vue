@@ -4,9 +4,11 @@ export default {
   data() {
     return {
       isDataLoading: false,
+      isDownloadAllDataLoading: false,
       panelData: null,
       panelSummaryData: null,
       errorMsg: null,
+      downloadAllDataErrorMsg: null,
       confidenceColorMap: {
         definitive: "green",
         strong: "green",
@@ -108,6 +110,53 @@ export default {
           console.log(error);
         });
     },
+    downloadAllData() {
+      let responseContentDisposition = null;
+      this.downloadAllDataErrorMsg = null;
+      this.isDownloadAllDataLoading = true;
+      fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/download`, {
+        method: "GET",
+        headers: {
+          "content-type": "text/csv;charset=UTF-8",
+        },
+      })
+        .then((response) => {
+          responseContentDisposition = response.headers.get(
+            "Content-Disposition"
+          );
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            return Promise.reject(
+              new Error("Unable to download data. Please try again later.")
+            );
+          }
+        })
+        .then((responseText) => {
+          this.isDownloadAllDataLoading = false;
+          // get csv file name from response Content-Disposition header
+          const regexMatch = responseContentDisposition.match(
+            /attachment; filename="([^"]+)"/
+          ); // Ex responseContentDisposition value: attachment; filename="some_file_name.csv"
+          let csvFileName = "data.csv"; //default csv file name
+          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+            csvFileName = regexMatch[1];
+          }
+          // download csv data to file
+          const csvDataText = responseText;
+          const anchor = document.createElement("a");
+          anchor.href =
+            "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
+          anchor.target = "_blank";
+          anchor.download = csvFileName;
+          anchor.click();
+        })
+        .catch((error) => {
+          this.isDownloadAllDataLoading = false;
+          this.downloadAllDataErrorMsg = error.message;
+          console.log(error);
+        });
+    },
   },
   components: { BarChart },
 };
@@ -131,7 +180,7 @@ export default {
         {{ panelData.description }} panel ({{ panelData.name }})
       </h2>
       <h2 v-else>Not Available</h2>
-      <div class="row pt-3 justify-content-md-center">
+      <div class="row pt-4 justify-content-md-center">
         <div class="col-4">
           <div class="card">
             <div class="card-body">
@@ -167,7 +216,7 @@ export default {
           </div>
         </div>
       </div>
-      <h4 class="py-3">Records Per Confidence Class</h4>
+      <h5 class="pt-5 text-center">Records per confidence class</h5>
       <div>
         <BarChart
           :chartData="chartData"
@@ -176,10 +225,38 @@ export default {
           class="w-50 mx-auto"
         />
       </div>
-      <h4 class="py-3">Latest Records</h4>
+      <h3 class="pt-5 pb-2">Latest records</h3>
+      <div class="d-flex justify-content-end mb-2">
+        <button
+          v-if="!isDownloadAllDataLoading"
+          type="button"
+          class="btn btn-outline-primary"
+          @click="downloadAllData"
+        >
+          <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
+        </button>
+        <button v-else disabled class="btn btn-outline-primary" type="button">
+          <span
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Downloading...
+        </button>
+      </div>
+      <div
+        class="alert alert-danger mt-3"
+        role="alert"
+        v-if="downloadAllDataErrorMsg"
+      >
+        <div>
+          <i class="bi bi-exclamation-circle-fill"></i>
+          {{ downloadAllDataErrorMsg }}
+        </div>
+      </div>
       <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="
             panelSummaryData.records_summary &&
             panelSummaryData.records_summary.length > 0
@@ -187,6 +264,15 @@ export default {
         >
           <thead>
             <tr>
+              <th
+                style="
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                G2P ID
+              </th>
               <th
                 style="
                   max-width: 150px;
@@ -249,21 +335,20 @@ export default {
                 "
               >
                 Confidence
-                <a href="#"><i class="bi bi-question-circle-fill"></i></a>
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                G2P ID
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in panelSummaryData.records_summary">
+              <td>
+                <router-link
+                  :to="`/lgd/${item.stable_id}`"
+                  style="text-decoration: none"
+                  v-if="item.stable_id"
+                >
+                  {{ item.stable_id }}
+                </router-link>
+              </td>
               <td>
                 <router-link
                   :to="`/gene/${item.locus}`"
@@ -298,21 +383,12 @@ export default {
                   {{ item.confidence }}
                 </span>
               </td>
-              <td>
-                <router-link
-                  :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
-                  v-if="item.stable_id"
-                >
-                  {{ item.stable_id }}
-                </router-link>
-              </td>
             </tr>
           </tbody>
         </table>
         <p v-else style="color: grey">Not Available</p>
       </div>
-      <h4 class="py-3">Curators</h4>
+      <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
         <ul v-if="panelData.curators && panelData.curators.length > 0">
           <li v-for="curator in panelData.curators">

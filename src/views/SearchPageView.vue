@@ -116,7 +116,10 @@ export default {
       class="alert alert-danger mt-3"
       role="alert"
     >
-      <div><i class="bi bi-x-circle-fill"></i> {{ searchDataNotFoundMsg }}</div>
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ searchDataNotFoundMsg }}
+      </div>
     </div>
     <div v-if="searchData">
       <div class="row mx-1 pt-3">
@@ -126,15 +129,24 @@ export default {
         >
           <thead>
             <tr>
+              <th>G2P ID</th>
               <th>Gene</th>
               <th>Disease</th>
               <th>Allelic Requirement</th>
               <th>Panels</th>
-              <th>G2P ID</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in searchData.results">
+              <td>
+                <router-link
+                  :to="`/lgd/${item.id}`"
+                  v-if="item.id"
+                  style="text-decoration: none"
+                >
+                  {{ item.id }}
+                </router-link>
+              </td>
               <td>
                 <router-link
                   v-if="item.gene"
@@ -166,15 +178,6 @@ export default {
                     {{ panelName }} </router-link
                   ><span v-if="index < item.panel.length - 1">, </span>
                 </span>
-              </td>
-              <td>
-                <router-link
-                  :to="`/lgd/${item.id}`"
-                  v-if="item.id"
-                  style="text-decoration: none"
-                >
-                  {{ item.id }}
-                </router-link>
               </td>
             </tr>
           </tbody>
