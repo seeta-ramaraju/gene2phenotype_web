@@ -461,6 +461,7 @@ export default {
           id="gene-symbol-input"
           v-model.trim="input.locus"
           aria-describedby="invalid-gene-symbol-input-feedback"
+          @keyup.enter="geneSearchBtnClickHandler"
         />
         <div id="invalid-gene-symbol-input-feedback" class="invalid-feedback">
           Please enter a valid Gene.
