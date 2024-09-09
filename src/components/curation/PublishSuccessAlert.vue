@@ -30,7 +30,7 @@ export default {
     <hr />
     <div class="d-flex justify-content-between">
       <router-link :to="`/lgd/${stableId}`" class="btn btn-primary me-3">
-        View New G2P Record {{ stableId }}
+        View G2P Record {{ stableId }}
       </router-link>
       <button class="btn btn-primary" @click="refreshCurrentPage">
         Add Another G2P Record
