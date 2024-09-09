@@ -14,7 +14,7 @@
       and has since been generalised to cover other disease areas. All data is
       made freely available. The initial paper is available
       <a
-        href="https://doi.org/10.1038/s41467-019-10016-3"
+        v-bind:href="initialpaper"
         target="_blank"
         style="text-decoration: none"
         >here</a
@@ -53,7 +53,7 @@
     </p>
     <p>
       G2P is a member of the Gene Curation Coalition (<a
-        href="https://thegencc.org/"
+        v-bind:href="gencc"
         target="_blank"
         style="text-decoration: none"
         >Gen CC</a
@@ -62,3 +62,13 @@
     </p>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      gencc: "https://thegencc.org/",
+      initialpaper: "https://doi.org/10.1038/s41467-019-10016-3",
+    };
+  },
+};
+</script>

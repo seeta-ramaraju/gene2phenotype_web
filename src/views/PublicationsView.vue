@@ -5,7 +5,7 @@
     <h6 class="pb-2">
       If you have used Gene2Phenotype in your work, please cite the
       <a
-        href="https://www.ebi.ac.uk/gene2phenotype"
+        v-bind:href="gene2phenotype"
         style="text-decoration: none"
         target="_blank"
       >
@@ -14,7 +14,7 @@
       with date accessed and below article.
     </h6>
     <a
-      href="https://doi.org/10.1038/s41467-019-10016-3"
+      v-bind:href="gene2phenotype_article"
       style="text-decoration: none"
       target="_blank"
     >
@@ -31,11 +31,7 @@
       </p>
     </div>
     <h4 class="pb-2">Additional G2P Publications</h4>
-    <a
-      href="https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1"
-      style="text-decoration: none"
-      target="_blank"
-    >
+    <a v-bind:href="curation" style="text-decoration: none" target="_blank">
       <h6>Curating genomic disease-gene relationships with Gene2Phenotype.</h6>
     </a>
     <div class="pb-2 citation-div">
@@ -47,11 +43,7 @@
         https://doi.org/10.1101/2024.02.26.24303357.
       </p>
     </div>
-    <a
-      href="https://doi.org/10.1136/jmg-2022-108618"
-      style="text-decoration: none"
-      target="_blank"
-    >
+    <a v-bind:href="eye" style="text-decoration: none" target="_blank">
       <h6>
         EyeG2P: an automated variant filtering approach improves efficiency of
         diagnostic genomic testing for inherited ophthalmic disorders.
@@ -66,7 +58,7 @@
       </p>
     </div>
     <a
-      href="https://doi.org/10.1186/s13073-023-01246-8"
+      v-bind:href="gene_validity"
       style="text-decoration: none"
       target="_blank"
     >
@@ -98,3 +90,16 @@
   border-radius: 5px;
 }
 </style>
+<script>
+export default {
+  data() {
+    return {
+      gene2phenotype: "https://www.ebi.ac.uk/gene2phenotype",
+      gene2phenotype_article: "https://doi.org/10.1038/s41467-019-10016-3",
+      curation: "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
+      eye: "https://doi.org/10.1136/jmg-2022-108618",
+      gene_validity: "https://doi.org/10.1186/s13073-023-01246-8",
+    };
+  },
+};
+</script>
