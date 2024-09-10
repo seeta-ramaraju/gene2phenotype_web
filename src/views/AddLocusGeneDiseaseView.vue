@@ -39,6 +39,8 @@ export default {
       submitErrorMsg: null,
       isSubmitSuccess: false,
       submitSuccessMsg: null,
+      isSaveBeforePublishSuccess: false,
+      saveBeforePublishErrorMsg: null,
       isPublishSuccess: false,
       publishSuccessMsg: null,
       publishErrorMsg: null,
@@ -95,10 +97,15 @@ export default {
       this.submitErrorMsg = null;
       this.isSubmitSuccess = false;
       this.submitSuccessMsg = null;
+      this.publishErrorMsg = null;
+      this.isPublishSuccess = false;
+      this.publishSuccessMsg = null;
       this.publicationsErrorMsg = null;
       this.isPublicationsDataLoading = false;
       this.inputPmids = "";
       this.isInputPmidsValid = true;
+      this.isSaveBeforePublishSuccess = false;
+      this.saveBeforePublishErrorMsg = null;
     },
     fetchGeneInformation() {
       this.geneErrorMsg =
@@ -276,9 +283,17 @@ export default {
         });
     },
     saveDraft() {
+      this.publishErrorMsg =
+        this.publishSucessMsg =
+        this.saveBeforePublishErrorMsg =
+          null;
+      this.isPublishSuccess = this.isSaveBeforePublishSuccess = false;
+
       this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
+
       this.isSubmitDataLoading = true;
+
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = {
         json_data: preparedInput,
@@ -290,7 +305,6 @@ export default {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.getItem("authToken")}`,
         },
       })
         .then((response) => {
@@ -305,12 +319,14 @@ export default {
             this.isSubmitSuccess = true;
             this.submitSuccessMsg = responseJson.message;
           } else {
-            let errorMsg = "Unable to submit data. Please try again later.";
+            let errorMsg = "Unable to save draft. Please try again later.";
             if (
               responseJson.errors?.message &&
               responseJson.errors?.message.length > 0
             ) {
-              errorMsg = "Error: " + responseJson.errors.message[0];
+              errorMsg =
+                "Unable to save draft. Error: " +
+                responseJson.errors.message[0];
             }
             this.submitErrorMsg = errorMsg;
             console.log(errorMsg);
@@ -318,26 +334,33 @@ export default {
         })
         .catch((error) => {
           this.isSubmitDataLoading = false;
-          this.submitErrorMsg =
-            "Unable to submit data. Please try again later.";
+          this.submitErrorMsg = "Unable to save draft. Please try again later.";
           console.log(error);
         });
     },
-    async publishEntry() {
+    async saveAndPublishEntry() {
+      this.submitErrorMsg = this.submitSuccessMsg = null;
+      this.isSubmitSuccess = false;
+
       this.publishErrorMsg =
         this.publishSucessMsg =
-        this.submitErrorMsg =
-        this.submitSuccessMsg =
+        this.saveBeforePublishErrorMsg =
           null;
-      this.isPublishSuccess = this.isSubmitSuccess = false;
-      this.isPublishDataLoading = this.isSubmitDataLoading = true;
+      this.isPublishSuccess = this.isSaveBeforePublishSuccess = false;
+
+      this.isSubmitDataLoading = true;
       this.stableId = null;
+
+      // Save and publish scenarios:
+      // 1. IF Save fails THEN saveBeforePublishErrorMsg=<error msg>, publishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=false
+      // 2. IF Save succeeds but Publish fails THEN publishErrorMsg=<error msg>, saveBeforePublishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=true, isPublishSuccess=false
+      // 3. IF Save and Publish both succeed THEN publishSucessMsg=<success msg>, saveBeforePublishErrorMsg=publishErrorMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=true
 
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = { json_data: preparedInput };
 
       try {
-        // Submitting Data
+        // Call API to Save draft
         const submitResponse = await fetch(
           "/gene2phenotype/api/add/curation/",
           {
@@ -349,29 +372,29 @@ export default {
             },
           }
         );
-
         const submitResponseJson = await submitResponse.json();
-        this.isSubmitDataLoading = false;
 
         if (submitResponse.status === 200) {
-          this.isSubmitSuccess = true;
-          this.submitSuccessMsg = submitResponseJson.message;
+          this.isSaveBeforePublishSuccess = true;
           this.stableId = submitResponseJson.result;
         } else {
-          let errorMsg = "Unable to submit data. Please try again later.";
+          this.isSubmitDataLoading = false;
+          let errorMsg =
+            "Unable to save and publish data. Please try again later.";
           if (
-            submitResponse.errors?.message &&
+            submitResponseJson.errors?.message &&
             submitResponseJson.errors?.message.length > 0
           ) {
-            errorMsg = "Error: " + submitResponseJson.errors.message[0];
+            errorMsg =
+              "Unable to save and publish data. Error: " +
+              submitResponseJson.errors.message[0];
           }
-          this.submitErrorMsg = errorMsg;
+          this.saveBeforePublishErrorMsg = errorMsg;
           console.log(errorMsg);
         }
 
-        this.isSubmitSuccess = false;
-        // Publishing Data
-        if (this.stableId) {
+        // Call API to Publish Data
+        if (this.isSaveBeforePublishSuccess) {
           const publishResponse = await fetch(
             `/gene2phenotype/api/curation/publish/${this.stableId}/`,
             {
@@ -383,20 +406,32 @@ export default {
           );
 
           const publishResponseJson = await publishResponse.json();
-          this.isPublishDataLoading = false;
+          this.isSubmitDataLoading = false;
+
           if (publishResponse.status === 201) {
             this.isPublishSuccess = true;
             this.publishSuccessMsg = publishResponseJson.message;
           } else {
-            let errorMsg = "Unable to publish data. ";
-            errorMsg += publishResponseJson.message;
+            let errorMsg =
+              "Saved draft but unable to publish data. Please try again later.";
+            if (publishResponseJson.message) {
+              errorMsg =
+                "Saved draft but unable to publish data. Error: " +
+                publishResponseJson.message;
+            }
             this.publishErrorMsg = errorMsg;
+            console.log(errorMsg);
           }
         }
       } catch (error) {
-        this.isSubmitDataLoading = this.isPublishDataLoading = false;
-        this.submitErrorMsg = this.publishErrorMsg =
-          "Unable to submit data. Please try again later.";
+        this.isSubmitDataLoading = false;
+        if (this.isSaveBeforePublishSuccess) {
+          this.publishErrorMsg =
+            "Saved draft but unable to publish data. Please try again later.";
+        } else {
+          this.saveBeforePublishErrorMsg =
+            "Unable to save and publish data. Please try again later.";
+        }
         console.log("Error:", error);
       }
     },
@@ -406,7 +441,15 @@ export default {
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>Add New G2P Record</h2>
-    <div class="row g-3 pt-3 pb-1" v-if="!isSubmitSuccess">
+    <div
+      class="row g-3 pt-3 pb-1"
+      v-if="
+        !isSubmitDataLoading &&
+        !isSubmitSuccess &&
+        !isSaveBeforePublishSuccess &&
+        !isPublishSuccess
+      "
+    >
       <div class="col-auto">
         <label for="gene-symbol-input" class="col-form-label">Gene</label>
       </div>
@@ -418,6 +461,7 @@ export default {
           id="gene-symbol-input"
           v-model.trim="input.locus"
           aria-describedby="invalid-gene-symbol-input-feedback"
+          @keyup.enter="geneSearchBtnClickHandler"
         />
         <div id="invalid-gene-symbol-input-feedback" class="invalid-feedback">
           Please enter a valid Gene.
@@ -426,6 +470,7 @@ export default {
       <div class="col-auto">
         <button
           v-if="geneData"
+          :disabled="isGeneDataLoading"
           type="button"
           class="btn btn-primary mb-3"
           data-bs-toggle="modal"
@@ -435,6 +480,7 @@ export default {
         </button>
         <button
           v-else
+          :disabled="isGeneDataLoading"
           type="button"
           class="btn btn-primary mb-3"
           @click="geneSearchBtnClickHandler"
@@ -443,7 +489,7 @@ export default {
         </button>
       </div>
     </div>
-    <p v-if="!geneData">
+    <p v-if="!isGeneDataLoading && !geneData">
       <i class="bi bi-info-circle"></i> Please enter Gene and click Search to
       proceed further.
     </p>
@@ -463,7 +509,13 @@ export default {
     </div>
     <div
       id="curation-form-section"
-      v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
+      v-if="
+        geneData &&
+        !isSubmitDataLoading &&
+        !isSubmitSuccess &&
+        !isSaveBeforePublishSuccess &&
+        !isPublishSuccess
+      "
     >
       <GeneInformation
         :geneData="geneData"
@@ -532,14 +584,35 @@ export default {
         v-model:level="input.confidence.level"
       />
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="submitErrorMsg">
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-if="!isSubmitDataLoading && submitErrorMsg"
+    >
       <div>
-        <i class="bi bi-exclamation-circle-fill"></i> {{ submitErrorMsg }}
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ submitErrorMsg }}
+      </div>
+    </div>
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-if="!isSubmitDataLoading && saveBeforePublishErrorMsg"
+    >
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ saveBeforePublishErrorMsg }}
       </div>
     </div>
     <div
       class="d-flex justify-content-between py-3"
-      v-if="geneData && !isSubmitDataLoading && !isSubmitSuccess"
+      v-if="
+        geneData &&
+        !isSubmitDataLoading &&
+        !isSubmitSuccess &&
+        !isSaveBeforePublishSuccess &&
+        !isPublishSuccess
+      "
     >
       <button
         class="btn btn-primary"
@@ -556,22 +629,29 @@ export default {
         <i class="bi bi-floppy-fill"></i> Save and Publish
       </button>
     </div>
+    <SaveSuccessAlert
+      v-if="!isSubmitDataLoading && isSubmitSuccess"
+      :successMsg="submitSuccessMsg"
+    />
     <SaveNotPublishSuccessAlert
-      v-if="submitSuccessMsg && publishErrorMsg"
+      v-if="
+        !isSubmitDataLoading && isSaveBeforePublishSuccess && !isPublishSuccess
+      "
       :errorMsg="publishErrorMsg"
       :stableId="stableId"
     />
-    <SaveSuccessAlert v-if="isSubmitSuccess" :successMsg="submitSuccessMsg" />
+    <PublishSuccessAlert
+      v-if="
+        !isSubmitDataLoading && isSaveBeforePublishSuccess && isPublishSuccess
+      "
+      :successMsg="publishSuccessMsg"
+      :stableId="stableId"
+    />
     <SaveDraftModal
       v-model:sessionname="input.session_name"
       @savedraft="saveDraft"
     />
-    <PublishModal @publish="publishEntry" />
-    <PublishSuccessAlert
-      v-if="isPublishSuccess"
-      :successMsg="publishSuccessMsg"
-      :stableId="stableId"
-    />
+    <PublishModal @publish="saveAndPublishEntry" />
     <AlertModal
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"

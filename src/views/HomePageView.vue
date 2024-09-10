@@ -323,10 +323,7 @@ export default {
                 <th scope="col" width="35%">Disorder Panel</th>
                 <th scope="col" width="37%">
                   Total LGMDE Records
-                  <span
-                    class="bi bi-info-circle custom-tooltip"
-                    style="color: #0d6efd"
-                  >
+                  <span class="bi bi-info-circle custom-tooltip">
                     <span class="custom-tooltip-text">
                       G2P records are Locus-Genotype-Mechanism-Disease-Evidence
                       (LGMDE) threads describing gene-disease associations
@@ -393,6 +390,7 @@ export default {
 .custom-tooltip {
   position: relative;
   display: inline-block;
+  color: #0d6efd;
 }
 
 .custom-tooltip .custom-tooltip-text {

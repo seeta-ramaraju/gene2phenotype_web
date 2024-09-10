@@ -51,6 +51,7 @@ export default {
                 @input="$emit('update:inputPmids', $event.target.value)"
                 rows="3"
                 aria-describedby="invalid-publications-input-feedback"
+                @keyup.enter="fetchPublications"
               >
               </textarea>
               <div

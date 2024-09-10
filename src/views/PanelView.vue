@@ -411,6 +411,7 @@ export default {
 .custom-tooltip {
   position: relative;
   display: inline-block;
+  color: #0d6efd;
 }
 
 .custom-tooltip .custom-tooltip-text {

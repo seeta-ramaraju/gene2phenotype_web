@@ -24,7 +24,7 @@ export default {
     <hr />
     <div class="d-flex justify-content-between">
       <button class="btn btn-primary me-3" @click="redirectToPage">
-        Update Current Record
+        Update Current Record Draft
       </button>
       <button class="btn btn-primary" @click="refreshCurrentPage">
         Add Another G2P Record
