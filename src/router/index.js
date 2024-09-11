@@ -14,6 +14,11 @@ import DisclaimerView from "../views/DisclaimerView.vue";
 import UpdateLocusGeneDiseaseView from "../views/UpdateLocusGeneDiseaseView.vue";
 import VariantFilteringView from "../views/VariantFilteringView.vue";
 import DataDownloadView from "../views/DataDownloadView.vue";
+import LoginView from "../views/LoginView.vue";
+import {
+  isUserLoggedIn,
+  logOutUser,
+} from "../utility/AuthenticationUtility.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,19 +59,21 @@ const router = createRouter({
       component: SearchPageView,
     },
     {
-      path: "/disease/:id", // to access the capture value in the component
-      name: "diseaseid",
+      path: "/disease/:id",
+      name: "disease",
       component: DiseaseView,
     },
     {
       path: "/curation/entries",
       name: "curation-entries",
       component: ListCurationView,
+      meta: { requiresLogIn: true },
     },
     {
       path: "/lgd/add",
       name: "add locus gene disease",
       component: AddLocusGeneDiseaseView,
+      meta: { requiresLogIn: true },
     },
     {
       path: "/curators",
@@ -82,6 +89,7 @@ const router = createRouter({
       path: "/lgd/update/:stableID",
       name: "update curation",
       component: UpdateLocusGeneDiseaseView,
+      meta: { requiresLogIn: true },
     },
     {
       path: "/variant-filtering",
@@ -93,7 +101,24 @@ const router = createRouter({
       name: "download",
       component: DataDownloadView,
     },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
+      meta: { requiresLogOut: true },
+    },
   ],
+});
+
+router.beforeEach(function (to, _, next) {
+  if (to.meta.requiresLogIn && !isUserLoggedIn()) {
+    logOutUser();
+    next("/login");
+  } else if (to.meta.requiresLogOut && isUserLoggedIn()) {
+    next("/");
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -21,6 +21,13 @@ import {
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 import AlertModal from "../components/curation/AlertModal.vue";
 import cloneDeep from "lodash/cloneDeep";
+import {
+  appendAuthenticationHeaders,
+  checkLogInAndAppendAuthHeaders,
+  isUserLoggedIn,
+  logOutUser,
+} from "../utility/AuthenticationUtility.js";
+import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
 
 export default {
   data() {
@@ -52,6 +59,7 @@ export default {
       isPanelDataLoading: false,
       panelData: null,
       stableId: null,
+      isLogInSessionExpired: false,
     };
   },
   components: {
@@ -70,18 +78,24 @@ export default {
     SaveNotPublishSuccessAlert,
     SaveSuccessAlert,
     AlertModal,
+    LoginErrorAlert,
   },
   methods: {
     geneSearchBtnClickHandler() {
       if (this.input.locus !== "") {
         this.isInputLocusValid = true;
-        if (this.geneData) {
-          // if we are fetching data for another gene then we need to reset the data variables
-          this.resetData();
+        if (isUserLoggedIn()) {
+          if (this.geneData) {
+            // if we are fetching data for another gene then we need to reset the data variables
+            this.resetData();
+          }
+          this.fetchGeneInformation();
+          this.fetchGeneDiseaseInformation();
+          this.fetchPanels();
+        } else {
+          logOutUser();
+          this.isLogInSessionExpired = true;
         }
-        this.fetchGeneInformation();
-        this.fetchGeneDiseaseInformation();
-        this.fetchPanels();
       } else {
         this.isInputLocusValid = false;
       }
@@ -114,10 +128,22 @@ export default {
         this.attributesData =
           null;
       this.isGeneDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
       Promise.all([
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/function/`),
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`),
-        fetch("/gene2phenotype/api/attribs/"),
+        fetch(`/gene2phenotype/api/gene/${this.input.locus}/function/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch("/gene2phenotype/api/attribs/", {
+          method: "GET",
+          headers: apiHeaders,
+        }),
       ])
         .then((responseArr) => {
           return Promise.all(
@@ -146,7 +172,13 @@ export default {
     fetchGeneDiseaseInformation() {
       this.geneDiseaseErrorMsg = this.geneDiseaseData = null;
       this.isGeneDiseaseDataLoading = true;
-      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -169,7 +201,13 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -203,7 +241,13 @@ export default {
         .filter((item) => item)
         .join(",");
       let responseStatus = null;
-      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           responseStatus = response.status;
           return response.json();
@@ -254,7 +298,13 @@ export default {
         .map((item) => item.trim())
         .join(",");
       let responseStatus = null;
-      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           responseStatus = response.status;
           return response.json();
@@ -283,6 +333,12 @@ export default {
         });
     },
     saveDraft() {
+      if (!isUserLoggedIn()) {
+        logOutUser();
+        this.isLogInSessionExpired = true;
+        return;
+      }
+
       this.publishErrorMsg =
         this.publishSucessMsg =
         this.saveBeforePublishErrorMsg =
@@ -299,13 +355,14 @@ export default {
         json_data: preparedInput,
       };
       let responseStatus = null;
+      let apiHeaders = appendAuthenticationHeaders({
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      });
       fetch("/gene2phenotype/api/add/curation/", {
         method: "POST",
         body: JSON.stringify(requestBody),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers: apiHeaders,
       })
         .then((response) => {
           responseStatus = response.status;
@@ -339,6 +396,12 @@ export default {
         });
     },
     async saveAndPublishEntry() {
+      if (!isUserLoggedIn()) {
+        logOutUser();
+        this.isLogInSessionExpired = true;
+        return;
+      }
+
       this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
 
@@ -361,15 +424,16 @@ export default {
 
       try {
         // Call API to Save draft
+        let submitApiHeaders = appendAuthenticationHeaders({
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        });
         const submitResponse = await fetch(
           "/gene2phenotype/api/add/curation/",
           {
             method: "POST",
             body: JSON.stringify(requestBody),
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
+            headers: submitApiHeaders,
           }
         );
         const submitResponseJson = await submitResponse.json();
@@ -395,13 +459,14 @@ export default {
 
         // Call API to Publish Data
         if (this.isSaveBeforePublishSuccess) {
+          let publishApiHeaders = appendAuthenticationHeaders({
+            "Content-Length": 0,
+          });
           const publishResponse = await fetch(
             `/gene2phenotype/api/curation/publish/${this.stableId}/`,
             {
               method: "POST",
-              headers: {
-                "Content-Length": 0,
-              },
+              headers: publishApiHeaders,
             }
           );
 
@@ -604,6 +669,7 @@ export default {
         {{ saveBeforePublishErrorMsg }}
       </div>
     </div>
+    <LoginErrorAlert v-if="isLogInSessionExpired" />
     <div
       class="d-flex justify-content-between py-3"
       v-if="

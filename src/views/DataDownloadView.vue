@@ -1,4 +1,6 @@
 <script>
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -24,7 +26,13 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -48,11 +56,12 @@ export default {
       let responseContentDisposition = null;
       this.dataDownloadErrorMsg = null;
       this.isDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "text/csv;charset=UTF-8",
+      });
       fetch(`/gene2phenotype/api/panel/${panelName}/download`, {
         method: "GET",
-        headers: {
-          "content-type": "text/csv;charset=UTF-8",
-        },
+        headers: apiHeaders,
       })
         .then((response) => {
           responseContentDisposition = response.headers.get(

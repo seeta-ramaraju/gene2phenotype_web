@@ -1,4 +1,6 @@
 <script>
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -35,12 +37,28 @@ export default {
         this.geneData =
           null;
       this.isDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
       Promise.all([
-        fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/summary/`),
         fetch(
-          `/gene2phenotype/api/gene/${this.$route.params.symbol}/function/`
+          `/gene2phenotype/api/gene/${this.$route.params.symbol}/summary/`,
+          {
+            method: "GET",
+            headers: apiHeaders,
+          }
         ),
-        fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/`),
+        fetch(
+          `/gene2phenotype/api/gene/${this.$route.params.symbol}/function/`,
+          {
+            method: "GET",
+            headers: apiHeaders,
+          }
+        ),
+        fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
       ])
         .then((responseArr) => {
           return Promise.all(

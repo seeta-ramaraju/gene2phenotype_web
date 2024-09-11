@@ -1,4 +1,6 @@
 <script>
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -29,7 +31,13 @@ export default {
     fetchData() {
       this.errorMsg = this.locusGeneDiseaseData = null;
       this.isDataLoading = true;
-      fetch(`/gene2phenotype/api/lgd/${this.$route.params.stableId}/`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/lgd/${this.$route.params.stableId}/`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();

@@ -1,5 +1,11 @@
 <script>
 import router from "@/router";
+import {
+  checkLogInAndAppendAuthHeaders,
+  getUsername,
+  isUserLoggedIn,
+  logOutUser,
+} from "../../utility/AuthenticationUtility.js";
 
 export default {
   data() {
@@ -30,7 +36,13 @@ export default {
       this.selectedSearchPanel = "all";
       this.panelData = null;
       this.isDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -62,6 +74,16 @@ export default {
         };
         router.push({ path: "/search", query: routeQuery });
       }
+    },
+    logout() {
+      logOutUser();
+      this.$router.go(); // Reloads current route
+    },
+    isLoggedIn() {
+      return isUserLoggedIn();
+    },
+    displayUsername() {
+      return getUsername();
     },
   },
 };
@@ -311,7 +333,7 @@ export default {
             Browse
           </router-link>
         </li>
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown" v-if="isLoggedIn()">
           <a
             class="nav-link dropdown-toggle px-1 text-white fw-bold"
             href="#"
@@ -336,8 +358,20 @@ export default {
         </li>
       </ul>
       <ul class="nav nav-underline">
-        <li class="nav-item">
-          <a href="#" class="nav-link text-white fw-bold">Log in</a>
+        <li class="nav-item" v-if="isLoggedIn() && !!displayUsername()">
+          <span class="nav-link text-white fw-bold">
+            <i class="bi bi-person-fill"></i> {{ displayUsername() }}
+          </span>
+        </li>
+        <li class="nav-item" v-if="isLoggedIn()">
+          <button class="nav-link text-white fw-bold" @click="logout">
+            Log Out
+          </button>
+        </li>
+        <li class="nav-item" v-else>
+          <router-link to="/login" class="nav-link text-white fw-bold">
+            Log In
+          </router-link>
         </li>
       </ul>
     </div>

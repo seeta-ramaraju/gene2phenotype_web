@@ -1,4 +1,6 @@
 <script>
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -25,9 +27,18 @@ export default {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
       this.isDataLoading = true;
       const diseaseID = this.$route.params.id;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
       Promise.all([
-        fetch(`/gene2phenotype/api/disease/${diseaseID}/summary`),
-        fetch(`/gene2phenotype/api/disease/${diseaseID}`),
+        fetch(`/gene2phenotype/api/disease/${diseaseID}/summary`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(`/gene2phenotype/api/disease/${diseaseID}`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
       ])
         .then((responseArr) => {
           return Promise.all(

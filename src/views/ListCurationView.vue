@@ -1,11 +1,22 @@
 <script>
+import {
+  appendAuthenticationHeaders,
+  isUserLoggedIn,
+  logOutUser,
+} from "../utility/AuthenticationUtility.js";
+import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+
 export default {
   data() {
     return {
       isDataLoading: false,
       curationListData: null,
       errorMsg: null,
+      isLogInSessionExpired: false,
     };
+  },
+  components: {
+    LoginErrorAlert,
   },
   created() {
     // watch the params of this route to fetch this data again
@@ -19,10 +30,21 @@ export default {
   },
   methods: {
     fetchData() {
+      if (!isUserLoggedIn()) {
+        logOutUser();
+        this.isLogInSessionExpired = true;
+        return;
+      }
+
       this.errorMsg = this.curationListData = null;
       this.isDataLoading = true;
-      //not using promise.all because it is one endpoint
-      fetch("/gene2phenotype/api/curations")
+      let apiHeaders = appendAuthenticationHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/curations", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -45,6 +67,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
+    <h2>Saved Curation Entries</h2>
     <div
       class="d-flex justify-content-center"
       v-if="isDataLoading"
@@ -57,8 +80,8 @@ export default {
     <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
+    <LoginErrorAlert v-if="isLogInSessionExpired" />
     <div v-if="curationListData">
-      <h2>Saved Curation Entries</h2>
       <div class="py-3">
         <table
           class="table table-hover table-bordered"
@@ -75,23 +98,23 @@ export default {
           </thead>
           <tbody>
             <tr v-for="item in curationListData.results">
-              <td>{{ item.session_name }}</td>
               <td>
                 <router-link
                   :to="`/lgd/update/${item.stable_id}`"
                   style="text-decoration: none"
-                  v-if="item.stable_id"
+                  v-if="item.session_name"
                 >
-                  {{ item.stable_id }}
+                  {{ item.session_name }}
                 </router-link>
               </td>
+              <td>{{ item.stable_id }}</td>
               <td>{{ item.locus }}</td>
               <td>{{ item.created_on }}</td>
               <td>{{ item.last_update }}</td>
             </tr>
           </tbody>
         </table>
-        <p class="text-danger" v-else>You currently have no saved drafts.</p>
+        <p class="text-dark" v-else>You currently have no saved drafts.</p>
       </div>
     </div>
   </div>

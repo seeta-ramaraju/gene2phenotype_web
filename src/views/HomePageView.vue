@@ -1,5 +1,6 @@
 <script>
 import router from "@/router";
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
   data() {
@@ -30,7 +31,13 @@ export default {
     fetchPanelData() {
       this.errorMsg = this.panelData = null;
       this.isDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -72,11 +79,12 @@ export default {
       // before fetching panel data for download, activeDownloadPanelName is set to panelName
       // after fetching data, it is set to null
       this.activeDownloadPanelName = panelName;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "text/csv;charset=UTF-8",
+      });
       fetch(`/gene2phenotype/api/panel/${panelName}/download`, {
         method: "GET",
-        headers: {
-          "content-type": "text/csv;charset=UTF-8",
-        },
+        headers: apiHeaders,
       })
         .then((response) => {
           responseContentDisposition = response.headers.get(

@@ -1,4 +1,6 @@
 <script>
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -48,7 +50,13 @@ export default {
         }
         url += queryParamsArr.join("&");
       }
-      fetch(url)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(url, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             isSearchDataFound = true;

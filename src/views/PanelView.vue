@@ -1,5 +1,7 @@
 <script>
 import BarChart from "../components/chart/BarChart.vue";
+import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+
 export default {
   data() {
     return {
@@ -56,9 +58,21 @@ export default {
     fetchData() {
       this.errorMsg = this.panelData = this.panelSummaryData = null;
       this.isDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
       Promise.all([
-        fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/`),
-        fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/summary/`),
+        fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(
+          `/gene2phenotype/api/panel/${this.$route.params.panel}/summary/`,
+          {
+            method: "GET",
+            headers: apiHeaders,
+          }
+        ),
       ])
         .then((responseArr) => {
           return Promise.all(
@@ -114,11 +128,12 @@ export default {
       let responseContentDisposition = null;
       this.downloadAllDataErrorMsg = null;
       this.isDownloadAllDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "text/csv;charset=UTF-8",
+      });
       fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/download`, {
         method: "GET",
-        headers: {
-          "content-type": "text/csv;charset=UTF-8",
-        },
+        headers: apiHeaders,
       })
         .then((response) => {
           responseContentDisposition = response.headers.get(
