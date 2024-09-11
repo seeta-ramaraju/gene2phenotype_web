@@ -71,7 +71,7 @@ const router = createRouter({
     },
     {
       path: "/lgd/add",
-      name: "add locus gene disease",
+      name: "add-g2p-record",
       component: AddLocusGeneDiseaseView,
       meta: { requiresLogIn: true },
     },
@@ -87,7 +87,7 @@ const router = createRouter({
     },
     {
       path: "/lgd/update/:stableID",
-      name: "update curation",
+      name: "update-g2p-record-draft",
       component: UpdateLocusGeneDiseaseView,
       meta: { requiresLogIn: true },
     },

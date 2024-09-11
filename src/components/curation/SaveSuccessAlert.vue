@@ -4,8 +4,14 @@ export default {
     successMsg: String,
   },
   methods: {
-    refreshCurrentPage() {
-      this.$router.go(); // Reloads current route
+    redirectToAddG2pPage() {
+      if (this.$route.name === "add-g2p-record") {
+        // If user is on add g2p record page then reload current page
+        this.$router.go();
+      } else if (this.$route.name === "update-g2p-record-draft") {
+        // If user is on update g2p record draft page then redirect to add g2p record page
+        this.$router.push("/lgd/add");
+      }
     },
   },
 };
@@ -30,7 +36,7 @@ export default {
       <router-link to="/curation/entries" class="btn btn-primary me-3">
         View All Saved Drafts
       </router-link>
-      <button class="btn btn-primary" @click="refreshCurrentPage">
+      <button class="btn btn-primary" @click="redirectToAddG2pPage">
         Add Another G2P Record
       </button>
     </div>
