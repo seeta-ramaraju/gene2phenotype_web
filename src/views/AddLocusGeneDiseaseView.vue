@@ -23,6 +23,7 @@ import AlertModal from "../components/curation/AlertModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import {
   appendAuthenticationHeaders,
+  checkLogInAndAppendAuthHeaders,
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
@@ -127,10 +128,22 @@ export default {
         this.attributesData =
           null;
       this.isGeneDataLoading = true;
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
       Promise.all([
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/function/`),
-        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`),
-        fetch("/gene2phenotype/api/attribs/"),
+        fetch(`/gene2phenotype/api/gene/${this.input.locus}/function/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(`/gene2phenotype/api/gene/${this.input.locus}/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch("/gene2phenotype/api/attribs/", {
+          method: "GET",
+          headers: apiHeaders,
+        }),
       ])
         .then((responseArr) => {
           return Promise.all(
@@ -159,7 +172,13 @@ export default {
     fetchGeneDiseaseInformation() {
       this.geneDiseaseErrorMsg = this.geneDiseaseData = null;
       this.isGeneDiseaseDataLoading = true;
-      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/gene/${this.input.locus}/disease`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -182,7 +201,13 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();
@@ -216,7 +241,13 @@ export default {
         .filter((item) => item)
         .join(",");
       let responseStatus = null;
-      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           responseStatus = response.status;
           return response.json();
@@ -267,7 +298,13 @@ export default {
         .map((item) => item.trim())
         .join(",");
       let responseStatus = null;
-      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`)
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`, {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           responseStatus = response.status;
           return response.json();

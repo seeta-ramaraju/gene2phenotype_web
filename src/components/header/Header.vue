@@ -1,6 +1,7 @@
 <script>
 import router from "@/router";
 import {
+  checkLogInAndAppendAuthHeaders,
   isUserLoggedIn,
   logOutUser,
 } from "../../utility/AuthenticationUtility.js";
@@ -34,7 +35,13 @@ export default {
       this.selectedSearchPanel = "all";
       this.panelData = null;
       this.isDataLoading = true;
-      fetch("/gene2phenotype/api/panels/")
+      const apiHeaders = checkLogInAndAppendAuthHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
         .then((response) => {
           if (response.status === 200) {
             return response.json();

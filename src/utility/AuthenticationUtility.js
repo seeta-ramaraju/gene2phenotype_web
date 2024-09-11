@@ -13,6 +13,13 @@ export const getCookie = (name) => {
   return cookieValue;
 };
 
+export const checkLogInAndAppendAuthHeaders = (headers) => {
+  if (isUserLoggedIn()) {
+    return appendAuthenticationHeaders(headers);
+  }
+  return headers;
+};
+
 export const appendAuthenticationHeaders = (headers) => {
   let authenticationToken = localStorage.getItem("authenticationToken");
   return {
