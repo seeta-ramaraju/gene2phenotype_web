@@ -30,7 +30,7 @@ export default {
             <div style="width: 90%">
               <a
                 v-if="geneData.gene_symbol"
-                :href="`/gene/${geneData.gene_symbol}`"
+                :href="`/gene2phenotype/gene/${geneData.gene_symbol}`"
                 style="text-decoration: none"
                 target="_blank"
               >
