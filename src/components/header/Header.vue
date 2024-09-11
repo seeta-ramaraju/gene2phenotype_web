@@ -2,6 +2,7 @@
 import router from "@/router";
 import {
   checkLogInAndAppendAuthHeaders,
+  getUsername,
   isUserLoggedIn,
   logOutUser,
 } from "../../utility/AuthenticationUtility.js";
@@ -80,6 +81,9 @@ export default {
     },
     isLoggedIn() {
       return isUserLoggedIn();
+    },
+    displayUsername() {
+      return getUsername();
     },
   },
 };
@@ -354,6 +358,11 @@ export default {
         </li>
       </ul>
       <ul class="nav nav-underline">
+        <li class="nav-item" v-if="isLoggedIn() && !!displayUsername()">
+          <span class="nav-link text-white fw-bold">
+            <i class="bi bi-person-fill"></i> {{ displayUsername() }}
+          </span>
+        </li>
         <li class="nav-item" v-if="isLoggedIn()">
           <button class="nav-link text-white fw-bold" @click="logout">
             Log Out

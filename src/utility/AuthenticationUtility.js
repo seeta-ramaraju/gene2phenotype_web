@@ -38,6 +38,7 @@ export const setItemsInLocalStorage = (items) => {
 export const logOutUser = () => {
   localStorage.removeItem("authenticationToken");
   localStorage.removeItem("tokenExpiry");
+  localStorage.removeItem("username");
 };
 
 export const isUserLoggedIn = () => {
@@ -47,4 +48,8 @@ export const isUserLoggedIn = () => {
   return (
     !!authenticationToken && !!tokenExpiry && new Date() < new Date(tokenExpiry)
   );
+};
+
+export const getUsername = () => {
+  return localStorage.getItem("username");
 };

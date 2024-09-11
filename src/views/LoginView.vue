@@ -40,6 +40,7 @@ export default {
           setItemsInLocalStorage({
             authenticationToken: responseJson.token,
             tokenExpiry: responseJson.expiry,
+            username: responseJson.user?.user_name,
           });
           this.$router.replace("/"); // Navigate to homepage
           this.isDataLoading = false;
