@@ -176,6 +176,7 @@ export default {
                 placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
                 v-model="searchInput"
                 id="search-input"
+                @keyup.enter="searchClickHandler"
               />
               <button
                 class="btn btn-primary dropdown-toggle"
