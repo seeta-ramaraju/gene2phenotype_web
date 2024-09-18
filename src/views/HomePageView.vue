@@ -145,8 +145,8 @@ export default {
         <div class="col-lg-8">
           <h1 class="display-5 fw-bold lh-1 mb-3">Gene2Phenotype (G2P)</h1>
           <h5 class="fw-bold lh-1 mb-3">
-            Accelerating diagnostic variant filtering with high-confidence
-            evidence-based gene-disease models
+            Accelerating genomic medicine with high confidence evidence based
+            gene disease models
           </h5>
           <p class="lead">
             Browse, search and download detailed gene-disease associations with
