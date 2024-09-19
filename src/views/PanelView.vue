@@ -129,7 +129,7 @@ export default {
       this.downloadAllDataErrorMsg = null;
       this.isDownloadAllDataLoading = true;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "text/csv;charset=UTF-8",
+        "Content-Type": "text/gzip",
       });
       fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/download`, {
         method: "GET",
@@ -140,35 +140,37 @@ export default {
             "Content-Disposition"
           );
           if (response.status === 200) {
-            return response.text();
+            return response.blob();
           } else {
             return Promise.reject(
               new Error("Unable to download data. Please try again later.")
             );
           }
         })
-        .then((responseText) => {
+        .then((responseBlob) => {
           this.isDownloadAllDataLoading = false;
-          // get csv file name from response Content-Disposition header
+          // get gzip file name from response Content-Disposition header
           const regexMatch = responseContentDisposition.match(
             /attachment; filename="([^"]+)"/
-          ); // Ex responseContentDisposition value: attachment; filename="some_file_name.csv"
-          let csvFileName = "data.csv"; //default csv file name
+          ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv.gz"
+          let gzipFileName = "data.csv.gz"; // default gzip file name
           if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
-            csvFileName = regexMatch[1];
+            gzipFileName = regexMatch[1];
           }
-          // download csv data to file
-          const csvDataText = responseText;
+          // download gzip file
+          const objectUrl = URL.createObjectURL(responseBlob);
           const anchor = document.createElement("a");
-          anchor.href =
-            "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
+          anchor.href = objectUrl;
           anchor.target = "_blank";
-          anchor.download = csvFileName;
+          anchor.download = gzipFileName;
           anchor.click();
+          URL.revokeObjectURL(objectUrl);
+          anchor.remove();
         })
         .catch((error) => {
           this.isDownloadAllDataLoading = false;
-          this.downloadAllDataErrorMsg = error.message;
+          this.downloadAllDataErrorMsg =
+            error.message || "Unable to download data. Please try again later.";
           console.log(error);
         });
     },

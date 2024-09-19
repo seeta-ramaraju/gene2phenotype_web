@@ -117,6 +117,7 @@ export default {
             placeholder="Search G2P"
             v-model="searchInput"
             id="header-search-input"
+            @keyup.enter="searchClickHandler"
           />
           <button
             class="btn dropdown-toggle text-white fw-bold filter-btn"
@@ -246,7 +247,6 @@ export default {
             type="button"
             class="btn text-white search-btn"
             @click="searchClickHandler"
-            :disabled="isDataLoading"
           >
             <i class="bi bi-search"></i>
           </button>

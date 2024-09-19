@@ -28,7 +28,7 @@ export default {
         <div class="accordion-body">
           <div class="row g-3">
             <div class="col-12">
-              <strong><p class="mb-0">Summary</p></strong>
+              <p class="mb-0 fw-bold">Summary</p>
             </div>
             <div class="col-3">
               <table class="table table-bordered">
@@ -71,50 +71,45 @@ export default {
               </table>
             </div>
           </div>
-          <form>
-            <strong><p class="mb-0 pt-3">Confidence</p></strong>
-            <div class="row g-3 pt-4">
-              <div class="col-1">
-                <label for="justification-input" class="col-form-label">
-                  Justification
-                </label>
-              </div>
-              <div class="col-4">
-                <textarea
-                  class="form-control"
-                  id="justification-input"
-                  rows="3"
-                  type="text"
-                  :value="justification"
-                  @input="$emit('update:justification', $event.target.value)"
+          <hr />
+          <p class="mb-0 fw-bold">Confidence</p>
+          <div class="row g-3 pt-3 w-50">
+            <label for="confidence-level-input" class="col-lg-3 col-form-label">
+              Level
+            </label>
+            <div class="col-lg-6">
+              <select
+                id="confidence-level-input"
+                class="form-select"
+                :value="level"
+                @input="$emit('update:level', $event.target.value)"
+              >
+                <option value="">Select</option>
+                <option
+                  v-for="item in attributesData.confidence_category"
+                  :value="item"
                 >
-                </textarea>
-              </div>
+                  {{ item }}
+                </option>
+              </select>
             </div>
-            <div class="row g-3 py-3">
-              <div class="col-1">
-                <label for="confidence-level-input" class="col-form-label"
-                  >Level</label
-                >
-              </div>
-              <div class="col-3">
-                <select
-                  id="confidence-level-input"
-                  class="form-select"
-                  :value="level"
-                  @input="$emit('update:level', $event.target.value)"
-                >
-                  <option value="">Select</option>
-                  <option
-                    v-for="item in attributesData.confidence_category"
-                    :value="item"
-                  >
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
+          </div>
+          <div class="row g-3 py-3 w-50">
+            <label for="justification-input" class="col-lg-3 col-form-label">
+              Justification
+            </label>
+            <div class="col-lg-9">
+              <textarea
+                class="form-control"
+                id="justification-input"
+                rows="3"
+                type="text"
+                :value="justification"
+                @input="$emit('update:justification', $event.target.value)"
+              >
+              </textarea>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
