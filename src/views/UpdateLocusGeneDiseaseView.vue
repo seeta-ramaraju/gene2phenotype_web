@@ -626,6 +626,9 @@ export default {
         v-model:justification="previousInput.confidence.justification"
         v-model:level="previousInput.confidence.level"
       />
+      <p class="pt-2">
+        <span class="text-danger">*</span> mandatory fields to publish
+      </p>
     </div>
     <div
       class="alert alert-danger mt-3"
