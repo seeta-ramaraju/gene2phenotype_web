@@ -75,7 +75,7 @@ export default {
           <p class="mb-0 fw-bold">Confidence</p>
           <div class="row g-3 pt-3 w-50">
             <label for="confidence-level-input" class="col-lg-3 col-form-label">
-              Level
+              Level<span class="text-danger">*</span>
             </label>
             <div class="col-lg-6">
               <select
@@ -96,7 +96,7 @@ export default {
           </div>
           <div class="row g-3 py-3 w-50">
             <label for="justification-input" class="col-lg-3 col-form-label">
-              Justification
+              Justification<span class="text-danger">*</span>
             </label>
             <div class="col-lg-9">
               <textarea

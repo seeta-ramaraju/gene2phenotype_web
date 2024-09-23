@@ -92,7 +92,7 @@ export default {
             <div class="row g-3 px-3 pt-4">
               <div class="col-2">
                 <label for="mechanism-input" class="col-form-label">
-                  Mechanism
+                  Mechanism<span class="text-danger">*</span>
                 </label>
               </div>
               <div class="col-3">
@@ -131,9 +131,9 @@ export default {
             </div>
             <div class="row g-3 px-3 py-3">
               <div class="col-2">
-                <label for="categorisation-input" class="col-form-label"
-                  >Categorisation</label
-                >
+                <label for="categorisation-input" class="col-form-label">
+                  Categorisation
+                </label>
               </div>
               <div class="col-3">
                 <select

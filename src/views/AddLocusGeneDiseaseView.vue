@@ -516,7 +516,9 @@ export default {
       "
     >
       <div class="col-auto">
-        <label for="gene-symbol-input" class="col-form-label">Gene</label>
+        <label for="gene-symbol-input" class="col-form-label">
+          Gene<span class="text-danger">*</span>
+        </label>
       </div>
       <div class="col-3">
         <input

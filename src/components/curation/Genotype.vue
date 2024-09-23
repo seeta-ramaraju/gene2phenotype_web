@@ -45,7 +45,7 @@ export default {
             <div class="row g-3">
               <div class="col-auto">
                 <label for="allelic-requirement-input" class="col-form-label">
-                  Allelic Requirement
+                  Allelic Requirement<span class="text-danger">*</span>
                 </label>
               </div>
               <div class="col-3">

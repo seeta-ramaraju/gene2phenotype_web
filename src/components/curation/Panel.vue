@@ -60,7 +60,9 @@ export default {
           </div>
           <form v-if="panelData && panelData.length > 0">
             <fieldset class="row mb-3">
-              <legend class="col-form-label col-lg-1 pt-0">Panel(s)</legend>
+              <legend class="col-form-label col-lg-1 pt-0">
+                Panel(s)<span class="text-danger">*</span>
+              </legend>
               <div class="col-lg-11">
                 <div class="form-check" v-for="item in panelData">
                   <input

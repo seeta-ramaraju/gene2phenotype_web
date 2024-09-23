@@ -38,7 +38,7 @@ export default {
           <div class="row g-3 py-3">
             <div class="col-auto">
               <label for="publications-input" class="col-form-label">
-                Publication(s)
+                Publication(s)<span class="text-danger">*</span>
               </label>
             </div>
             <div class="col-4">
