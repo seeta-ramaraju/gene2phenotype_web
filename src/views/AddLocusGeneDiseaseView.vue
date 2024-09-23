@@ -201,10 +201,10 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
+      const apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/panels/", {
+      fetch("/gene2phenotype/api/user/panels/", {
         method: "GET",
         headers: apiHeaders,
       })
