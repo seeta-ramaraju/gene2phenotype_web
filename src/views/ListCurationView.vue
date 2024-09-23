@@ -100,7 +100,7 @@ export default {
             <tr v-for="item in curationListData.results">
               <td>
                 <router-link
-                  :to="`/lgd/update/${item.stable_id}`"
+                  :to="`/lgd/update-draft/${item.stable_id}`"
                   style="text-decoration: none"
                   v-if="item.session_name"
                 >
