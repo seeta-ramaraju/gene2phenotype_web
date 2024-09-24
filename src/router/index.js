@@ -86,7 +86,7 @@ const router = createRouter({
       component: DisclaimerView,
     },
     {
-      path: "/lgd/update/:stableID",
+      path: "/lgd/update-draft/:stableID",
       name: "update-g2p-record-draft",
       component: UpdateLocusGeneDiseaseView,
       meta: { requiresLogIn: true },

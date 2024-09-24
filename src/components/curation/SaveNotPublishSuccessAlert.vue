@@ -20,7 +20,7 @@ export default {
         this.$router.go();
       } else if (this.$route.name === "add-g2p-record") {
         // If user is on add g2p record page then redirect to update g2p record draft page
-        this.$router.push(`/lgd/update/${this.stableId}`);
+        this.$router.push(`/lgd/update-draft/${this.stableId}`);
       }
     },
   },

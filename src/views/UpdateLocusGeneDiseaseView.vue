@@ -213,10 +213,10 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
+      const apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/panels/", {
+      fetch("/gene2phenotype/api/user/panels/", {
         method: "GET",
         headers: apiHeaders,
       })
@@ -626,6 +626,9 @@ export default {
         v-model:justification="previousInput.confidence.justification"
         v-model:level="previousInput.confidence.level"
       />
+      <p class="pt-2">
+        <span class="text-danger">*</span> mandatory fields to publish
+      </p>
     </div>
     <div
       class="alert alert-danger mt-3"

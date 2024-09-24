@@ -201,10 +201,10 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
+      const apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/panels/", {
+      fetch("/gene2phenotype/api/user/panels/", {
         method: "GET",
         headers: apiHeaders,
       })
@@ -516,7 +516,9 @@ export default {
       "
     >
       <div class="col-auto">
-        <label for="gene-symbol-input" class="col-form-label">Gene</label>
+        <label for="gene-symbol-input" class="col-form-label">
+          Gene<span class="text-danger">*</span>
+        </label>
       </div>
       <div class="col-3">
         <input
@@ -648,6 +650,9 @@ export default {
         v-model:justification="input.confidence.justification"
         v-model:level="input.confidence.level"
       />
+      <p class="pt-2">
+        <span class="text-danger">*</span> mandatory fields to publish
+      </p>
     </div>
     <div
       class="alert alert-danger mt-3"

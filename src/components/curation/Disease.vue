@@ -67,9 +67,9 @@ export default {
           <div class="row g-3">
             <div class="row g-3">
               <div class="col-auto">
-                <label for="disease-name-input" class="col-form-label"
-                  >Disease Name</label
-                >
+                <label for="disease-name-input" class="col-form-label">
+                  Disease Name<span class="text-danger">*</span>
+                </label>
               </div>
               <div class="col input-group">
                 <span class="input-group-text"

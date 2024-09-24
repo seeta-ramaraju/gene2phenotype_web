@@ -58,15 +58,13 @@ export default {
               {{ panelErrorMsg }}
             </div>
           </div>
-          <form
-            v-if="
-              panelData && panelData.results && panelData.results.length > 0
-            "
-          >
+          <form v-if="panelData && panelData.length > 0">
             <fieldset class="row mb-3">
-              <legend class="col-form-label col-sm-1 pt-0">Panel(s)</legend>
-              <div class="col-sm-10">
-                <div class="form-check" v-for="item in panelData.results">
+              <legend class="col-form-label col-lg-1 pt-0">
+                Panel(s)<span class="text-danger">*</span>
+              </legend>
+              <div class="col-lg-11">
+                <div class="form-check" v-for="item in panelData">
                   <input
                     class="form-check-input"
                     type="checkbox"
