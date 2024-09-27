@@ -19,6 +19,7 @@ import {
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
+import UpdateRecordView from "@/views/UpdateRecordView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -89,6 +90,12 @@ const router = createRouter({
       path: "/lgd/update-draft/:stableID",
       name: "update-g2p-record-draft",
       component: UpdateLocusGeneDiseaseView,
+      meta: { requiresLogIn: true },
+    },
+    {
+      path: "/lgd/update/:stableId",
+      name: "update-g2p-record",
+      component: UpdateRecordView,
       meta: { requiresLogIn: true },
     },
     {
