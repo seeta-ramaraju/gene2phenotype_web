@@ -1,5 +1,11 @@
 <script>
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+import {
+  checkLogInAndAppendAuthHeaders,
+  appendAuthenticationHeaders,
+  isUserLoggedIn,
+  logOutUser,
+} from "../utility/AuthenticationUtility.js";
+import AddPanelModal from "./update/AddPanelModal.vue";
 
 export default {
   data() {
@@ -13,14 +19,21 @@ export default {
         moderate: "green",
         limited: "red",
       },
+      isRecordPartOfUserPanels: false,
+      stableId: null,
+      userPanels: null,
+      isPanelDataLoading: false,
     };
+  },
+  components: {
+    AddPanelModal,
   },
   created() {
     // watch the params of the route to fetch the data again
     this.$watch(
       () => this.$route.params,
       () => {
-        this.fetchData();
+        this.fetchRecordData();
       },
       // fetch the data when the view is created and the data is
       // already being observed
@@ -28,13 +41,14 @@ export default {
     );
   },
   methods: {
-    fetchData() {
+    fetchRecordData() {
+      this.stableId = this.$route.params.stableId;
       this.errorMsg = this.locusGeneDiseaseData = null;
       this.isDataLoading = true;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/lgd/${this.$route.params.stableId}/`, {
+      fetch(`/gene2phenotype/api/lgd/${this.stableId}/`, {
         method: "GET",
         headers: apiHeaders,
       })
@@ -50,12 +64,69 @@ export default {
         .then((responseJson) => {
           this.isDataLoading = false;
           this.locusGeneDiseaseData = responseJson;
+          this.fetchUserPanels();
         })
         .catch((error) => {
           this.isDataLoading = false;
           this.errorMsg = error.message;
           console.log(error);
         });
+    },
+    fetchUserPanels() {
+      if (!isUserLoggedIn()) {
+        logOutUser();
+        return;
+      }
+
+      this.userPanels = null;
+      this.isPanelDataLoading = true;
+      const apiHeaders = appendAuthenticationHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch("/gene2phenotype/api/user/panels/", {
+        method: "GET",
+        headers: apiHeaders,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            return Promise.reject(new Error("Unable to fetch user panels."));
+          }
+        })
+        .then((responseJson) => {
+          this.isPanelDataLoading = false;
+          if (responseJson && responseJson.length > 0) {
+            this.userPanels = responseJson;
+            this.validateIsRecordPartOfUserPanels(
+              this.locusGeneDiseaseData?.panels,
+              this.userPanels
+            );
+          }
+        })
+        .catch((error) => {
+          this.isPanelDataLoading = false;
+          console.log(error);
+        });
+    },
+    validateIsRecordPartOfUserPanels(recordPanels, userPanels) {
+      // convert array of objects (name, description) to array of strings (description)
+      const userPanelDescriptions = userPanels.map(
+        (panelObj) => panelObj.description
+      );
+      // if any of the user panels exists in the g2p record panels list then true else false
+      this.isRecordPartOfUserPanels = recordPanels.some((item) =>
+        userPanelDescriptions.includes(item.description)
+      );
+    },
+    goToUpdateRecordPage() {
+      this.$router.push(`/lgd/update/${this.stableId}`);
+    },
+    refreshPage() {
+      this.$router.go(); // refresh current page
+    },
+    isLoggedIn() {
+      return isUserLoggedIn();
     },
   },
 };
@@ -78,10 +149,42 @@ export default {
       </div>
     </div>
     <div v-if="locusGeneDiseaseData">
-      <h2 v-if="locusGeneDiseaseData.disease?.name">
-        {{ locusGeneDiseaseData.disease.name }}
-      </h2>
-      <h2 v-else class="text-muted">Disease Name Not Available</h2>
+      <div class="d-flex justify-content-between">
+        <div>
+          <h2 v-if="locusGeneDiseaseData.disease?.name">
+            {{ locusGeneDiseaseData.disease.name }}
+          </h2>
+          <h2 v-else class="text-muted">Disease Name Not Available</h2>
+        </div>
+        <button
+          class="btn btn-outline-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#add-panel-modal"
+          v-if="
+            !isPanelDataLoading &&
+            userPanels &&
+            userPanels.length > 0 &&
+            isLoggedIn() &&
+            !isRecordPartOfUserPanels
+          "
+        >
+          <i class="bi bi-plus-circle-fill"></i> Add to my panel
+        </button>
+        <button
+          class="btn btn-outline-primary"
+          @click="goToUpdateRecordPage"
+          v-if="!isPanelDataLoading && isLoggedIn() && isRecordPartOfUserPanels"
+        >
+          <i class="bi bi-pencil-square"></i> Update record
+        </button>
+        <div v-if="isPanelDataLoading && isLoggedIn()" class="my-auto">
+          <span
+            class="spinner-border spinner-border-sm text-primary"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        </div>
+      </div>
       <table class="table table-borderless my-3">
         <tbody>
           <tr class="align-middle">
@@ -624,6 +727,11 @@ export default {
           </tr>
         </tbody>
       </table>
+      <AddPanelModal
+        :stableId="stableId"
+        :userPanels="userPanels"
+        @refreshpage="refreshPage"
+      />
     </div>
   </div>
 </template>
