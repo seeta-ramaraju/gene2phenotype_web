@@ -94,7 +94,7 @@
 export default {
   data() {
     return {
-      gene2phenotype: "https://www.ebi.ac.uk/gene2phenotype",
+      gene2phenotype: "/gene2phenotype/",
       gene2phenotype_article: "https://doi.org/10.1038/s41467-019-10016-3",
       curation: "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
       eye: "https://doi.org/10.1136/jmg-2022-108618",
