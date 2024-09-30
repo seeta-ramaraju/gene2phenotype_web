@@ -1,3 +1,28 @@
+<script>
+export default {
+  data() {
+    return {
+      vep: "https://www.ensembl.org/info/docs/tools/vep/index.html",
+      individual:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_individual",
+      symbol:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol",
+      frequency:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af",
+      sift: "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_sift",
+      polyphen:
+        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_polyphen",
+      vep_options:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html",
+      docker:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker",
+      g2p: "https://github.com/Ensembl/VEP_plugins/blob/main/G2P.pm",
+      vep_other:
+        "http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster",
+    };
+  },
+};
+</script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2 class="pb-2">
@@ -375,28 +400,3 @@ h6 {
   font-weight: bold;
 }
 </style>
-<script>
-export default {
-  data() {
-    return {
-      vep: "https://www.ensembl.org/info/docs/tools/vep/index.html",
-      individual:
-        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_individual",
-      symbol:
-        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_symbol",
-      frequency:
-        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_af",
-      sift: "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_sift",
-      polyphen:
-        "https://www.ensembl.org/info/docs/tools/vep/script/vep_options.html#opt_polyphen",
-      vep_options:
-        "http://www.ensembl.org/info/docs/tools/vep/script/vep_options.html",
-      docker:
-        "http://www.ensembl.org/info/docs/tools/vep/script/vep_download.html#docker",
-      g2p: "https://github.com/Ensembl/VEP_plugins/blob/main/G2P.pm",
-      vep_other:
-        "http://www.ensembl.org/info/docs/tools/vep/script/vep_other.html#faster",
-    };
-  },
-};
-</script>
