@@ -194,9 +194,9 @@ export default {
                   overflow: hidden;
                   text-overflow: ellipsis;
                 "
-                v-if="Array.isArray(item.molecular_mehanism)"
+                v-if="Array.isArray(item.molecular_mechanism)"
               >
-                {{ item.molecular_mehanism.join(",") }}
+                {{ item.molecular_mechanism.join(",") }}
               </td>
               <td
                 style="
@@ -206,7 +206,7 @@ export default {
                 "
                 v-else
               >
-                {{ item.molecular_mehanism }}
+                {{ item.molecular_mechanism }}
               </td>
               <td
                 style="
