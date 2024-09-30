@@ -67,8 +67,9 @@ export default {
       </p>
     </div>
     <div class="col-12">
-      <table class="table table-bordered">
-        <thead>
+      <table class="table">
+        <!-- sticky header is collapsing the borders so a border styling fix is made in the style section below -->
+        <thead class="sticky-top">
           <tr>
             <th style="width: 20%">Types</th>
             <th style="width: 15%"></th>
@@ -250,3 +251,31 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+/* Border styling fix for sticky header - START */
+table {
+  border-collapse: separate; /* Does not collapse border */
+  border-spacing: 0;
+  width: 100%;
+}
+
+table th {
+  /* Apply top and bottom borders */
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+}
+
+table td {
+  /* Apply bottom and right borders */
+  border-bottom: 1px solid #dee2e6;
+  border-right: 1px solid #dee2e6;
+}
+
+table th:first-child,
+table td:first-child {
+  /* Apply left border to first <td> and first <th> of every row */
+  border-left: 1px solid #dee2e6;
+}
+/* Border styling fix for sticky header - END */
+</style>
