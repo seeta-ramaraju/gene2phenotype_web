@@ -15,8 +15,9 @@
                       href="https://www.sanger.ac.uk/people/faculty/honorary-faculty/helen-firth"
                       style="text-decoration: none"
                       target="_blank"
-                      >Helen V Firth</a
                     >
+                      Helen V Firth
+                    </a>
                   </li>
                   <li>James Whitworth</li>
                   <li>Marc Tischkowitz</li>
@@ -36,8 +37,9 @@
                       href="https://www.sanger.ac.uk/people/faculty/honorary-faculty/helen-firth"
                       style="text-decoration: none"
                       target="_blank"
-                      >Helen V Firth</a
                     >
+                      Helen V Firth
+                    </a>
                   </li>
                   <li>T Michael Yates</li>
                   <li>Morad Ansari</li>
@@ -51,8 +53,9 @@
                       href="https://www.ed.ac.uk/profile/david-fitzpatrick"
                       style="text-decoration: none"
                       target="_blank"
-                      >David FitzPatrick</a
                     >
+                      David FitzPatrick
+                    </a>
                   </li>
                   <li>Wayne Lam</li>
                 </ul>
@@ -71,8 +74,9 @@
                       href="https://www.research.manchester.ac.uk/portal/graeme.black.html"
                       style="text-decoration: none"
                       target="_blank"
-                      >Graeme Black</a
                     >
+                      Graeme Black
+                    </a>
                   </li>
                   <li>Ana Carvalho</li>
                   <li>Eva Lenassi</li>
@@ -94,11 +98,12 @@
                   <li>Richard Martin</li>
                   <li>
                     <a
-                      href="https://www.ncl.ac.uk/medicalsciences/research/groups/profile/neilrajan.html#background"
+                      href="https://www.ncl.ac.uk/medical-sciences/people/profile/neilrajan.html"
                       style="text-decoration: none"
                       target="_blank"
-                      >Neil Rajan</a
                     >
+                      Neil Rajan
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -116,8 +121,9 @@
                       href="https://www.imperial.ac.uk/people/j.ware"
                       style="text-decoration: none"
                       target="_blank"
-                      >James Ware</a
                     >
+                      James Ware
+                    </a>
                   </li>
                   <li>Katherine Josephs</li>
                   <li>Roddy Walsh</li>
@@ -130,9 +136,10 @@
                       href="https://clinicalgenome.org/working-groups/clinical-domain/cardiovascular/"
                       style="text-decoration: none"
                       target="_blank"
-                      >The ClinGen Genome Resource Heritable Cardiovascular
-                      Disorders Gene Curation Expert Panel</a
                     >
+                      The ClinGen Genome Resource Heritable Cardiovascular
+                      Disorders Gene Curation Expert Panel
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -150,8 +157,9 @@
                       href="https://www.sydney.edu.au/medicine-health/about/our-people/academic-staff/andreas-zankl.html"
                       style="text-decoration: none"
                       target="_blank"
-                      >Andreas Zankl</a
                     >
+                      Andreas Zankl
+                    </a>
                   </li>
                 </ul>
               </div>
