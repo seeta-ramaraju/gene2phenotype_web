@@ -603,6 +603,7 @@ export default {
           (updatedMechanismEvidence) =>
             (previousInput.mechanism_evidence = updatedMechanismEvidence)
         "
+        :mechanismGeneStats="geneFunctionData.gene_stats"
       />
       <Disease
         :inputGeneSymbol="previousInput.locus"

@@ -12,6 +12,7 @@ export default {
     mechanismSynopsis: String,
     mechanismSynopsisSupport: String,
     mechanismEvidence: Object,
+    mechanismGeneStats: Object,
   },
   emits: [
     "update:molecularMechanism",
@@ -53,40 +54,52 @@ export default {
                 <p class="col-form-label">Badoyni et al probabilities</p>
               </div>
               <div class="col-md-3">
-                <label for="gain-of-function-input" class="form-label">
+                <label for="gain-of-function-textbox" class="form-label">
                   Gain of Function
                 </label>
-                <input
-                  type="email"
+                <textarea
                   class="form-control"
-                  id="gain-of-function-input"
+                  id="gain-of-function-textbox"
+                  rows="1"
                   disabled
-                  value="Not Available"
-                />
+                  >{{
+                    mechanismGeneStats.gain_of_function_mp
+                      ? mechanismGeneStats.gain_of_function_mp
+                      : "Not Available"
+                  }}</textarea
+                >
               </div>
               <div class="col-md-3">
                 <label for="loss-of-function-input" class="form-label">
                   Loss of Function
                 </label>
-                <input
-                  type="email"
+                <textarea
                   class="form-control"
-                  id="loss-of-function-input"
+                  id="loss-of-function-textbox"
+                  rows="1"
                   disabled
-                  value="Not Available"
-                />
+                  >{{
+                    mechanismGeneStats.loss_of_function_mp
+                      ? mechanismGeneStats.loss_of_function_mp
+                      : "Not Available"
+                  }}</textarea
+                >
               </div>
               <div class="col-md-3">
                 <label for="dominant-negative-input" class="form-label">
                   Dominant Negative
                 </label>
-                <input
-                  type="email"
+                <textarea
                   class="form-control"
-                  id="dominant-negative-input"
+                  id="loss-of-function-textbox"
+                  rows="1"
                   disabled
-                  value="Not Available"
-                />
+                  >{{
+                    mechanismGeneStats.dominant_negative_mp
+                      ? mechanismGeneStats.dominant_negative_mp
+                      : "Not Available"
+                  }}</textarea
+                >
               </div>
             </div>
             <div class="row g-3 px-3 pt-4">
