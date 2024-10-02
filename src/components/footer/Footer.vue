@@ -7,7 +7,7 @@
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
               <router-link
-                to="/variant-filtering"
+                to="/about/project"
                 class="nav-link p-0 text-body-secondary"
               >
                 Documentation

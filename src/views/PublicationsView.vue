@@ -1,3 +1,16 @@
+<script>
+export default {
+  data() {
+    return {
+      gene2phenotype: "/gene2phenotype/",
+      gene2phenotype_article: "https://doi.org/10.1038/s41467-019-10016-3",
+      curation: "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
+      eye: "https://doi.org/10.1136/jmg-2022-108618",
+      gene_validity: "https://doi.org/10.1186/s13073-023-01246-8",
+    };
+  },
+};
+</script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2>Publications</h2>
@@ -90,16 +103,3 @@
   border-radius: 5px;
 }
 </style>
-<script>
-export default {
-  data() {
-    return {
-      gene2phenotype: "https://www.ebi.ac.uk/gene2phenotype",
-      gene2phenotype_article: "https://doi.org/10.1038/s41467-019-10016-3",
-      curation: "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
-      eye: "https://doi.org/10.1136/jmg-2022-108618",
-      gene_validity: "https://doi.org/10.1186/s13073-023-01246-8",
-    };
-  },
-};
-</script>

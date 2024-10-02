@@ -1,3 +1,16 @@
+<script>
+export default {
+  data() {
+    return {
+      gencc: "https://thegencc.org/",
+      initialpaper: "https://doi.org/10.1038/s41467-019-10016-3",
+      curationpaper:
+        "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
+      variantfiltering: "/variant-filtering",
+    };
+  },
+};
+</script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2 class="pb-3">The Project</h2>
@@ -43,13 +56,19 @@
     </ul>
     <p>
       The full curation process is described here and terminology used is
-      described <a href="#" style="text-decoration: none">here</a>.
+      described
+      <a :href="curationpaper" target="_blank" style="text-decoration: none"
+        >here</a
+      >.
     </p>
     <p>
       The Ensembl VEP diagnostic variant filtering pipeline matches patient
       genotypes to allelic requirements and genes reported in the literature to
       identify likely causative genes and variants. Full information is
-      available <a href="#" style="text-decoration: none">here</a>.
+      available
+      <router-link :to="variantfiltering" style="text-decoration: none"
+        >here</router-link
+      >.
     </p>
     <p>
       G2P is a member of the Gene Curation Coalition (<a
@@ -62,13 +81,3 @@
     </p>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      gencc: "https://thegencc.org/",
-      initialpaper: "https://doi.org/10.1038/s41467-019-10016-3",
-    };
-  },
-};
-</script>
