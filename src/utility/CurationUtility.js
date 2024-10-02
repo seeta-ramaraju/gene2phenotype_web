@@ -245,7 +245,7 @@ export const prepareInputForDataSubmission = (input) => {
     if (valueObj.description.trim() !== "") {
       let variantDescriptionObj = {
         ...valueObj,
-        pmid: pmidKey,
+        publication: pmidKey,
         description: valueObj.description.trim(), // trim description value
       };
       variantDescriptionsArray.push(variantDescriptionObj);
@@ -358,10 +358,10 @@ export const prepareInputForUpdating = (previousInput) => {
   }
 
   variantDesc.forEach((variant) => {
-    const { description, pmid } = variant;
+    const { description, publication } = variant;
 
-    if (variantDescObj[pmid]) {
-      variantDescObj[pmid] = {
+    if (variantDescObj[publication]) {
+      variantDescObj[publication] = {
         description,
       };
     }
