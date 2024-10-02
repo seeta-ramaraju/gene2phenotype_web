@@ -91,7 +91,7 @@ export default {
                 </label>
                 <textarea
                   class="form-control"
-                  id="loss-of-function-textbox"
+                  id="dominant-negative-textbox"
                   rows="1"
                   disabled
                   >{{
