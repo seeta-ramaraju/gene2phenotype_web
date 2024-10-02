@@ -86,7 +86,7 @@ export default {
                 >
               </div>
               <div class="col-md-3">
-                <label for="dominant-negative-input" class="form-label">
+                <label for="dominant-negative-textbox" class="form-label">
                   Dominant Negative
                 </label>
                 <textarea
