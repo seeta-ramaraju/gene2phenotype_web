@@ -1,5 +1,4 @@
 <script>
-import { getEvidenceTypes } from "@/utility/CommonUtility.js";
 import {
   checkLogInAndAppendAuthHeaders,
   appendAuthenticationHeaders,
@@ -128,9 +127,6 @@ export default {
     },
     isLoggedIn() {
       return isUserLoggedIn();
-    },
-    getAllEvidenceTypes(evidenceObj) {
-      return getEvidenceTypes(evidenceObj);
     },
   },
 };
@@ -268,6 +264,7 @@ export default {
                           item.inherited ||
                           item.unknown_inheritance
                         "
+                        class="mb-0"
                       >
                         <li v-if="item.de_novo">De Novo</li>
                         <li v-if="item.inherited">Inherited</li>
@@ -482,8 +479,25 @@ export default {
                     v-for="(value, key) in locusGeneDiseaseData
                       .molecular_mechanism[0].evidence"
                   >
-                    <td>
-                      {{ getAllEvidenceTypes(value).join(", ") }}
+                    <td class="ps-0">
+                      <ul
+                        v-if="value && Object.keys(value).length > 0"
+                        class="mb-0"
+                      >
+                        <li
+                          v-for="(
+                            secondaryEvidenceTypeArray, primaryEvidenceType
+                          ) in value"
+                        >
+                          {{ primaryEvidenceType }} :
+                          {{
+                            secondaryEvidenceTypeArray &&
+                            secondaryEvidenceTypeArray.length > 0
+                              ? secondaryEvidenceTypeArray.join(", ")
+                              : null
+                          }}
+                        </li>
+                      </ul>
                     </td>
                     <td>
                       <a
