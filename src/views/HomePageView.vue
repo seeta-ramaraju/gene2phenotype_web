@@ -356,8 +356,8 @@ export default {
                     {{ item.description ? item.description : item.name }}
                   </router-link>
                 </td>
-                <td>{{ item.stats?.total_records }}</td>
-                <td>{{ item.stats?.total_genes }}</td>
+                <td>{{ item.stats?.total_records.toLocaleString() }}</td>
+                <td>{{ item.stats?.total_genes.toLocaleString() }}</td>
                 <td class="p-0">
                   <div class="d-flex justify-content-center">
                     <button
