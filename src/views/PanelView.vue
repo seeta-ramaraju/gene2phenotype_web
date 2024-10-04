@@ -104,10 +104,10 @@ export default {
                   panelData?.stats?.by_confidence?.limited,
                 ],
                 backgroundColor: [
-                  "rgba(39,103,73)",
-                  "rgba(56,161,105)",
-                  "rgba(104,211,145)",
-                  "rgba(252,129,129)",
+                  "rgb(39,103,73)",
+                  "rgb(56,161,105)",
+                  "rgb(104,211,145)",
+                  "rgb(252,129,129)",
                 ],
                 borderColor: [
                   "rgb(39,103,73)",
