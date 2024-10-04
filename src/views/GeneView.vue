@@ -10,10 +10,12 @@ export default {
       geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: {
-        definitive: "green",
-        strong: "green",
-        moderate: "green",
-        limited: "red",
+        definitive: "rgb(39,103,73)",
+        strong: "rgb(56,161,105)",
+        moderate: "rgb(104,211,145)",
+        limited: "rgb(252,129,129)",
+        disputed: "rgb(229,62,62)",
+        refuted: "rgb(155,44,44)",
       },
     };
   },
