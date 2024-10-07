@@ -70,7 +70,7 @@ export default {
                 >
               </div>
               <div class="col-md-3">
-                <label for="loss-of-function-input" class="form-label">
+                <label for="loss-of-function-textbox" class="form-label">
                   Loss of Function
                 </label>
                 <textarea
