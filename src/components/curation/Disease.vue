@@ -9,16 +9,6 @@ export default {
     diseaseCrossReferences: Array,
   },
   emits: ["update:diseaseName", "update:diseaseCrossReferences"],
-  watch: {
-    selectedDiseaseObj(newSelectedDiseaseObj) {
-      this.$emit("update:diseaseName", newSelectedDiseaseObj.disease_name);
-    },
-  },
-  data() {
-    return {
-      selectedDiseaseObj: {},
-    };
-  },
   methods: {
     checkboxHandler(diseaseCrossReference, checked) {
       let updatedDiseaseCrossReferences = [...this.diseaseCrossReferences];
@@ -34,6 +24,11 @@ export default {
         "update:diseaseCrossReferences",
         updatedDiseaseCrossReferences
       );
+    },
+    useDiseaseName(diseaseName) {
+      if (diseaseName) {
+        this.$emit("update:diseaseName", diseaseName);
+      }
     },
   },
 };
@@ -102,24 +97,15 @@ export default {
               >
                 <thead>
                   <tr>
-                    <th>Use</th>
-                    <th>Link</th>
-                    <th>Name</th>
-                    <th>Accession</th>
-                    <th>Source</th>
+                    <th style="width: 5%">Link</th>
+                    <th style="width: 55%">Name</th>
+                    <th style="width: 20%">Accession</th>
+                    <th style="width: 20%">Source</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in geneDiseaseData.results">
-                    <td>
-                      <input
-                        type="radio"
-                        :id="`disease-name-use-input-${index}`"
-                        :value="item"
-                        v-model="selectedDiseaseObj"
-                      />
-                    </td>
-                    <td>
+                    <td class="text-center" style="width: 5%">
                       <input
                         type="checkbox"
                         :id="`disease-name-link-input-${index}`"
@@ -133,8 +119,20 @@ export default {
                         @input="checkboxHandler(item, $event.target.checked)"
                       />
                     </td>
-                    <td>{{ item.disease_name }}</td>
-                    <td>
+                    <td style="width: 55%">
+                      <div class="d-flex justify-content-between">
+                        {{ item.disease_name }}
+                        <button
+                          :id="`disease-name-use-btn-${index}`"
+                          class="btn btn-outline-primary py-0 px-1"
+                          @click="useDiseaseName(item.disease_name)"
+                          type="button"
+                        >
+                          Use name
+                        </button>
+                      </div>
+                    </td>
+                    <td style="width: 20%">
                       <a
                         v-bind:href="`https://www.omim.org/entry/${item.identifier}`"
                         style="text-decoration: none"
@@ -153,10 +151,14 @@ export default {
                       </a>
                       <span v-else>{{ item.identifier }}</span>
                     </td>
-                    <td>{{ item.source }}</td>
+                    <td style="width: 20%">{{ item.source }}</td>
                   </tr>
                 </tbody>
               </table>
+              <p class="m-0">
+                <i class="bi bi-info-circle"></i> Clicking on 'Use name' button
+                will auto-populate the disease name in the input.
+              </p>
             </div>
           </div>
         </div>
