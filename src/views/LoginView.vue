@@ -11,6 +11,7 @@ export default {
       isDataLoading: false,
       username: "",
       password: "",
+      isPasswordVisible: false,
     };
   },
   methods: {
@@ -51,6 +52,9 @@ export default {
           console.log(error);
         });
     },
+    togglePasswordVisibility() {
+      this.isPasswordVisible = !this.isPasswordVisible;
+    },
   },
 };
 </script>
@@ -86,13 +90,15 @@ export default {
         </div>
         <div class="form-floating">
           <input
-            type="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
             class="form-control"
             id="input-password"
             placeholder="Password"
             v-model.trim="password"
           />
           <label for="input-password">Password</label>
+          <input type="checkbox" @click="togglePasswordVisibility" />
+          {{ isPasswordVisible ? "Hide Password" : "Show Password" }}
         </div>
         <button class="btn btn-primary w-100 mt-2" type="submit">Log in</button>
       </form>
