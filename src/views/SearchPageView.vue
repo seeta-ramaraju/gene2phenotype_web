@@ -141,7 +141,6 @@ export default {
               <th>Gene</th>
               <th>Disease</th>
               <th>Allelic Requirement</th>
-              <th>Mechanism</th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -175,7 +174,6 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.mechanism }}</td>
               <td>
                 <span
                   v-if="item.panel && item.panel.length > 0"
