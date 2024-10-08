@@ -63,14 +63,14 @@ export default {
                   rows="1"
                   disabled
                   >{{
-                    mechanismGeneStats.gain_of_function_mp
+                    mechanismGeneStats?.gain_of_function_mp
                       ? mechanismGeneStats.gain_of_function_mp
                       : "Not Available"
                   }}</textarea
                 >
               </div>
               <div class="col-md-3">
-                <label for="loss-of-function-input" class="form-label">
+                <label for="loss-of-function-textbox" class="form-label">
                   Loss of Function
                 </label>
                 <textarea
@@ -79,7 +79,7 @@ export default {
                   rows="1"
                   disabled
                   >{{
-                    mechanismGeneStats.loss_of_function_mp
+                    mechanismGeneStats?.loss_of_function_mp
                       ? mechanismGeneStats.loss_of_function_mp
                       : "Not Available"
                   }}</textarea
@@ -95,7 +95,7 @@ export default {
                   rows="1"
                   disabled
                   >{{
-                    mechanismGeneStats.dominant_negative_mp
+                    mechanismGeneStats?.dominant_negative_mp
                       ? mechanismGeneStats.dominant_negative_mp
                       : "Not Available"
                   }}</textarea
