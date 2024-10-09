@@ -629,18 +629,18 @@ export default {
               <h6>Level</h6>
             </td>
             <td>
-              <p
+              <span
                 v-if="locusGeneDiseaseData.confidence"
+                class="badge text-white fs-6"
                 :style="{
-                  color:
+                  backgroundColor:
                     confidenceColorMap[
                       locusGeneDiseaseData.confidence.toLowerCase()
                     ],
-                  fontWeight: 'bold',
                 }"
               >
-                {{ locusGeneDiseaseData.confidence.toUpperCase() }}
-              </p>
+                {{ locusGeneDiseaseData.confidence }}
+              </span>
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
