@@ -170,7 +170,7 @@ export default {
             !isRecordPartOfUserPanels
           "
         >
-          <i class="bi bi-plus-circle-fill"></i> Add to my panel
+          <i class="bi bi-plus-circle-fill"></i> Add to another panel
         </button>
         <button
           class="btn btn-outline-primary"
