@@ -410,20 +410,15 @@ export default {
               <h6>Mechanism</h6>
             </td>
             <td class="w-75">
-              <p
-                v-if="
-                  locusGeneDiseaseData.molecular_mechanism &&
-                  locusGeneDiseaseData.molecular_mechanism.length > 0
-                "
-              >
-                {{ locusGeneDiseaseData.molecular_mechanism[0].mechanism }}
+              <p v-if="locusGeneDiseaseData.molecular_mechanism">
+                {{ locusGeneDiseaseData.molecular_mechanism.mechanism }}
                 <span
                   v-if="
-                    locusGeneDiseaseData.molecular_mechanism[0].support ===
+                    locusGeneDiseaseData.molecular_mechanism.support ===
                     'inferred'
                   "
                 >
-                  ({{ locusGeneDiseaseData.molecular_mechanism[0].support }})
+                  ({{ locusGeneDiseaseData.molecular_mechanism.support }})
                 </span>
               </p>
               <p v-else class="text-muted">Not Available</p>
