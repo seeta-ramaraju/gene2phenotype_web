@@ -429,22 +429,16 @@ export default {
               <h6>Categorization</h6>
             </td>
             <td class="w-75">
-              <p
-                v-if="
-                  locusGeneDiseaseData.molecular_mechanism &&
-                  locusGeneDiseaseData.molecular_mechanism.length > 0
-                "
-              >
-                {{ locusGeneDiseaseData.molecular_mechanism[0].synopsis }}
+              <p v-if="locusGeneDiseaseData.molecular_mechanism">
+                {{ locusGeneDiseaseData.molecular_mechanism.synopsis }}
                 <span
                   v-if="
-                    locusGeneDiseaseData.molecular_mechanism[0]
+                    locusGeneDiseaseData.molecular_mechanism
                       .synopsis_support === 'inferred'
                   "
                 >
                   ({{
-                    locusGeneDiseaseData.molecular_mechanism[0]
-                      .synopsis_support
+                    locusGeneDiseaseData.molecular_mechanism.synopsis_support
                   }})
                 </span>
               </p>
@@ -454,10 +448,7 @@ export default {
           <tr
             v-if="
               locusGeneDiseaseData.molecular_mechanism &&
-              locusGeneDiseaseData.molecular_mechanism.length > 0 &&
-              locusGeneDiseaseData.molecular_mechanism[0].evidence &&
-              Object.keys(locusGeneDiseaseData.molecular_mechanism[0].evidence)
-                .length > 0
+              locusGeneDiseaseData.molecular_mechanism.evidence
             "
           >
             <td class="w-25 text-end">
@@ -474,7 +465,7 @@ export default {
                 <tbody>
                   <tr
                     v-for="(value, key) in locusGeneDiseaseData
-                      .molecular_mechanism[0].evidence"
+                      .molecular_mechanism.evidence"
                   >
                     <td class="ps-0">
                       <ul

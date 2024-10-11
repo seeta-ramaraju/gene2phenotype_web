@@ -141,7 +141,7 @@ export default {
               <th>Gene</th>
               <th>Disease</th>
               <th>Allelic Requirement</th>
-              <th>Molecular Mechanism</th>
+              <th>Mechanism</th>
               <th>Panels</th>
             </tr>
           </thead>
