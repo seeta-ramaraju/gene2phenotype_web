@@ -410,7 +410,7 @@ export default {
               <h6>Mechanism</h6>
             </td>
             <td class="w-75">
-              <p v-if="locusGeneDiseaseData.molecular_mechanism">
+              <p v-if="locusGeneDiseaseData.molecular_mechanism?.mechanism">
                 {{ locusGeneDiseaseData.molecular_mechanism.mechanism }}
                 <span
                   v-if="
