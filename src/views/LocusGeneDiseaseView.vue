@@ -433,7 +433,7 @@ export default {
                 {{ locusGeneDiseaseData.molecular_mechanism.synopsis }}
                 <span
                   v-if="
-                    locusGeneDiseaseData.molecular_mechanism
+                    locusGeneDiseaseData.molecular_mechanism?
                       .synopsis_support === 'inferred'
                   "
                 >
