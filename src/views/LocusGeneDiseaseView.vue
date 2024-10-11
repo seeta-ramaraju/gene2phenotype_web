@@ -447,7 +447,6 @@ export default {
           </tr>
           <tr
             v-if="
-              locusGeneDiseaseData.molecular_mechanism &&
               locusGeneDiseaseData.molecular_mechanism?.evidence &&
               Object.keys(locusGeneDiseaseData.molecular_mechanism.evidence)
                 .length > 0
