@@ -80,7 +80,7 @@ export default {
       // after fetching data, it is set to null
       this.activeDownloadPanelName = panelName;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "text/gzip",
+        "Content-Type": "text/csv;charset=UTF-8",
       });
       fetch(`/gene2phenotype/api/panel/${panelName}/download`, {
         method: "GET",
@@ -91,31 +91,31 @@ export default {
             "Content-Disposition"
           );
           if (response.status === 200) {
-            return response.blob();
+            return response.text();
           } else {
             return Promise.reject(
               new Error("Unable to download data. Please try again later.")
             );
           }
         })
-        .then((responseBlob) => {
+        .then((responseText) => {
           this.activeDownloadPanelName = null;
-          // get gzip file name from response Content-Disposition header
+          // get csv file name from response Content-Disposition header
           const regexMatch = responseContentDisposition.match(
             /attachment; filename="([^"]+)"/
-          ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv.gz"
-          let gzipFileName = "data.csv.gz"; // default gzip file name
+          ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
+          let csvFileName = "data.csv"; // default csv file name
           if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
-            gzipFileName = regexMatch[1];
+            csvFileName = regexMatch[1];
           }
-          // download gzip file
-          const objectUrl = URL.createObjectURL(responseBlob);
+          // download csv data to file
+          const csvDataText = responseText;
           const anchor = document.createElement("a");
-          anchor.href = objectUrl;
+          anchor.href =
+            "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
           anchor.target = "_blank";
-          anchor.download = gzipFileName;
+          anchor.download = csvFileName;
           anchor.click();
-          URL.revokeObjectURL(objectUrl);
           anchor.remove();
         })
         .catch((error) => {
