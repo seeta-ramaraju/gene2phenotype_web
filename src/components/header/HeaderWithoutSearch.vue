@@ -29,6 +29,7 @@ export default {
       this.panelData = null;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
       });
       fetch("/gene2phenotype/api/panels/", {
         method: "GET",
