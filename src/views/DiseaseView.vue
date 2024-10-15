@@ -122,14 +122,7 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr
-              style="
-                max-width: 150px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              "
-              v-for="item in diseaseSummaryData.records_summary"
-            >
+            <tr v-for="item in diseaseSummaryData.records_summary">
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
@@ -139,82 +132,31 @@ export default {
                   {{ item.stable_id }}
                 </router-link>
               </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
+              <td>
                 {{ item.genotype }}
               </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-if="Array.isArray(item.variant_consequence)"
-              >
-                {{ item.variant_consequence.join(",") }}
+              <td>
+                {{
+                  Array.isArray(item.variant_consequence)
+                    ? item.variant_consequence.join(", ")
+                    : item.variant_consequence
+                }}
               </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-else
-              >
-                {{ item.variant_consequence }}
+              <td>
+                {{
+                  Array.isArray(item.variant_type)
+                    ? item.variant_type.join(", ")
+                    : item.variant_type
+                }}
               </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-if="Array.isArray(item.variant_type)"
-              >
-                {{ item.variant_type.join(",") }}
+              <td>
+                {{
+                  Array.isArray(item.molecular_mechanism)
+                    ? item.molecular_mechanism.join(", ")
+                    : item.molecular_mechanism
+                }}
               </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-else
-              >
-                {{ item.variant_type }}
-              </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-if="Array.isArray(item.molecular_mechanism)"
-              >
-                {{ item.molecular_mechanism.join(",") }}
-              </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-                v-else
-              >
-                {{ item.molecular_mechanism }}
-              </td>
-              <td
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
+              <td>
                 <span
                   v-if="item.panels && item.panels.length > 0"
                   v-for="(panelName, index) in item.panels"
