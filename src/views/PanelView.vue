@@ -283,78 +283,14 @@ export default {
         >
           <thead>
             <tr>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                G2P ID
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Gene
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Disease
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Allelic Requirement
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Variant Consequence
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Variant Type
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Mechanism
-              </th>
-              <th
-                style="
-                  max-width: 150px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                "
-              >
-                Confidence
-              </th>
+              <th>G2P ID</th>
+              <th>Gene</th>
+              <th>Disease</th>
+              <th>Allelic Requirement</th>
+              <th>Variant Consequence</th>
+              <th>Variant Type</th>
+              <th>Mechanism</th>
+              <th>Confidence</th>
             </tr>
           </thead>
           <tbody>
@@ -387,9 +323,7 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>
-                {{ item.variant_consequence.join(", ") }}
-              </td>
+              <td>{{ item.variant_consequence.join(", ") }}</td>
               <td>{{ item.variant_type.join(", ") }}</td>
               <td>{{ item.molecular_mechanism.join(", ") }}</td>
               <td>
@@ -407,7 +341,7 @@ export default {
             </tr>
           </tbody>
         </table>
-        <p v-else style="color: grey">Not Available</p>
+        <p v-else>No Records found</p>
       </div>
       <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
