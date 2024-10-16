@@ -388,7 +388,15 @@ export default {
                 <tbody>
                   <tr v-for="item in locusGeneDiseaseData.variant_consequence">
                     <td>
-                      {{ item.variant_consequence }}
+                      <a
+                        v-if="item.accession"
+                        v-bind:href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
+                        style="text-decoration: none"
+                        target="_blank"
+                      >
+                        {{ item.variant_consequence }}
+                      </a>
+                      <span v-else>{{ item.variant_consequence }}</span>
                     </td>
                     <td>
                       {{ item.support }}
