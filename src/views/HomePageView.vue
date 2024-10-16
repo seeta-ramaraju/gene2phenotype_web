@@ -176,7 +176,7 @@ export default {
                 type="text"
                 class="form-control"
                 aria-label="Search text input"
-                placeholder="Eg: CRYBA1 or Severe Neurodevelopmental Syndrome"
+                placeholder="Search for a Gene, Disease, Phenotype or G2P ID"
                 v-model="searchInput"
                 id="search-input"
                 @keyup.enter="searchClickHandler"
@@ -310,6 +310,26 @@ export default {
                 <i class="bi bi-search"></i>
               </button>
             </div>
+            <div class="form-text text-start">
+              Example searches:
+              <router-link
+                :to="{
+                  path: '/search',
+                  query: { query: 'Weill-Marchesani syndrome' },
+                }"
+                style="text-decoration: none"
+                >Weill-Marchesani syndrome</router-link
+              >
+              |
+              <router-link
+                :to="{
+                  path: '/search',
+                  query: { query: 'Tuberous sclerosis' },
+                }"
+                style="text-decoration: none"
+                >Tuberous sclerosis</router-link
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -332,8 +352,8 @@ export default {
           <table class="table table-hover table-bordered shadow-sm">
             <thead>
               <tr>
-                <th scope="col" width="35%">Disorder Panel</th>
-                <th scope="col" width="37%">
+                <th>Disorder Panel</th>
+                <th>
                   Total LGMDE Records
                   <span class="bi bi-info-circle custom-tooltip">
                     <span class="custom-tooltip-text">
@@ -342,8 +362,8 @@ export default {
                     </span>
                   </span>
                 </th>
-                <th scope="col" width="20%">Total Genes</th>
-                <th scope="col" width="8%">Download</th>
+                <th>Total Genes</th>
+                <th>Download</th>
               </tr>
             </thead>
             <tbody>
