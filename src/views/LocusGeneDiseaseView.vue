@@ -641,7 +641,7 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h6>Justification</h6>
+              <h6>Comment</h6>
             </td>
             <td>
               <p v-if="locusGeneDiseaseData.confidence_support">
