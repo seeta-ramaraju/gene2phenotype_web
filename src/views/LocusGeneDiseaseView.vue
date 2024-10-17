@@ -191,17 +191,6 @@ export default {
         <tbody>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h4>G2P ID</h4>
-            </td>
-            <td class="w-75">
-              <p v-if="locusGeneDiseaseData.stable_id">
-                {{ locusGeneDiseaseData.stable_id }}
-              </p>
-              <p v-else class="text-muted">Not Available</p>
-            </td>
-          </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
               <h4>Allelic Requirement</h4>
             </td>
             <td class="w-75">
@@ -997,6 +986,17 @@ export default {
                   </tr>
                 </tbody>
               </table>
+              <p v-else class="text-muted">Not Available</p>
+            </td>
+          </tr>
+          <tr class="align-middle">
+            <td class="w-25 text-end">
+              <h4>G2P ID</h4>
+            </td>
+            <td class="w-75">
+              <p v-if="locusGeneDiseaseData.stable_id">
+                {{ locusGeneDiseaseData.stable_id }}
+              </p>
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
