@@ -9,6 +9,14 @@ export default {
       searchDataNotFoundMsg: null,
       routeQuery: null,
       errorMsg: null,
+      confidenceColorMap: {
+        definitive: "#276749",
+        strong: "#38a169",
+        moderate: "#68d391",
+        limited: "#fc8181",
+        disputed: "#e53e3e",
+        refuted: "#9b2c2c",
+      },
     };
   },
   created() {
@@ -143,6 +151,7 @@ export default {
               <th>Allelic Requirement</th>
               <th>Mechanism</th>
               <th>Panels</th>
+              <th>Confidence</th>
             </tr>
           </thead>
           <tbody>
@@ -187,6 +196,18 @@ export default {
                   >
                     {{ panelName }} </router-link
                   ><span v-if="index < item.panel.length - 1">, </span>
+                </span>
+              </td>
+              <td>
+                <span
+                  v-if="item.confidence"
+                  class="badge text-white"
+                  :style="{
+                    backgroundColor:
+                      confidenceColorMap[item.confidence.toLowerCase()],
+                  }"
+                >
+                  {{ item.confidence }}
                 </span>
               </td>
             </tr>
