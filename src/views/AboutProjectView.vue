@@ -75,7 +75,7 @@ export default {
         v-bind:href="gencc"
         target="_blank"
         style="text-decoration: none"
-        >Gen CC</a
+        >GenCC</a
       >) which seeks to standardise the curation and description of gene disease
       information.
     </p>
