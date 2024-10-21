@@ -350,7 +350,6 @@ export default {
       this.isSubmitSuccess = false;
 
       this.isSubmitDataLoading = true;
-      console.log(this.input);
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = {
         json_data: preparedInput,

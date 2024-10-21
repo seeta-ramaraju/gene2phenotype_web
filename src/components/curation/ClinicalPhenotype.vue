@@ -72,6 +72,19 @@ export default {
       summaryInputHandler(pmid, term.name);
       hpoTermsInputHandler(pmid, term.id);
 
+      // Add the term to hpo_terms
+      let updateClinicalPhenotype = { ...props.clinicalPhenotype };
+      if (!updateClinicalPhenotype[pmid].hpo_terms) {
+        updateClinicalPhenotype[pmid].hpo_terms = [];
+      }
+      updateClinicalPhenotype[pmid].hpo_terms.push({
+        accession: term.id, // or whatever property corresponds to accession
+        term: term.name,
+        description: term.description,
+      });
+
+      emit("update:clinicalPhenotype", updateClinicalPhenotype);
+
       showDropDown.value[pmid] = false;
     };
 
@@ -111,7 +124,6 @@ export default {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
   },
-  emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
 };
 </script>
 <template>
@@ -226,33 +238,6 @@ export default {
                   :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
                 >
                 </textarea>
-              </div>
-            </div>
-            <div
-              class="row py-3"
-              v-if="
-                clinicalPhenotype[pmid].hpo_terms &&
-                clinicalPhenotype[pmid].hpo_terms.length > 0
-              "
-            >
-              <div class="col-12">
-                <strong><p class="mb-3">HPO Terms</p></strong>
-              </div>
-              <div class="col-6">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th width="30%">Accession</th>
-                      <th width="70%">Term</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in clinicalPhenotype[pmid].hpo_terms">
-                      <td>{{ item.accession }}</td>
-                      <td>{{ item.term }}</td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
