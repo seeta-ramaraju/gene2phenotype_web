@@ -1,5 +1,4 @@
 <script>
-import { update } from "lodash";
 import { ref } from "vue";
 
 export default {
