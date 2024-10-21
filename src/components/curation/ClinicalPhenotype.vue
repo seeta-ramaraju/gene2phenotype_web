@@ -92,6 +92,7 @@ export default {
       } else {
         updatedHpoTermsInputHelper[pmid].hpoTermsInput += `; ${inputValue}`;
       }
+
       emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
     };
 
@@ -105,6 +106,7 @@ export default {
       onInput,
     };
   },
+
   props: {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
@@ -221,7 +223,7 @@ export default {
                   :value="hpoTermsInputHelper[pmid].hpoTermsInput"
                   @input="hpoTermsInputHandler(pmid, $event.target.value)"
                   rows="3"
-                  :aria-describedby="`invalid-phenotype-hpoterms-input-feedback-${pmid}`"
+                  :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
                 >
                 </textarea>
               </div>

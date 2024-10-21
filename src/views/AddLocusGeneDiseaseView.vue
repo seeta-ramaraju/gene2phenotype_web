@@ -106,6 +106,7 @@ export default {
       this.input = { ...cloneDeep(resetInput), locus: this.input.locus };
 
       // most of the data variables have to be reset
+
       this.hpoTermsInputHelper = {};
       this.isSubmitDataLoading = false;
       this.submitErrorMsg = null;
@@ -349,7 +350,7 @@ export default {
       this.isSubmitSuccess = false;
 
       this.isSubmitDataLoading = true;
-
+      console.log(this.input);
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = {
         json_data: preparedInput,
@@ -418,7 +419,6 @@ export default {
       // 1. IF Save fails THEN saveBeforePublishErrorMsg=<error msg>, publishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=false
       // 2. IF Save succeeds but Publish fails THEN publishErrorMsg=<error msg>, saveBeforePublishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=true, isPublishSuccess=false
       // 3. IF Save and Publish both succeed THEN publishSucessMsg=<success msg>, saveBeforePublishErrorMsg=publishErrorMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=true
-
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = { json_data: preparedInput };
 
@@ -597,7 +597,6 @@ export default {
         :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
-        :fetchHpoTerms="fetchHpoTerms"
         v-model:clinical-phenotype="input.phenotypes"
         v-model:hpo-terms-input-helper="hpoTermsInputHelper"
       />
