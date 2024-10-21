@@ -533,7 +533,9 @@ export default {
                       aria-expanded="false"
                       aria-controls="collapsiblePhenotypicFeaturesTable"
                     >
-                      Phenotypic Feature(s)
+                      Phenotypic Features ({{
+                        locusGeneDiseaseData.phenotypes.length
+                      }})
                     </button>
                   </h2>
                   <div
@@ -679,7 +681,9 @@ export default {
                       aria-expanded="false"
                       aria-controls="collapsiblePublicationsTable"
                     >
-                      Publication(s)
+                      Publications ({{
+                        locusGeneDiseaseData.publications.length
+                      }})
                     </button>
                   </h2>
                   <div
