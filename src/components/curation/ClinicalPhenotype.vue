@@ -181,7 +181,7 @@ export default {
                   class="autocomplete results"
                 >
                   <li
-                    v-for="term in HPOsearchResponseJson[pmid] || []"
+                    v-for="term in HPOsearchResponseJson[pmid]"
                     :key="term.id"
                     @click="selectTerm(pmid, term)"
                     class="autocomplete-result"
@@ -238,6 +238,33 @@ export default {
                   :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
                 >
                 </textarea>
+              </div>
+            </div>
+            <div
+              class="row py-3"
+              v-if="
+                clinicalPhenotype[pmid].hpo_terms &&
+                clinicalPhenotype[pmid].hpo_terms.length > 0
+              "
+            >
+              <div class="col-12">
+                <strong><p class="mb-3">HPO Terms</p></strong>
+              </div>
+              <div class="col-6">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="30%">Accession</th>
+                      <th width="70%">Term</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in clinicalPhenotype[pmid].hpo_terms">
+                      <td>{{ item.accession }}</td>
+                      <td>{{ item.term }}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
