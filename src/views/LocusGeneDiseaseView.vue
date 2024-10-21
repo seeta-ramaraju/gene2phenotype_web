@@ -921,6 +921,22 @@ export default {
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
+          <tr class="align-middle">
+            <td class="w-25 text-end">
+              <h6>DECIPHER</h6>
+            </td>
+            <td>
+              <a
+                v-bind:href="`https://www.deciphergenomics.org/gene/${locusGeneDiseaseData.locus.gene_symbol}`"
+                style="text-decoration: none"
+                v-if="locusGeneDiseaseData.locus?.gene_symbol"
+                target="_blank"
+              >
+                View Gene in DECIPHER
+              </a>
+              <p v-else class="text-muted">Not Available</p>
+            </td>
+          </tr>
           <tr>
             <td class="w-25 text-end">
               <h4>Disease Information</h4>
