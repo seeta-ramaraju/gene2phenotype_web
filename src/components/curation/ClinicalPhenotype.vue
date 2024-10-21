@@ -1,4 +1,5 @@
 <script>
+import { update } from "lodash";
 import { ref } from "vue";
 
 export default {
@@ -67,7 +68,7 @@ export default {
       if (!term || !pmid) return;
       initializeStateForPmid(pmid);
 
-      searchTerm.value[pmid] = term.name;
+      searchTerm.value[pmid] = "";
       summaryInputHandler(pmid, term.name);
       hpoTermsInputHandler(pmid, term.id);
 
@@ -76,13 +77,21 @@ export default {
 
     const summaryInputHandler = (pmid, inputValue) => {
       let updateClinicalPhenotype = { ...props.clinicalPhenotype };
-      updateClinicalPhenotype[pmid].summary = inputValue;
+      if (!updateClinicalPhenotype[pmid].summary) {
+        updateClinicalPhenotype[pmid].summary = inputValue;
+      } else {
+        updateClinicalPhenotype[pmid].summary += `; ${inputValue}`;
+      }
       emit("update:clinicalPhenotype", updateClinicalPhenotype);
     };
 
     const hpoTermsInputHandler = (pmid, inputValue) => {
       let updatedHpoTermsInputHelper = { ...props.hpoTermsInputHelper };
-      updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
+      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
+        updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
+      } else {
+        updatedHpoTermsInputHelper[pmid].hpoTermsInput += `; ${inputValue}`;
+      }
       emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
     };
 
@@ -97,23 +106,10 @@ export default {
     };
   },
   props: {
-    fetchHpoTerms: Function,
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
   },
   emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
-  methods: {
-    summaryInputHandler(pmid, inputValue) {
-      let updateClinicalPhenotype = { ...this.clinicalPhenotype };
-      updateClinicalPhenotype[pmid].summary = inputValue;
-      this.$emit("update:clinicalPhenotype", updateClinicalPhenotype);
-    },
-    hpoTermsInputHandler(pmid, inputValue) {
-      let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
-      updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
-      this.$emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
-    },
-  },
 };
 </script>
 <template>
@@ -225,55 +221,9 @@ export default {
                   :value="hpoTermsInputHelper[pmid].hpoTermsInput"
                   @input="hpoTermsInputHandler(pmid, $event.target.value)"
                   rows="3"
-                  :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
+                  :aria-describedby="`invalid-phenotype-hpoterms-input-feedback-${pmid}`"
                 >
                 </textarea>
-                <div
-                  :id="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
-                  class="invalid-feedback"
-                >
-                  Please enter valid HPO Terms(s).
-                </div>
-                <div
-                  class="form-text"
-                  :id="`phenotype-hpo-terms-input-help-text-${pmid}`"
-                >
-                  For multiple entries, separate by semicolon
-                </div>
-              </div>
-              <div class="col-auto">
-                <button
-                  type="button"
-                  class="btn btn-primary mb-3"
-                  @click="fetchHpoTerms(pmid)"
-                >
-                  <i class="bi bi-search"></i> Look Up
-                </button>
-              </div>
-            </div>
-            <div
-              class="d-flex justify-content-center"
-              v-if="
-                hpoTermsInputHelper &&
-                hpoTermsInputHelper[pmid]?.isHpoTermsDataLoading
-              "
-              style="margin-top: 20px; margin-bottom: 20px"
-            >
-              <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-            <div
-              class="alert alert-danger mt-3"
-              role="alert"
-              v-if="
-                hpoTermsInputHelper &&
-                hpoTermsInputHelper[pmid]?.hpoTermsErrorMsg
-              "
-            >
-              <div>
-                <i class="bi bi-exclamation-circle-fill"></i>
-                {{ hpoTermsInputHelper[pmid].hpoTermsErrorMsg }}
               </div>
             </div>
             <div
