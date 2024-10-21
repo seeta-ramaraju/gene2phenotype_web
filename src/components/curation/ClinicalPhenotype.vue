@@ -160,9 +160,7 @@ export default {
               </div>
             </div>
             <div class="row pt-3">
-              <label for="search_phenotype" class="autocomplete">
-                Search Phenotypes
-              </label>
+              <label for="search_phenotype"> Search Phenotypes </label>
               <div class="d-flex align-items-center position-relative">
                 <input
                   type="text"
@@ -170,6 +168,9 @@ export default {
                   placeholder="Enter phenotype...."
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
+                  class="form-control dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
                 />
                 <ul
                   v-show="
@@ -177,13 +178,14 @@ export default {
                     HPOsearchResponseJson[pmid].length > 0 &&
                     showDropDown[pmid]
                   "
-                  class="autocomplete results"
+                  class="dropdown-menu"
+                  aria-labelledby="search_phenotype_${pmid}"
                 >
                   <li
                     v-for="term in HPOsearchResponseJson[pmid]"
                     :key="term.id"
                     @click="selectTerm(pmid, term)"
-                    class="autocomplete-result"
+                    class="dropdown-item"
                   >
                     {{ term.name }}
                   </li>
@@ -278,30 +280,3 @@ export default {
     </div>
   </div>
 </template>
-<style>
-.autocomplete {
-  position: relative;
-}
-
-.autocomplete-results {
-  padding: 0;
-  margin: 0;
-  border: 1px solid #eeeeee;
-  height: 120px;
-  min-height: 1em;
-  max-height: 6em;
-  overflow: auto;
-}
-
-.autocomplete-result {
-  list-style: none;
-  text-align: left;
-  padding: 4px 2px;
-  cursor: pointer;
-}
-
-.autocomplete-result:hover {
-  background-color: #4aae9b;
-  color: white;
-}
-</style>
