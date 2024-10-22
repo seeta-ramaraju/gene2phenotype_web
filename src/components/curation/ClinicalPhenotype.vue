@@ -161,7 +161,7 @@ export default {
                 <input
                   type="text"
                   :id="`search_phenotype_${pmid}`"
-                  placeholder="Enter phenotype...."
+                  placeholder="Fast phenotype entry. First, search for a phenotype in the Human Phenotype Ontology tree. Then, hit the Add button to add the phenotype to the entry"
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
                   @focus="showDropDown[pmid] = true"
