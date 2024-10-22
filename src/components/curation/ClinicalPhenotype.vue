@@ -164,9 +164,11 @@ export default {
                   placeholder="Enter phenotype...."
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
+                  @focus="showDropDown[pmid] = true"
+                  @blur="setTimeout(() => (showDropDown[pmid] = false), 100)"
                   class="form-control dropdown-toggle"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  aria-expanded="showDropDown[pmid]"
                 />
                 <ul
                   v-show="
