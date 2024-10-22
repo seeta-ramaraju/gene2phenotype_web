@@ -68,7 +68,6 @@ export default {
       initializeStateForPmid(pmid);
 
       searchTerm.value[pmid] = "";
-      summaryInputHandler(pmid, term.name);
       hpoTermsInputHandler(pmid, term.id);
 
       // Add the term to hpo_terms
@@ -85,16 +84,6 @@ export default {
       emit("update:clinicalPhenotype", updateClinicalPhenotype);
 
       showDropDown.value[pmid] = false;
-    };
-
-    const summaryInputHandler = (pmid, inputValue) => {
-      let updateClinicalPhenotype = { ...props.clinicalPhenotype };
-      if (!updateClinicalPhenotype[pmid].summary) {
-        updateClinicalPhenotype[pmid].summary = inputValue;
-      } else {
-        updateClinicalPhenotype[pmid].summary += `; ${inputValue}`;
-      }
-      emit("update:clinicalPhenotype", updateClinicalPhenotype);
     };
 
     const hpoTermsInputHandler = (pmid, inputValue) => {
@@ -122,6 +111,13 @@ export default {
   props: {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
+  },
+  methods: {
+    summaryInputHandler(pmid, inputValue) {
+      let updateClinicalPhenotype = { ...this.clinicalPhenotype };
+      updateClinicalPhenotype[pmid].summary = inputValue;
+      this.$emit("update:clinicalPhenotype", updateClinicalPhenotype);
+    },
   },
 };
 </script>
