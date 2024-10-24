@@ -149,12 +149,15 @@ export default {
               </div>
             </div>
             <div class="row pt-3">
-              <label :for="`search_phenotype_${pmid}`">Search Phenotypes</label>
+              <label :for="`search_phenotype_${pmid}`"
+                >Search Phenotypes using the Human Phenotype Ontology
+                database</label
+              >
               <div class="d-flex align-items-center position-relative">
                 <input
                   type="text"
                   :id="`search_phenotype_${pmid}`"
-                  placeholder="Search for a phenotype in the Human Phenotype Ontology tree."
+                  placeholder="e.g Marfan syndrome"
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
                   @focus="showDropDown[pmid] = true"
@@ -175,7 +178,7 @@ export default {
                   <li
                     v-for="term in HPOsearchResponseJson[pmid]"
                     :key="term.id"
-                    @click="selectTerm(pmid, term)"
+                    @mousedown="selectTerm(pmid, term)"
                     class="dropdown-item"
                   >
                     {{ term.name }}
