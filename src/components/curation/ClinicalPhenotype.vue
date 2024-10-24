@@ -1,110 +1,12 @@
 <script>
-import { ref } from "vue";
-
 export default {
-  setup(props, { emit }) {
-    const searchTerm = ref({});
-    const isLoadingValue = ref({});
-    const HPOsearchResponseJson = ref({});
-    const HPOAPIerrormsg = ref({});
-    const showDropDown = ref({});
-
-    const initializeStateForPmid = (pmid) => {
-      if (!searchTerm.value[pmid]) {
-        searchTerm.value[pmid] = ""; // Initialize search term for the pmid
-      }
-      if (!isLoadingValue.value[pmid]) {
-        isLoadingValue.value[pmid] = false; // Initialize loading state
-      }
-      if (!HPOsearchResponseJson.value[pmid]) {
-        HPOsearchResponseJson.value[pmid] = []; // Initialize search results
-      }
-      if (!HPOAPIerrormsg.value[pmid]) {
-        HPOAPIerrormsg.value[pmid] = null; // Initialize error message
-      }
-      if (!showDropDown.value[pmid]) {
-        showDropDown.value[pmid] = false; // Initialize dropdown visibility
-      }
-    };
-
-    const fetchAndSearchHPO = async (pmid) => {
-      initializeStateForPmid(pmid);
-
-      isLoadingValue.value[pmid] = true;
-      HPOAPIerrormsg.value[pmid] = null;
-      HPOsearchResponseJson.value[pmid] = [];
-
-      if (searchTerm.value[pmid].length < 3) {
-        isLoadingValue.value[pmid] = false;
-        return [];
-      }
-      try {
-        const hpoApiResponse = await fetch(
-          `https://ontology.jax.org/api/hp/search?q=${searchTerm.value[pmid]}&page=0&limit=10`
-        );
-
-        if (!hpoApiResponse.ok) {
-          throw new Error("Failed to fetch HPO API");
-        }
-
-        const ontology_data = await hpoApiResponse.json();
-        HPOsearchResponseJson.value[pmid] = ontology_data.terms || [];
-      } catch (error) {
-        HPOAPIerrormsg.value[pmid] =
-          "HPO ontology API not working, try again later";
-      } finally {
-        isLoadingValue.value[pmid] = false;
-      }
-    };
-
-    const onInput = (pmid) => {
-      initializeStateForPmid(pmid);
-      showDropDown.value[pmid] = true;
-      fetchAndSearchHPO(pmid);
-    };
-
-    const selectTerm = (pmid, term) => {
-      if (!term || !pmid) return;
-      initializeStateForPmid(pmid);
-
-      searchTerm.value[pmid] = "";
-      hpoTermsInputHandler(pmid, term.id);
-
-      // Add the term to hpo_terms
-      let updateClinicalPhenotype = { ...props.clinicalPhenotype };
-      if (!updateClinicalPhenotype[pmid].hpo_terms) {
-        updateClinicalPhenotype[pmid].hpo_terms = [];
-      }
-      updateClinicalPhenotype[pmid].hpo_terms.push({
-        accession: term.id, // or whatever property corresponds to accession
-        term: term.name,
-        description: term.description,
-      });
-
-      emit("update:clinicalPhenotype", updateClinicalPhenotype);
-
-      showDropDown.value[pmid] = false;
-    };
-
-    const hpoTermsInputHandler = (pmid, inputValue) => {
-      let updatedHpoTermsInputHelper = { ...props.hpoTermsInputHelper };
-      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
-        updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
-      } else {
-        updatedHpoTermsInputHelper[pmid].hpoTermsInput += `; ${inputValue}`;
-      }
-
-      emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
-    };
-
+  data() {
     return {
-      isLoadingValue,
-      HPOsearchResponseJson,
-      HPOAPIerrormsg,
-      showDropDown,
-      searchTerm,
-      selectTerm,
-      onInput,
+      isLoadingValue: {},
+      HPOsearchResponseJson: {},
+      HPOAPIerrormsg: {},
+      showDropDown: {},
+      searchTerm: {},
     };
   },
 
@@ -112,11 +14,101 @@ export default {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
   },
+  emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
   methods: {
+    initializeStateForPmid(pmid) {
+      if (!this.searchTerm[pmid]) {
+        this.searchTerm[pmid] = "";
+      }
+      if (!this.isLoadingValue[pmid]) {
+        this.isLoadingValue[pmid] = false;
+      }
+      if (!this.HPOsearchResponseJson[pmid]) {
+        this.HPOsearchResponseJson[pmid] = [];
+      }
+      if (!this.HPOAPIerrormsg[pmid]) {
+        this.HPOAPIerrormsg[pmid] = null;
+      }
+      if (!this.showDropDown[pmid]) {
+        this.showDropDown[pmid] = false;
+      }
+    },
+
+    async fetchAndSearchHPO(pmid) {
+      this.initializeStateForPmid(pmid);
+      this.isLoadingValue[pmid] = true;
+      this.HPOsearchResponseJson[pmid] = [];
+      this.HPOAPIerrormsg[pmid] = null;
+
+      if (!this.searchTerm[pmid] || this.searchTerm[pmid].length < 3) {
+        this.isLoadingValue[pmid] = false;
+        return;
+      }
+
+      try {
+        const hpoApiResponse = await fetch(
+          `https://ontology.jax.org/api/hp/search?q=${this.searchTerm[pmid]}&page=0&limit=10`
+        );
+        if (!hpoApiResponse.ok) {
+          throw new Error("Failed to fetch HPO API");
+        }
+        const ontology_data = await hpoApiResponse.json();
+        this.HPOsearchResponseJson[pmid] = ontology_data.terms;
+      } catch (error) {
+        this.HPOsearchResponseJson[pmid] = [];
+        this.HPOAPIerrormsg[pmid] = "HPO API not working, try again later";
+      } finally {
+        this.isLoadingValue[pmid] = false;
+      }
+    },
+
+    onInput(pmid) {
+      this.initializeStateForPmid(pmid);
+      this.showDropDown[pmid] = true;
+      this.fetchAndSearchHPO(pmid);
+    },
+
+    selectTerm(pmid, term) {
+      if (!term || !pmid) return;
+      this.initializeStateForPmid(pmid);
+
+      this.searchTerm[pmid] = "";
+      this.hpoTermsInputHandler(pmid, term.id);
+
+      let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
+      if (!updatedClinicalPhenotype[pmid].hpo_terms) {
+        updatedClinicalPhenotype[pmid].hpo_terms = [];
+      }
+      updatedClinicalPhenotype[pmid].hpo_terms.push({
+        accession: term.id,
+        term: term.name,
+        description: term.description,
+      });
+
+      this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
+      this.showDropDown[pmid] = false;
+    },
+
+    hpoTermsInputHandler(pmid, inputValue) {
+      let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
+      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
+        updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
+      } else {
+        updatedHpoTermsInputHelper[pmid].hpoTermsInput += `;${inputValue}`;
+      }
+      this.$emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
+    },
+
     summaryInputHandler(pmid, inputValue) {
-      let updateClinicalPhenotype = { ...this.clinicalPhenotype };
-      updateClinicalPhenotype[pmid].summary = inputValue;
-      this.$emit("update:clinicalPhenotype", updateClinicalPhenotype);
+      let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
+      updatedClinicalPhenotype[pmid].summary = inputValue;
+      this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
+    },
+
+    handleBlur(pmid) {
+      setTimeout(() => {
+        this.showDropDown[pmid] = false;
+      }, 100);
     },
   },
 };
@@ -147,6 +139,7 @@ export default {
               clinicalPhenotype && Object.keys(clinicalPhenotype).length > 0
             "
             v-for="pmid in Object.keys(clinicalPhenotype)"
+            :key="pmid"
           >
             <div class="row">
               <div class="col-12">
@@ -156,16 +149,16 @@ export default {
               </div>
             </div>
             <div class="row pt-3">
-              <label for="search_phenotype"> Search Phenotypes </label>
+              <label :for="`search_phenotype_${pmid}`">Search Phenotypes</label>
               <div class="d-flex align-items-center position-relative">
                 <input
                   type="text"
                   :id="`search_phenotype_${pmid}`"
-                  placeholder="Fast phenotype entry. First, search for a phenotype in the Human Phenotype Ontology tree. Then, hit the Add button to add the phenotype to the entry"
+                  placeholder="Search for a phenotype in the Human Phenotype Ontology tree."
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
                   @focus="showDropDown[pmid] = true"
-                  @blur="setTimeout(() => (showDropDown[pmid] = false), 100)"
+                  @blur="handleBlur(pmid)"
                   class="form-control dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="showDropDown[pmid]"
@@ -177,7 +170,7 @@ export default {
                     showDropDown[pmid]
                   "
                   class="dropdown-menu"
-                  aria-labelledby="search_phenotype_${pmid}"
+                  :aria-labelledby="`search_phenotype_${pmid}`"
                 >
                   <li
                     v-for="term in HPOsearchResponseJson[pmid]"
@@ -190,7 +183,6 @@ export default {
                 </ul>
               </div>
             </div>
-
             <div class="row pt-3">
               <div class="col-2">
                 <label
@@ -205,10 +197,9 @@ export default {
                   class="form-control"
                   :id="`phenotype-summary-input-${pmid}`"
                   rows="3"
-                  :value="clinicalPhenotype[pmid].summary"
+                  v-model="clinicalPhenotype[pmid].summary"
                   @input="summaryInputHandler(pmid, $event.target.value)"
-                >
-                </textarea>
+                ></textarea>
               </div>
             </div>
             <div
@@ -220,23 +211,21 @@ export default {
                   :for="`phenotype-hpo-terms-input-${pmid}`"
                   class="col-form-label"
                 >
-                  HPO Terms(s)
+                  HPO Term(s)
                 </label>
               </div>
               <div class="col-4">
                 <textarea
-                  :class="
-                    hpoTermsInputHelper[pmid].isHpoTermsValid
-                      ? 'form-control'
-                      : 'form-control is-invalid'
-                  "
+                  :class="{
+                    'form-control': true,
+                    'is-invalid': !hpoTermsInputHelper[pmid].isHpoTermsValid,
+                  }"
                   :id="`phenotype-hpo-terms-input-${pmid}`"
-                  :value="hpoTermsInputHelper[pmid].hpoTermsInput"
+                  v-model="hpoTermsInputHelper[pmid].hpoTermsInput"
                   @input="hpoTermsInputHandler(pmid, $event.target.value)"
                   rows="3"
                   :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
-                >
-                </textarea>
+                ></textarea>
               </div>
             </div>
             <div
@@ -245,33 +234,7 @@ export default {
                 clinicalPhenotype[pmid].hpo_terms &&
                 clinicalPhenotype[pmid].hpo_terms.length > 0
               "
-            >
-              <div class="col-12">
-                <strong><p class="mb-3">HPO Terms</p></strong>
-              </div>
-              <div class="col-6">
-                <table class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th width="30%">Accession</th>
-                      <th width="70%">Term</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in clinicalPhenotype[pmid].hpo_terms">
-                      <td>{{ item.accession }}</td>
-                      <td>{{ item.term }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="row g-3 px-3 py-3" v-else>
-            <p>
-              <i class="bi bi-info-circle"></i> Please enter Publication(s) to
-              fill this section.
-            </p>
+            ></div>
           </div>
         </div>
       </div>
