@@ -64,14 +64,13 @@ export default {
 
       this.hpoTermsInputHandler(pmid, term.id);
       this.searchTerm[pmid] = "";
-      this.HPOsearchResponseJson = [];
+      this.HPOsearchResponseJson = []; // to make the dropdown have nothing to dropdown since a term has been selected
 
       // Ensure clinicalPhenotype is not mutated directly
       let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
       updatedClinicalPhenotype[pmid].hpo_terms.push({
         accession: term.id,
         term: term.name,
-        description: term.description,
       });
 
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
