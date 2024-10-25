@@ -347,7 +347,7 @@ export default {
         </div>
         <div
           v-if="panelData && panelData.results && panelData.results.length > 0"
-          class="col-lg-6 mx-auto"
+          class="col-lg-7 mx-auto"
         >
           <table class="table table-hover table-bordered shadow-sm">
             <thead>

@@ -115,6 +115,10 @@ const router = createRouter({
       meta: { requiresLogOut: true },
     },
   ],
+  scrollBehavior() {
+    // scroll to top
+    return { top: 0 };
+  },
 });
 
 router.beforeEach(function (to, _, next) {
