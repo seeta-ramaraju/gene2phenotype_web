@@ -6,6 +6,8 @@ export default {
     return {
       isDataLoading: false,
       terminologyDescriptionData: null,
+      MolecularDescriptionData: null,
+      VariantDescriptionData: null,
       errorMsg: null,
     };
   },
@@ -27,21 +29,46 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
-
-      fetch(`/gene2phenotype/api/attribs/description`, {
-        method: "GET",
-        headers: apiHeaders,
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Unable to fetch terminology information");
-          }
+      Promise.all([
+        fetch(`/gene2phenotype/api/attribs/description`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(`/gene2phenotype/api/molecular_mechanisms/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(`/gene2phenotype/api/ontology_terms/variant_types/`, {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+      ])
+        .then((responseArr) => {
+          return Promise.all(
+            responseArr.map((response) => {
+              if (response.status === 200) {
+                return response.json();
+              } else {
+                return Promise.reject(
+                  new Error("Unable to fetch descriptions data")
+                );
+              }
+            })
+          );
         })
-        .then((responseJson) => {
+        .then((responseJsonArr) => {
+          const [
+            terminologyDescriptionData,
+            MolecularDescriptionData,
+            VariantDescriptionData,
+          ] = responseJsonArr;
           this.isDataLoading = false;
-          this.terminologyDescriptionData = responseJson;
+          this.terminologyDescriptionData = terminologyDescriptionData;
+          this.MolecularDescriptionData = MolecularDescriptionData;
+          this.VariantDescriptionData = VariantDescriptionData;
+          for (let consequence in MolecularDescriptionData.mechanism) {
+            console.log(consequence);
+          }
         })
         .catch((error) => {
           this.isDataLoading = false;
@@ -127,7 +154,6 @@ export default {
             </tbody>
           </table>
         </div>
-
         <br />
         <h4>Cross Cutting Modifier</h4>
         <div class="pt-3">
@@ -159,76 +185,64 @@ export default {
           </table>
         </div>
         <br />
-        <h4>Mutation Consequence</h4>
+        <h4>Molecular Mechanism</h4>
         <div class="pt-3">
-          <div
-            v-for="consequences in terminologyDescriptionData.mutation_consequence"
-          >
-            <div v-for="(description, consequence) in consequences">
-              <ul class="list-group">
-                <li class="list-group-item" v-if="description">
-                  {{ consequence }} : {{ description }}
-                </li>
-                <li class="list-group-item" v-else>
-                  {{ consequence }} :
-                  <text class="text-muted">No description available</text>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Consequence</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template
+                v-for="consequences in MolecularDescriptionData.mechanism"
+              >
+                <tr
+                  v-for="(description, consequence) in consequences"
+                  :key="consequence"
+                >
+                  <td>{{ consequence }}</td>
+                  <td>
+                    <span v-if="description">{{ description }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
         <br />
-        <h4>Mutation Consequence Flag</h4>
+        <h4>Molecular Mechanism Synopsis</h4>
         <div class="pt-3">
-          <div
-            v-for="flags in terminologyDescriptionData.mutation_consequence_flag"
-          >
-            <div v-for="(description, flag) in flags">
-              <ul class="list-group">
-                <li class="list-group-item" v-if="description">
-                  {{ flag }} : {{ description }}
-                </li>
-                <li class="list-group-item" v-else>
-                  {{ flag }} :
-                  <text class="text-muted">No description available</text>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <br />
-        <h4>Evidence Support</h4>
-        <div class="pt-3">
-          <div v-for="supports in terminologyDescriptionData.support">
-            <div v-for="(description, support) in supports">
-              <ul class="list-group">
-                <li class="list-group-item" v-if="description">
-                  {{ support }} : {{ description }}
-                </li>
-                <li class="list-group-item" v-else>
-                  {{ support }} :
-                  <text class="text-muted">No description available</text>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <br />
-        <h4>Inheritance type</h4>
-        <div class="pt-3">
-          <div v-for="types in terminologyDescriptionData.inheritance_type">
-            <div v-for="(description, type) in types">
-              <ul class="list-group">
-                <li class="list-group-item" v-if="description">
-                  {{ type }} : {{ description }}
-                </li>
-                <li class="list-group-item" v-else>
-                  {{ type }} :
-                  <text class="text-muted">No description available</text>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Consequence</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <template
+                v-for="consequences in MolecularDescriptionData.mechanism_synopsis"
+              >
+                <tr
+                  v-for="(description, consequence) in consequences"
+                  :key="consequence"
+                >
+                  <td>{{ consequence }}</td>
+                  <td>
+                    <span v-if="description">{{ description }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
