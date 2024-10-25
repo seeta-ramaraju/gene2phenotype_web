@@ -17,21 +17,12 @@ export default {
   emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
   methods: {
     initializeStateForPmid(pmid) {
-      if (!this.searchTerm[pmid]) {
-        this.searchTerm[pmid] = "";
-      }
-      if (!this.isLoadingValue[pmid]) {
-        this.isLoadingValue[pmid] = false;
-      }
-      if (!this.HPOsearchResponseJson[pmid]) {
+      if (!this.searchTerm[pmid]) this.searchTerm[pmid] = "";
+      if (!this.isLoadingValue[pmid]) this.isLoadingValue[pmid] = false;
+      if (!this.HPOsearchResponseJson[pmid])
         this.HPOsearchResponseJson[pmid] = [];
-      }
-      if (!this.HPOAPIerrormsg[pmid]) {
-        this.HPOAPIerrormsg[pmid] = null;
-      }
-      if (!this.showDropDown[pmid]) {
-        this.showDropDown[pmid] = false;
-      }
+      if (!this.HPOAPIerrormsg[pmid]) this.HPOAPIerrormsg[pmid] = null;
+      if (!this.showDropDown[pmid]) this.showDropDown[pmid] = false;
     },
 
     async fetchAndSearchHPO(pmid) {
@@ -49,9 +40,8 @@ export default {
         const hpoApiResponse = await fetch(
           `https://ontology.jax.org/api/hp/search?q=${this.searchTerm[pmid]}&page=0&limit=10`
         );
-        if (!hpoApiResponse.ok) {
-          throw new Error("Failed to fetch HPO API");
-        }
+        if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO API");
+
         const ontology_data = await hpoApiResponse.json();
         this.HPOsearchResponseJson[pmid] = ontology_data.terms;
       } catch (error) {
@@ -72,13 +62,12 @@ export default {
       if (!term || !pmid) return;
       this.initializeStateForPmid(pmid);
 
-      this.searchTerm[pmid] = "";
       this.hpoTermsInputHandler(pmid, term.id);
+      this.searchTerm[pmid] = "";
+      this.HPOsearchResponseJson = [];
 
+      // Ensure clinicalPhenotype is not mutated directly
       let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
-      if (!updatedClinicalPhenotype[pmid].hpo_terms) {
-        updatedClinicalPhenotype[pmid].hpo_terms = [];
-      }
       updatedClinicalPhenotype[pmid].hpo_terms.push({
         accession: term.id,
         term: term.name,
@@ -91,16 +80,20 @@ export default {
 
     hpoTermsInputHandler(pmid, inputValue) {
       let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
-      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
+      if (!updatedHpoTermsInputHelper[pmid]) {
+        updatedHpoTermsInputHelper[pmid] = { hpoTermsInput: inputValue };
+      } else if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
         updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
       } else {
         updatedHpoTermsInputHelper[pmid].hpoTermsInput += `;${inputValue}`;
       }
+
       this.$emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
     },
 
     summaryInputHandler(pmid, inputValue) {
       let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
+      if (!updatedClinicalPhenotype[pmid]) updatedClinicalPhenotype[pmid] = {};
       updatedClinicalPhenotype[pmid].summary = inputValue;
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
     },
@@ -113,6 +106,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <div class="accordion py-1" id="clinical-phenotype-section">
     <div class="accordion-item">
@@ -237,7 +231,33 @@ export default {
                 clinicalPhenotype[pmid].hpo_terms &&
                 clinicalPhenotype[pmid].hpo_terms.length > 0
               "
-            ></div>
+            >
+              <div class="col-12">
+                <strong><p class="mb-3">HPO Terms</p></strong>
+              </div>
+              <div class="col-6">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th width="30%">Accession</th>
+                      <th width="70%">Term</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="item in clinicalPhenotype[pmid].hpo_terms">
+                      <td>{{ item.accession }}</td>
+                      <td>{{ item.term }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row g-3 px-3 py-3" v-else>
+              <p>
+                <i class="bi bi-info-circle"></i> Please enter Publication(s) to
+                fill this section.
+              </p>
+            </div>
           </div>
         </div>
       </div>
