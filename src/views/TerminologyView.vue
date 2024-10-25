@@ -66,9 +66,6 @@ export default {
           this.terminologyDescriptionData = terminologyDescriptionData;
           this.MolecularDescriptionData = MolecularDescriptionData;
           this.VariantDescriptionData = VariantDescriptionData;
-          for (let consequence in MolecularDescriptionData.mechanism) {
-            console.log(consequence);
-          }
         })
         .catch((error) => {
           this.isDataLoading = false;
@@ -241,6 +238,57 @@ export default {
                   </td>
                 </tr>
               </template>
+            </tbody>
+          </table>
+        </div>
+        <br />
+        <h4>Variant Consequences</h4>
+        <div class="pt-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Consequence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loop through each main category in VariantDescriptionData -->
+              <tr
+                v-for="(consequences, index) in Object.keys(
+                  VariantDescriptionData
+                )"
+                :key="index"
+              >
+                <td>
+                  <strong>{{ consequences }}</strong>
+                  <table class="table mt-2">
+                    <thead>
+                      <tr>
+                        <th>Variant Consequence</th>
+                        <th>SO term</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="term in VariantDescriptionData[consequences]"
+                        :key="term.accession"
+                      >
+                        <td>{{ term.term }}</td>
+                        <td>
+                          <a
+                            :href="
+                              'http://www.sequenceontology.org/browser/current_release/term/' +
+                              term.accession
+                            "
+                            target="_blank"
+                          >
+                            {{ term.accession }}
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
