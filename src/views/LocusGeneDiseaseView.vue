@@ -25,7 +25,6 @@ export default {
       stableId: null,
       userPanels: null,
       isPanelDataLoading: false,
-      curatorString: null,
     };
   },
   components: {
@@ -67,14 +66,6 @@ export default {
         .then((responseJson) => {
           this.isDataLoading = false;
           this.locusGeneDiseaseData = responseJson;
-          if (
-            this.locusGeneDiseaseData.curators &&
-            this.locusGeneDiseaseData.curators.length > 1
-          ) {
-            this.curatorString = this.locusGeneDiseaseData.curators.join(",");
-          } else {
-            this.curatorString = this.locusGeneDiseaseData.curators[0];
-          }
           this.fetchUserPanels();
         })
         .catch((error) => {
@@ -1020,7 +1011,9 @@ export default {
               <h6>Curator(s)</h6>
             </td>
             <td class="w-75">
-              <p v-if="curatorString">{{ curatorString }}</p>
+              <p v-if="locusGeneDiseaseData.curators">
+                {{ locusGeneDiseaseData.curators.join(", ") }}
+              </p>
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
