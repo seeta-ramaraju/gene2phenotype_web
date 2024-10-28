@@ -67,7 +67,6 @@ export default {
         .then((responseJson) => {
           this.isDataLoading = false;
           this.locusGeneDiseaseData = responseJson;
-          console.log(this.locusGeneDiseaseData.curators[0]);
           if (
             this.locusGeneDiseaseData.curators &&
             this.locusGeneDiseaseData.curators.length > 1
