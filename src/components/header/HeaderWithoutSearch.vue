@@ -101,6 +101,11 @@ export default {
               </router-link>
             </li>
             <li>
+              <router-link to="/about/terminology" class="dropdown-item"
+                >Terminology</router-link
+              >
+            </li>
+            <li>
               <router-link to="/variant-filtering" class="dropdown-item">
                 Variant filtering
               </router-link>
