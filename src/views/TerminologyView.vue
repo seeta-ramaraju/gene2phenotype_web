@@ -247,48 +247,46 @@ export default {
           <table class="table">
             <thead>
               <tr>
-                <th>Consequence</th>
+                <th>Primary Consequence</th>
+                <th>Variant Consequence</th>
+                <th>Description in SO</th>
               </tr>
             </thead>
             <tbody>
               <!-- Loop through each main category in VariantDescriptionData -->
-              <tr
+              <template
                 v-for="(consequences, index) in Object.keys(
                   VariantDescriptionData
                 )"
                 :key="index"
               >
-                <td>
-                  <strong>{{ consequences }}</strong>
-                  <table class="table mt-2">
-                    <thead>
-                      <tr>
-                        <th>Variant Consequence</th>
-                        <th>SO term</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        v-for="term in VariantDescriptionData[consequences]"
-                        :key="term.accession"
-                      >
-                        <td>{{ term.term }}</td>
-                        <td>
-                          <a
-                            :href="
-                              'http://www.sequenceontology.org/browser/current_release/term/' +
-                              term.accession
-                            "
-                            target="_blank"
-                          >
-                            {{ term.accession }}
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
+                <!-- Row for the first term in each category with Primary Consequence in the first column -->
+                <tr
+                  v-for="(term, termIndex) in VariantDescriptionData[
+                    consequences
+                  ]"
+                  :key="term.accession"
+                >
+                  <td
+                    v-if="termIndex === 0"
+                    :rowspan="VariantDescriptionData[consequences].length"
+                  >
+                    <strong>{{ consequences }}</strong>
+                  </td>
+                  <td>{{ term.term }}</td>
+                  <td>
+                    <a
+                      :href="
+                        'http://www.sequenceontology.org/browser/current_release/term/' +
+                        term.accession
+                      "
+                      target="_blank"
+                    >
+                      {{ term.accession }}
+                    </a>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </div>
