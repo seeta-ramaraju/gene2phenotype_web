@@ -164,6 +164,7 @@ export default {
                     showDropDown[pmid]
                   "
                   class="dropdown-menu"
+                  @mousedown.prevent
                   :aria-labelledby="`search_phenotype_${pmid}`"
                 >
                   <li
