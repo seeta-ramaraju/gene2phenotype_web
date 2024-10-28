@@ -1192,7 +1192,10 @@ export default {
               <h6>Curator(s)</h6>
             </td>
             <td class="w-75">
-              <p class="text-muted">Not Available</p>
+              <p v-if="locusGeneDiseaseData.curators">
+                {{ locusGeneDiseaseData.curators.join(", ") }}
+              </p>
+              <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
           <tr class="align-middle">
