@@ -233,7 +233,7 @@ export default {
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Consequence</th>
+                    <th>Molecular Mechanism</th>
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -265,7 +265,7 @@ export default {
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Consequence</th>
+                    <th>Molecular Mechanism Synopsis</th>
                     <th>Description</th>
                   </tr>
                 </thead>
@@ -321,7 +321,7 @@ export default {
                         v-if="termIndex === 0"
                         :rowspan="VariantDescriptionData[consequences].length"
                       >
-                        <strong>{{ consequences }}</strong>
+                        {{ consequences }}
                       </td>
                       <td>{{ term.term }}</td>
                       <td>
