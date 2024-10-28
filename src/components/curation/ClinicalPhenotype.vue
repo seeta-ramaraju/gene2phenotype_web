@@ -79,9 +79,7 @@ export default {
 
     hpoTermsInputHandler(pmid, inputValue) {
       let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
-      if (!updatedHpoTermsInputHelper[pmid]) {
-        updatedHpoTermsInputHelper[pmid] = { hpoTermsInput: inputValue };
-      } else if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
+      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
         updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
       } else {
         updatedHpoTermsInputHelper[pmid].hpoTermsInput += `;${inputValue}`;
@@ -150,7 +148,7 @@ export default {
                 <input
                   type="text"
                   :id="`search_phenotype_${pmid}`"
-                  placeholder="e.g Marfan syndrome"
+                  placeholder="e.g Abnormality of the kidney"
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
                   @focus="showDropDown[pmid] = true"
@@ -251,12 +249,12 @@ export default {
                 </table>
               </div>
             </div>
-            <div class="row g-3 px-3 py-3" v-else>
-              <p>
-                <i class="bi bi-info-circle"></i> Please enter Publication(s) to
-                fill this section.
-              </p>
-            </div>
+          </div>
+          <div class="row g-3 px-3 py-3" v-else>
+            <p>
+              <i class="bi bi-info-circle"></i> Please enter Publication(s) to
+              fill this section.
+            </p>
           </div>
         </div>
       </div>
