@@ -13,6 +13,7 @@ import CuratorsView from "../views/CuratorsView.vue";
 import DisclaimerView from "../views/DisclaimerView.vue";
 import UpdateLocusGeneDiseaseView from "../views/UpdateLocusGeneDiseaseView.vue";
 import VariantFilteringView from "../views/VariantFilteringView.vue";
+import TerminologyView from "../views/TerminologyView.vue";
 import DataDownloadView from "../views/DataDownloadView.vue";
 import LoginView from "../views/LoginView.vue";
 import {
@@ -113,6 +114,11 @@ const router = createRouter({
       name: "login",
       component: LoginView,
       meta: { requiresLogOut: true },
+    },
+    {
+      path: "/about/terminology",
+      name: "terminology",
+      component: TerminologyView,
     },
   ],
   scrollBehavior() {

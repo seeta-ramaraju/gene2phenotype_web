@@ -15,6 +15,14 @@
             </li>
             <li class="nav-item mb-2">
               <router-link
+                to="/about/terminology"
+                class="nav-link p-0 text-body-secondary"
+              >
+                G2P terminologies
+              </router-link>
+            </li>
+            <li class="nav-item mb-2">
+              <router-link
                 to="/publications"
                 class="nav-link p-0 text-body-secondary"
               >
