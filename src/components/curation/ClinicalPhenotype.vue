@@ -155,7 +155,7 @@ export default {
                   @blur="handleBlur(pmid)"
                   class="form-control dropdown-toggle"
                   data-bs-toggle="dropdown"
-                  aria-expanded="showDropDown[pmid]"
+                  :aria-expanded="showDropDown[pmid]"
                 />
                 <ul
                   v-show="
