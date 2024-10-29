@@ -211,10 +211,7 @@ export default {
               </div>
               <div class="col-4">
                 <textarea
-                  :class="{
-                    'form-control': true,
-                    'is-invalid': !hpoTermsInputHelper[pmid].isHpoTermsValid,
-                  }"
+                  class="form-control"
                   :id="`phenotype-hpo-terms-input-${pmid}`"
                   :value="hpoTermsInputHelper[pmid].hpoTermsInput"
                   @input="hpoTermsInputHandler(pmid, $event.target.value)"
