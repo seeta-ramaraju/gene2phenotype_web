@@ -192,7 +192,7 @@ export default {
                   class="form-control"
                   :id="`phenotype-summary-input-${pmid}`"
                   rows="3"
-                  v-model="clinicalPhenotype[pmid].summary"
+                  :value="clinicalPhenotype[pmid].summary"
                   @input="summaryInputHandler(pmid, $event.target.value)"
                 ></textarea>
               </div>
