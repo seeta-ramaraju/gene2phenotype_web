@@ -77,225 +77,223 @@ export default {
 };
 </script>
 <template>
-  <div class="container-fluid d-flex">
-    <div class="container px-5 py-3" style="min-height: 60vh">
-      <div
-        class="d-flex justify-content-center"
-        v-if="isDataLoading"
-        style="margin-top: 250px; margin-bottom: 250px"
-      >
-        <div class="spinner-border text-secondary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+  <div class="container px-5 py-3" style="min-height: 60vh">
+    <div
+      class="d-flex justify-content-center"
+      v-if="isDataLoading"
+      style="margin-top: 250px; margin-bottom: 250px"
+    >
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
-        <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
-      </div>
-      <div v-if="terminologyDescriptionData">
-        <div class="container px-5 py-3" style="min-height: 60vh">
-          <section id="g2p-confidence">
-            <h4>G2P Confidence Category</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Category</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(
-                      item, index
-                    ) in terminologyDescriptionData.confidence_category"
-                    :key="index"
-                  >
-                    <td>{{ Object.entries(item)[0][0] }}</td>
-                    <td>
-                      <span v-if="Object.entries(item)[0][1]">{{
-                        Object.entries(item)[0][1]
-                      }}</span>
-                      <span v-else class="text-muted"
-                        >No description available</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <br />
-          <section id="allelic-requirement">
-            <h4>Allelic Requirement</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Genotype</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(item, index) in terminologyDescriptionData.genotype"
-                    :key="index"
-                  >
-                    <td>{{ Object.entries(item)[0][0] }}</td>
-                    <td>
-                      <span v-if="Object.entries(item)[0][1]">{{
-                        Object.entries(item)[0][1]
-                      }}</span>
-                      <span v-else class="text-muted"
-                        >No description available</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <br />
-          <section id="cross-cutting-modifier">
-            <h4>Cross Cutting Modifier</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Modifier</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(
-                      item, index
-                    ) in terminologyDescriptionData.cross_cutting_modifier"
-                    :key="index"
-                  >
-                    <td>{{ Object.entries(item)[0][0] }}</td>
-                    <td>
-                      <span v-if="Object.entries(item)[0][1]">{{
-                        Object.entries(item)[0][1]
-                      }}</span>
-                      <span v-else class="text-muted"
-                        >No description available</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <br />
-          <section id="molecular-mechanism">
-            <h4>Molecular Mechanism</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Molecular Mechanism</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(item, index) in molecularDescriptionData.mechanism"
-                    :key="index"
-                  >
-                    <td>{{ Object.entries(item)[0][0] }}</td>
-                    <td>
-                      <span v-if="Object.entries(item)[0][1]">{{
-                        Object.entries(item)[0][1]
-                      }}</span>
-                      <span v-else class="text-muted"
-                        >No description available</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <br />
-          <section id="mechanism-synopsis">
-            <h4>Molecular Mechanism Synopsis</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Molecular Mechanism Synopsis</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="(
-                      item, index
-                    ) in molecularDescriptionData.mechanism_synopsis"
-                    :key="index"
-                  >
-                    <td>{{ Object.entries(item)[0][0] }}</td>
-                    <td>
-                      <span v-if="Object.entries(item)[0][1]">{{
-                        Object.entries(item)[0][1]
-                      }}</span>
-                      <span v-else class="text-muted"
-                        >No description available</span
-                      >
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-          <br />
-          <section id="variant-consequences">
-            <h4>Variant Consequences</h4>
-            <div class="pt-3">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Primary Consequence</th>
-                    <th>Variant Consequence</th>
-                    <th>Description in SO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <template
-                    v-for="(consequences, index) in Object.keys(
-                      variantDescriptionData
-                    )"
-                    :key="index"
-                  >
-                    <tr
-                      v-for="(term, termIndex) in variantDescriptionData[
-                        consequences
-                      ]"
-                      :key="term.accession"
+    </div>
+    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+      <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
+    </div>
+    <div v-if="terminologyDescriptionData">
+      <div class="container px-5 py-3" style="min-height: 60vh">
+        <section id="g2p-confidence">
+          <h4>G2P Confidence Category</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(
+                    item, index
+                  ) in terminologyDescriptionData.confidence_category"
+                  :key="index"
+                >
+                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span v-if="Object.entries(item)[0][1]">{{
+                      Object.entries(item)[0][1]
+                    }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
                     >
-                      <td
-                        v-if="termIndex === 0"
-                        :rowspan="variantDescriptionData[consequences].length"
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <br />
+        <section id="allelic-requirement">
+          <h4>Allelic Requirement</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Genotype</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item, index) in terminologyDescriptionData.genotype"
+                  :key="index"
+                >
+                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span v-if="Object.entries(item)[0][1]">{{
+                      Object.entries(item)[0][1]
+                    }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <br />
+        <section id="cross-cutting-modifier">
+          <h4>Cross Cutting Modifier</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Modifier</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(
+                    item, index
+                  ) in terminologyDescriptionData.cross_cutting_modifier"
+                  :key="index"
+                >
+                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span v-if="Object.entries(item)[0][1]">{{
+                      Object.entries(item)[0][1]
+                    }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <br />
+        <section id="molecular-mechanism">
+          <h4>Molecular Mechanism</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Molecular Mechanism</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(item, index) in molecularDescriptionData.mechanism"
+                  :key="index"
+                >
+                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span v-if="Object.entries(item)[0][1]">{{
+                      Object.entries(item)[0][1]
+                    }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <br />
+        <section id="mechanism-synopsis">
+          <h4>Molecular Mechanism Synopsis</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Molecular Mechanism Synopsis</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(
+                    item, index
+                  ) in molecularDescriptionData.mechanism_synopsis"
+                  :key="index"
+                >
+                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span v-if="Object.entries(item)[0][1]">{{
+                      Object.entries(item)[0][1]
+                    }}</span>
+                    <span v-else class="text-muted"
+                      >No description available</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <br />
+        <section id="variant-consequences">
+          <h4>Variant Consequences</h4>
+          <div class="pt-3">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Primary Consequence</th>
+                  <th>Variant Consequence</th>
+                  <th>Description in SO</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template
+                  v-for="(consequences, index) in Object.keys(
+                    variantDescriptionData
+                  )"
+                  :key="index"
+                >
+                  <tr
+                    v-for="(term, termIndex) in variantDescriptionData[
+                      consequences
+                    ]"
+                    :key="term.accession"
+                  >
+                    <td
+                      v-if="termIndex === 0"
+                      :rowspan="variantDescriptionData[consequences].length"
+                    >
+                      {{ consequences }}
+                    </td>
+                    <td>{{ term.term }}</td>
+                    <td>
+                      <a
+                        :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
+                        style="text-decoration: none"
+                        target="_blank"
                       >
-                        {{ consequences }}
-                      </td>
-                      <td>{{ term.term }}</td>
-                      <td>
-                        <a
-                          :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
-                          style="text-decoration: none"
-                          target="_blank"
-                        >
-                          {{ term.accession }}
-                        </a>
-                      </td>
-                    </tr>
-                  </template>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
+                        {{ term.accession }}
+                      </a>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
     </div>
   </div>
