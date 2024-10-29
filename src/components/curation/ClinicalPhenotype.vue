@@ -216,7 +216,7 @@ export default {
                     'is-invalid': !hpoTermsInputHelper[pmid].isHpoTermsValid,
                   }"
                   :id="`phenotype-hpo-terms-input-${pmid}`"
-                  v-model="hpoTermsInputHelper[pmid].hpoTermsInput"
+                  :value="hpoTermsInputHelper[pmid].hpoTermsInput"
                   @input="hpoTermsInputHandler(pmid, $event.target.value)"
                   rows="3"
                   :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
