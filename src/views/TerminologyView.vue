@@ -78,44 +78,6 @@ export default {
 </script>
 <template>
   <div class="container-fluid d-flex">
-    <div>
-      <div class="p-3 bg-light border-end" style="min-width: 200px">
-        <h5 class="text-dark fw-bold">Terminology</h5>
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#g2p-confidence"
-              >G2P Confidence Category</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#allelic-requirement"
-              >Allelic Requirement</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#cross-cutting-modifier"
-              >Cross Cutting Modifier</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#molecular-mechanism"
-              >Molecular Mechanism</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#mechanism-synopsis"
-              >Molecular Mechanism Synopsis</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#variant-consequences"
-              >Variant Consequences</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-
     <div class="container px-5 py-3" style="min-height: 60vh">
       <div
         class="d-flex justify-content-center"
@@ -236,22 +198,20 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="consequences in molecularDescriptionData.mechanism"
+                  <tr
+                    v-for="(item, index) in molecularDescriptionData.mechanism"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(description, consequence) in consequences"
-                      :key="consequence"
-                    >
-                      <td>{{ consequence }}</td>
-                      <td>
-                        <span v-if="description">{{ description }}</span>
-                        <span v-else class="text-muted"
-                          >No description available</span
-                        >
-                      </td>
-                    </tr>
-                  </template>
+                    <td>{{ Object.entries(item)[0][0] }}</td>
+                    <td>
+                      <span v-if="Object.entries(item)[0][1]">{{
+                        Object.entries(item)[0][1]
+                      }}</span>
+                      <span v-else class="text-muted"
+                        >No description available</span
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -268,22 +228,22 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="consequences in molecularDescriptionData.mechanism_synopsis"
+                  <tr
+                    v-for="(
+                      item, index
+                    ) in molecularDescriptionData.mechanism_synopsis"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(description, consequence) in consequences"
-                      :key="consequence"
-                    >
-                      <td>{{ consequence }}</td>
-                      <td>
-                        <span v-if="description">{{ description }}</span>
-                        <span v-else class="text-muted"
-                          >No description available</span
-                        >
-                      </td>
-                    </tr>
-                  </template>
+                    <td>{{ Object.entries(item)[0][0] }}</td>
+                    <td>
+                      <span v-if="Object.entries(item)[0][1]">{{
+                        Object.entries(item)[0][1]
+                      }}</span>
+                      <span v-else class="text-muted"
+                        >No description available</span
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -301,14 +261,12 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Loop through each main category in VariantDescriptionData -->
                   <template
                     v-for="(consequences, index) in Object.keys(
                       variantDescriptionData
                     )"
                     :key="index"
                   >
-                    <!-- Row for the first term in each category with Primary Consequence in the first column -->
                     <tr
                       v-for="(term, termIndex) in variantDescriptionData[
                         consequences
