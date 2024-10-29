@@ -6,8 +6,8 @@ export default {
     return {
       isDataLoading: false,
       terminologyDescriptionData: null,
-      MolecularDescriptionData: null,
-      VariantDescriptionData: null,
+      molecularDescriptionData: null,
+      variantDescriptionData: null,
       errorMsg: null,
     };
   },
@@ -59,13 +59,13 @@ export default {
         .then((responseJsonArr) => {
           const [
             terminologyDescriptionData,
-            MolecularDescriptionData,
-            VariantDescriptionData,
+            molecularDescriptionData,
+            variantDescriptionData,
           ] = responseJsonArr;
           this.isDataLoading = false;
           this.terminologyDescriptionData = terminologyDescriptionData;
-          this.MolecularDescriptionData = MolecularDescriptionData;
-          this.VariantDescriptionData = VariantDescriptionData;
+          this.molecularDescriptionData = molecularDescriptionData;
+          this.variantDescriptionData = variantDescriptionData;
         })
         .catch((error) => {
           this.isDataLoading = false;
@@ -80,7 +80,7 @@ export default {
   <div class="container-fluid d-flex">
     <div>
       <div class="p-3 bg-light border-end" style="min-width: 200px">
-        <h5 class="text-dark fw-bold">G2P terminologies</h5>
+        <h5 class="text-dark fw-bold">Terminology</h5>
         <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link text-dark" href="#g2p-confidence"
@@ -142,22 +142,22 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="con_category in terminologyDescriptionData.confidence_category"
+                  <tr
+                    v-for="(
+                      item, index
+                    ) in terminologyDescriptionData.confidence_category"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(description, category) in con_category"
-                      :key="category"
-                    >
-                      <td>{{ category }}</td>
-                      <td>
-                        <span v-if="description">{{ description }}</span>
-                        <span v-else class="text-muted"
-                          >No description available</span
-                        >
-                      </td>
-                    </tr>
-                  </template>
+                    <td>{{ Object.entries(item)[0][0] }}</td>
+                    <td>
+                      <span v-if="Object.entries(item)[0][1]">{{
+                        Object.entries(item)[0][1]
+                      }}</span>
+                      <span v-else class="text-muted"
+                        >No description available</span
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -174,22 +174,20 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="genotypes in terminologyDescriptionData.genotype"
+                  <tr
+                    v-for="(item, index) in terminologyDescriptionData.genotype"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(description, genotype) in genotypes"
-                      :key="genotype"
-                    >
-                      <td>{{ genotype }}</td>
-                      <td>
-                        <span v-if="description">{{ description }}</span>
-                        <span v-else class="text-muted"
-                          >No description available</span
-                        >
-                      </td>
-                    </tr>
-                  </template>
+                    <td>{{ Object.entries(item)[0][0] }}</td>
+                    <td>
+                      <span v-if="Object.entries(item)[0][1]">{{
+                        Object.entries(item)[0][1]
+                      }}</span>
+                      <span v-else class="text-muted"
+                        >No description available</span
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -206,22 +204,22 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <template
-                    v-for="modifiers in terminologyDescriptionData.cross_cutting_modifier"
+                  <tr
+                    v-for="(
+                      item, index
+                    ) in terminologyDescriptionData.cross_cutting_modifier"
+                    :key="index"
                   >
-                    <tr
-                      v-for="(description, modifier) in modifiers"
-                      :key="modifier"
-                    >
-                      <td>{{ modifier }}</td>
-                      <td>
-                        <span v-if="description">{{ description }}</span>
-                        <span v-else class="text-muted"
-                          >No description available</span
-                        >
-                      </td>
-                    </tr>
-                  </template>
+                    <td>{{ Object.entries(item)[0][0] }}</td>
+                    <td>
+                      <span v-if="Object.entries(item)[0][1]">{{
+                        Object.entries(item)[0][1]
+                      }}</span>
+                      <span v-else class="text-muted"
+                        >No description available</span
+                      >
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -239,7 +237,7 @@ export default {
                 </thead>
                 <tbody>
                   <template
-                    v-for="consequences in MolecularDescriptionData.mechanism"
+                    v-for="consequences in molecularDescriptionData.mechanism"
                   >
                     <tr
                       v-for="(description, consequence) in consequences"
@@ -271,7 +269,7 @@ export default {
                 </thead>
                 <tbody>
                   <template
-                    v-for="consequences in MolecularDescriptionData.mechanism_synopsis"
+                    v-for="consequences in molecularDescriptionData.mechanism_synopsis"
                   >
                     <tr
                       v-for="(description, consequence) in consequences"
@@ -306,20 +304,20 @@ export default {
                   <!-- Loop through each main category in VariantDescriptionData -->
                   <template
                     v-for="(consequences, index) in Object.keys(
-                      VariantDescriptionData
+                      variantDescriptionData
                     )"
                     :key="index"
                   >
                     <!-- Row for the first term in each category with Primary Consequence in the first column -->
                     <tr
-                      v-for="(term, termIndex) in VariantDescriptionData[
+                      v-for="(term, termIndex) in variantDescriptionData[
                         consequences
                       ]"
                       :key="term.accession"
                     >
                       <td
                         v-if="termIndex === 0"
-                        :rowspan="VariantDescriptionData[consequences].length"
+                        :rowspan="variantDescriptionData[consequences].length"
                       >
                         {{ consequences }}
                       </td>
