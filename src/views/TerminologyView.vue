@@ -324,10 +324,8 @@ export default {
                       <td>{{ term.term }}</td>
                       <td>
                         <a
-                          :href="
-                            'http://www.sequenceontology.org/browser/current_release/term/' +
-                            term.accession
-                          "
+                          :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
+                          style="text-decoration: none"
                           target="_blank"
                         >
                           {{ term.accession }}
