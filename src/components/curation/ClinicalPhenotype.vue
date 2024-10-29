@@ -148,7 +148,7 @@ export default {
                 <input
                   type="text"
                   :id="`search_phenotype_${pmid}`"
-                  placeholder="e.g Abnormality of the kidney"
+                  placeholder="E.g. Abnormality of the kidney"
                   v-model="searchTerm[pmid]"
                   @input="onInput(pmid)"
                   @focus="showDropDown[pmid] = true"
