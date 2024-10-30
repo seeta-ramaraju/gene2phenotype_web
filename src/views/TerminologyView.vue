@@ -9,6 +9,14 @@ export default {
       molecularDescriptionData: null,
       variantDescriptionData: null,
       errorMsg: null,
+      confidenceColorMap: {
+        definitive: "#276749",
+        strong: "#38a169",
+        moderate: "#68d391",
+        limited: "#fc8181",
+        disputed: "#e53e3e",
+        refuted: "#9b2c2c",
+      }
     };
   },
   created() {
@@ -91,7 +99,7 @@ export default {
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div v-if="terminologyDescriptionData">
-      <div class="container px-5 py-3" style="min-height: 60vh">
+      <h2>Terminology</h2>
         <section id="g2p-confidence">
           <h4>G2P Confidence Category</h4>
           <div class="pt-3">
@@ -109,7 +117,18 @@ export default {
                   ) in terminologyDescriptionData.confidence_category"
                   :key="index"
                 >
-                  <td>{{ Object.entries(item)[0][0] }}</td>
+                  <td>
+                    <span
+                      v-if="Object.entries(item)[0][0]"
+                      class="badge text-white"
+                      :style="{
+                        backgroundColor:
+                          confidenceColorMap[Object.entries(item)[0][0]],
+                      }"
+                    >
+                      {{ Object.entries(item)[0][0] }}
+                    </span>
+                  </td>
                   <td>
                     <span v-if="Object.entries(item)[0][1]">{{
                       Object.entries(item)[0][1]
@@ -121,6 +140,16 @@ export default {
                 </tr>
               </tbody>
             </table>
+            <p>
+              Operationally several groups use <span style="color: #276749;">definitive</span>, 
+              <span style="color: #38a169;">strong</span> and 
+              <span style="color: #68d391;">moderate</span> for clinical reporting.
+            </p>
+            <p>
+              <span style="color: #fc8181;">Limited</span>, 
+              <span style="color: #e53e3e;">disputed</span> and 
+              <span style="color: #9b2c2c;">refuted</span> are not used for clinical reporting.
+            </p>
           </div>
         </section>
         <br />
@@ -294,7 +323,6 @@ export default {
             </table>
           </div>
         </section>
-      </div>
     </div>
   </div>
 </template>

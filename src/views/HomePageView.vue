@@ -334,7 +334,7 @@ export default {
         </div>
       </div>
       <div class="container p-5">
-        <h1 class="pb-5 text-center">Browse disorder panels</h1>
+        <h1 class="pb-5 text-center">Browse panels</h1>
         <div
           class="alert alert-danger mx-auto col-lg-6"
           role="alert"
