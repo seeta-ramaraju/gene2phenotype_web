@@ -18,7 +18,7 @@
                 to="/about/terminology"
                 class="nav-link p-0 text-body-secondary"
               >
-                G2P terminologies
+                Terminology
               </router-link>
             </li>
             <li class="nav-item mb-2">

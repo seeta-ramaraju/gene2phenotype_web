@@ -320,7 +320,7 @@ export default {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Browse
+            Browse panels
           </a>
           <ul class="dropdown-menu">
             <li v-for="item in panelData.results">
@@ -336,7 +336,7 @@ export default {
         </li>
         <li class="nav-item" v-else>
           <router-link to="/" class="nav-link px-1 text-white fw-bold">
-            Browse
+            Browse panels
           </router-link>
         </li>
         <li class="nav-item dropdown" v-if="isLoggedIn()">
