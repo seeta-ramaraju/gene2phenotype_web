@@ -106,6 +106,7 @@ export default {
       this.input = { ...cloneDeep(resetInput), locus: this.input.locus };
 
       // most of the data variables have to be reset
+
       this.hpoTermsInputHelper = {};
       this.isSubmitDataLoading = false;
       this.submitErrorMsg = null;
@@ -281,57 +282,6 @@ export default {
           console.log(error);
         });
     },
-    fetchHpoTerms(pmid) {
-      // if hpoTermsInput is empty then set isHpoTermsValid to false and dont continue further
-      if (this.hpoTermsInputHelper[pmid].hpoTermsInput.trim() === "") {
-        this.hpoTermsInputHelper[pmid].isHpoTermsValid = false;
-        return;
-      }
-      // if hpoTermsInput is not empty then continue further
-      this.hpoTermsInputHelper[pmid].isHpoTermsValid = true;
-      this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg = "";
-      this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = true;
-      let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
-        .trim()
-        .split(";")
-        .filter((item) => item.trim())
-        .map((item) => item.trim())
-        .join(",");
-      let responseStatus = null;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`, {
-        method: "GET",
-        headers: apiHeaders,
-      })
-        .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
-          if (responseStatus === 200 && responseJson && responseJson.results) {
-            this.input.phenotypes[pmid].hpo_terms = responseJson.results;
-          } else if (responseStatus === 404) {
-            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-              responseJson.detail
-                ? responseJson.detail
-                : "Unable to fetch hpo terms";
-            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
-          } else {
-            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-              "Unable to fetch hpo terms";
-            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
-          }
-        })
-        .catch((error) => {
-          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
-          this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-            "Unable to fetch hpo terms";
-          console.log(error);
-        });
-    },
     saveDraft() {
       if (!isUserLoggedIn()) {
         logOutUser();
@@ -349,7 +299,6 @@ export default {
       this.isSubmitSuccess = false;
 
       this.isSubmitDataLoading = true;
-
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = {
         json_data: preparedInput,
@@ -418,7 +367,6 @@ export default {
       // 1. IF Save fails THEN saveBeforePublishErrorMsg=<error msg>, publishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=false
       // 2. IF Save succeeds but Publish fails THEN publishErrorMsg=<error msg>, saveBeforePublishErrorMsg=publishSucessMsg=null, isSaveBeforePublishSuccess=true, isPublishSuccess=false
       // 3. IF Save and Publish both succeed THEN publishSucessMsg=<success msg>, saveBeforePublishErrorMsg=publishErrorMsg=null, isSaveBeforePublishSuccess=isPublishSuccess=true
-
       const preparedInput = prepareInputForDataSubmission(this.input);
       const requestBody = { json_data: preparedInput };
 
@@ -597,7 +545,6 @@ export default {
         :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
-        :fetchHpoTerms="fetchHpoTerms"
         v-model:clinical-phenotype="input.phenotypes"
         v-model:hpo-terms-input-helper="hpoTermsInputHelper"
       />

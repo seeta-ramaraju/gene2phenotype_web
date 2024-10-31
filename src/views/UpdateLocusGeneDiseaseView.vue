@@ -293,58 +293,6 @@ export default {
           console.log(error);
         });
     },
-    fetchHpoTerms(pmid) {
-      // if hpoTermsInput is empty then set isHpoTermsValid to false and dont continue further
-      if (this.hpoTermsInputHelper[pmid].hpoTermsInput.trim() === "") {
-        this.hpoTermsInputHelper[pmid].isHpoTermsValid = false;
-        return;
-      }
-      // if hpoTermsInput is not empty then continue further
-      this.hpoTermsInputHelper[pmid].isHpoTermsValid = true;
-      this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg = "";
-      this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = true;
-      let hpoTermsListStr = this.hpoTermsInputHelper[pmid].hpoTermsInput
-        .trim()
-        .split(";")
-        .filter((item) => item.trim())
-        .map((item) => item.trim())
-        .join(",");
-      let responseStatus = null;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(`/gene2phenotype/api/phenotype/${hpoTermsListStr}/`, {
-        method: "GET",
-        headers: apiHeaders,
-      })
-        .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
-          if (responseStatus === 200 && responseJson && responseJson.results) {
-            this.previousInput.phenotypes[pmid].hpo_terms =
-              responseJson.results;
-          } else if (responseStatus === 404) {
-            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-              responseJson.detail
-                ? responseJson.detail
-                : "Unable to fetch hpo terms";
-            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
-          } else {
-            this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-              "Unable to fetch hpo terms";
-            console.log(this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg);
-          }
-        })
-        .catch((error) => {
-          this.hpoTermsInputHelper[pmid].isHpoTermsDataLoading = false;
-          this.hpoTermsInputHelper[pmid].hpoTermsErrorMsg =
-            "Unable to fetch hpo terms";
-          console.log(error);
-        });
-    },
     saveDraft() {
       if (!isUserLoggedIn()) {
         logOutUser();
@@ -566,7 +514,6 @@ export default {
         :isInputPmidsValid="isInputPmidsValid"
       />
       <ClinicalPhenotype
-        :fetchHpoTerms="fetchHpoTerms"
         v-model:clinical-phenotype="previousInput.phenotypes"
         v-model:hpo-terms-input-helper="hpoTermsInputHelper"
       />
