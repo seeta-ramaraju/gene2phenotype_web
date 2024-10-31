@@ -86,6 +86,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
+    <h2>Terminology</h2>
     <div
       class="d-flex justify-content-center"
       v-if="isDataLoading"
@@ -99,7 +100,6 @@ export default {
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div v-if="terminologyDescriptionData">
-      <h2>Terminology</h2>
         <section id="g2p-confidence">
           <h4>G2P Confidence Category</h4>
           <div class="pt-3">
@@ -123,7 +123,7 @@ export default {
                       class="badge text-white"
                       :style="{
                         backgroundColor:
-                          confidenceColorMap[Object.entries(item)[0][0]],
+                          confidenceColorMap[Object.entries(item)[0][0].toLowerCase()],
                       }"
                     >
                       {{ Object.entries(item)[0][0] }}
@@ -141,14 +141,10 @@ export default {
               </tbody>
             </table>
             <p>
-              Operationally several groups use <span style="color: #276749;">definitive</span>, 
-              <span style="color: #38a169;">strong</span> and 
-              <span style="color: #68d391;">moderate</span> for clinical reporting.
+              Operationally several groups use <b>definitive</b>, <b>strong</b> and <b>moderate</b> for clinical reporting.
             </p>
             <p>
-              <span style="color: #fc8181;">Limited</span>, 
-              <span style="color: #e53e3e;">disputed</span> and 
-              <span style="color: #9b2c2c;">refuted</span> are not used for clinical reporting.
+              <b>Limited</b>, <b>disputed</b> and <b>refuted</b> are not used for clinical reporting.
             </p>
           </div>
         </section>
