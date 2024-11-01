@@ -61,7 +61,7 @@ const router = createRouter({
       component: SearchPageView,
     },
     {
-      path: "/disease/:id",
+      path: "/disease/:id(.*)",
       name: "disease",
       component: DiseaseView,
     },
