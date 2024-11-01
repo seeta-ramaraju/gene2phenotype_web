@@ -91,7 +91,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>Terminology</h2>
+    <h2 class="pb-3">Terminology</h2>
     <div
       class="d-flex justify-content-center"
       v-if="isDataLoading"
