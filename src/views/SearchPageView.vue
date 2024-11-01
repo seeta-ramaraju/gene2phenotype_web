@@ -105,7 +105,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>
+    <h2 class="pb-3">
       Search results
       <span v-if="routeQuery?.type || routeQuery?.query"> for </span>
       <span v-if="routeQuery?.type">
@@ -139,9 +139,9 @@ export default {
       </div>
     </div>
     <div v-if="searchData">
-      <div class="row mx-1 pt-3">
+      <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="searchData.results && searchData.results.length > 0"
         >
           <thead>
