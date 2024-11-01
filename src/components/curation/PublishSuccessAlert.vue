@@ -17,7 +17,6 @@ export default {
   },
 };
 </script>
-
 <template>
   <div
     class="alert alert-success mx-auto col-6"
