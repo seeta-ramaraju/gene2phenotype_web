@@ -27,16 +27,16 @@ export default {
     fetchData() {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
       this.isDataLoading = true;
-      const diseaseID = this.$route.params.id;
+      const diseaseName = this.$route.params.name;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseID), {
+        fetch(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseName), {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(DISEASE_URL.replace(":diseasename", diseaseID), {
+        fetch(DISEASE_URL.replace(":diseasename", diseaseName), {
           method: "GET",
           headers: apiHeaders,
         }),
@@ -49,7 +49,7 @@ export default {
               } else {
                 return Promise.reject(
                   new Error(
-                    `Unable to fetch Disease information for ${diseaseID}`
+                    `Unable to fetch Disease information for ${diseaseName}`
                   )
                 );
               }
