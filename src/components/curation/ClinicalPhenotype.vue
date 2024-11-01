@@ -1,4 +1,5 @@
 <script>
+import { HPO_SEARCH_API_URL } from "../../utility/UrlConstants.js";
 export default {
   data() {
     return {
@@ -36,7 +37,7 @@ export default {
 
       try {
         const hpoApiResponse = await fetch(
-          `https://ontology.jax.org/api/hp/search?q=${this.searchTerm[pmid]}&page=0&limit=10`
+          `${HPO_SEARCH_API_URL}?q=${this.searchTerm[pmid]}&page=0&limit=10`
         );
         if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO API");
 

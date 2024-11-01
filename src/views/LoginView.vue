@@ -1,4 +1,5 @@
 <script>
+import { LOGIN_URL } from "../utility/UrlConstants.js";
 import {
   getCookie,
   setItemsInLocalStorage,
@@ -18,7 +19,7 @@ export default {
     login() {
       this.errorMsg = null;
       this.isDataLoading = true;
-      fetch("/gene2phenotype/api/login/", {
+      fetch(LOGIN_URL, {
         method: "POST",
         body: JSON.stringify({
           username: this.username,

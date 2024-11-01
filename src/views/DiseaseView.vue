@@ -1,4 +1,5 @@
 <script>
+import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -31,11 +32,11 @@ export default {
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(`/gene2phenotype/api/disease/${diseaseID}/summary`, {
+        fetch(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseID), {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(`/gene2phenotype/api/disease/${diseaseID}`, {
+        fetch(DISEASE_URL.replace(":diseasename", diseaseID), {
           method: "GET",
           headers: apiHeaders,
         }),

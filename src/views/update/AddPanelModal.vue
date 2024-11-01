@@ -1,10 +1,11 @@
 <script>
-import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import LoginErrorAlert from "../../components/alert/LoginErrorAlert.vue";
 import {
   isUserLoggedIn,
   logOutUser,
   appendAuthenticationHeaders,
-} from "@/utility/AuthenticationUtility";
+} from "../../utility/AuthenticationUtility";
+import { ADD_PANEL_URL } from "../../utility/UrlConstants";
 
 export default {
   props: {
@@ -45,7 +46,7 @@ export default {
         Accept: "application/json",
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/lgd/${this.stableId}/panel/`, {
+      fetch(ADD_PANEL_URL.replace(":stableid", this.stableId), {
         method: "POST",
         body: JSON.stringify(requestBody),
         headers: apiHeaders,

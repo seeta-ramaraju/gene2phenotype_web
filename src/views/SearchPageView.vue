@@ -1,4 +1,5 @@
 <script>
+import { SEARCH_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -44,7 +45,7 @@ export default {
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
       } else {
-        url = "/gene2phenotype/api/search/?";
+        url = `${SEARCH_URL}?`;
         const { query, type, panel } = this.$route.query;
         let queryParamsArr = [];
         if (this.$route.query.query) {

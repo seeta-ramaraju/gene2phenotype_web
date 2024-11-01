@@ -1,10 +1,11 @@
 <script>
-import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import LoginErrorAlert from "../../components/alert/LoginErrorAlert.vue";
 import {
   isUserLoggedIn,
   logOutUser,
   appendAuthenticationHeaders,
-} from "@/utility/AuthenticationUtility";
+} from "../../utility/AuthenticationUtility";
+import { UPDATE_CONFIDENCE_URL } from "../../utility/UrlConstants";
 
 export default {
   props: {
@@ -49,7 +50,7 @@ export default {
         Accept: "application/json",
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/lgd/${this.stableId}/update_confidence/`, {
+      fetch(UPDATE_CONFIDENCE_URL.replace(":stableid", this.stableId), {
         method: "PUT",
         body: JSON.stringify(requestBody),
         headers: apiHeaders,

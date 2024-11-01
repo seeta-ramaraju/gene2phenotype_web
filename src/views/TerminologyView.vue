@@ -1,4 +1,9 @@
 <script>
+import {
+  ATTRIBS_DESCRIPTION_URL,
+  MECHANISMS_URL,
+  VARIANT_TYPES_URL,
+} from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -38,15 +43,15 @@ export default {
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(`/gene2phenotype/api/attribs/description`, {
+        fetch(ATTRIBS_DESCRIPTION_URL, {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(`/gene2phenotype/api/molecular_mechanisms/`, {
+        fetch(MECHANISMS_URL, {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(`/gene2phenotype/api/ontology_terms/variant_types/`, {
+        fetch(VARIANT_TYPES_URL, {
           method: "GET",
           headers: apiHeaders,
         }),

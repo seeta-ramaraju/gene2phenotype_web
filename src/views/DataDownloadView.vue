@@ -1,4 +1,5 @@
 <script>
+import { ALL_PANELS_URL, DOWNLOAD_PANEL_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -30,7 +31,7 @@ export default {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
       });
-      fetch("/gene2phenotype/api/panels/", {
+      fetch(ALL_PANELS_URL, {
         method: "GET",
         headers: apiHeaders,
       })
@@ -60,7 +61,7 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "text/csv;charset=UTF-8",
       });
-      fetch(`/gene2phenotype/api/panel/${panelName}/download`, {
+      fetch(DOWNLOAD_PANEL_URL.replace(":panelname", panelName), {
         method: "GET",
         headers: apiHeaders,
       })
