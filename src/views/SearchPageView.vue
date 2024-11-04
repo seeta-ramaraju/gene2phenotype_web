@@ -1,4 +1,5 @@
 <script>
+import { SEARCH_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -44,7 +45,7 @@ export default {
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
       } else {
-        url = "/gene2phenotype/api/search/?";
+        url = `${SEARCH_URL}?`;
         const { query, type, panel } = this.$route.query;
         let queryParamsArr = [];
         if (this.$route.query.query) {
@@ -104,7 +105,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>
+    <h2 class="pb-3">
       Search results
       <span v-if="routeQuery?.type || routeQuery?.query"> for </span>
       <span v-if="routeQuery?.type">
@@ -138,9 +139,9 @@ export default {
       </div>
     </div>
     <div v-if="searchData">
-      <div class="row mx-1 pt-3">
+      <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered"
+          class="table table-hover table-bordered shadow-sm"
           v-if="searchData.results && searchData.results.length > 0"
         >
           <thead>

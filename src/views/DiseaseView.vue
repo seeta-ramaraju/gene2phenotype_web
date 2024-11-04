@@ -1,4 +1,5 @@
 <script>
+import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -26,16 +27,16 @@ export default {
     fetchData() {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
       this.isDataLoading = true;
-      const diseaseID = this.$route.params.id;
+      const diseaseName = this.$route.params.name;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(`/gene2phenotype/api/disease/${diseaseID}/summary`, {
+        fetch(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseName), {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(`/gene2phenotype/api/disease/${diseaseID}`, {
+        fetch(DISEASE_URL.replace(":diseasename", diseaseName), {
           method: "GET",
           headers: apiHeaders,
         }),
@@ -48,7 +49,7 @@ export default {
               } else {
                 return Promise.reject(
                   new Error(
-                    `Unable to fetch Disease information for ${diseaseID}`
+                    `Unable to fetch Disease information for ${diseaseName}`
                   )
                 );
               }

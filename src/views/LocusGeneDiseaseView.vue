@@ -1,4 +1,5 @@
 <script>
+import { LGD_RECORD_URL, USER_PANELS_URL } from "../utility/UrlConstants.js";
 import {
   checkLogInAndAppendAuthHeaders,
   appendAuthenticationHeaders,
@@ -50,7 +51,7 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/lgd/${this.stableId}/`, {
+      fetch(LGD_RECORD_URL.replace(":stableid", this.stableId), {
         method: "GET",
         headers: apiHeaders,
       })
@@ -85,7 +86,7 @@ export default {
       const apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/user/panels/", {
+      fetch(USER_PANELS_URL, {
         method: "GET",
         headers: apiHeaders,
       })

@@ -1,4 +1,5 @@
 <script>
+import { HPO_SEARCH_API_URL } from "../../utility/UrlConstants.js";
 export default {
   data() {
     return {
@@ -9,7 +10,6 @@ export default {
       searchTerm: {},
     };
   },
-
   props: {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
@@ -24,7 +24,6 @@ export default {
       if (!this.HPOAPIerrormsg[pmid]) this.HPOAPIerrormsg[pmid] = null;
       if (!this.showDropDown[pmid]) this.showDropDown[pmid] = false;
     },
-
     async fetchAndSearchHPO(pmid) {
       this.initializeStateForPmid(pmid);
       this.isLoadingValue[pmid] = true;
@@ -38,7 +37,7 @@ export default {
 
       try {
         const hpoApiResponse = await fetch(
-          `https://ontology.jax.org/api/hp/search?q=${this.searchTerm[pmid]}&page=0&limit=10`
+          `${HPO_SEARCH_API_URL}?q=${this.searchTerm[pmid]}&page=0&limit=10`
         );
         if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO API");
 
@@ -51,13 +50,11 @@ export default {
         this.isLoadingValue[pmid] = false;
       }
     },
-
     onInput(pmid) {
       this.initializeStateForPmid(pmid);
       this.showDropDown[pmid] = true;
       this.fetchAndSearchHPO(pmid);
     },
-
     selectTerm(pmid, term) {
       if (!term || !pmid) return;
       this.initializeStateForPmid(pmid);
@@ -76,7 +73,6 @@ export default {
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
       this.showDropDown[pmid] = false;
     },
-
     hpoTermsInputHandler(pmid, inputValue) {
       let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
       if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
@@ -87,14 +83,12 @@ export default {
 
       this.$emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
     },
-
     summaryInputHandler(pmid, inputValue) {
       let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
       if (!updatedClinicalPhenotype[pmid]) updatedClinicalPhenotype[pmid] = {};
       updatedClinicalPhenotype[pmid].summary = inputValue;
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
     },
-
     handleBlur(pmid) {
       setTimeout(() => {
         this.showDropDown[pmid] = false;
@@ -103,7 +97,6 @@ export default {
   },
 };
 </script>
-
 <template>
   <div class="accordion py-1" id="clinical-phenotype-section">
     <div class="accordion-item">

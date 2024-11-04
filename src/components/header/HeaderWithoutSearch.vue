@@ -1,4 +1,5 @@
 <script>
+import { ALL_PANELS_URL } from "../../utility/UrlConstants.js";
 import {
   checkLogInAndAppendAuthHeaders,
   getUsername,
@@ -31,7 +32,7 @@ export default {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
       });
-      fetch("/gene2phenotype/api/panels/", {
+      fetch(ALL_PANELS_URL, {
         method: "GET",
         headers: apiHeaders,
       })

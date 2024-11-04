@@ -27,6 +27,17 @@ import {
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
 import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import {
+  ATTRIBS_URL,
+  GENE_DISEASE_URL,
+  GENE_FUNCTION_URL,
+  GENE_URL,
+  PUBLICATIONS_URL,
+  PUBLISH_URL,
+  SAVED_DRAFT_DATA_URL,
+  UPDATE_SAVED_DRAFT_URL,
+  USER_PANELS_URL,
+} from "../utility/UrlConstants";
 
 export default {
   created() {
@@ -103,7 +114,7 @@ export default {
       let apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/curation/${this.stableID}`, {
+      fetch(SAVED_DRAFT_DATA_URL.replace(":stableid", this.stableID), {
         method: "GET",
         headers: apiHeaders,
       })
@@ -141,18 +152,15 @@ export default {
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(
-          `/gene2phenotype/api/gene/${this.previousInput.locus}/function/`,
-          {
-            method: "GET",
-            headers: apiHeaders,
-          }
-        ),
-        fetch(`/gene2phenotype/api/gene/${this.previousInput.locus}/`, {
+        fetch(GENE_FUNCTION_URL.replace(":locus", this.previousInput.locus), {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch("/gene2phenotype/api/attribs/", {
+        fetch(GENE_URL.replace(":locus", this.previousInput.locus), {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(ATTRIBS_URL, {
           method: "GET",
           headers: apiHeaders,
         }),
@@ -187,7 +195,7 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/gene/${this.previousInput.locus}/disease`, {
+      fetch(GENE_DISEASE_URL.replace(":locus", this.previousInput.locus), {
         method: "GET",
         headers: apiHeaders,
       })
@@ -216,7 +224,7 @@ export default {
       const apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/user/panels/", {
+      fetch(USER_PANELS_URL, {
         method: "GET",
         headers: apiHeaders,
       })
@@ -256,7 +264,7 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/publication/${pmidListStr}/`, {
+      fetch(PUBLICATIONS_URL.replace(":pmids", pmidListStr), {
         method: "GET",
         headers: apiHeaders,
       })
@@ -323,7 +331,7 @@ export default {
         Accept: "application/json",
         "Content-Type": "application/json",
       });
-      fetch(`/gene2phenotype/api/curation/${this.stableID}/update/`, {
+      fetch(UPDATE_SAVED_DRAFT_URL.replace(":stableid", this.stableID), {
         method: "PUT",
         body: JSON.stringify(requestBody),
         headers: apiHeaders,
@@ -390,7 +398,7 @@ export default {
           "Content-Type": "application/json",
         });
         const submitResponse = await fetch(
-          `/gene2phenotype/api/curation/${this.stableID}/update/`,
+          UPDATE_SAVED_DRAFT_URL.replace(":stableid", this.stableID),
           {
             method: "PUT",
             body: JSON.stringify(requestBody),
@@ -424,7 +432,7 @@ export default {
             "Content-Length": 0,
           });
           const publishResponse = await fetch(
-            `/gene2phenotype/api/curation/publish/${this.stableID}/`,
+            PUBLISH_URL.replace(":stableid", this.stableID),
             {
               method: "POST",
               headers: publishApiHeaders,

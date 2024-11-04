@@ -1,4 +1,9 @@
 <script>
+import {
+  DOWNLOAD_PANEL_URL,
+  PANEL_SUMMARY_URL,
+  PANEL_URL,
+} from "../utility/UrlConstants";
 import BarChart from "../components/chart/BarChart.vue";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
@@ -64,12 +69,12 @@ export default {
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/`, {
+        fetch(PANEL_URL.replace(":panelname", this.$route.params.panel), {
           method: "GET",
           headers: apiHeaders,
         }),
         fetch(
-          `/gene2phenotype/api/panel/${this.$route.params.panel}/summary/`,
+          PANEL_SUMMARY_URL.replace(":panelname", this.$route.params.panel),
           {
             method: "GET",
             headers: apiHeaders,
@@ -133,10 +138,13 @@ export default {
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "text/csv;charset=UTF-8",
       });
-      fetch(`/gene2phenotype/api/panel/${this.$route.params.panel}/download`, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      fetch(
+        DOWNLOAD_PANEL_URL.replace(":panelname", this.$route.params.panel),
+        {
+          method: "GET",
+          headers: apiHeaders,
+        }
+      )
         .then((response) => {
           responseContentDisposition = response.headers.get(
             "Content-Disposition"

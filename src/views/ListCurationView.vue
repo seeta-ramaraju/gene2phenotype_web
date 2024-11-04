@@ -1,4 +1,5 @@
 <script>
+import { ALL_SAVED_DRAFTS_URL } from "../utility/UrlConstants.js";
 import {
   appendAuthenticationHeaders,
   isUserLoggedIn,
@@ -41,7 +42,7 @@ export default {
       let apiHeaders = appendAuthenticationHeaders({
         "Content-Type": "application/json",
       });
-      fetch("/gene2phenotype/api/curations", {
+      fetch(ALL_SAVED_DRAFTS_URL, {
         method: "GET",
         headers: apiHeaders,
       })

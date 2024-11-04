@@ -1,4 +1,5 @@
 <script>
+import { ATTRIBS_URL, LGD_RECORD_URL } from "../utility/UrlConstants.js";
 import { appendAuthenticationHeaders } from "../utility/AuthenticationUtility.js";
 import UpdateConfidence from "./update/UpdateConfidence.vue";
 import UpdatePanel from "./update/UpdatePanel.vue";
@@ -38,11 +39,11 @@ export default {
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch("/gene2phenotype/api/attribs/", {
+        fetch(ATTRIBS_URL, {
           method: "GET",
           headers: apiHeaders,
         }),
-        fetch(`/gene2phenotype/api/lgd/${this.stableId}/`, {
+        fetch(LGD_RECORD_URL.replace(":stableid", this.stableId), {
           method: "GET",
           headers: apiHeaders,
         }),

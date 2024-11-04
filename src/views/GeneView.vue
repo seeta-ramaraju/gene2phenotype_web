@@ -1,4 +1,9 @@
 <script>
+import {
+  GENE_FUNCTION_URL,
+  GENE_SUMMARY_URL,
+  GENE_URL,
+} from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -39,25 +44,20 @@ export default {
         this.geneData =
           null;
       this.isDataLoading = true;
+      const geneSymbol = this.$route.params.symbol;
       const apiHeaders = checkLogInAndAppendAuthHeaders({
         "Content-Type": "application/json",
       });
       Promise.all([
-        fetch(
-          `/gene2phenotype/api/gene/${this.$route.params.symbol}/summary/`,
-          {
-            method: "GET",
-            headers: apiHeaders,
-          }
-        ),
-        fetch(
-          `/gene2phenotype/api/gene/${this.$route.params.symbol}/function/`,
-          {
-            method: "GET",
-            headers: apiHeaders,
-          }
-        ),
-        fetch(`/gene2phenotype/api/gene/${this.$route.params.symbol}/`, {
+        fetch(GENE_SUMMARY_URL.replace(":locus", geneSymbol), {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(GENE_FUNCTION_URL.replace(":locus", geneSymbol), {
+          method: "GET",
+          headers: apiHeaders,
+        }),
+        fetch(GENE_URL.replace(":locus", geneSymbol), {
           method: "GET",
           headers: apiHeaders,
         }),
