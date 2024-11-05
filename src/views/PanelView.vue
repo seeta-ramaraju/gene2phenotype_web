@@ -6,6 +6,7 @@ import {
 } from "../utility/UrlConstants";
 import BarChart from "../components/chart/BarChart.vue";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+import { CONFIDENCE_COLOR_MAP } from "../utility/Constants";
 
 export default {
   data() {
@@ -16,14 +17,7 @@ export default {
       panelSummaryData: null,
       errorMsg: null,
       downloadAllDataErrorMsg: null,
-      confidenceColorMap: {
-        definitive: "#276749",
-        strong: "#38a169",
-        moderate: "#68d391",
-        limited: "#fc8181",
-        disputed: "#e53e3e",
-        refuted: "#9b2c2c",
-      },
+      confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
       chartData: {},
       chartOptions: {
         responsive: true,
