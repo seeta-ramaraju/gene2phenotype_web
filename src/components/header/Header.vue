@@ -367,7 +367,10 @@ export default {
       <ul class="nav nav-underline">
         <li class="nav-item" v-if="isLoggedIn() && !!displayUsername()">
           <span class="nav-link text-white fw-bold">
-            <i class="bi bi-person-fill"></i> {{ displayUsername() }}
+            <i class="bi bi-person-fill"></i>
+            <router-link to="/profile" class="text-white">
+              {{ displayUsername() }}
+            </router-link>
           </span>
         </li>
         <li class="nav-item" v-if="isLoggedIn()">
