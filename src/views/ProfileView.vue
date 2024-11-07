@@ -1,8 +1,7 @@
 <script>
 import { PROFILE_URL } from "../utility/UrlConstants.js";
 import {
-  appendAuthenticationHeaders,
-  getUsername,
+  appendAuthenticationHeaders
 } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -14,9 +13,6 @@ export default {
     }
   },
   methods: {
-    displayUsername() {
-      return getUsername();
-    },
     fetchData() {
       this.userProfileData = null;
       this.errorMsg = null;
@@ -55,16 +51,16 @@ export default {
     <h2 class="pb-3">Profile</h2>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}
     </div>
-    <div class="pt-3">
+    <div class="pt-3" v-if="userProfileData">
       <table class="table" style="max-width: 60%">
         <tbody>
           <tr>
             <th>Username</th>
-            <td>{{ displayUsername() }}</td>
+            <td>{{ userProfileData.user_name }}</td>
           </tr>
           <tr>
             <th>Email</th>
-            <td>{{ userProfileData }}</td>
+            <td>{{ userProfileData.email }}</td>
           </tr>
           <tr>
             <th>Panel(s)</th>
