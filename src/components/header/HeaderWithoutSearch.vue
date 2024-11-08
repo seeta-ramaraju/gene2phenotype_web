@@ -186,7 +186,7 @@ export default {
         <li class="nav-item" v-if="isLoggedIn() && !!displayUsername()">
           <span class="nav-link text-white fw-bold">
             <i class="bi bi-person-fill"></i>
-            <router-link to="/profile" class="text-white">
+            <router-link to="/profile" class="text-white" style="text-decoration: none;">
               {{ displayUsername() }}
             </router-link>
           </span>
