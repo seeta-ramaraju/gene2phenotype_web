@@ -62,6 +62,15 @@ export default {
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <h2 class="pb-3">Profile</h2>
+    <div
+      class="d-flex justify-content-center"
+      v-if="isDataLoading"
+      style="margin-top: 250px; margin-bottom: 250px"
+    >
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}
     </div>
     <div class="pt-3" v-if="userProfileData">
