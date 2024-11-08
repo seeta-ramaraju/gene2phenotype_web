@@ -12,6 +12,16 @@ export default {
       isDataLoading: false,
     }
   },
+  created() {
+    // watch the params of this route to fetch this data again
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.fetchData();
+      },
+      { immediate: true }
+    );
+  },
   methods: {
     fetchData() {
       this.userProfileData = null;
@@ -43,19 +53,6 @@ export default {
           console.log(error);
         });
     },
-  },
-  mounted() {
-    this.fetchData();
-  },
-  created() {
-    // watch the params of this route to fetch this data again
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        this.fetchData();
-      },
-      { immediate: true }
-    );
   },
 };
 </script>
