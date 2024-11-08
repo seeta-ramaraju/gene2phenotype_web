@@ -84,7 +84,14 @@ export default {
           </tr>
           <tr>
             <th>Panel(s)</th>
-            <td>{{ userProfileData.panels.join(", ") }}</td>
+            <td>
+              <span v-if="userProfileData.panels && userProfileData.panels.length > 0">
+                  {{ userProfileData.panels.join(", ") }}
+              </span>
+              <span v-else class="text-muted">
+                  No permission to edit
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
