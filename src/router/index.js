@@ -16,6 +16,7 @@ import VariantFilteringView from "../views/VariantFilteringView.vue";
 import TerminologyView from "../views/TerminologyView.vue";
 import DataDownloadView from "../views/DataDownloadView.vue";
 import LoginView from "../views/LoginView.vue";
+import ProfileView from "../views/ProfileView.vue";
 import {
   isUserLoggedIn,
   logOutUser,
@@ -114,6 +115,12 @@ const router = createRouter({
       name: "login",
       component: LoginView,
       meta: { requiresLogOut: true },
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfileView,
+      meta: { requiresLogIn: true },
     },
     {
       path: "/about/terminology",

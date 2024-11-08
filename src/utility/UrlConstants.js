@@ -1,6 +1,7 @@
 // G2P API URLS
 export const G2P_API_BASE_URL = "/gene2phenotype/api";
 export const LOGIN_URL = `${G2P_API_BASE_URL}/login/`;
+export const PROFILE_URL = `${G2P_API_BASE_URL}/profile/`;
 export const ALL_PANELS_URL = `${G2P_API_BASE_URL}/panels/`;
 export const PANEL_URL = `${G2P_API_BASE_URL}/panel/:panelname/`;
 export const PANEL_SUMMARY_URL = `${G2P_API_BASE_URL}/panel/:panelname/summary/`;
