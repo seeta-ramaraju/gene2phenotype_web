@@ -44,15 +44,28 @@ export default {
         });
     },
   },
+  mounted() {
+    this.fetchData();
+  },
+  created() {
+    // watch the params of this route to fetch this data again
+    this.$watch(
+      () => this.$route.params,
+      () => {
+        this.fetchData();
+      },
+      { immediate: true }
+    );
+  },
 };
 </script>
 <template>
-  <div class="container px-5 py-5" style="min-height: 60vh">
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <h2 class="pb-3">Profile</h2>
     <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}
     </div>
     <div class="pt-3" v-if="userProfileData">
-      <table class="table" style="max-width: 60%">
+      <table class="table" style="max-width: 80%">
         <tbody>
           <tr>
             <th>Username</th>
@@ -64,12 +77,10 @@ export default {
           </tr>
           <tr>
             <th>Panel(s)</th>
-            <td></td>
+            <td>{{ userProfileData.panels.join(", ") }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </template>
-<style scoped>
-</style>
