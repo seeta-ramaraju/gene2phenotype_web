@@ -68,7 +68,8 @@ export default {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div v-if="errorMsg" class="alert alert-danger">{{ errorMsg }}
+    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+      <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div class="pt-3" v-if="userProfileData">
       <table class="table" style="max-width: 80%">
