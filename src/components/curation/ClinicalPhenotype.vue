@@ -25,7 +25,6 @@ export default {
       if (!this.showDropDown[pmid]) this.showDropDown[pmid] = false;
     },
     async fetchAndSearchHPO(pmid) {
-      this.initializeStateForPmid(pmid);
       this.isLoadingValue[pmid] = true;
       this.HPOsearchResponseJson[pmid] = [];
       this.HPOAPIerrormsg[pmid] = null;
@@ -46,6 +45,7 @@ export default {
       } catch (error) {
         this.HPOsearchResponseJson[pmid] = [];
         this.HPOAPIerrormsg[pmid] = "HPO API not working, try again later";
+        console.log(this.HPOAPIerrormsg[pmid]);
       } finally {
         this.isLoadingValue[pmid] = false;
       }
