@@ -3,6 +3,7 @@ import { ATTRIBS_URL, LGD_RECORD_URL } from "../utility/UrlConstants.js";
 import { appendAuthenticationHeaders } from "../utility/AuthenticationUtility.js";
 import UpdateConfidence from "./update/UpdateConfidence.vue";
 import UpdatePanel from "./update/UpdatePanel.vue";
+import UpdateMechanism from "./update/UpdateMechanism.vue";
 
 export default {
   data() {
@@ -17,6 +18,16 @@ export default {
   components: {
     UpdateConfidence,
     UpdatePanel,
+    UpdateMechanism,
+  },
+  computed: {
+    canUpdateMechanism() {
+      return (
+        this.locusGeneDiseaseData?.molecular_mechanism?.mechanism ===
+          "undetermined" &&
+        this.locusGeneDiseaseData?.molecular_mechanism?.support === "inferred"
+      );
+    },
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -110,9 +121,16 @@ export default {
       </h4>
       <h4 v-else class="text-muted pb-2">Disease Name Not Available</h4>
       <p>
-        <i class="bi bi-info-circle"></i> Open any individual section to update
-        data accordingly.
+        <i class="bi bi-info-circle"></i> For this record, only these sections
+        can be updated: <b v-if="canUpdateMechanism">Mechanism, </b
+        ><b>Panel, Confidence</b>
       </p>
+      <UpdateMechanism
+        v-if="canUpdateMechanism"
+        :stableId="stableId"
+        :currentPublications="locusGeneDiseaseData.publications"
+        :currentMechanism="locusGeneDiseaseData.molecular_mechanism"
+      />
       <UpdatePanel
         :stableId="stableId"
         :currentPanels="locusGeneDiseaseData.panels"

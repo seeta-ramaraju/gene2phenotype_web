@@ -7,6 +7,7 @@ import {
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
 import AddPanelModal from "./update/AddPanelModal.vue";
+import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
 
 export default {
   data() {
@@ -14,14 +15,7 @@ export default {
       isDataLoading: false,
       locusGeneDiseaseData: null,
       errorMsg: null,
-      confidenceColorMap: {
-        definitive: "#276749",
-        strong: "#38a169",
-        moderate: "#68d391",
-        limited: "#fc8181",
-        disputed: "#e53e3e",
-        refuted: "#9b2c2c",
-      },
+      confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
       isRecordPartOfUserPanels: false,
       stableId: null,
       userPanels: null,
@@ -755,13 +749,7 @@ export default {
             <td class="w-25 text-end">
               <h5>Confidence</h5>
             </td>
-            <td></td>
-          </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
-              <h6>Level</h6>
-            </td>
-            <td>
+            <td class="w-75">
               <span
                 v-if="locusGeneDiseaseData.confidence"
                 class="badge text-white fs-6"
