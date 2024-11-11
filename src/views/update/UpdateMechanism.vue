@@ -196,17 +196,16 @@ export default {
               <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-          <p
-            v-else-if="
-              isUpdateMechanismSuccess &&
-              !(mechanism === 'undetermined' && mechanismSupport === 'inferred')
-            "
-            class="py-2"
+          <div
+            class="alert alert-success mt-3"
+            role="alert"
+            v-else-if="isUpdateMechanismSuccess"
           >
-            <i class="bi bi-info-circle"></i> Mechanism can be updated only if
-            the mechanism value is <b>undetermined</b> and mechanism source
-            value is <b>inferred</b>.
-          </p>
+            <div>
+              <i class="bi bi-check-circle-fill"></i>
+              {{ updateMechanismSuccessMsg }}
+            </div>
+          </div>
           <div v-else>
             <div class="row g-3 px-3 pt-3">
               <div class="col-lg-2">
@@ -374,16 +373,6 @@ export default {
             <div>
               <i class="bi bi-exclamation-circle-fill"></i>
               {{ updateMechanismErrorMsg }}
-            </div>
-          </div>
-          <div
-            class="alert alert-success mt-3"
-            role="alert"
-            v-if="isUpdateMechanismSuccess"
-          >
-            <div>
-              <i class="bi bi-check-circle-fill"></i>
-              {{ updateMechanismSuccessMsg }}
             </div>
           </div>
           <LoginErrorAlert v-if="isLogInSessionExpired" />
