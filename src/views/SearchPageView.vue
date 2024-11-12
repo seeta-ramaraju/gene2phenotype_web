@@ -133,6 +133,7 @@ export default {
       </div>
     </div>
     <div v-if="searchData">
+      <p>Total results: {{ searchData.count }}</p>
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
