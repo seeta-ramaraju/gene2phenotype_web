@@ -23,7 +23,7 @@ export default {
     };
   },
   components: {
-    AddPanelModal,
+    AddPanelModal
   },
   created() {
     // watch the params of the route to fetch the data again

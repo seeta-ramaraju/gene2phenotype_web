@@ -2,6 +2,7 @@
 import router from "@/router";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { ALL_PANELS_URL, DOWNLOAD_PANEL_URL } from "../utility/UrlConstants.js";
+import CustomToolTip from "../components/tooltip/CustomToolTip.vue";
 
 export default {
   data() {
@@ -27,6 +28,9 @@ export default {
       // already being observed
       { immediate: true }
     );
+  },
+  components: {
+    CustomToolTip
   },
   methods: {
     fetchPanelData() {
@@ -356,12 +360,10 @@ export default {
                 <th>Disorder Panel</th>
                 <th>
                   Total LGMDE Records
-                  <span class="bi bi-info-circle custom-tooltip">
-                    <span class="custom-tooltip-text">
-                      G2P records are Locus-Genotype-Mechanism-Disease-Evidence
-                      (LGMDE) threads describing gene-disease associations
-                    </span>
-                  </span>
+                  <CustomToolTip
+                    toolTipText="G2P records are Locus-Genotype-Mechanism-Disease-Evidence (LGMDE)
+                    threads describing gene-disease associations"
+                  />
                 </th>
                 <th>Total Genes</th>
                 <th>Download</th>
@@ -419,44 +421,3 @@ export default {
     </div>
   </div>
 </template>
-<style scoped>
-.custom-tooltip {
-  position: relative;
-  display: inline-block;
-  color: #0d6efd;
-}
-
-.custom-tooltip .custom-tooltip-text {
-  visibility: hidden;
-  width: 200px;
-  border-radius: 6px;
-  padding: 5px;
-  position: absolute;
-  z-index: 5;
-  bottom: 125%;
-  left: 30%;
-  margin-left: -97px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  background-color: #000;
-  color: #fff;
-  text-align: center;
-  font-size: 12px;
-}
-
-.custom-tooltip .custom-tooltip-text::after {
-  border-width: 5px;
-  border-style: solid;
-  border-color: #000 transparent transparent transparent;
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-}
-
-.custom-tooltip:hover .custom-tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-</style>
