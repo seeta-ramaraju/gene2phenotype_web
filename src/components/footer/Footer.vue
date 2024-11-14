@@ -34,7 +34,7 @@
                 to="/contact"
                 class="nav-link p-0 text-body-secondary"
               >
-                Contact
+                Contact us
               </router-link>
             </li>
           </ul>
