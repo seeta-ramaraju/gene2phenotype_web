@@ -21,7 +21,8 @@ import {
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
-import UpdateRecordView from "@/views/UpdateRecordView.vue";
+import UpdateRecordView from "../views/UpdateRecordView.vue";
+import ContactPageView from "../views/ContactPageView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -126,6 +127,11 @@ const router = createRouter({
       path: "/about/terminology",
       name: "terminology",
       component: TerminologyView,
+    },
+    {
+      path: "/contact",
+      name: "contact",
+      component: ContactPageView,
     },
   ],
   scrollBehavior() {
