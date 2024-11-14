@@ -16,6 +16,7 @@ export default {
       geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      readMoreActivated: false
     };
   },
   created() {
@@ -80,6 +81,12 @@ export default {
           console.log(error);
         });
     },
+    activateReadMore(){
+      this.readMoreActivated = true;
+    },
+    activateReadLess(){
+      this.readMoreActivated = false;
+    }
   },
 };
 </script>
@@ -110,7 +117,11 @@ export default {
       <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          {{ geneFunctionData.function.protein_function }} <br />
+          <span v-if="!readMoreActivated">{{ geneFunctionData.function.protein_function.slice(0, 800) }} </span>
+          <a class="" v-if="!readMoreActivated" @click="activateReadMore" href="#">Show more>></a>
+          <span v-if="readMoreActivated" v-html="geneFunctionData.function.protein_function"></span>
+          <a class="" v-if="readMoreActivated" @click="activateReadLess" href="#">Show less<<</a>
+          <br />
           <b>Source:</b>
           <a
             v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
