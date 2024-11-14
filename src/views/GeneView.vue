@@ -118,9 +118,9 @@ export default {
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
           <span v-if="!readMoreActivated">{{ geneFunctionData.function.protein_function.slice(0, 800) }} </span>
-          <a class="" v-if="!readMoreActivated" @click="activateReadMore" href="#">Show more>></a>
+          <a class="" v-if="!readMoreActivated && geneFunctionData.function.protein_function.length >= 800" @click="activateReadMore">Show more</a>
           <span v-if="readMoreActivated" v-html="geneFunctionData.function.protein_function"></span>
-          <a class="" v-if="readMoreActivated" @click="activateReadLess" href="#">Show less<<</a>
+          <a class="" v-if="readMoreActivated && geneFunctionData.function.protein_function.length >= 800" @click="activateReadLess">Show less</a>
           <br />
           <b>Source:</b>
           <a
