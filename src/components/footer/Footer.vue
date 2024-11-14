@@ -30,7 +30,12 @@
               </router-link>
             </li>
             <li class="nav-item mb-2">
-              <a href="#" class="nav-link p-0 text-body-secondary"> Contact </a>
+              <router-link
+                to="/contact"
+                class="nav-link p-0 text-body-secondary"
+              >
+                Contact us
+              </router-link>
             </li>
           </ul>
         </div>
