@@ -1,9 +1,20 @@
 <script>
 export default {
+  data() {
+    return {
+      readMoreActivated: false,
+      MAX_CHARACTERS: 800
+    };
+  },
   props: {
     geneData: Object,
     geneFunctionData: Object,
   },
+  methods: {
+    toggleReadMore() {
+      this.readMoreActivated = !this.readMoreActivated;
+    }
+  }
 };
 </script>
 <template>
@@ -56,7 +67,20 @@ export default {
             </div>
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
-                {{ geneFunctionData.function.protein_function }} <br />
+                <span v-if="!readMoreActivated">
+                {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}...
+                </span>
+                <span v-else>
+                  {{ geneFunctionData.function.protein_function }}
+                </span>
+                <button
+                  class="btn btn-link p-0 ml-2 align-baseline"
+                  @click="toggleReadMore"
+                  v-if="geneFunctionData.function.protein_function.length > MAX_CHARACTERS"
+                >
+                  {{ readMoreActivated ? "Show less" : "Show more" }}
+                </button>
+                <br />
                 <b>Source:</b>
                 <a
                   v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
