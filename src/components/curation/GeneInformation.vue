@@ -68,7 +68,7 @@ export default {
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
                 <span v-if="!readMoreActivated">
-                {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}...
+                {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}&hellip;
                 </span>
                 <span v-else>
                   {{ geneFunctionData.function.protein_function }}
