@@ -1,9 +1,11 @@
 <script>
+import { MAX_CHARACTERS } from "../../utility/Constants.js";
+
 export default {
   data() {
     return {
-      readMoreActivated: false,
-      MAX_CHARACTERS: 800
+      isReadMoreActivated: false,
+      maxCharacters: MAX_CHARACTERS
     };
   },
   props: {
@@ -12,7 +14,7 @@ export default {
   },
   methods: {
     toggleReadMore() {
-      this.readMoreActivated = !this.readMoreActivated;
+      this.isReadMoreActivated = !this.isReadMoreActivated;
     }
   }
 };
@@ -67,8 +69,8 @@ export default {
             </div>
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
-                <span v-if="!readMoreActivated">
-                {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}&hellip;
+                <span v-if="!isReadMoreActivated && geneFunctionData.function.protein_function.length > maxCharacters">
+                {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
                 </span>
                 <span v-else>
                   {{ geneFunctionData.function.protein_function }}
@@ -76,9 +78,9 @@ export default {
                 <button
                   class="btn btn-link p-0 ml-2 align-baseline"
                   @click="toggleReadMore"
-                  v-if="geneFunctionData.function.protein_function.length > MAX_CHARACTERS"
+                  v-if="geneFunctionData.function.protein_function.length > maxCharacters"
                 >
-                  {{ readMoreActivated ? "Show less" : "Show more" }}
+                  {{ isReadMoreActivated ? "Show less" : "Show more" }}
                 </button>
                 <br />
                 <b>Source:</b>

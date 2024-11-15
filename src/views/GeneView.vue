@@ -5,7 +5,10 @@ import {
   GENE_URL,
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import {
+  CONFIDENCE_COLOR_MAP,
+  MAX_CHARACTERS
+} from "../utility/Constants.js";
 
 export default {
   data() {
@@ -16,8 +19,8 @@ export default {
       geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
-      readMoreActivated: false,
-      MAX_CHARACTERS: 800
+      isReadMoreActivated: false,
+      maxCharacters: MAX_CHARACTERS
     };
   },
   created() {
@@ -83,7 +86,7 @@ export default {
         });
     },
     toggleReadMore() {
-      this.readMoreActivated = !this.readMoreActivated;
+      this.isReadMoreActivated = !this.isReadMoreActivated;
     }
   },
 };
@@ -115,8 +118,8 @@ export default {
       <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          <span v-if="!readMoreActivated">
-            {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}&hellip;
+          <span v-if="!isReadMoreActivated && geneFunctionData.function.protein_function.length > maxCharacters">
+            {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
           </span>
           <span v-else>
             {{ geneFunctionData.function.protein_function }}
@@ -124,9 +127,9 @@ export default {
           <button
             class="btn btn-link p-0 ml-2 align-baseline"
             @click="toggleReadMore"
-            v-if="geneFunctionData.function.protein_function.length > MAX_CHARACTERS"
+            v-if="geneFunctionData.function.protein_function.length > maxCharacters"
           >
-            {{ readMoreActivated ? "Show less" : "Show more" }}
+            {{ isReadMoreActivated ? "Show less" : "Show more" }}
           </button>
           <br />
           <b>Source:</b>

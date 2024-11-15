@@ -6,3 +6,5 @@ export const CONFIDENCE_COLOR_MAP = {
   disputed: "#e53e3e",
   refuted: "#9b2c2c",
 };
+
+export const MAX_CHARACTERS = 800;
