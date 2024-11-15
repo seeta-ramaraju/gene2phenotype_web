@@ -16,7 +16,8 @@ export default {
       geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
-      readMoreActivated: false
+      readMoreActivated: false,
+      MAX_CHARACTERS: 800
     };
   },
   created() {
@@ -81,11 +82,8 @@ export default {
           console.log(error);
         });
     },
-    activateReadMore(){
-      this.readMoreActivated = true;
-    },
-    activateReadLess(){
-      this.readMoreActivated = false;
+    toggleReadMore() {
+      this.readMoreActivated = !this.readMoreActivated;
     }
   },
 };
@@ -117,10 +115,19 @@ export default {
       <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          <span v-if="!readMoreActivated">{{ geneFunctionData.function.protein_function.slice(0, 800) }} </span>
-          <a class="" v-if="!readMoreActivated && geneFunctionData.function.protein_function.length >= 800" @click="activateReadMore">Show more</a>
-          <span v-if="readMoreActivated" v-html="geneFunctionData.function.protein_function"></span>
-          <a class="" v-if="readMoreActivated && geneFunctionData.function.protein_function.length >= 800" @click="activateReadLess">Show less</a>
+          <span v-if="!readMoreActivated">
+            {{ geneFunctionData.function.protein_function.slice(0, MAX_CHARACTERS) }}...
+          </span>
+          <span v-else>
+            {{ geneFunctionData.function.protein_function }}
+          </span>
+          <button
+            class="btn btn-link p-0 ml-2 align-baseline"
+            @click="toggleReadMore"
+            v-if="geneFunctionData.function.protein_function.length > MAX_CHARACTERS"
+          >
+            {{ readMoreActivated ? "Show less" : "Show more" }}
+          </button>
           <br />
           <b>Source:</b>
           <a
