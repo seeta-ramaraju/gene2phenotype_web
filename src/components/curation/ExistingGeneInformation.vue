@@ -355,9 +355,10 @@ export default {
                   <router-link
                     :to="`/lgd/${item.id}`"
                     style="text-decoration: none"
+                    target="_blank"
                     v-if="item.id"
                   >
-                    View record
+                    View record <i class="bi bi-box-arrow-up-right"></i>
                   </router-link>
                 </td>
               </tr>
