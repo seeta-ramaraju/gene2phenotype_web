@@ -39,6 +39,7 @@ export const logOutUser = () => {
   localStorage.removeItem("authenticationToken");
   localStorage.removeItem("tokenExpiry");
   localStorage.removeItem("username");
+  localStorage.removeItem("email");
 };
 
 export const isUserLoggedIn = () => {
@@ -52,4 +53,8 @@ export const isUserLoggedIn = () => {
 
 export const getUsername = () => {
   return localStorage.getItem("username");
+};
+
+export const getUserEmail = () => {
+  return localStorage.getItem("email");
 };

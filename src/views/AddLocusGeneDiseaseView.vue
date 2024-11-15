@@ -27,7 +27,7 @@ import {
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
-import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import LoginErrorAlert from "../components/alert/LoginErrorAlert.vue";
 import {
   ATTRIBS_URL,
   GENE_DISEASE_URL,
@@ -37,7 +37,8 @@ import {
   PUBLISH_URL,
   SAVE_DRAFT_URL,
   USER_PANELS_URL,
-} from "../utility/UrlConstants";
+} from "../utility/UrlConstants.js";
+import ExistingGeneInformation from "../components/curation/ExistingGeneInformation.vue";
 
 export default {
   data() {
@@ -70,6 +71,8 @@ export default {
       panelData: null,
       stableId: null,
       isLogInSessionExpired: false,
+      isDisplayGeneExistingData: false, // variable used to display ExistingGeneInformation component
+      notifyExistingGeneInformation: false, // variable used to notify ExistingGeneInformation component to fetch existing data for gene
     };
   },
   components: {
@@ -89,19 +92,39 @@ export default {
     SaveSuccessAlert,
     AlertModal,
     LoginErrorAlert,
+    ExistingGeneInformation,
   },
   methods: {
     geneSearchBtnClickHandler() {
       if (this.input.locus !== "") {
         this.isInputLocusValid = true;
         if (isUserLoggedIn()) {
-          if (this.geneData) {
-            // if we are fetching data for another gene then we need to reset the data variables
-            this.resetData();
-          }
+          // Do not display ExistingGeneInformation component
+          this.isDisplayGeneExistingData = false;
+          // Fetch relevant data
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
+        } else {
+          logOutUser();
+          this.isLogInSessionExpired = true;
+        }
+      } else {
+        this.isInputLocusValid = false;
+      }
+    },
+    existingGeneDataSearchHandler() {
+      if (this.input.locus !== "") {
+        this.isInputLocusValid = true;
+        if (isUserLoggedIn()) {
+          if (this.geneData) {
+            // if fetching data for another gene and data of current gene exists then reset data variables of current gene
+            this.resetData();
+          }
+          // Display ExistingGeneInformation component
+          this.isDisplayGeneExistingData = true;
+          // Notify ExistingGeneInformation component to fetch existing data for gene
+          this.notifyExistingGeneInformation = true;
         } else {
           logOutUser();
           this.isLogInSessionExpired = true;
@@ -115,8 +138,10 @@ export default {
       const resetInput = getInitialInputForNewCuration();
       this.input = { ...cloneDeep(resetInput), locus: this.input.locus };
 
-      // most of the data variables have to be reset
+      // these variables wont be part of reset logic in this function:
+      // stableId, isLogInSessionExpired, isDisplayGeneExistingData, notifyExistingGeneInformation
 
+      // other data variables have to be reset
       this.hpoTermsInputHelper = {};
       this.isSubmitDataLoading = false;
       this.submitErrorMsg = null;
@@ -131,6 +156,17 @@ export default {
       this.isInputPmidsValid = true;
       this.isSaveBeforePublishSuccess = false;
       this.saveBeforePublishErrorMsg = null;
+      this.geneErrorMsg = null;
+      this.geneFunctionData = null;
+      this.geneData = null;
+      this.attributesData = null;
+      this.isGeneDataLoading = false;
+      this.geneDiseaseErrorMsg = null;
+      this.geneDiseaseData = null;
+      this.isGeneDiseaseDataLoading = false;
+      this.panelErrorMsg = null;
+      this.panelData = null;
+      this.isPanelDataLoading = false;
     },
     fetchGeneInformation() {
       this.geneErrorMsg =
@@ -483,13 +519,14 @@ export default {
           id="gene-symbol-input"
           v-model.trim="input.locus"
           aria-describedby="invalid-gene-symbol-input-feedback"
-          @keyup.enter="geneSearchBtnClickHandler"
+          @keyup.enter="existingGeneDataSearchHandler"
         />
         <div id="invalid-gene-symbol-input-feedback" class="invalid-feedback">
           Please enter a valid Gene.
         </div>
       </div>
       <div class="col-auto">
+        <!-- TODO: Handle logic to disable below btns when fetching existing gene data is loading -->
         <button
           v-if="geneData"
           :disabled="isGeneDataLoading"
@@ -505,13 +542,13 @@ export default {
           :disabled="isGeneDataLoading"
           type="button"
           class="btn btn-primary mb-3"
-          @click="geneSearchBtnClickHandler"
+          @click="existingGeneDataSearchHandler"
         >
           <i class="bi bi-search"></i> Search
         </button>
       </div>
     </div>
-    <p v-if="!isGeneDataLoading && !geneData">
+    <p v-if="!isGeneDataLoading && !geneData && !isDisplayGeneExistingData">
       <i class="bi bi-info-circle"></i> Please enter Gene and click Search to
       proceed further.
     </p>
@@ -529,6 +566,15 @@ export default {
         <i class="bi bi-exclamation-circle-fill"></i> {{ geneErrorMsg }}
       </div>
     </div>
+    <ExistingGeneInformation
+      v-if="isDisplayGeneExistingData"
+      :gene="input.locus"
+      :geneSearchBtnClickHandler="geneSearchBtnClickHandler"
+      :notifyExistingGeneInformation="notifyExistingGeneInformation"
+      @setNotifyExistingGeneInformation="
+        (value) => (notifyExistingGeneInformation = value)
+      "
+    />
     <div
       id="curation-form-section"
       v-if="
@@ -681,7 +727,7 @@ export default {
     <AlertModal
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
-      @confirm-click-handler="geneSearchBtnClickHandler"
+      @confirm-click-handler="existingGeneDataSearchHandler"
     />
     <AlertModal
       modalId="publications-input-alert-modal"
