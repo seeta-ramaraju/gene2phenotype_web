@@ -5,7 +5,10 @@ import {
   GENE_URL,
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import {
+  CONFIDENCE_COLOR_MAP,
+  MAX_CHARACTERS
+} from "../utility/Constants.js";
 
 export default {
   data() {
@@ -16,6 +19,8 @@ export default {
       geneFunctionData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      isReadMoreActivated: false,
+      maxCharacters: MAX_CHARACTERS
     };
   },
   created() {
@@ -80,6 +85,9 @@ export default {
           console.log(error);
         });
     },
+    toggleReadMore() {
+      this.isReadMoreActivated = !this.isReadMoreActivated;
+    }
   },
 };
 </script>
@@ -110,7 +118,20 @@ export default {
       <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          {{ geneFunctionData.function.protein_function }} <br />
+          <span v-if="!isReadMoreActivated && geneFunctionData.function.protein_function.length > maxCharacters">
+            {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
+          </span>
+          <span v-else>
+            {{ geneFunctionData.function.protein_function }}
+          </span>
+          <button
+            class="btn btn-link p-0 ml-2 align-baseline"
+            @click="toggleReadMore"
+            v-if="geneFunctionData.function.protein_function.length > maxCharacters"
+          >
+            {{ isReadMoreActivated ? "Show less" : "Show more" }}
+          </button>
+          <br />
           <b>Source:</b>
           <a
             v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
