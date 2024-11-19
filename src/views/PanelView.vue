@@ -7,7 +7,7 @@ import {
 import BarChart from "../components/chart/BarChart.vue";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants";
-import CustomToolTip from "../components/tooltip/CustomToolTip.vue";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -182,7 +182,7 @@ export default {
   },
   components: { 
     BarChart,
-    CustomToolTip
+    ToolTip
   },
 };
 </script>
@@ -211,7 +211,7 @@ export default {
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">
                 Total LGMDE Records
-                <CustomToolTip
+                <ToolTip
                   toolTipText="G2P records are Locus-Genotype-Mechanism-Disease-Evidence
                   (LGMDE) threads describing gene-disease associations"
                 />

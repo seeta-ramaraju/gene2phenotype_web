@@ -2,7 +2,7 @@
 import router from "@/router";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { ALL_PANELS_URL, DOWNLOAD_PANEL_URL } from "../utility/UrlConstants.js";
-import CustomToolTip from "../components/tooltip/CustomToolTip.vue";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -30,7 +30,7 @@ export default {
     );
   },
   components: {
-    CustomToolTip
+    ToolTip
   },
   methods: {
     fetchPanelData() {
@@ -360,7 +360,7 @@ export default {
                 <th>Disorder Panel</th>
                 <th>
                   Total LGMDE Records
-                  <CustomToolTip
+                  <ToolTip
                     toolTipText="G2P records are Locus-Genotype-Mechanism-Disease-Evidence (LGMDE)
                     threads describing gene-disease associations"
                   />
