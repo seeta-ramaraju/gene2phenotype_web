@@ -65,7 +65,7 @@ export default {
                 />
               </p>
               <p>
-                See Badonyi and Marsh, 2024 <a href="https://europepmc.org/article/MED/39172982">https://europepmc.org/article/MED/39172982</a>
+                See <a href="https://europepmc.org/article/MED/39172982" target="_blank" style="text-decoration: none">Badonyi and Marsh, 2024</a>
               </p>
               <div class="col-xl-5 col-lg-6">
                 <table class="table table-bordered">
