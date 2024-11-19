@@ -1,0 +1,396 @@
+<script>
+import {
+  appendAuthenticationHeaders,
+  getUserEmail,
+} from "../../utility/AuthenticationUtility.js";
+import { CONFIDENCE_COLOR_MAP } from "../../utility/Constants.js";
+import { SEARCH_URL } from "../../utility/UrlConstants.js";
+
+export default {
+  props: {
+    gene: String,
+    geneSearchBtnClickHandler: Function,
+    notifyExistingGeneInformation: Boolean,
+  },
+  emits: ["setNotifyExistingGeneInformation"],
+  watch: {
+    // whenever the prop notifyExistingGeneInformation changes, this function will run
+    notifyExistingGeneInformation: {
+      handler(newNotifyExistingGeneInformation) {
+        // IF newNotifyExistingGeneInformation === true,
+        // it means the parent component notified this component to fetch existing data for gene
+        // THEN reset newNotifyExistingGeneInformation and fetch existing data for gene
+        if (newNotifyExistingGeneInformation === true) {
+          this.$emit("setNotifyExistingGeneInformation", false);
+          this.fetchExistingGeneDrafts();
+          this.fetchExistingGeneRecords();
+        }
+      },
+      immediate: true,
+    },
+  },
+  data() {
+    return {
+      isGeneExistingDraftsDataLoading: false,
+      isGeneExistingRecordsDataLoading: false,
+      geneExistingDrafts: null,
+      geneExistingRecords: null,
+      geneExistingDraftsErrorMsg: null,
+      geneExistingRecordsErrorMsg: null,
+      confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+    };
+  },
+  methods: {
+    fetchExistingGeneDrafts(dataUrl) {
+      this.geneExistingDraftsErrorMsg = this.geneExistingDrafts = null;
+      this.isGeneExistingDraftsDataLoading = true;
+      let isDataFound = false;
+      let url = "";
+      if (dataUrl) {
+        url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
+      } else {
+        url = `${SEARCH_URL}?query=${this.gene}&type=draft`;
+      }
+      const apiHeaders = appendAuthenticationHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(url, {
+        method: "GET",
+        headers: apiHeaders,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            isDataFound = true;
+            return response.json();
+          } else if (response.status === 404) {
+            isDataFound = false;
+            return response.json();
+          } else {
+            isDataFound = false;
+            return Promise.reject(
+              new Error("Unable to fetch existing gene drafts")
+            );
+          }
+        })
+        .then((responseJson) => {
+          this.isGeneExistingDraftsDataLoading = false;
+          if (isDataFound) {
+            this.geneExistingDrafts = responseJson;
+          }
+        })
+        .catch((error) => {
+          this.isGeneExistingDraftsDataLoading = false;
+          this.geneExistingDraftsErrorMsg = error.message;
+          console.log(error);
+        });
+    },
+    fetchExistingGeneDraftsNextPage() {
+      this.fetchExistingGeneDrafts(this.geneExistingDrafts.next);
+    },
+    fetchExistingGeneDraftsPreviousPage() {
+      this.fetchExistingGeneDrafts(this.geneExistingDrafts.previous);
+    },
+    fetchExistingGeneRecords(dataUrl) {
+      this.geneExistingRecordsErrorMsg = this.geneExistingRecords = null;
+      this.isGeneExistingRecordsDataLoading = true;
+      let isDataFound = false;
+      let url = "";
+      if (dataUrl) {
+        url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
+      } else {
+        url = `${SEARCH_URL}?query=${this.gene}&type=gene`;
+      }
+      const apiHeaders = appendAuthenticationHeaders({
+        "Content-Type": "application/json",
+      });
+      fetch(url, {
+        method: "GET",
+        headers: apiHeaders,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            isDataFound = true;
+            return response.json();
+          } else if (response.status === 404) {
+            isDataFound = false;
+            return response.json();
+          } else {
+            isDataFound = false;
+            return Promise.reject(
+              new Error("Unable to fetch existing gene records")
+            );
+          }
+        })
+        .then((responseJson) => {
+          this.isGeneExistingRecordsDataLoading = false;
+          if (isDataFound) {
+            this.geneExistingRecords = responseJson;
+          }
+        })
+        .catch((error) => {
+          this.isGeneExistingRecordsDataLoading = false;
+          this.geneExistingRecordsErrorMsg = error.message;
+          console.log(error);
+        });
+    },
+    fetchExistingGeneRecordsNextPage() {
+      this.fetchExistingGeneRecords(this.geneExistingRecords.next);
+    },
+    fetchExistingGeneRecordsPreviousPage() {
+      this.fetchExistingGeneRecords(this.geneExistingRecords.previous);
+    },
+    isUserCreatorOfDraft(email) {
+      return getUserEmail() === email;
+    },
+  },
+};
+</script>
+<template>
+  <div>
+    <div
+      class="d-flex justify-content-center"
+      v-if="isGeneExistingDraftsDataLoading || isGeneExistingRecordsDataLoading"
+      style="margin-top: 250px; margin-bottom: 250px"
+    >
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-else-if="geneExistingDraftsErrorMsg || geneExistingRecordsErrorMsg"
+    >
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ geneExistingDraftsErrorMsg || geneExistingRecordsErrorMsg }}
+      </div>
+    </div>
+    <div v-else>
+      <button
+        type="button"
+        class="btn btn-primary mt-3"
+        @click="geneSearchBtnClickHandler"
+      >
+        Create new record
+      </button>
+      <div v-if="!geneExistingDrafts && !geneExistingRecords">
+        <p>
+          <i class="bi bi-info-circle"></i> There are no saved drafts or
+          published records for this Gene.
+        </p>
+      </div>
+      <div
+        v-if="
+          geneExistingDrafts?.results && geneExistingDrafts.results.length > 0
+        "
+      >
+        <h3 class="pt-3">Saved drafts for Gene</h3>
+        <div class="mx-1 pt-3 table-responsive-xl">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th>G2P ID</th>
+                <th>Gene</th>
+                <th>Disease</th>
+                <th>Allelic Requirement</th>
+                <th>Panels</th>
+                <th>Confidence</th>
+                <th>Curator</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in geneExistingDrafts.results">
+                <td>
+                  {{ item.id }}
+                </td>
+                <td>
+                  {{ item.gene }}
+                </td>
+                <td>
+                  {{ item.disease_name }}
+                </td>
+                <td>{{ item.genotype }}</td>
+                <td>
+                  <span v-if="item.panels && item.panels.length > 0">
+                    {{ item.panels.join(", ") }}
+                  </span>
+                </td>
+                <td>
+                  <span
+                    v-if="item.confidence"
+                    class="badge text-white"
+                    :style="{
+                      backgroundColor:
+                        confidenceColorMap[item.confidence.toLowerCase()],
+                    }"
+                  >
+                    {{ item.confidence }}
+                  </span>
+                </td>
+                <td>
+                  Name: {{ item.curator_first + " " + item.curator_last_name }}
+                  <br />
+                  Email: {{ item.curator_email }}
+                </td>
+                <td>
+                  <router-link
+                    :to="`/lgd/update-draft/${item.id}`"
+                    style="text-decoration: none"
+                    v-if="isUserCreatorOfDraft(item.curator_email)"
+                  >
+                    Update draft
+                  </router-link>
+                  <a
+                    v-bind:href="`mailto:${item.curator_email}`"
+                    style="text-decoration: none"
+                    target="_blank"
+                    v-else
+                  >
+                    Mail curator
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mx-1 justify-content-between">
+          <div class="col-2 px-0">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="float: left"
+              @click="fetchExistingGeneDraftsPreviousPage"
+              v-if="geneExistingDrafts.previous"
+            >
+              <i class="bi bi-arrow-left"></i> Previous Page
+            </button>
+          </div>
+          <div class="col-2 px-0">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="float: right"
+              @click="fetchExistingGeneDraftsNextPage"
+              v-if="geneExistingDrafts.next"
+            >
+              Next Page
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="
+          geneExistingRecords?.results && geneExistingRecords.results.length > 0
+        "
+      >
+        <h3 class="pt-3">Published records for Gene</h3>
+        <div class="mx-1 pt-3 table-responsive-xl">
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th>G2P ID</th>
+                <th>Gene</th>
+                <th>Disease</th>
+                <th>Allelic Requirement</th>
+                <th>Mechanism</th>
+                <th>Panels</th>
+                <th>Confidence</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in geneExistingRecords.results">
+                <td>
+                  {{ item.id }}
+                </td>
+                <td>
+                  <router-link
+                    v-if="item.gene"
+                    :to="`/gene/${item.gene}`"
+                    style="text-decoration: none"
+                  >
+                    {{ item.gene }}
+                  </router-link>
+                </td>
+                <td>
+                  <router-link
+                    v-if="item.disease"
+                    :to="`/disease/${item.disease}`"
+                    style="text-decoration: none"
+                  >
+                    {{ item.disease }}
+                  </router-link>
+                </td>
+                <td>{{ item.genotype }}</td>
+                <td>{{ item.mechanism }}</td>
+                <td>
+                  <span
+                    v-if="item.panel && item.panel.length > 0"
+                    v-for="(panelName, index) in item.panel"
+                  >
+                    <router-link
+                      :to="`/panel/${panelName}`"
+                      style="text-decoration: none"
+                    >
+                      {{ panelName }} </router-link
+                    ><span v-if="index < item.panel.length - 1">, </span>
+                  </span>
+                </td>
+                <td>
+                  <span
+                    v-if="item.confidence"
+                    class="badge text-white"
+                    :style="{
+                      backgroundColor:
+                        confidenceColorMap[item.confidence.toLowerCase()],
+                    }"
+                  >
+                    {{ item.confidence }}
+                  </span>
+                </td>
+                <td>
+                  <router-link
+                    :to="`/lgd/${item.id}`"
+                    style="text-decoration: none"
+                    target="_blank"
+                    v-if="item.id"
+                  >
+                    View record <i class="bi bi-box-arrow-up-right"></i>
+                  </router-link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mx-1 justify-content-between">
+          <div class="col-2 px-0">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="float: left"
+              @click="fetchExistingGeneRecordsPreviousPage"
+              v-if="geneExistingRecords.previous"
+            >
+              <i class="bi bi-arrow-left"></i> Previous Page
+            </button>
+          </div>
+          <div class="col-2 px-0">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="float: right"
+              @click="fetchExistingGeneRecordsNextPage"
+              v-if="geneExistingRecords.next"
+            >
+              Next Page
+              <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

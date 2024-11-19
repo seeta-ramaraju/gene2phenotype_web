@@ -43,6 +43,7 @@ export default {
             authenticationToken: responseJson.token,
             tokenExpiry: responseJson.expiry,
             username: responseJson.user?.user_name,
+            email: responseJson.user?.email,
           });
           this.$router.replace("/"); // Navigate to homepage
           this.isDataLoading = false;

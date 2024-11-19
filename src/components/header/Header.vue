@@ -84,9 +84,7 @@ export default {
     isLoggedIn() {
       return isUserLoggedIn();
     },
-    displayUsername() {
-      return getUsername();
-    },
+    getUsername,
   },
 };
 </script>
@@ -365,11 +363,15 @@ export default {
         </li>
       </ul>
       <ul class="nav nav-underline">
-        <li class="nav-item" v-if="isLoggedIn() && !!displayUsername()">
+        <li class="nav-item" v-if="isLoggedIn() && !!getUsername()">
           <span class="nav-link text-white fw-bold">
             <i class="bi bi-person-fill"></i>
-            <router-link to="/profile" class="text-white" style="text-decoration: none;">
-              {{ displayUsername() }}
+            <router-link
+              to="/profile"
+              class="text-white"
+              style="text-decoration: none"
+            >
+              {{ getUsername() }}
             </router-link>
           </span>
         </li>
