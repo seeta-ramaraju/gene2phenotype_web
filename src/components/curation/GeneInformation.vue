@@ -69,11 +69,11 @@ export default {
             </div>
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
-                <span v-if="!isReadMoreActivated && geneFunctionData.function.protein_function.length > maxCharacters">
-                {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
+                <span v-if="isReadMoreActivated || geneFunctionData.function.protein_function.length <= maxCharacters">
+                  {{ geneFunctionData.function.protein_function }}
                 </span>
                 <span v-else>
-                  {{ geneFunctionData.function.protein_function }}
+                  {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
                 </span>
                 <button
                   class="btn btn-link p-0 ml-2 align-baseline"
