@@ -9,7 +9,7 @@ export default {
   },
   emits: ["update:justification", "update:level"],
   methods: {
-    reOrderConfidenceCategory(confidence_category) {
+    reOrderConfidenceCategory() {
       return this.attributesData.confidence_category.sort(
         (a, b) => ConfidenceAttribs.indexOf(a) - ConfidenceAttribs.indexOf(b)
       );
@@ -94,9 +94,7 @@ export default {
               >
                 <option value="">Select</option>
                 <option
-                  v-for="item in reOrderConfidenceCategory(
-                    attributesData.confidence_category
-                  )"
+                  v-for="item in reOrderConfidenceCategory()"
                   :value="item"
                 >
                   {{ item }}
