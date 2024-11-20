@@ -212,3 +212,12 @@ export const MechanismSynopsisAttribs = [
 ];
 
 export const MechanismSupportAttribs = ["inferred", "evidence"];
+
+export const ConfidenceAttribs = [
+  "definitive",
+  "strong",
+  "moderate",
+  "limited",
+  "disputed",
+  "refuted",
+];
