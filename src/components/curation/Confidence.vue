@@ -1,7 +1,6 @@
 <script>
 import { ConfidenceAttribs } from "../../utility/CurationConstants.js";
 export default {
-  methods: {},
   props: {
     attributesData: Object,
     justification: String,
