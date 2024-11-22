@@ -1,5 +1,5 @@
 <script>
-import { ConfidenceAttribs } from "../../utility/CurationConstants.js";
+import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
 export default {
   props: {
     attributesData: Object,
@@ -11,7 +11,8 @@ export default {
   computed: {
     reorderedConfidenceCategoryList() {
       return this.attributesData.confidence_category.sort(
-        (a, b) => ConfidenceAttribs.indexOf(a) - ConfidenceAttribs.indexOf(b)
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
       );
     },
   },
