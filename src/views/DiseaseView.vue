@@ -1,5 +1,6 @@
 <script>
 import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
+import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -9,6 +10,7 @@ export default {
       diseaseSummaryData: null,
       diseaseData: null,
       errorMsg: null,
+      confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
     };
   },
   created() {
@@ -115,10 +117,12 @@ export default {
           <thead>
             <tr>
               <th>G2P ID</th>
+              <th>Gene</th>
               <th>Genotype</th>
               <th>Variant Consequence</th>
               <th>Variant Type</th>
               <th>Mechanism</th>
+              <th>Confidence</th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -131,6 +135,15 @@ export default {
                   v-if="item.stable_id"
                 >
                   {{ item.stable_id }}
+                </router-link>
+              </td>
+              <td>
+                <router-link
+                  :to="`/gene/${item.locus}`"
+                  style="text-decoration: none"
+                  v-if="item.locus"
+                >
+                  {{ item.locus }}
                 </router-link>
               </td>
               <td>
@@ -156,6 +169,18 @@ export default {
                     ? item.molecular_mechanism.join(", ")
                     : item.molecular_mechanism
                 }}
+              </td>
+              <td>
+                <span
+                  v-if="item.confidence"
+                  class="badge text-white"
+                  :style="{
+                    backgroundColor:
+                      confidenceColorMap[item.confidence.toLowerCase()],
+                  }"
+                >
+                  {{ item.confidence }}
+                </span>
               </td>
               <td>
                 <span
