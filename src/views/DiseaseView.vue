@@ -90,21 +90,13 @@ export default {
     <div v-if="diseaseData && diseaseSummaryData">
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
-      <div class="pt-3">
-        <p v-for="item in diseaseData.ontology_terms">
-          {{ item.description }}
+      <h4 class="py-3">Synonyms</h4>
+      <div class="row">
+        <p v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
+          {{ diseaseData.synonyms.join(", ") }}
         </p>
+        <p v-else class="text-muted">Not Available</p>
       </div>
-      <p v-if="diseaseData.mim" class="pt-3">
-        <strong>OMIM: </strong>
-        <a
-          :href="`https://omim.org/entry/${diseaseData.mim}`"
-          target="_blank"
-          style="text-decoration: none"
-        >
-          {{ diseaseData.mim }}
-        </a>
-      </p>
       <h4 class="py-3">Latest Records</h4>
       <div class="table-responsive-xl">
         <table
