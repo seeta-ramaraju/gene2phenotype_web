@@ -182,7 +182,6 @@ export const EvidenceTypesAttribs = [
   {
     primaryType: "Rescue",
     secondaryType: [
-      "Human",
       "Non-Human Model Organism",
       "Cell Culture Model",
       "Patient Cells",

@@ -23,7 +23,7 @@ export default {
     };
   },
   components: {
-    AddPanelModal
+    AddPanelModal,
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -191,6 +191,18 @@ export default {
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.genotype">
                 {{ locusGeneDiseaseData.genotype }}
+                <span
+                  v-if="locusGeneDiseaseData.confidence"
+                  class="badge text-white fs-6 ms-2"
+                  :style="{
+                    backgroundColor:
+                      confidenceColorMap[
+                        locusGeneDiseaseData.confidence.toLowerCase()
+                      ],
+                  }"
+                >
+                  {{ locusGeneDiseaseData.confidence }}
+                </span>
               </p>
               <p v-else class="text-muted">Not Available</p>
             </td>
@@ -747,39 +759,6 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h5>Confidence</h5>
-            </td>
-            <td class="w-75">
-              <span
-                v-if="locusGeneDiseaseData.confidence"
-                class="badge text-white fs-6"
-                :style="{
-                  backgroundColor:
-                    confidenceColorMap[
-                      locusGeneDiseaseData.confidence.toLowerCase()
-                    ],
-                }"
-              >
-                {{ locusGeneDiseaseData.confidence }}
-              </span>
-              <p v-else class="text-muted">Not Available</p>
-            </td>
-          </tr>
-          <tr
-            class="align-middle"
-            v-if="locusGeneDiseaseData.confidence_support"
-          >
-            <td class="w-25 text-end">
-              <h6>Comment</h6>
-            </td>
-            <td>
-              <p>
-                {{ locusGeneDiseaseData.confidence_support }}
-              </p>
-            </td>
-          </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
               <h5>Evidence</h5>
             </td>
             <td></td>
@@ -1168,6 +1147,19 @@ export default {
                 {{ locusGeneDiseaseData.stable_id }}
               </p>
               <p v-else class="text-muted">Not Available</p>
+            </td>
+          </tr>
+          <tr
+            class="align-middle"
+            v-if="locusGeneDiseaseData.confidence_support"
+          >
+            <td class="w-25 text-end">
+              <h5>Comment</h5>
+            </td>
+            <td class="w-75">
+              <p>
+                {{ locusGeneDiseaseData.confidence_support }}
+              </p>
             </td>
           </tr>
           <tr>

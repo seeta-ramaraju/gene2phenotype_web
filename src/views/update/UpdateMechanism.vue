@@ -280,7 +280,7 @@ export default {
               "
             >
               <div class="row g-3 px-3 pt-3">
-                <div class="col-12"><h5>Evidence</h5></div>
+                <h5>Evidence</h5>
               </div>
               <div
                 class="row g-3 px-3 py-3"
@@ -289,10 +289,7 @@ export default {
                 <div class="col-12">
                   <h6>Publication (PMID: {{ pmid }})</h6>
                 </div>
-                <div class="col-1">
-                  <p class="col-form-label">Type</p>
-                </div>
-                <div class="col-3">
+                <div class="col-12">
                   <ul style="list-style: none; padding-left: 0">
                     <li v-for="item in evidenceTypesAttribs">
                       {{ item.primaryType }}
@@ -326,23 +323,22 @@ export default {
                     </li>
                   </ul>
                 </div>
-                <div class="col-8"></div>
-                <div class="col-1">
+                <div class="row mt-2 w-50">
                   <label
                     :for="`evidence-type-input-${pmid}-description`"
-                    class="col-form-label"
+                    class="col-form-label col-lg-3"
                   >
                     Description
                   </label>
-                </div>
-                <div class="col-4">
-                  <textarea
-                    class="form-control"
-                    :id="`evidence-type-input-${pmid}-description`"
-                    rows="3"
-                    v-model="mechanismEvidence[pmid].description"
-                  >
-                  </textarea>
+                  <div class="col-lg-9">
+                    <textarea
+                      class="form-control"
+                      :id="`evidence-type-input-${pmid}-description`"
+                      rows="3"
+                      v-model="mechanismEvidence[pmid].description"
+                    >
+                    </textarea>
+                  </div>
                 </div>
               </div>
             </div>
