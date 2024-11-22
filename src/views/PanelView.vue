@@ -249,7 +249,12 @@ export default {
         />
       </div>
       <h3 class="pt-5 pb-2">Latest records</h3>
-      <div class="d-flex justify-content-end mb-2">
+      <div class="d-flex justify-content-end mb-2"
+      v-if="
+            panelSummaryData.records_summary &&
+            panelSummaryData.records_summary.length > 0
+          "
+      >
         <button
           v-if="!isDownloadAllDataLoading"
           type="button"
