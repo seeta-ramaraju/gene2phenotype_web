@@ -1,6 +1,6 @@
 <script>
 import LoginErrorAlert from "../../components/alert/LoginErrorAlert.vue";
-import { ConfidenceAttribs } from "../../utility/CurationConstants.js";
+import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
 import {
   isUserLoggedIn,
   logOutUser,
