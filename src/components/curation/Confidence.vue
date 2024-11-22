@@ -8,8 +8,8 @@ export default {
     inputPublications: Object,
   },
   emits: ["update:justification", "update:level"],
-  methods: {
-    reOrderConfidenceCategory() {
+  computed: {
+    reorderedConfidenceCategoryList() {
       return this.attributesData.confidence_category.sort(
         (a, b) => ConfidenceAttribs.indexOf(a) - ConfidenceAttribs.indexOf(b)
       );
@@ -94,7 +94,7 @@ export default {
               >
                 <option value="">Select</option>
                 <option
-                  v-for="item in reOrderConfidenceCategory()"
+                  v-for="item in reorderedConfidenceCategoryList"
                   :value="item"
                 >
                   {{ item }}

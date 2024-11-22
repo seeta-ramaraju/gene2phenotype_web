@@ -213,7 +213,7 @@ export const MechanismSynopsisAttribs = [
 
 export const MechanismSupportAttribs = ["inferred", "evidence"];
 
-export const ConfidenceAttribs = [
+export const ConfidenceAttribsOrder = [
   "definitive",
   "strong",
   "moderate",
