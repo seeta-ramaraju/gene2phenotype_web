@@ -83,9 +83,10 @@ export default {
           console.log(error);
         });
     },
-    reOrderConfidenceCategory() {
+    reOrderConfidenceCategoryList() {
       return this.attributesData.confidence_category.sort(
-        (a, b) => ConfidenceAttribs.indexOf(a) - ConfidenceAttribs.indexOf(b)
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
       );
     },
   },
@@ -142,7 +143,7 @@ export default {
                   v-model="level"
                 >
                   <option
-                    v-for="item in reOrderConfidenceCategory()"
+                    v-for="item in reOrderConfidenceCategoryList()"
                     :value="item"
                   >
                     {{ item }}
