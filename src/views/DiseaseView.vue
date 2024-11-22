@@ -93,7 +93,9 @@ export default {
       <h4 class="py-3">Synonyms</h4>
       <div class="row">
         <p v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
-          {{ diseaseData.synonyms.join(", ") }}
+          <ul>
+            <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
+          </ul>
         </p>
         <p v-else class="text-muted">Not Available</p>
       </div>
