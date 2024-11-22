@@ -23,9 +23,9 @@ export default {
     "update:mechanismSynopsisSupport",
     "updateMechanismEvidence",
   ],
-  components: { 
+  components: {
     MechanismEvidence,
-    ToolTip
+    ToolTip,
   },
   data() {
     return {
@@ -64,8 +64,14 @@ export default {
                   molecular disease mechanisms In many cases, the different dominant molecular mechanisms are not mutually exclusive in a gene."
                 />
               </p>
-              <p>
-                See <a href="https://europepmc.org/article/MED/39172982" target="_blank" style="text-decoration: none">Badonyi and Marsh, 2024</a>
+              <p class="mb-0 mt-1">
+                See
+                <a
+                  href="https://europepmc.org/article/MED/39172982"
+                  target="_blank"
+                  style="text-decoration: none"
+                  >Badonyi and Marsh, 2024</a
+                >
               </p>
               <div class="col-xl-5 col-lg-6">
                 <table class="table table-bordered">
@@ -81,10 +87,10 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <p v-if="mechanismGeneStats.gain_of_function_mp">
+                        <span v-if="mechanismGeneStats.gain_of_function_mp">
                           {{ mechanismGeneStats.gain_of_function_mp }}
-                        </p>
-                        <p v-else class="text-muted">Not Available</p>
+                        </span>
+                        <span v-else class="text-muted">Not Available</span>
                       </td>
                     </tr>
                     <tr>
@@ -98,10 +104,10 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <p v-if="mechanismGeneStats.loss_of_function_mp">
-                            {{ mechanismGeneStats.loss_of_function_mp }}
-                        </p>
-                        <p v-else class="text-muted">Not Available</p>
+                        <span v-if="mechanismGeneStats.loss_of_function_mp">
+                          {{ mechanismGeneStats.loss_of_function_mp }}
+                        </span>
+                        <span v-else class="text-muted">Not Available</span>
                       </td>
                     </tr>
                     <tr>
@@ -115,10 +121,10 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <p v-if="mechanismGeneStats.dominant_negative_mp">
-                            {{ mechanismGeneStats.dominant_negative_mp }}
-                        </p>
-                        <p v-else class="text-muted">Not Available</p>
+                        <span v-if="mechanismGeneStats.dominant_negative_mp">
+                          {{ mechanismGeneStats.dominant_negative_mp }}
+                        </span>
+                        <span v-else class="text-muted">Not Available</span>
                       </td>
                     </tr>
                   </tbody>
