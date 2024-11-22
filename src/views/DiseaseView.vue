@@ -1,5 +1,6 @@
 <script>
 import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
+import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
@@ -9,6 +10,7 @@ export default {
       diseaseSummaryData: null,
       diseaseData: null,
       errorMsg: null,
+      confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
     };
   },
   created() {
@@ -88,21 +90,13 @@ export default {
     <div v-if="diseaseData && diseaseSummaryData">
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
-      <div class="pt-3">
-        <p v-for="item in diseaseData.ontology_terms">
-          {{ item.description }}
+      <h4 class="py-3">Synonyms</h4>
+      <div class="row">
+        <p v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
+          {{ diseaseData.synonyms.join(", ") }}
         </p>
+        <p v-else class="text-muted">Not Available</p>
       </div>
-      <p v-if="diseaseData.mim" class="pt-3">
-        <strong>OMIM: </strong>
-        <a
-          :href="`https://omim.org/entry/${diseaseData.mim}`"
-          target="_blank"
-          style="text-decoration: none"
-        >
-          {{ diseaseData.mim }}
-        </a>
-      </p>
       <h4 class="py-3">Latest Records</h4>
       <div class="table-responsive-xl">
         <table
@@ -115,10 +109,12 @@ export default {
           <thead>
             <tr>
               <th>G2P ID</th>
+              <th>Gene</th>
               <th>Genotype</th>
               <th>Variant Consequence</th>
               <th>Variant Type</th>
               <th>Mechanism</th>
+              <th>Confidence</th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -131,6 +127,15 @@ export default {
                   v-if="item.stable_id"
                 >
                   {{ item.stable_id }}
+                </router-link>
+              </td>
+              <td>
+                <router-link
+                  :to="`/gene/${item.locus}`"
+                  style="text-decoration: none"
+                  v-if="item.locus"
+                >
+                  {{ item.locus }}
                 </router-link>
               </td>
               <td>
@@ -156,6 +161,18 @@ export default {
                     ? item.molecular_mechanism.join(", ")
                     : item.molecular_mechanism
                 }}
+              </td>
+              <td>
+                <span
+                  v-if="item.confidence"
+                  class="badge text-white"
+                  :style="{
+                    backgroundColor:
+                      confidenceColorMap[item.confidence.toLowerCase()],
+                  }"
+                >
+                  {{ item.confidence }}
+                </span>
               </td>
               <td>
                 <span
