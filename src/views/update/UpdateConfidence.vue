@@ -29,6 +29,14 @@ export default {
       updateConfidenceSuccessMsg: null,
     };
   },
+  computed: {
+    reorderedConfidenceCategoryList() {
+      return this.attributesData.confidence_category.sort(
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
+      );
+    },
+  },
   methods: {
     updateConfidence() {
       if (!isUserLoggedIn()) {
@@ -82,12 +90,6 @@ export default {
             "Unable to update confidence. Please try again later.";
           console.log(error);
         });
-    },
-    reOrderConfidenceCategoryList() {
-      return this.attributesData.confidence_category.sort(
-        (a, b) =>
-          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
-      );
     },
   },
 };
