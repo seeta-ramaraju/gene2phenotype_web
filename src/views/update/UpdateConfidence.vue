@@ -145,7 +145,7 @@ export default {
                   v-model="level"
                 >
                   <option
-                    v-for="item in reOrderConfidenceCategoryList()"
+                    v-for="item in reOrderConfidenceCategoryList"
                     :value="item"
                   >
                     {{ item }}
