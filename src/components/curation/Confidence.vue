@@ -1,4 +1,5 @@
 <script>
+import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
 export default {
   props: {
     attributesData: Object,
@@ -7,6 +8,14 @@ export default {
     inputPublications: Object,
   },
   emits: ["update:justification", "update:level"],
+  computed: {
+    reorderedConfidenceCategoryList() {
+      return this.attributesData.confidence_category.sort(
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
+      );
+    },
+  },
 };
 </script>
 <template>
@@ -86,7 +95,7 @@ export default {
               >
                 <option value="">Select</option>
                 <option
-                  v-for="item in attributesData.confidence_category"
+                  v-for="item in reorderedConfidenceCategoryList"
                   :value="item"
                 >
                   {{ item }}

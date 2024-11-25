@@ -1,5 +1,6 @@
 <script>
 import LoginErrorAlert from "../../components/alert/LoginErrorAlert.vue";
+import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
 import {
   isUserLoggedIn,
   logOutUser,
@@ -27,6 +28,14 @@ export default {
       isUpdateConfidenceSuccess: false,
       updateConfidenceSuccessMsg: null,
     };
+  },
+  computed: {
+    reorderedConfidenceCategoryList() {
+      return this.attributesData.confidence_category.sort(
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(a) - ConfidenceAttribsOrder.indexOf(b)
+      );
+    },
   },
   methods: {
     updateConfidence() {
@@ -136,7 +145,7 @@ export default {
                   v-model="level"
                 >
                   <option
-                    v-for="item in attributesData.confidence_category"
+                    v-for="item in reOrderConfidenceCategoryList"
                     :value="item"
                   >
                     {{ item }}
