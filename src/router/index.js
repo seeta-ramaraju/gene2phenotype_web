@@ -23,6 +23,7 @@ import {
 } from "../utility/AuthenticationUtility.js";
 import UpdateRecordView from "../views/UpdateRecordView.vue";
 import ContactPageView from "../views/ContactPageView.vue";
+import AddPublicationView from "../views/AddPublicationView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +100,12 @@ const router = createRouter({
       path: "/lgd/update/:stableId",
       name: "update-g2p-record",
       component: UpdateRecordView,
+      meta: { requiresLogIn: true },
+    },
+    {
+      path: "/lgd/add-publication/:stableId",
+      name: "add-publication",
+      component: AddPublicationView,
       meta: { requiresLogIn: true },
     },
     {
