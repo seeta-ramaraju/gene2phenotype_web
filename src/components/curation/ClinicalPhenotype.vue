@@ -1,5 +1,6 @@
 <script>
 import { HPO_SEARCH_API_URL } from "../../utility/UrlConstants.js";
+import ToolTip from "../tooltip/ToolTip.vue";
 export default {
   data() {
     return {
@@ -14,6 +15,7 @@ export default {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
   },
+  components: { ToolTip },
   emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
   methods: {
     initializeStateForPmid(pmid) {
@@ -38,13 +40,14 @@ export default {
         const hpoApiResponse = await fetch(
           `${HPO_SEARCH_API_URL}?q=${this.searchTerm[pmid]}&page=0&limit=10`
         );
-        if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO API");
+        if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO data");
 
         const ontology_data = await hpoApiResponse.json();
         this.HPOsearchResponseJson[pmid] = ontology_data.terms;
       } catch (error) {
         this.HPOsearchResponseJson[pmid] = [];
-        this.HPOAPIerrormsg[pmid] = "HPO API not working, try again later";
+        this.HPOAPIerrormsg[pmid] =
+          "Failed to fetch HPO data, please try again later.";
         console.log(this.HPOAPIerrormsg[pmid]);
       } finally {
         this.isLoadingValue[pmid] = false;
@@ -89,11 +92,6 @@ export default {
       updatedClinicalPhenotype[pmid].summary = inputValue;
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
     },
-    handleBlur(pmid) {
-      setTimeout(() => {
-        this.showDropDown[pmid] = false;
-      }, 100);
-    },
   },
 };
 </script>
@@ -133,54 +131,82 @@ export default {
               </div>
             </div>
             <div class="row pt-3">
-              <label :for="`search_phenotype_${pmid}`"
-                >Search Phenotypes using the Human Phenotype Ontology
-                database</label
-              >
-              <div class="d-flex align-items-center position-relative">
-                <input
-                  type="text"
-                  :id="`search_phenotype_${pmid}`"
-                  placeholder="E.g. Abnormality of the kidney"
-                  v-model="searchTerm[pmid]"
-                  @input="onInput(pmid)"
-                  @focus="showDropDown[pmid] = true"
-                  @blur="handleBlur(pmid)"
-                  class="form-control dropdown-toggle"
+              <div class="dropdown">
+                <button
+                  class="btn btn-primary dropdown-toggle"
+                  type="button"
                   data-bs-toggle="dropdown"
-                  :aria-expanded="showDropDown[pmid]"
-                />
-                <ul
-                  v-show="
-                    HPOsearchResponseJson[pmid] &&
-                    HPOsearchResponseJson[pmid].length > 0 &&
-                    showDropDown[pmid]
-                  "
-                  class="dropdown-menu"
-                  @mousedown.prevent
-                  :aria-labelledby="`search_phenotype_${pmid}`"
+                  aria-expanded="false"
                 >
-                  <li
-                    v-for="term in HPOsearchResponseJson[pmid]"
-                    :key="term.id"
-                    @mousedown="selectTerm(pmid, term)"
-                    class="dropdown-item"
+                  Click to search HPO terms
+                </button>
+                <div class="dropdown-menu w-50">
+                  <form class="p-3">
+                    <label :for="`search_phenotype_${pmid}`" class="form-label">
+                      Search and select Human Phenotype Ontology terms
+                      <ToolTip
+                        toolTipText="Atleast 3 letters required to display HPO term suggestions."
+                      />
+                    </label>
+                    <input
+                      type="text"
+                      :id="`search-phenotype-${pmid}`"
+                      placeholder="E.g. Abnormality of the kidney"
+                      v-model="searchTerm[pmid]"
+                      @input="onInput(pmid)"
+                      class="form-control"
+                    />
+                    <div
+                      class="form-text"
+                      :id="`search-phenotype-${pmid}-input-help-text`"
+                    >
+                      Enter atleast 3 letters. Click outside to close.
+                    </div>
+                  </form>
+                  <div
+                    class="alert alert-danger m-3"
+                    role="alert"
+                    v-if="HPOAPIerrormsg[pmid]"
                   >
-                    {{ term.name }}
-                  </li>
-                </ul>
+                    <div>
+                      <i class="bi bi-exclamation-circle-fill"></i>
+                      {{ HPOAPIerrormsg[pmid] }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="
+                      HPOsearchResponseJson[pmid] &&
+                      HPOsearchResponseJson[pmid].length > 0 &&
+                      showDropDown[pmid]
+                    "
+                  >
+                    <div class="dropdown-divider"></div>
+                    <li>
+                      <h6 class="dropdown-header">
+                        HPO term suggestions
+                        <ToolTip toolTipText="Click any term to select it." />
+                      </h6>
+                    </li>
+                    <li
+                      v-for="term in HPOsearchResponseJson[pmid]"
+                      :key="term.id"
+                      @mousedown="selectTerm(pmid, term)"
+                      class="dropdown-item"
+                    >
+                      {{ term.name }}
+                    </li>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="row pt-3">
-              <div class="col-2">
-                <label
-                  :for="`phenotype-summary-input-${pmid}`"
-                  class="col-form-label"
-                >
-                  Summary
-                </label>
-              </div>
-              <div class="col-4">
+            <div class="row mt-4 w-50">
+              <label
+                :for="`phenotype-summary-input-${pmid}`"
+                class="col-form-label col-lg-3"
+              >
+                Summary
+              </label>
+              <div class="col-lg-9">
                 <textarea
                   class="form-control"
                   :id="`phenotype-summary-input-${pmid}`"
@@ -191,37 +217,14 @@ export default {
               </div>
             </div>
             <div
-              class="row py-3"
-              v-if="hpoTermsInputHelper && hpoTermsInputHelper[pmid]"
-            >
-              <div class="col-2">
-                <label
-                  :for="`phenotype-hpo-terms-input-${pmid}`"
-                  class="col-form-label"
-                >
-                  HPO Term(s)
-                </label>
-              </div>
-              <div class="col-4">
-                <textarea
-                  class="form-control"
-                  :id="`phenotype-hpo-terms-input-${pmid}`"
-                  :value="hpoTermsInputHelper[pmid].hpoTermsInput"
-                  @input="hpoTermsInputHandler(pmid, $event.target.value)"
-                  rows="3"
-                  :aria-describedby="`invalid-phenotype-hpo-terms-input-feedback-${pmid}`"
-                ></textarea>
-              </div>
-            </div>
-            <div
-              class="row py-3"
+              class="row pt-3"
               v-if="
                 clinicalPhenotype[pmid].hpo_terms &&
                 clinicalPhenotype[pmid].hpo_terms.length > 0
               "
             >
               <div class="col-12">
-                <strong><p class="mb-3">HPO Terms</p></strong>
+                <p>Selected HPO Term(s)</p>
               </div>
               <div class="col-6">
                 <table class="table table-bordered">
