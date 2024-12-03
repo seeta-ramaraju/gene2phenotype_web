@@ -261,7 +261,7 @@ export default {
                           </td>
                           <td>
                             <a
-                              v-bind:href="`https://europepmc.org/article/MED/${key}`"
+                              :href="`https://europepmc.org/article/MED/${key}`"
                               style="text-decoration: none"
                               target="_blank"
                             >

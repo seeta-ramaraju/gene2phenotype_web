@@ -94,7 +94,7 @@ export default {
                   <td>
                     <a
                       v-if="item.accession"
-                      v-bind:href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
+                      :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
                       style="text-decoration: none"
                       target="_blank"
                     >
@@ -127,7 +127,7 @@ export default {
                       >
                         <span v-if="index < item.publications.length - 1">
                           <a
-                            v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                            :href="`https://europepmc.org/article/MED/${publicationItem}`"
                             style="text-decoration: none"
                             target="_blank"
                           >
@@ -137,7 +137,7 @@ export default {
                         </span>
                         <a
                           v-else
-                          v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                          :href="`https://europepmc.org/article/MED/${publicationItem}`"
                           style="text-decoration: none"
                           target="_blank"
                         >

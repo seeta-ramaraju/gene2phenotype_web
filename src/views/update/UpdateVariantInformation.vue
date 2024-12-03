@@ -105,7 +105,7 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
-                                      v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                      :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                       style="text-decoration: none"
                                       target="_blank"
                                     >
@@ -115,7 +115,7 @@ export default {
                                   </span>
                                   <a
                                     v-else
-                                    v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                    :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                     style="text-decoration: none"
                                     target="_blank"
                                   >

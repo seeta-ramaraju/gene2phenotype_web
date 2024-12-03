@@ -69,7 +69,7 @@ export default {
                         <td>
                           <a
                             v-if="item.publication?.pmid"
-                            v-bind:href="`https://europepmc.org/article/MED/${item.publication?.pmid}`"
+                            :href="`https://europepmc.org/article/MED/${item.publication?.pmid}`"
                             style="text-decoration: none"
                             target="_blank"
                           >
@@ -157,7 +157,7 @@ export default {
                     <div class="row g-3">
                       <div class="col-12">
                         <a
-                          v-bind:href="`https://europepmc.org/article/MED/${pmid}`"
+                          :href="`https://europepmc.org/article/MED/${pmid}`"
                           style="text-decoration: none"
                           v-if="pmid"
                           target="_blank"
