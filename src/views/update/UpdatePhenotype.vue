@@ -234,7 +234,7 @@ export default {
                     <div class="dropdown-menu w-50">
                       <form class="p-3">
                         <label
-                          :for="`search_phenotype_${pmid}`"
+                          :for="`search-phenotype-${pmid}`"
                           class="form-label"
                         >
                           Search and select Human Phenotype Ontology terms

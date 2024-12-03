@@ -142,7 +142,7 @@ export default {
                 </button>
                 <div class="dropdown-menu w-50">
                   <form class="p-3">
-                    <label :for="`search_phenotype_${pmid}`" class="form-label">
+                    <label :for="`search-phenotype-${pmid}`" class="form-label">
                       Search and select Human Phenotype Ontology terms
                       <ToolTip
                         toolTipText="Atleast 3 letters required to display HPO term suggestions."
