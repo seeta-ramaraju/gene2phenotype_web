@@ -69,7 +69,8 @@ export default {
       this.isUpdateApiCallLoading = true;
 
       const requestBody = prepareInputForNewPublicationDataSubmission(
-        this.input
+        this.input,
+        this.locusGeneDiseaseData
       );
 
       let responseStatus = null;
@@ -88,7 +89,7 @@ export default {
         })
         .then((responseJson) => {
           this.isUpdateApiCallLoading = false;
-          if (responseStatus === 200) {
+          if (responseStatus === 201) {
             this.isUpdateDataSuccess = true;
             this.updateDataSuccessMsg = responseJson.message;
           } else {
