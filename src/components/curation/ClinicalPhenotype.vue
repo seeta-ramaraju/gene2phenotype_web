@@ -160,7 +160,8 @@ export default {
                       class="form-text"
                       :id="`search-phenotype-${pmid}-input-help-text`"
                     >
-                      Enter atleast 3 letters. Click outside to close.
+                      Enter atleast 3 letters to find and select HPO term(s)
+                      then click outside to close.
                     </div>
                   </form>
                   <div
