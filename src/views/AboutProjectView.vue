@@ -13,7 +13,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2 class="pb-3">The Project</h2>
+    <h2 class="pb-3">The G2P Project</h2>
     <p>
       The G2P project shares detailed, evidence-based gene-disease models,
       curated from the literature by experts. These data can be used in the G2P
@@ -23,13 +23,17 @@ export default {
       accelerate diagnosis.
     </p>
     <p>
-      The project was established in 2014, focused on developmental disorders
-      and has since been generalised to cover other disease areas. All data is
-      made freely available. The initial paper is available
-      <a
-        v-bind:href="initialpaper"
-        target="_blank"
-        style="text-decoration: none"
+      The G2P project was established by David FitzPatrick in 2012 with the aim
+      of accelerating the diagnosis of children with developmental disorders. In
+      2014, the database moved from the University of Edinburgh to EMBL-EBI and
+      a dedicated website was launched to improve data accessibility. G2P has
+      been generalised to cover other disease areas and extended to capture
+      additional information to provide a more detailed understanding of disease
+      mechanism.
+    </p>
+    <p>
+      All data is made freely available. The initial paper is available
+      <a :href="initialpaper" target="_blank" style="text-decoration: none"
         >here</a
       >.
     </p>
@@ -72,7 +76,7 @@ export default {
     </p>
     <p>
       G2P is a member of the Gene Curation Coalition (<a
-        v-bind:href="gencc"
+        :href="gencc"
         target="_blank"
         style="text-decoration: none"
         >GenCC</a
