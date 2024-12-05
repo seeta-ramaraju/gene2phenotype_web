@@ -8,6 +8,7 @@ import {
 } from "../utility/AuthenticationUtility.js";
 import AddPanelModal from "./update/AddPanelModal.vue";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import UpdateRecordModal from "./update/UpdateRecordModal.vue";
 
 export default {
   data() {
@@ -24,6 +25,7 @@ export default {
   },
   components: {
     AddPanelModal,
+    UpdateRecordModal,
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -116,9 +118,6 @@ export default {
         userPanelDescriptions.includes(item.description)
       );
     },
-    goToUpdateRecordPage() {
-      this.$router.push(`/lgd/update/${this.stableId}`);
-    },
     refreshPage() {
       this.$router.go(); // refresh current page
     },
@@ -169,7 +168,8 @@ export default {
         </button>
         <button
           class="btn btn-outline-primary"
-          @click="goToUpdateRecordPage"
+          data-bs-toggle="modal"
+          data-bs-target="#update-record-modal"
           v-if="!isPanelDataLoading && isLoggedIn() && isRecordPartOfUserPanels"
         >
           <i class="bi bi-pencil-square"></i> Update record
@@ -1208,6 +1208,7 @@ export default {
         :userPanels="userPanels"
         @refreshpage="refreshPage"
       />
+      <UpdateRecordModal :stableId="stableId" />
     </div>
   </div>
 </template>
