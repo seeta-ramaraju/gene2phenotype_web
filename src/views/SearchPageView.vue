@@ -133,7 +133,7 @@ export default {
       </div>
     </div>
     <div v-if="searchData">
-      <p>Total results: {{ searchData.count }}</p>
+      <p class="mb-1">Total results: {{ searchData.count }}</p>
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
@@ -211,7 +211,7 @@ export default {
         </table>
         <p v-else style="color: grey">Not Available</p>
       </div>
-      <div class="row mx-1 justify-content-between">
+      <div class="row mx-1 justify-content-between mb-3">
         <div class="col-2 px-0">
           <button
             type="button"
@@ -236,6 +236,12 @@ export default {
           </button>
         </div>
       </div>
+      <p>
+        <i class="bi bi-info-circle"></i> G2P records are curated by experts on
+        a gene-disease basis from publications and may not be a comprehensive
+        record for any specific gene or disease. Please observe the 'last
+        updated' dates on records.
+      </p>
     </div>
   </div>
 </template>
