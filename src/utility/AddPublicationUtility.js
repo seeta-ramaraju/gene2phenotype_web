@@ -210,14 +210,10 @@ export const prepareInputForNewPublicationDataSubmission = (
     preparedInput.mechanism_evidence = mechanismEvidenceArray;
   }
 
-  preparedInput.molecular_mechanism = {
-    name: isMechanismUpdated(locusGeneDiseaseData, clonedInput)
-      ? clonedInput.molecular_mechanism.name
-      : "",
-    support: isMechanismSupportUpdated(locusGeneDiseaseData, clonedInput)
-      ? clonedInput.molecular_mechanism.support
-      : "",
-  };
+  // IF molecular_mechanism is updated THEN include it in preparedInput object
+  if (isMechanismUpdated(locusGeneDiseaseData, clonedInput)) {
+    preparedInput.molecular_mechanism = clonedInput.molecular_mechanism;
+  }
 
   // IF mechanism_synopsis is updated THEN include it in preparedInput object
   if (isMechanismSynopsisUpdated(locusGeneDiseaseData, clonedInput)) {
@@ -280,19 +276,16 @@ export const prepareInputForNewPublicationDataSubmission = (
 const isMechanismUpdated = (locusGeneDiseaseData, clonedInput) => {
   const currentMechanism =
     locusGeneDiseaseData.molecular_mechanism.mechanism ?? ""; // if mechanism is null or undefined then it will set the value as empty string
-
-  const newMechanism = clonedInput.molecular_mechanism.name;
-
-  return newMechanism !== currentMechanism;
-};
-
-const isMechanismSupportUpdated = (locusGeneDiseaseData, clonedInput) => {
   const currentMechanismSupport =
     locusGeneDiseaseData.molecular_mechanism.support ?? ""; // if support is null or undefined then it will set the value as empty string
 
+  const newMechanism = clonedInput.molecular_mechanism.name;
   const newMechanismSupport = clonedInput.molecular_mechanism.support;
 
-  return newMechanismSupport !== currentMechanismSupport;
+  return (
+    newMechanism !== currentMechanism ||
+    newMechanismSupport !== currentMechanismSupport
+  );
 };
 
 const isMechanismSynopsisUpdated = (locusGeneDiseaseData, clonedInput) => {
