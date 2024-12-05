@@ -1,16 +1,16 @@
 <script>
 export default {
   props: {
-    toolTipText: String
+    toolTipText: String,
   },
 };
 </script>
 <template>
-    <span class="bi bi-info-circle custom-tooltip">
-        <span class="custom-tooltip-text">
-            {{ toolTipText }}
-        </span>
+  <span class="bi bi-info-circle custom-tooltip">
+    <span class="custom-tooltip-text">
+      {{ toolTipText }}
     </span>
+  </span>
 </template>
 <style scoped>
 .custom-tooltip {
