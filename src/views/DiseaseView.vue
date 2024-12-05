@@ -92,11 +92,9 @@ export default {
       <h2 v-else class="text-muted">Not Available</h2>
       <h4 class="py-3">Synonyms</h4>
       <div class="row">
-        <p v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
-          <ul>
-            <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
-          </ul>
-        </p>
+        <ul v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
+          <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
+        </ul>
         <p v-else class="text-muted">Not Available</p>
       </div>
       <h4 class="py-3">Latest Records</h4>
@@ -220,7 +218,7 @@ export default {
           <tr v-for="item in diseaseData.ontology_terms">
             <td>
               <a
-                v-bind:href="`https://www.omim.org/entry/${item.accession}`"
+                :href="`https://www.omim.org/entry/${item.accession}`"
                 v-if="item.source === 'OMIM'"
                 target="_blank"
                 style="text-decoration: none"
@@ -228,7 +226,7 @@ export default {
                 {{ item.accession }}
               </a>
               <a
-                v-bind:href="`https://monarchinitiative.org/${item.accession}`"
+                :href="`https://monarchinitiative.org/${item.accession}`"
                 v-else-if="item.source === 'Mondo'"
                 target="_blank"
                 style="text-decoration: none"
