@@ -42,10 +42,10 @@
         >g2p-help@ebi.ac.uk</a
       >
       for further information. Please acknowledge gene2phenotype (<a
-        href="http://www.ebi.ac.uk/gene2phenotype/"
+        href="https://www.ebi.ac.uk/gene2phenotype/"
         target="_blank"
         style="text-decoration: none"
-        >http://www.ebi.ac.uk/gene2phenotype/</a
+        >https://www.ebi.ac.uk/gene2phenotype/</a
       >) if you use these data in your analyses or publications. For more
       information on G2P see our
       <router-link to="/publications" style="text-decoration: none"
