@@ -243,7 +243,7 @@ export default {
                     Update draft
                   </router-link>
                   <a
-                    v-bind:href="`mailto:${item.curator_email}`"
+                    :href="`mailto:${item.curator_email}`"
                     style="text-decoration: none"
                     target="_blank"
                     v-else

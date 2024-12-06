@@ -30,7 +30,7 @@ export default {
     </h2>
     <p>
       The Ensembl Variant Effect Predictor (<a
-        v-bind:href="vep"
+        :href="vep"
         target="_blank"
         style="text-decoration: none"
         >Ensembl VEP</a
@@ -51,19 +51,19 @@ export default {
     <p>
       By default VEP-G2P checks for known genomic variants that are colocated
       with the input variants and switches on the following Ensembl VEP options:
-      <a v-bind:href="individual" target="_blank" style="text-decoration: none"
+      <a :href="individual" target="_blank" style="text-decoration: none"
         >individual information</a
       >,
-      <a v-bind:href="symbol" target="_blank" style="text-decoration: none"
+      <a :href="symbol" target="_blank" style="text-decoration: none"
         >gene symbol</a
       >,
-      <a v-bind:href="frequency" target="_blank" style="text-decoration: none"
+      <a :href="frequency" target="_blank" style="text-decoration: none"
         >global allele frequency from 1000 Genomes Phase 3</a
       >,
-      <a v-bind:href="sift" target="_blank" style="text-decoration: none"
+      <a :href="sift" target="_blank" style="text-decoration: none"
         >SIFT predictions</a
       >,
-      <a v-bind:href="polyphen" target="_blank" style="text-decoration: none"
+      <a :href="polyphen" target="_blank" style="text-decoration: none"
         >PolyPhen-2 predictions</a
       >.
     </p>
@@ -126,17 +126,13 @@ export default {
     <h6 class="pb-2">Installing and running VEP-G2P</h6>
     <p>
       Please refer to the Ensembl VEP
-      <a v-bind:href="vep_options" target="_blank" style="text-decoration: none"
+      <a :href="vep_options" target="_blank" style="text-decoration: none"
         >documentation</a
       >
       for information on how to install and run Ensembl VEP locally. Using the
-      <a v-bind:href="docker" target="_blank" style="text-decoration: none"
-        >Docker</a
-      >
+      <a :href="docker" target="_blank" style="text-decoration: none">Docker</a>
       image is the simplest approach. Plugins including
-      <a v-bind:href="g2p" target="_blank" style="text-decoration: none"
-        >VEP-G2P</a
-      >
+      <a :href="g2p" target="_blank" style="text-decoration: none">VEP-G2P</a>
       are present in the Docker image or installed in the interactive
       installation process. The G2P datafile for your panel of choice can be
       downloaded here or PanelApp downloads can also be used.
@@ -323,7 +319,7 @@ export default {
         installation process.
       </li>
       <li>
-        <a v-bind:href="vep_other" target="_blank" style="text-decoration: none"
+        <a :href="vep_other" target="_blank" style="text-decoration: none"
           >More ways to make sure that your Ensembl VEP installation is running
           as fast as possible.</a
         >

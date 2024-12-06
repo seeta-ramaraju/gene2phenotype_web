@@ -17,17 +17,13 @@ export default {
     <h4 class="pb-2">Citing G2P</h4>
     <h6 class="pb-2">
       If you have used Gene2Phenotype in your work, please cite the
-      <a
-        v-bind:href="gene2phenotype"
-        style="text-decoration: none"
-        target="_blank"
-      >
+      <a :href="gene2phenotype" style="text-decoration: none" target="_blank">
         website
       </a>
       with date accessed and below article.
     </h6>
     <a
-      v-bind:href="gene2phenotype_article"
+      :href="gene2phenotype_article"
       style="text-decoration: none"
       target="_blank"
     >
@@ -44,8 +40,10 @@ export default {
       </p>
     </div>
     <h4 class="pb-2">Additional G2P Publications</h4>
-    <a v-bind:href="curation" style="text-decoration: none" target="_blank">
-      <h6>Curating genomic disease-gene relationships with Gene2Phenotype (G2P).</h6>
+    <a :href="curation" style="text-decoration: none" target="_blank">
+      <h6>
+        Curating genomic disease-gene relationships with Gene2Phenotype (G2P).
+      </h6>
     </a>
     <div class="pb-2 citation-div">
       <p>
@@ -56,7 +54,7 @@ export default {
         https://doi.org/10.1186/s13073-024-01398-1.
       </p>
     </div>
-    <a v-bind:href="eye" style="text-decoration: none" target="_blank">
+    <a :href="eye" style="text-decoration: none" target="_blank">
       <h6>
         EyeG2P: an automated variant filtering approach improves efficiency of
         diagnostic genomic testing for inherited ophthalmic disorders.
@@ -70,11 +68,7 @@ export default {
         2023;60:810-818.
       </p>
     </div>
-    <a
-      v-bind:href="gene_validity"
-      style="text-decoration: none"
-      target="_blank"
-    >
+    <a :href="gene_validity" style="text-decoration: none" target="_blank">
       <h6>
         Beyond gene-disease validity: capturing structured data on inheritance,
         allelic-requirement, disease-relevant variant classes, and disease

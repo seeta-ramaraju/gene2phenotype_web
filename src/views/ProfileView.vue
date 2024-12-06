@@ -1,8 +1,6 @@
 <script>
 import { PROFILE_URL } from "../utility/UrlConstants.js";
-import {
-  appendAuthenticationHeaders
-} from "../utility/AuthenticationUtility.js";
+import { appendAuthenticationHeaders } from "../utility/AuthenticationUtility.js";
 
 export default {
   data() {
@@ -10,7 +8,7 @@ export default {
       userProfileData: null,
       errorMsg: null,
       isDataLoading: false,
-    }
+    };
   },
   created() {
     // watch the params of this route to fetch this data again
@@ -71,7 +69,7 @@ export default {
     <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
-    <div class="pt-3" v-if="userProfileData">
+    <div v-if="userProfileData">
       <table class="table" style="max-width: 80%">
         <tbody>
           <tr>
@@ -85,12 +83,14 @@ export default {
           <tr>
             <th>Panel(s)</th>
             <td>
-              <span v-if="userProfileData.panels && userProfileData.panels.length > 0">
-                  {{ userProfileData.panels.join(", ") }}
+              <span
+                v-if="
+                  userProfileData.panels && userProfileData.panels.length > 0
+                "
+              >
+                {{ userProfileData.panels.join(", ") }}
               </span>
-              <span v-else class="text-muted">
-                  No permission to edit
-              </span>
+              <span v-else class="text-muted">No permission to edit</span>
             </td>
           </tr>
         </tbody>

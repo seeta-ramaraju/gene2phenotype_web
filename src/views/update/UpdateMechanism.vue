@@ -186,192 +186,199 @@ export default {
         class="accordion-collapse collapse"
       >
         <div class="accordion-body">
-          <p class="mb-0 fw-bold">Mechanism</p>
-          <div
-            v-if="isUpdateApiCallLoading"
-            class="d-flex justify-content-center"
-            style="margin-top: 122px; margin-bottom: 122px"
-          >
-            <div class="spinner-border text-secondary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-          <div
-            class="alert alert-success mt-3"
-            role="alert"
-            v-else-if="isUpdateMechanismSuccess"
-          >
-            <div>
-              <i class="bi bi-check-circle-fill"></i>
-              {{ updateMechanismSuccessMsg }}
-            </div>
-          </div>
-          <div v-else>
-            <div class="row g-3 px-3 pt-3">
-              <div class="col-lg-2">
-                <label for="mechanism-input" class="col-form-label">
-                  Mechanism
-                </label>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-6">
-                <select
-                  id="mechanism-input"
-                  class="form-select"
-                  v-model="mechanism"
-                >
-                  <option value="">Select</option>
-                  <option v-for="item in mechanismAttribs" :value="item">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-6">
-                <select
-                  id="mechanism-input-source"
-                  class="form-select"
-                  v-model="mechanismSupport"
-                >
-                  <option value="">Select Source</option>
-                  <option v-for="item in mechanismSupportAttribs" :value="item">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="row g-3 px-3 py-3">
-              <div class="col-lg-2">
-                <label for="categorisation-input" class="col-form-label">
-                  Categorisation
-                </label>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-6">
-                <select
-                  id="categorisation-input"
-                  class="form-select"
-                  v-model="mechanismSynopsis"
-                >
-                  <option value="">Select</option>
-                  <option
-                    v-for="item in mechanismSynopsisAttribs"
-                    :value="item"
-                  >
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-xl-3 col-lg-3 col-6">
-                <select
-                  id="categorisation-input-source"
-                  class="form-select"
-                  v-model="mechanismSynopsisSupport"
-                >
-                  <option value="">Select Source</option>
-                  <option v-for="item in mechanismSupportAttribs" :value="item">
-                    {{ item }}
-                  </option>
-                </select>
+          <div class="row g-3 p-2">
+            <h5>Mechanism</h5>
+            <div
+              v-if="isUpdateApiCallLoading"
+              class="d-flex justify-content-center"
+              style="margin-top: 122px; margin-bottom: 122px"
+            >
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
               </div>
             </div>
             <div
-              v-if="
-                mechanismEvidence &&
-                Object.keys(mechanismEvidence).length > 0 &&
-                mechanismSupport === 'evidence'
-              "
+              class="alert alert-success mt-3"
+              role="alert"
+              v-else-if="isUpdateMechanismSuccess"
             >
-              <div class="row g-3 px-3 pt-3">
-                <h5>Evidence</h5>
+              <div>
+                <i class="bi bi-check-circle-fill"></i>
+                {{ updateMechanismSuccessMsg }}
+              </div>
+            </div>
+            <div v-else>
+              <div class="row">
+                <div class="col-lg-2">
+                  <label for="mechanism-input" class="col-form-label">
+                    Mechanism
+                  </label>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-6">
+                  <select
+                    id="mechanism-input"
+                    class="form-select"
+                    v-model="mechanism"
+                  >
+                    <option value="">Select</option>
+                    <option v-for="item in mechanismAttribs" :value="item">
+                      {{ item }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-6">
+                  <select
+                    id="mechanism-input-source"
+                    class="form-select"
+                    v-model="mechanismSupport"
+                  >
+                    <option value="">Select Source</option>
+                    <option
+                      v-for="item in mechanismSupportAttribs"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+              <div class="row pt-3 pb-4">
+                <div class="col-lg-2">
+                  <label for="categorisation-input" class="col-form-label">
+                    Categorisation
+                  </label>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-6">
+                  <select
+                    id="categorisation-input"
+                    class="form-select"
+                    v-model="mechanismSynopsis"
+                  >
+                    <option value="">Select</option>
+                    <option
+                      v-for="item in mechanismSynopsisAttribs"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-6">
+                  <select
+                    id="categorisation-input-source"
+                    class="form-select"
+                    v-model="mechanismSynopsisSupport"
+                  >
+                    <option value="">Select Source</option>
+                    <option
+                      v-for="item in mechanismSupportAttribs"
+                      :value="item"
+                    >
+                      {{ item }}
+                    </option>
+                  </select>
+                </div>
               </div>
               <div
-                class="row g-3 px-3 py-3"
-                v-for="pmid in Object.keys(mechanismEvidence)"
+                v-if="
+                  mechanismEvidence &&
+                  Object.keys(mechanismEvidence).length > 0 &&
+                  mechanismSupport === 'evidence'
+                "
               >
-                <div class="col-12">
-                  <h6>Publication (PMID: {{ pmid }})</h6>
-                </div>
-                <div class="col-12">
-                  <ul style="list-style: none; padding-left: 0">
-                    <li v-for="item in evidenceTypesAttribs">
-                      {{ item.primaryType }}
-                      <ul style="list-style: none">
-                        <li v-for="secondaryTypeItem in item.secondaryType">
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              :id="`evidence-type-input-${pmid}-${kebabCase(
-                                item.primaryType
-                              )}-${kebabCase(secondaryTypeItem)}`"
-                              v-model="
-                                mechanismEvidence[pmid].evidence_types[
+                <h5 class="mb-0">Evidence</h5>
+                <div
+                  class="pt-3 pb-4"
+                  v-for="pmid in Object.keys(mechanismEvidence)"
+                >
+                  <div class="col-12">
+                    <h6 class="mb-3">Publication (PMID: {{ pmid }})</h6>
+                  </div>
+                  <div class="col-12">
+                    <ul style="list-style: none; padding-left: 0">
+                      <li v-for="item in evidenceTypesAttribs">
+                        {{ item.primaryType }}
+                        <ul style="list-style: none">
+                          <li v-for="secondaryTypeItem in item.secondaryType">
+                            <div class="form-check">
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                :id="`evidence-type-input-${pmid}-${kebabCase(
                                   item.primaryType
-                                ]
-                              "
-                              :value="secondaryTypeItem"
-                            />
-                            <label
-                              class="form-check-label"
-                              :for="`evidence-type-input-${pmid}-${kebabCase(
-                                item.primaryType
-                              )}-${kebabCase(secondaryTypeItem)}`"
-                            >
-                              {{ secondaryTypeItem }}
-                            </label>
-                          </div>
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                </div>
-                <div class="row mt-2 w-50">
-                  <label
-                    :for="`evidence-type-input-${pmid}-description`"
-                    class="col-form-label col-lg-3"
-                  >
-                    Description
-                  </label>
-                  <div class="col-lg-9">
-                    <textarea
-                      class="form-control"
-                      :id="`evidence-type-input-${pmid}-description`"
-                      rows="3"
-                      v-model="mechanismEvidence[pmid].description"
+                                )}-${kebabCase(secondaryTypeItem)}`"
+                                v-model="
+                                  mechanismEvidence[pmid].evidence_types[
+                                    item.primaryType
+                                  ]
+                                "
+                                :value="secondaryTypeItem"
+                              />
+                              <label
+                                class="form-check-label"
+                                :for="`evidence-type-input-${pmid}-${kebabCase(
+                                  item.primaryType
+                                )}-${kebabCase(secondaryTypeItem)}`"
+                              >
+                                {{ secondaryTypeItem }}
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="row mt-2 w-50">
+                    <label
+                      :for="`evidence-type-input-${pmid}-description`"
+                      class="col-form-label col-lg-3"
                     >
-                    </textarea>
+                      Description
+                    </label>
+                    <div class="col-lg-9">
+                      <textarea
+                        class="form-control"
+                        :id="`evidence-type-input-${pmid}-description`"
+                        rows="3"
+                        v-model="mechanismEvidence[pmid].description"
+                      >
+                      </textarea>
+                    </div>
                   </div>
                 </div>
               </div>
+              <p
+                v-if="
+                  !(
+                    mechanismEvidence &&
+                    Object.keys(mechanismEvidence).length > 0
+                  ) && mechanismSupport === 'evidence'
+                "
+              >
+                <i class="bi bi-info-circle"></i> Please add 1 or more
+                Publication(s) to provide information on evidence.
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click="updateMechanism"
+                v-else
+              >
+                <i class="bi bi-pencil-square"></i> Update mechanism
+              </button>
             </div>
-            <p
-              v-if="
-                !(
-                  mechanismEvidence && Object.keys(mechanismEvidence).length > 0
-                ) && mechanismSupport === 'evidence'
-              "
+            <div
+              class="alert alert-danger mt-3"
+              role="alert"
+              v-if="updateMechanismErrorMsg"
             >
-              <i class="bi bi-info-circle"></i> Please add 1 or more
-              Publication(s) to provide information on evidence.
-            </p>
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="updateMechanism"
-              v-else
-            >
-              <i class="bi bi-pencil-square"></i> Update mechanism
-            </button>
-          </div>
-          <div
-            class="alert alert-danger mt-3"
-            role="alert"
-            v-if="updateMechanismErrorMsg"
-          >
-            <div>
-              <i class="bi bi-exclamation-circle-fill"></i>
-              {{ updateMechanismErrorMsg }}
+              <div>
+                <i class="bi bi-exclamation-circle-fill"></i>
+                {{ updateMechanismErrorMsg }}
+              </div>
             </div>
+            <LoginErrorAlert v-if="isLogInSessionExpired" />
           </div>
-          <LoginErrorAlert v-if="isLogInSessionExpired" />
         </div>
       </div>
     </div>

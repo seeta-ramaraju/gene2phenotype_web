@@ -5,7 +5,7 @@ export default {
   data() {
     return {
       isReadMoreActivated: false,
-      maxCharacters: MAX_CHARACTERS
+      maxCharacters: MAX_CHARACTERS,
     };
   },
   props: {
@@ -15,8 +15,8 @@ export default {
   methods: {
     toggleReadMore() {
       this.isReadMoreActivated = !this.isReadMoreActivated;
-    }
-  }
+    },
+  },
 };
 </script>
 <template>
@@ -69,23 +69,37 @@ export default {
             </div>
             <div style="width: 90%">
               <p v-if="geneFunctionData?.function?.protein_function">
-                <span v-if="isReadMoreActivated || geneFunctionData.function.protein_function.length <= maxCharacters">
+                <span
+                  v-if="
+                    isReadMoreActivated ||
+                    geneFunctionData.function.protein_function.length <=
+                      maxCharacters
+                  "
+                >
                   {{ geneFunctionData.function.protein_function }}
                 </span>
                 <span v-else>
-                  {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
+                  {{
+                    geneFunctionData.function.protein_function.slice(
+                      0,
+                      maxCharacters
+                    )
+                  }}&hellip;
                 </span>
                 <button
                   class="btn btn-link p-0 ml-2 align-baseline"
                   @click="toggleReadMore"
-                  v-if="geneFunctionData.function.protein_function.length > maxCharacters"
+                  v-if="
+                    geneFunctionData.function.protein_function.length >
+                    maxCharacters
+                  "
                 >
                   {{ isReadMoreActivated ? "Show less" : "Show more" }}
                 </button>
                 <br />
                 <b>Source:</b>
                 <a
-                  v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+                  :href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
                   style="text-decoration: none"
                   target="_blank"
                 >
@@ -101,7 +115,7 @@ export default {
             </div>
             <div style="width: 90%">
               <a
-                v-bind:href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
+                :href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
                 style="text-decoration: none"
                 v-if="geneData.ids?.OMIM"
                 target="_blank"
@@ -117,7 +131,7 @@ export default {
             </div>
             <div style="width: 90%">
               <a
-                v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${geneData.ids.HGNC}`"
+                :href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${geneData.ids.HGNC}`"
                 style="text-decoration: none"
                 v-if="geneData.ids?.HGNC"
                 target="_blank"
@@ -133,7 +147,7 @@ export default {
             </div>
             <div style="width: 90%">
               <a
-                v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
+                :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
                 style="text-decoration: none"
                 v-if="geneData.ids?.Ensembl"
                 target="_blank"
@@ -145,7 +159,7 @@ export default {
           </div>
           <div class="row">
             <a
-              v-bind:href="`https://www.deciphergenomics.org/gene/${geneData.gene_symbol}`"
+              :href="`https://www.deciphergenomics.org/gene/${geneData.gene_symbol}`"
               style="text-decoration: none"
               target="_blank"
             >
