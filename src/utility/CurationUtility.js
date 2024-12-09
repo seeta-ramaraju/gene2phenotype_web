@@ -492,3 +492,31 @@ export const prepareInputForUpdating = (previousInput) => {
     },
   };
 };
+
+export const appendObjectToPublications = (publications, pubDict) => {
+  //publications is the new publication
+  //pubDict is the old JSON
+  // updating the information from pubDict to the new publications
+  // Initialize a new array to hold the combined objects
+
+  // Check if publications.results is an array
+  let new_publications = publications.results;
+
+  // Iterate through the new publications
+  for (const [pmid, pubData] of Object.entries(pubDict)) {
+    let existingPub = new_publications.find((pub) => pub.pmid == pmid);
+    if (existingPub) {
+      existingPub.families = pubData.families ?? existingPub.families;
+      existingPub.affectedIndividuals =
+        pubData.affectedIndividuals ?? existingPub.affectedIndividuals;
+      existingPub.consanguineous =
+        pubData.consanguineous ?? existingPub.consanguineous;
+      existingPub.ancestries = pubData.ancestries ?? existingPub.ancestries;
+      existingPub.comment = pubData.comment ?? existingPub.comment;
+      existingPub.source = pubData.source ?? existingPub.source;
+    } else {
+      new_publications.push({ pmid, ...pubData });
+    }
+  }
+  return { result: new_publications };
+};

@@ -17,6 +17,7 @@ import {
   prepareInputForDataSubmission,
   prepareInputForUpdating,
   updateHpoTermsInputHelperWithPublicationsData,
+  appendObjectToPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
 import AlertModal from "../components/curation/AlertModal.vue";
@@ -38,6 +39,7 @@ import {
   UPDATE_SAVED_DRAFT_URL,
   USER_PANELS_URL,
 } from "../utility/UrlConstants";
+import { compileScript } from "vue/compiler-sfc";
 
 export default {
   created() {
@@ -275,13 +277,19 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
-            const publicationsData = responseJson;
+            let publicationsData = responseJson;
+            console.log(publicationsData);
+            publicationsData = appendObjectToPublications(
+              publicationsData,
+              this.previousInput.publications
+            );
             if (publicationsData && publicationsData.results) {
               this.previousInput = updateInputWithPublicationsData(
                 this.previousInput,
                 publicationsData
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
+              console.log(pmidList);
               this.hpoTermsInputHelper =
                 updateHpoTermsInputHelperWithPublicationsData(pmidList);
             }
