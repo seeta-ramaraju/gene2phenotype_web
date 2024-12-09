@@ -277,8 +277,9 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
+            console.log(responseJson);
             let publicationsData = responseJson;
-            console.log(publicationsData);
+            // console.log(publicationsData);
             publicationsData = appendObjectToPublications(
               publicationsData,
               this.previousInput.publications

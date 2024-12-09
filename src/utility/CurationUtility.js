@@ -500,12 +500,15 @@ export const appendObjectToPublications = (publications, pubDict) => {
   // Initialize a new array to hold the combined objects
 
   // Check if publications.results is an array
-  let new_publications = publications.results;
+  let new_publications = publications.results || [];
 
-  // Iterate through the new publications
-  for (const [pmid, pubData] of Object.entries(pubDict)) {
-    let existingPub = new_publications.find((pub) => pub.pmid == pmid);
-    if (existingPub) {
+  const existingPmids = new Set(new_publications.map((pub) => pub.pmid));
+
+  // Iterate through pubDict and process each PMID
+  for (let [pmid, pubData] of Object.entries(pubDict)) {
+    if (existingPmids.has(pmid)) {
+      // Update existing publication
+      let existingPub = new_publications.find((pub) => pub.pmid == pmid);
       existingPub.families = pubData.families ?? existingPub.families;
       existingPub.affectedIndividuals =
         pubData.affectedIndividuals ?? existingPub.affectedIndividuals;
@@ -514,9 +517,27 @@ export const appendObjectToPublications = (publications, pubDict) => {
       existingPub.ancestries = pubData.ancestries ?? existingPub.ancestries;
       existingPub.comment = pubData.comment ?? existingPub.comment;
       existingPub.source = pubData.source ?? existingPub.source;
+      existingPub.year = pubData.year ?? existingPub.year;
+      existingPub.title = pubData.title ?? existingPub.title;
+      existingPub.authors = pubData.authors ?? existingPub.authors;
     } else {
-      new_publications.push({ pmid, ...pubData });
+      // Add new publication
+      pmid = String(pmid);
+      new_publications.push({
+        pmid,
+        families: pubData.families ?? null,
+        affectedIndividuals: pubData.affectedIndividuals ?? null,
+        consanguineous: pubData.consanguineous ?? "unknown",
+        ancestries: pubData.ancestries ?? "",
+        comment: pubData.comment ?? "",
+        source: pubData.source ?? "",
+        year: pubData.year ?? "",
+        title: pubData.title ?? "",
+        authors: pubData.authors ?? "",
+      });
     }
   }
-  return { result: new_publications };
+
+  // Return updated publications with the correct structure
+  return { ...publications, results: new_publications };
 };
