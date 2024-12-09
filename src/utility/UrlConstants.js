@@ -29,6 +29,7 @@ export const LGD_RECORD_URL = `${G2P_API_BASE_URL}/lgd/:stableid/`;
 export const ADD_PANEL_URL = `${G2P_API_BASE_URL}/lgd/:stableid/panel/`;
 export const UPDATE_CONFIDENCE_URL = `${G2P_API_BASE_URL}/lgd/:stableid/update_confidence/`;
 export const UPDATE_MECHANISM_URL = `${G2P_API_BASE_URL}/lgd/:stableid/update_mechanism/`;
+export const ADD_PUBLICATION_URL = `${G2P_API_BASE_URL}/lgd/:stableid/publication/`;
 
 //External API URLS
 export const HPO_SEARCH_API_URL = "https://ontology.jax.org/api/hp/search";

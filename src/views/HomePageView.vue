@@ -30,7 +30,7 @@ export default {
     );
   },
   components: {
-    ToolTip
+    ToolTip,
   },
   methods: {
     fetchPanelData() {
@@ -172,9 +172,9 @@ export default {
       </div>
     </div>
     <div v-else>
-      <div class="p-5 text-center bg-body-tertiary">
-        <div class="container pt-0 px-3 pb-3">
-          <h1 class="pb-5">Search G2P</h1>
+      <div class="px-5 py-4 text-center bg-body-tertiary">
+        <div class="container px-3">
+          <h1 class="pb-3">Search G2P</h1>
           <div class="col-lg-8 mx-auto">
             <div class="input-group shadow-sm">
               <input
@@ -338,8 +338,8 @@ export default {
           </div>
         </div>
       </div>
-      <div class="container p-5">
-        <h1 class="pb-5 text-center">Browse panels</h1>
+      <div class="container px-5 py-4">
+        <h1 class="pb-3 text-center">Browse panels</h1>
         <div
           class="alert alert-danger mx-auto col-lg-6"
           role="alert"

@@ -89,11 +89,7 @@ export default {
 };
 </script>
 <template>
-  <div
-    class="container px-5 py-3"
-    style="min-height: 60vh"
-    id="update-g2p-record-form-section"
-  >
+  <div class="container px-5 py-3" style="min-height: 60vh">
     <div class="d-flex justify-content-between pb-2">
       <h2>Update G2P Record</h2>
       <button class="btn btn-outline-primary" @click="goToRecordPage">
@@ -120,7 +116,7 @@ export default {
         {{ locusGeneDiseaseData.disease.name }}
       </h4>
       <h4 v-else class="text-muted pb-2">Disease Name Not Available</h4>
-      <p>
+      <p class="mb-2">
         <i class="bi bi-info-circle"></i> For this record, only these sections
         can be updated: <b v-if="canUpdateMechanism">Mechanism, </b
         ><b>Panel, Confidence</b>

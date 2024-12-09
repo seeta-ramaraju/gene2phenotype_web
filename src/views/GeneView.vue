@@ -5,10 +5,7 @@ import {
   GENE_URL,
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import {
-  CONFIDENCE_COLOR_MAP,
-  MAX_CHARACTERS
-} from "../utility/Constants.js";
+import { CONFIDENCE_COLOR_MAP, MAX_CHARACTERS } from "../utility/Constants.js";
 
 export default {
   data() {
@@ -20,7 +17,7 @@ export default {
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
       isReadMoreActivated: false,
-      maxCharacters: MAX_CHARACTERS
+      maxCharacters: MAX_CHARACTERS,
     };
   },
   created() {
@@ -87,7 +84,7 @@ export default {
     },
     toggleReadMore() {
       this.isReadMoreActivated = !this.isReadMoreActivated;
-    }
+    },
   },
 };
 </script>
@@ -118,8 +115,18 @@ export default {
       <h4 class="py-3">Function</h4>
       <div class="row">
         <p v-if="geneFunctionData?.function?.protein_function">
-          <span v-if="!isReadMoreActivated && geneFunctionData.function.protein_function.length > maxCharacters">
-            {{ geneFunctionData.function.protein_function.slice(0, maxCharacters) }}&hellip;
+          <span
+            v-if="
+              !isReadMoreActivated &&
+              geneFunctionData.function.protein_function.length > maxCharacters
+            "
+          >
+            {{
+              geneFunctionData.function.protein_function.slice(
+                0,
+                maxCharacters
+              )
+            }}&hellip;
           </span>
           <span v-else>
             {{ geneFunctionData.function.protein_function }}
@@ -127,14 +134,16 @@ export default {
           <button
             class="btn btn-link p-0 ml-2 align-baseline"
             @click="toggleReadMore"
-            v-if="geneFunctionData.function.protein_function.length > maxCharacters"
+            v-if="
+              geneFunctionData.function.protein_function.length > maxCharacters
+            "
           >
             {{ isReadMoreActivated ? "Show less" : "Show more" }}
           </button>
           <br />
           <b>Source:</b>
           <a
-            v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+            :href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
             style="text-decoration: none"
             target="_blank"
           >
@@ -223,7 +232,7 @@ export default {
         <ul>
           <li v-if="geneData.gene_symbol">
             <a
-              v-bind:href="`https://www.deciphergenomics.org/gene/${geneData.gene_symbol}`"
+              :href="`https://www.deciphergenomics.org/gene/${geneData.gene_symbol}`"
               style="text-decoration: none"
               target="_blank"
             >
@@ -233,7 +242,7 @@ export default {
           </li>
           <li v-if="geneData.ids?.OMIM">
             <a
-              v-bind:href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
+              :href="`https://www.omim.org/entry/${geneData.ids.OMIM}`"
               style="text-decoration: none"
               target="_blank"
             >
@@ -243,7 +252,7 @@ export default {
           </li>
           <li v-if="geneData.ids?.Ensembl">
             <a
-              v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
+              :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
               style="text-decoration: none"
               target="_blank"
             >
@@ -253,7 +262,7 @@ export default {
           </li>
           <li v-if="geneData.ids?.HGNC">
             <a
-              v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${geneData.ids.HGNC}`"
+              :href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${geneData.ids.HGNC}`"
               style="text-decoration: none"
               target="_blank"
             >
@@ -263,7 +272,7 @@ export default {
           </li>
           <li v-if="geneFunctionData?.function?.uniprot_accession">
             <a
-              v-bind:href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
+              :href="`https://www.uniprot.org/uniprotkb/${geneFunctionData.function.uniprot_accession}`"
               style="text-decoration: none"
               target="_blank"
             >

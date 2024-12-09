@@ -134,7 +134,7 @@ export default {
                     </td>
                     <td style="width: 20%">
                       <a
-                        v-bind:href="`https://www.omim.org/entry/${item.identifier}`"
+                        :href="`https://www.omim.org/entry/${item.identifier}`"
                         style="text-decoration: none"
                         v-if="item.source === 'OMIM'"
                         target="_blank"
@@ -142,7 +142,7 @@ export default {
                         {{ item.identifier }}
                       </a>
                       <a
-                        v-bind:href="`https://monarchinitiative.org/${item.identifier}`"
+                        :href="`https://monarchinitiative.org/${item.identifier}`"
                         style="text-decoration: none"
                         v-else-if="item.source === 'Mondo'"
                         target="_blank"

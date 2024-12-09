@@ -164,18 +164,18 @@ export default {
       </h2>
       <div id="update-panel-section-body" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <p class="mb-0 fw-bold">Panel(s)</p>
-          <div
-            class="d-flex justify-content-center"
-            v-if="isUserPanelsDataLoading || isAddPanelApiCallLoading"
-            style="margin-top: 122px; margin-bottom: 122px"
-          >
-            <div class="spinner-border text-secondary" role="status">
-              <span class="visually-hidden">Loading...</span>
+          <div class="row g-3 p-2">
+            <h5>Panel(s)</h5>
+            <div
+              class="d-flex justify-content-center"
+              v-if="isUserPanelsDataLoading || isAddPanelApiCallLoading"
+              style="margin-top: 122px; margin-bottom: 122px"
+            >
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
             </div>
-          </div>
-          <div v-else>
-            <div class="row g-3 pt-4">
+            <div v-else>
               <table class="table table-bordered" style="width: 30%">
                 <thead>
                   <tr>
@@ -188,66 +188,65 @@ export default {
                   </tr>
                 </tbody>
               </table>
+              <div
+                v-if="userPanelOptionsToAdd && userPanelOptionsToAdd.length > 0"
+              >
+                <hr />
+                <h5 class="mb-0">Add to panel</h5>
+                <div class="row py-4 w-50">
+                  <label
+                    for="add-panel-select-input"
+                    class="col-lg-2 col-form-label"
+                  >
+                    Panel
+                  </label>
+                  <div class="col-lg-7">
+                    <select
+                      id="add-panel-select-input"
+                      class="form-select"
+                      v-model="panelToAdd"
+                    >
+                      <option value="">Select</option>
+                      <option
+                        v-for="item in userPanelOptionsToAdd"
+                        :value="item"
+                      >
+                        {{ item.description }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <button class="btn btn-primary" @click="addPanel" type="button">
+                  <i class="bi bi-plus-circle-fill"></i> Add to panel
+                </button>
+              </div>
+              <p v-else>
+                <i class="bi bi-info-circle"></i> All of your panels are already
+                part of the panel(s) list. No panels left to add.
+              </p>
             </div>
             <div
-              v-if="userPanelOptionsToAdd && userPanelOptionsToAdd.length > 0"
+              class="alert alert-danger mt-3"
+              role="alert"
+              v-if="userPanelsErrorMsg || addPanelErrorMsg"
             >
-              <hr />
-              <p class="fw-bold">Add to panel</p>
-              <div class="row g-3 pt-2 pb-4 w-50">
-                <label
-                  for="add-panel-select-input"
-                  class="col-lg-2 col-form-label"
-                >
-                  Panel
-                </label>
-                <div class="col-lg-7">
-                  <select
-                    id="add-panel-select-input"
-                    class="form-select"
-                    v-model="panelToAdd"
-                  >
-                    <option value="">Select</option>
-                    <option v-for="item in userPanelOptionsToAdd" :value="item">
-                      {{ item.description }}
-                    </option>
-                  </select>
-                </div>
+              <div>
+                <i class="bi bi-exclamation-circle-fill"></i>
+                {{ userPanelsErrorMsg || addPanelErrorMsg }}
               </div>
-              <button
-                class="btn btn-primary me-3"
-                @click="addPanel"
-                type="button"
-              >
-                <i class="bi bi-plus-circle-fill"></i> Add to panel
-              </button>
             </div>
-            <p v-else>
-              <i class="bi bi-info-circle"></i> All of your panels are already
-              part of the panel(s) list. No panels left to add.
-            </p>
-          </div>
-          <div
-            class="alert alert-danger mt-3"
-            role="alert"
-            v-if="userPanelsErrorMsg || addPanelErrorMsg"
-          >
-            <div>
-              <i class="bi bi-exclamation-circle-fill"></i>
-              {{ userPanelsErrorMsg || addPanelErrorMsg }}
+            <div
+              class="alert alert-success mt-3"
+              role="alert"
+              v-if="isAddPanelSuccess"
+            >
+              <div>
+                <i class="bi bi-check-circle-fill"></i>
+                {{ addPanelSuccessMsg }}
+              </div>
             </div>
+            <LoginErrorAlert v-if="isLogInSessionExpired" />
           </div>
-          <div
-            class="alert alert-success mt-3"
-            role="alert"
-            v-if="isAddPanelSuccess"
-          >
-            <div>
-              <i class="bi bi-check-circle-fill"></i>
-              {{ addPanelSuccessMsg }}
-            </div>
-          </div>
-          <LoginErrorAlert v-if="isLogInSessionExpired" />
         </div>
       </div>
     </div>

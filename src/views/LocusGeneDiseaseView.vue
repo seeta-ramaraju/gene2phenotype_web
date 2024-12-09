@@ -8,6 +8,7 @@ import {
 } from "../utility/AuthenticationUtility.js";
 import AddPanelModal from "./update/AddPanelModal.vue";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import UpdateRecordModal from "./update/UpdateRecordModal.vue";
 
 export default {
   data() {
@@ -24,6 +25,7 @@ export default {
   },
   components: {
     AddPanelModal,
+    UpdateRecordModal,
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -116,9 +118,6 @@ export default {
         userPanelDescriptions.includes(item.description)
       );
     },
-    goToUpdateRecordPage() {
-      this.$router.push(`/lgd/update/${this.stableId}`);
-    },
     refreshPage() {
       this.$router.go(); // refresh current page
     },
@@ -169,7 +168,8 @@ export default {
         </button>
         <button
           class="btn btn-outline-primary"
-          @click="goToUpdateRecordPage"
+          data-bs-toggle="modal"
+          data-bs-target="#update-record-modal"
           v-if="!isPanelDataLoading && isLoggedIn() && isRecordPartOfUserPanels"
         >
           <i class="bi bi-pencil-square"></i> Update record
@@ -283,7 +283,7 @@ export default {
                             <td>
                               <a
                                 v-if="item.accession"
-                                v-bind:href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
+                                :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -323,7 +323,7 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
-                                      v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                      :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                       style="text-decoration: none"
                                       target="_blank"
                                     >
@@ -333,7 +333,7 @@ export default {
                                   </span>
                                   <a
                                     v-else
-                                    v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                    :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                     style="text-decoration: none"
                                     target="_blank"
                                   >
@@ -417,7 +417,7 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
-                                      v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                      :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                       style="text-decoration: none"
                                       target="_blank"
                                     >
@@ -427,7 +427,7 @@ export default {
                                   </span>
                                   <a
                                     v-else
-                                    v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                    :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                     style="text-decoration: none"
                                     target="_blank"
                                   >
@@ -496,7 +496,7 @@ export default {
                             <td>
                               <a
                                 v-if="item.accession"
-                                v-bind:href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
+                                :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -636,7 +636,7 @@ export default {
                             </td>
                             <td>
                               <a
-                                v-bind:href="`https://europepmc.org/article/MED/${key}`"
+                                :href="`https://europepmc.org/article/MED/${key}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -728,7 +728,7 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
-                                      v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                      :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                       style="text-decoration: none"
                                       target="_blank"
                                     >
@@ -738,7 +738,7 @@ export default {
                                   </span>
                                   <a
                                     v-else
-                                    v-bind:href="`https://europepmc.org/article/MED/${publicationItem}`"
+                                    :href="`https://europepmc.org/article/MED/${publicationItem}`"
                                     style="text-decoration: none"
                                     target="_blank"
                                   >
@@ -811,7 +811,7 @@ export default {
                             <td>
                               <a
                                 v-if="item.publication?.pmid"
-                                v-bind:href="`https://europepmc.org/article/MED/${item.publication?.pmid}`"
+                                :href="`https://europepmc.org/article/MED/${item.publication?.pmid}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -947,7 +947,7 @@ export default {
             </td>
             <td>
               <a
-                v-bind:href="`https://www.ensembl.org/Homo_sapiens/Location/View?r=${locusGeneDiseaseData.locus?.sequence}:${locusGeneDiseaseData.locus?.start}-${locusGeneDiseaseData.locus?.end}`"
+                :href="`https://www.ensembl.org/Homo_sapiens/Location/View?r=${locusGeneDiseaseData.locus?.sequence}:${locusGeneDiseaseData.locus?.start}-${locusGeneDiseaseData.locus?.end}`"
                 v-if="
                   locusGeneDiseaseData.locus?.sequence &&
                   locusGeneDiseaseData.locus?.start &&
@@ -989,7 +989,7 @@ export default {
                     <td>
                       DECIPHER:
                       <a
-                        v-bind:href="`https://www.deciphergenomics.org/gene/${locusGeneDiseaseData.locus?.gene_symbol}`"
+                        :href="`https://www.deciphergenomics.org/gene/${locusGeneDiseaseData.locus?.gene_symbol}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.gene_symbol"
                         target="_blank"
@@ -1001,7 +1001,7 @@ export default {
                     <td>
                       OMIM:
                       <a
-                        v-bind:href="`https://www.omim.org/entry/${locusGeneDiseaseData.locus?.ids?.OMIM}`"
+                        :href="`https://www.omim.org/entry/${locusGeneDiseaseData.locus?.ids?.OMIM}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.ids?.OMIM"
                         target="_blank"
@@ -1013,7 +1013,7 @@ export default {
                     <td>
                       Ensembl ID:
                       <a
-                        v-bind:href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
+                        :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.ids?.Ensembl"
                         target="_blank"
@@ -1025,7 +1025,7 @@ export default {
                     <td>
                       HGNC ID:
                       <a
-                        v-bind:href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${locusGeneDiseaseData.locus?.ids?.HGNC}`"
+                        :href="`https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/${locusGeneDiseaseData.locus?.ids?.HGNC}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.ids?.HGNC"
                         target="_blank"
@@ -1110,7 +1110,7 @@ export default {
                             <td>
                               <a
                                 v-if="ontologyTerm.source === 'OMIM'"
-                                v-bind:href="`https://www.omim.org/entry/${ontologyTerm.accession}`"
+                                :href="`https://www.omim.org/entry/${ontologyTerm.accession}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -1118,7 +1118,7 @@ export default {
                               </a>
                               <a
                                 v-else-if="ontologyTerm.source === 'Mondo'"
-                                v-bind:href="`https://monarchinitiative.org/${ontologyTerm.accession}`"
+                                :href="`https://monarchinitiative.org/${ontologyTerm.accession}`"
                                 style="text-decoration: none"
                                 target="_blank"
                               >
@@ -1208,6 +1208,7 @@ export default {
         :userPanels="userPanels"
         @refreshpage="refreshPage"
       />
+      <UpdateRecordModal :stableId="stableId" />
     </div>
   </div>
 </template>

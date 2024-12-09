@@ -96,7 +96,7 @@ export default {
           <ul class="dropdown-menu">
             <li>
               <router-link to="/about/project" class="dropdown-item">
-                The project
+                The G2P project
               </router-link>
             </li>
             <li>

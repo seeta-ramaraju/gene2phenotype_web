@@ -1,14 +1,10 @@
 <script>
 export default {
   props: {
-    fetchPublications: Function,
-    isPublicationsDataLoading: Boolean,
-    publicationsErrorMsg: String,
+    currentPublications: Object,
     publications: Object,
-    inputPmids: String,
-    isInputPmidsValid: Boolean,
   },
-  emits: ["update:publications", "update:inputPmids"],
+  emits: ["update:publications"],
   methods: {
     inputHandler(key, pmid, inputValue) {
       let updatedPublications = { ...this.publications };
@@ -35,67 +31,105 @@ export default {
       </h2>
       <div id="publication-section-body" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <div class="row g-3 py-3">
-            <div class="col-auto">
-              <label for="publications-input" class="col-form-label">
-                Publication(s)<span class="text-danger">*</span>
-              </label>
-            </div>
-            <div class="col-4">
-              <textarea
-                :class="
-                  isInputPmidsValid ? 'form-control' : 'form-control is-invalid'
-                "
-                id="publications-input"
-                :value="inputPmids"
-                @input="$emit('update:inputPmids', $event.target.value)"
-                rows="3"
-                aria-describedby="invalid-publications-input-feedback"
-              >
-              </textarea>
+          <div
+            v-if="currentPublications && currentPublications.length > 0"
+            class="accordion accordion-flush"
+            id="accordionPublications"
+          >
+            <div class="accordion-item">
+              <h2 class="accordion-header border">
+                <button
+                  class="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapsiblePublicationsTable"
+                  aria-expanded="false"
+                  aria-controls="collapsiblePublicationsTable"
+                >
+                  Current Publications ({{ currentPublications.length }})
+                </button>
+              </h2>
               <div
-                id="invalid-publications-input-feedback"
-                class="invalid-feedback"
+                id="collapsiblePublicationsTable"
+                class="accordion-collapse collapse"
+                data-bs-parent="#accordionPublications"
               >
-                Please enter valid Publication(s).
+                <div class="accordion-body p-0">
+                  <table class="table table-bordered mb-0">
+                    <thead>
+                      <tr>
+                        <th>PMID</th>
+                        <th>Title</th>
+                        <th>Individuals</th>
+                        <th>Comment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in currentPublications">
+                        <td>
+                          <a
+                            v-if="item.publication?.pmid"
+                            :href="`https://europepmc.org/article/MED/${item.publication?.pmid}`"
+                            style="text-decoration: none"
+                            target="_blank"
+                          >
+                            {{ item.publication.pmid }}
+                          </a>
+                        </td>
+                        <td>
+                          {{ item.publication?.title }}
+                        </td>
+                        <td>
+                          <span
+                            v-if="
+                              item.publication?.families &&
+                              item.publication?.families.length > 0
+                            "
+                          >
+                            Number of Families:
+                            {{
+                              item.publication.families[0].number_of_families
+                            }}
+                            <br />
+                            Affected Individuals:
+                            {{
+                              item.publication.families[0].affected_individuals
+                            }}
+                            <br />
+                            Ancestry:
+                            {{ item.publication.families[0].ancestry }}
+                            <br />
+                            Consanguinity:
+                            {{ item.publication.families[0].consanguinity }}
+                          </span>
+                        </td>
+                        <td>
+                          <span
+                            v-if="
+                              item.publication?.comments &&
+                              item.publication?.comments.length > 0
+                            "
+                          >
+                            {{
+                              item.publication.comments[
+                                item.publication.comments.length - 1
+                              ].comment
+                            }}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div class="form-text" id="publications-input-help-text">
-                For multiple entries, separate by semicolon
-              </div>
-            </div>
-            <div class="col-auto">
-              <button
-                type="button"
-                class="btn btn-primary mb-3"
-                @click="fetchPublications"
-              >
-                <i class="bi bi-search"></i> Look Up
-              </button>
             </div>
           </div>
-          <div
-            class="d-flex justify-content-center"
-            v-if="isPublicationsDataLoading"
-            style="margin-top: 20px; margin-bottom: 20px"
-          >
-            <div class="spinner-border text-secondary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-          <div
-            class="alert alert-danger mt-3"
-            role="alert"
-            v-if="publicationsErrorMsg"
-          >
-            <div>
-              <i class="bi bi-exclamation-circle-fill"></i>
-              {{ publicationsErrorMsg }}
-            </div>
-          </div>
+          <p v-else>
+            <i class="bi bi-info-circle"></i> No Publication available for this
+            record.
+          </p>
           <div v-if="publications && Object.keys(publications).length > 0">
-            <div>
-              <strong><p>Enter Publications Data</p></strong>
-            </div>
+            <h5 class="pt-3">Data for new Publication(s)</h5>
             <div
               class="accordion py-1"
               :id="`parent-accordion-${pmid}`"
