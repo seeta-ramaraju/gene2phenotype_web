@@ -277,12 +277,10 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
-            console.log(responseJson);
             let publicationsData = responseJson;
-            // console.log(publicationsData);
             publicationsData = appendObjectToPublications(
               publicationsData,
-              this.previousInput.publications
+              this.previousInput
             );
             if (publicationsData && publicationsData.results) {
               this.previousInput = updateInputWithPublicationsData(
@@ -290,7 +288,6 @@ export default {
                 publicationsData
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
-              console.log(pmidList);
               this.hpoTermsInputHelper =
                 updateHpoTermsInputHelperWithPublicationsData(pmidList);
             }

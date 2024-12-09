@@ -82,14 +82,23 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
       authors: item.authors,
     };
 
-    updatedPhenotypesObj[item.pmid] = {
-      summary: "",
-      hpo_terms: [],
-    };
+    if (updatedInput.phenotypes[item.pmid]) {
+      updatedPhenotypesObj[item.pmid] = updatedInput.phenotypes[item.pmid];
+    } else {
+      updatedPhenotypesObj[item.pmid] = {
+        summary: "",
+        hpo_terms: [],
+      };
+    }
 
-    updatedVariantDescriptionsObj[item.pmid] = {
-      description: "",
-    };
+    if (updatedInput.variant_descriptions[item.pmid]) {
+      updatedVariantDescriptionsObj[item.pmid] =
+        updatedInput.variant_descriptions[item.pmid];
+    } else {
+      updatedVariantDescriptionsObj[item.pmid] = {
+        description: "",
+      };
+    }
 
     let evidenceTypesObj = {};
     EvidenceTypesAttribs.forEach((item) => {
@@ -493,7 +502,7 @@ export const prepareInputForUpdating = (previousInput) => {
   };
 };
 
-export const appendObjectToPublications = (publications, pubDict) => {
+export const appendObjectToPublications = (publications, input) => {
   //publications is the new publication
   //pubDict is the old JSON
   // updating the information from pubDict to the new publications
@@ -505,7 +514,7 @@ export const appendObjectToPublications = (publications, pubDict) => {
   const existingPmids = new Set(new_publications.map((pub) => pub.pmid));
 
   // Iterate through pubDict and process each PMID
-  for (let [pmid, pubData] of Object.entries(pubDict)) {
+  for (let [pmid, pubData] of Object.entries(input.publications)) {
     if (existingPmids.has(pmid)) {
       // Update existing publication
       let existingPub = new_publications.find((pub) => pub.pmid == pmid);
