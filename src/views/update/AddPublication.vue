@@ -18,11 +18,11 @@ import {
 } from "../../utility/AddPublicationUtility.js";
 import LoginErrorAlert from "../../components/alert/LoginErrorAlert.vue";
 import UpdatePublication from "./UpdatePublication.vue";
-import RemovePublicationModal from "./RemovePublicationModal.vue";
+import RemovePublicationModal from "../../components/modal/RemovePublicationModal.vue";
 import UpdateVariantInformation from "./UpdateVariantInformation.vue";
 import UpdatePhenotype from "./UpdatePhenotype.vue";
 import UpdateMechanismEvidence from "./UpdateMechanismEvidence.vue";
-import AddPublicationSuccessAlert from "./AddPublicationSuccessAlert.vue";
+import AddPublicationSuccessAlert from "../../components/alert/AddPublicationSuccessAlert.vue";
 
 export default {
   props: {
