@@ -6,9 +6,9 @@ import {
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
-import AddPanelModal from "./update/AddPanelModal.vue";
+import AddPanelModal from "../components/modal/AddPanelModal.vue";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
-import UpdateRecordModal from "./update/UpdateRecordModal.vue";
+import UpdateRecordModal from "../components/modal/UpdateRecordModal.vue";
 
 export default {
   data() {
