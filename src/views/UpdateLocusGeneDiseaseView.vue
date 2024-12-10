@@ -8,10 +8,10 @@ import Mechanism from "../components/curation/Mechanism.vue";
 import Disease from "../components/curation/Disease.vue";
 import Panel from "../components/curation/Panel.vue";
 import Confidence from "../components/curation/Confidence.vue";
-import SaveDraftModal from "../components/curation/SaveDraftModal.vue";
-import PublishModal from "../components/curation/PublishModal.vue";
-import PublishSuccessAlert from "../components/curation/PublishSuccessAlert.vue";
-import SaveNotPublishSuccessAlert from "../components/curation/SaveNotPublishSuccessAlert.vue";
+import SaveDraftModal from "../components/modal/SaveDraftModal.vue";
+import PublishModal from "../components/modal/PublishModal.vue";
+import PublishSuccessAlert from "../components/alert/PublishSuccessAlert.vue";
+import SaveNotPublishSuccessAlert from "../components/alert/SaveNotPublishSuccessAlert.vue";
 import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
@@ -19,8 +19,8 @@ import {
   updateHpoTermsInputHelperWithPublicationsData,
   appendObjectToPublications,
 } from "../utility/CurationUtility.js";
-import SaveSuccessAlert from "../components/curation/SaveSuccessAlert.vue";
-import AlertModal from "../components/curation/AlertModal.vue";
+import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
+import AlertModal from "../components/modal/AlertModal.vue";
 import {
   appendAuthenticationHeaders,
   checkLogInAndAppendAuthHeaders,
