@@ -75,6 +75,19 @@ export default {
       notifyExistingGeneInformation: false, // variable used to notify ExistingGeneInformation component to fetch existing data for gene
     };
   },
+  beforeRouteLeave(to, from) {
+    if (
+      this.geneData &&
+      !this.isSubmitSuccess &&
+      !this.isSaveBeforePublishSuccess &&
+      !this.isPublishSuccess
+    ) {
+      const answer = window.confirm(
+        "Are you sure you want to leave? You have unsaved changes which will be lost. Consider saving your changes before leaving."
+      );
+      if (!answer) return false;
+    }
+  },
   components: {
     GeneInformation,
     Publication,
