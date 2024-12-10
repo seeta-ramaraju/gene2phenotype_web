@@ -734,11 +734,6 @@ export default {
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
       @confirm-click-handler="existingGeneDataSearchHandler"
     />
-    <AlertModal
-      modalId="publications-input-alert-modal"
-      alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"
-      @confirm-click-handler="fetchPublications"
-    />
   </div>
 </template>
 <style scoped>
