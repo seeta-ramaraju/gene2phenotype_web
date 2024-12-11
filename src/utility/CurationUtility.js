@@ -63,14 +63,8 @@ export const getInitialInputForNewCuration = () => {
 export const updateInputWithPublicationsData = (input, publicationsData) => {
   let updatedInput = { ...input };
 
-  // update publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
-  let updatedPublicationsObj = {};
-  let updatedPhenotypesObj = {};
-  let updatedVariantDescriptionsObj = {};
-  let updatedMechanismEvidenceObj = {};
-
   publicationsData.results.forEach((item) => {
-    updatedPublicationsObj[item.pmid] = {
+    updatedInput.publications[item.pmid] = {
       families: null,
       affectedIndividuals: null,
       consanguineous: "unknown",
@@ -82,38 +76,24 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
       authors: item.authors,
     };
 
-    if (updatedInput.phenotypes[item.pmid]) {
-      updatedPhenotypesObj[item.pmid] = updatedInput.phenotypes[item.pmid];
-    } else {
-      updatedPhenotypesObj[item.pmid] = {
-        summary: "",
-        hpo_terms: [],
-      };
-    }
+    updatedInput.phenotypes[item.pmid] = {
+      summary: "",
+      hpo_terms: [],
+    };
 
-    if (updatedInput.variant_descriptions[item.pmid]) {
-      updatedVariantDescriptionsObj[item.pmid] =
-        updatedInput.variant_descriptions[item.pmid];
-    } else {
-      updatedVariantDescriptionsObj[item.pmid] = {
-        description: "",
-      };
-    }
+    updatedInput.variant_descriptions[item.pmid] = {
+      description: "",
+    };
 
     let evidenceTypesObj = {};
     EvidenceTypesAttribs.forEach((item) => {
       evidenceTypesObj[item.primaryType] = [];
     });
-    updatedMechanismEvidenceObj[item.pmid] = {
+    updatedInput.mechanism_evidence[item.pmid] = {
       description: "",
       evidence_types: evidenceTypesObj,
     };
   });
-
-  updatedInput.publications = updatedPublicationsObj;
-  updatedInput.phenotypes = updatedPhenotypesObj;
-  updatedInput.variant_descriptions = updatedVariantDescriptionsObj;
-  updatedInput.mechanism_evidence = updatedMechanismEvidenceObj;
 
   for (let primaryTypeKey in updatedInput.variant_types) {
     for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
@@ -500,53 +480,4 @@ export const prepareInputForUpdating = (previousInput) => {
       level: clonedpreviousInput.confidence.level,
     },
   };
-};
-
-export const appendObjectToPublications = (publications, input) => {
-  //publications is the new publication
-  //pubDict is the old JSON
-  // updating the information from pubDict to the new publications
-  // Initialize a new array to hold the combined objects
-
-  // Check if publications.results is an array
-  let new_publications = publications.results || [];
-
-  const existingPmids = new Set(new_publications.map((pub) => pub.pmid));
-
-  // Iterate through pubDict and process each PMID
-  for (let [pmid, pubData] of Object.entries(input.publications)) {
-    if (existingPmids.has(pmid)) {
-      // Update existing publication
-      let existingPub = new_publications.find((pub) => pub.pmid == pmid);
-      existingPub.families = pubData.families ?? existingPub.families;
-      existingPub.affectedIndividuals =
-        pubData.affectedIndividuals ?? existingPub.affectedIndividuals;
-      existingPub.consanguineous =
-        pubData.consanguineous ?? existingPub.consanguineous;
-      existingPub.ancestries = pubData.ancestries ?? existingPub.ancestries;
-      existingPub.comment = pubData.comment ?? existingPub.comment;
-      existingPub.source = pubData.source ?? existingPub.source;
-      existingPub.year = pubData.year ?? existingPub.year;
-      existingPub.title = pubData.title ?? existingPub.title;
-      existingPub.authors = pubData.authors ?? existingPub.authors;
-    } else {
-      // Add new publication
-      pmid = String(pmid);
-      new_publications.push({
-        pmid,
-        families: pubData.families ?? null,
-        affectedIndividuals: pubData.affectedIndividuals ?? null,
-        consanguineous: pubData.consanguineous ?? "unknown",
-        ancestries: pubData.ancestries ?? "",
-        comment: pubData.comment ?? "",
-        source: pubData.source ?? "",
-        year: pubData.year ?? "",
-        title: pubData.title ?? "",
-        authors: pubData.authors ?? "",
-      });
-    }
-  }
-
-  // Return updated publications with the correct structure
-  return { ...publications, results: new_publications };
 };
