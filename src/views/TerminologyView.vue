@@ -6,7 +6,7 @@ import {
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
-
+import { ConfidenceAttribsOrder } from "../utility/CurationConstants.js";
 export default {
   data() {
     return {
@@ -80,6 +80,17 @@ export default {
           console.log(error);
         });
     },
+    reorderedConfidenceCategoryList() {
+      return this.terminologyDescriptionData.confidence_category
+        .sort(
+          (a, b) =>
+            ConfidenceAttribsOrder.indexOf(a) -
+            ConfidenceAttribsOrder.indexOf(b)
+        )
+        .map((item, index) => {
+          return { ...item, index };
+        });
+    },
   },
 };
 </script>
@@ -111,10 +122,8 @@ export default {
             </thead>
             <tbody>
               <tr
-                v-for="(
-                  item, index
-                ) in terminologyDescriptionData.confidence_category"
-                :key="index"
+                v-for="(item, index) in reorderedConfidenceCategoryList()"
+                :key="item.index"
               >
                 <td>
                   <span
