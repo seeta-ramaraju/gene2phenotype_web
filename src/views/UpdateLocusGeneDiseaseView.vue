@@ -17,7 +17,6 @@ import {
   prepareInputForDataSubmission,
   prepareInputForUpdating,
   updateHpoTermsInputHelperWithPublicationsData,
-  appendObjectToPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
 import AlertModal from "../components/modal/AlertModal.vue";
@@ -278,10 +277,6 @@ export default {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
             let publicationsData = responseJson;
-            publicationsData = appendObjectToPublications(
-              publicationsData,
-              this.previousInput
-            );
             if (publicationsData && publicationsData.results) {
               this.previousInput = updateInputWithPublicationsData(
                 this.previousInput,
