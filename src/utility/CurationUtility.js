@@ -104,23 +104,28 @@ export const updateInputWithRemovedPublications = (input, removedPmidList) => {
   let updatedInput = { ...input };
 
   removedPmidList.forEach((pmid) => {
-    delete updatedInput.publications(pmid);
-    delete updatedInput.phenotypes(pmid);
-    delete updatedInput.variant_descriptions(pmid);
-    delete updatedInput.mechanism_evidence(pmid);
+    delete updatedInput.publications[pmid];
+    delete updatedInput.phenotypes[pmid];
+    delete updatedInput.variant_descriptions[pmid];
+    delete updatedInput.mechanism_evidence[pmid];
   });
 
   for (let primaryTypeKey in updatedInput.variant_types) {
     for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
-      let supportingPapers = secondaryTypeKey.supporting_papers;
+      let supportingPapers =
+        updatedInput.variant_types[primaryTypeKey][secondaryTypeKey]
+          .supporting_papers;
 
       let RemovedsupportingPapers = supportingPapers.filter(
         (paper) => paper !== removedPmidList
       );
 
-      supportingPapers = RemovedsupportingPapers;
+      updatedInput.variant_types[primaryTypeKey][
+        secondaryTypeKey
+      ].supporting_papers = RemovedsupportingPapers;
     }
   }
+  return updatedInput;
 };
 
 const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {

@@ -17,9 +17,12 @@ import {
   prepareInputForDataSubmission,
   prepareInputForUpdating,
   updateHpoTermsInputHelperWithPublicationsData,
+  updateInputWithRemovedPublications,
+  updateHpoTermsInputHelperWithRemovedPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
 import AlertModal from "../components/modal/AlertModal.vue";
+import RemovePublicationModal from "../components/modal/RemovePublicationModal.vue";
 import {
   appendAuthenticationHeaders,
   checkLogInAndAppendAuthHeaders,
@@ -98,6 +101,7 @@ export default {
     SaveNotPublishSuccessAlert,
     SaveSuccessAlert,
     AlertModal,
+    RemovePublicationModal,
     LoginErrorAlert,
   },
   methods: {
@@ -130,7 +134,10 @@ export default {
           this.previousInput = prepareInputForUpdating(responseJson.data);
           let pmidList = Object.keys(this.previousInput.publications);
           this.hpoTermsInputHelper =
-            updateHpoTermsInputHelperWithPublicationsData(pmidList);
+            updateHpoTermsInputHelperWithPublicationsData(
+              this.hpoTermsInputHelper,
+              pmidList
+            );
           this.fetchGeneInformation();
           this.fetchGeneDiseaseInformation();
           this.fetchPanels();
@@ -303,6 +310,17 @@ export default {
           this.publicationsErrorMsg = "Unable to fetch publications data.";
           console.log(error);
         });
+    },
+    removePublication(removedPmidList) {
+      this.previousInputinput = updateInputWithRemovedPublications(
+        this.previousInput,
+        removedPmidList
+      );
+      this.hpoTermsInputHelper =
+        updateHpoTermsInputHelperWithRemovedPublications(
+          this.hpoTermsInputHelper,
+          removedPmidList
+        );
     },
     saveDraft() {
       if (!isUserLoggedIn()) {
@@ -649,6 +667,10 @@ export default {
       :stableId="stableID"
     />
     <PublishModal @publish="saveAndPublishEntry" />
+    <RemovePublicationModal
+      :pmidList="Object.keys(previousInput.publications)"
+      @removePublication="(pmid) => removePublication(pmid)"
+    />
   </div>
 </template>
 <style scoped>
