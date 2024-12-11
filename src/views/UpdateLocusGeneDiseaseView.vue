@@ -83,6 +83,7 @@ export default {
       panelData: null,
       stableID: null,
       isLogInSessionExpired: false,
+      publications: null,
     };
   },
   components: {
@@ -132,6 +133,7 @@ export default {
         .then((responseJson) => {
           this.isPreviousInputDataLoading = false;
           this.previousInput = prepareInputForUpdating(responseJson.data);
+          this.publications = this.previousInput.publications || [];
           let pmidList = Object.keys(this.previousInput.publications);
           this.hpoTermsInputHelper =
             updateHpoTermsInputHelperWithPublicationsData(
@@ -313,7 +315,7 @@ export default {
     },
     removePublication(removedPmidList) {
       this.previousInputinput = updateInputWithRemovedPublications(
-        this.previousInput,
+        this.publications,
         removedPmidList
       );
       this.hpoTermsInputHelper =
@@ -668,7 +670,7 @@ export default {
     />
     <PublishModal @publish="saveAndPublishEntry" />
     <RemovePublicationModal
-      :pmidList="Object.keys(previousInput.publications)"
+      :pmidList="Object.keys(publications || {})"
       @removePublication="(pmid) => removePublication(pmid)"
     />
   </div>
