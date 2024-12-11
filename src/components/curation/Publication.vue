@@ -93,7 +93,10 @@ export default {
             </div>
           </div>
           <div v-if="publications && Object.keys(publications).length > 0">
-            <div class="text-end">
+            <div class="d-flex justify-content-between mb-3">
+              <div>
+                <strong><p>Enter Publications Data</p></strong>
+              </div>
               <button
                 class="btn btn-outline-danger"
                 data-bs-toggle="modal"
@@ -101,9 +104,6 @@ export default {
               >
                 <i class="bi bi-trash-fill"></i> Remove Publication(s)
               </button>
-            </div>
-            <div>
-              <strong><p>Enter Publications Data</p></strong>
             </div>
             <div
               class="accordion py-1"
