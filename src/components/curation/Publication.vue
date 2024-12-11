@@ -69,7 +69,7 @@ export default {
                 class="btn btn-primary mb-3"
                 @click="fetchPublications"
               >
-                <i class="bi bi-search"></i> Look Up
+                <i class="bi bi-plus-circle-fill"></i> Add
               </button>
             </div>
           </div>
