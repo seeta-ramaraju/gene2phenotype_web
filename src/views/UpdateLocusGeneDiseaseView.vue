@@ -38,7 +38,6 @@ import {
   UPDATE_SAVED_DRAFT_URL,
   USER_PANELS_URL,
 } from "../utility/UrlConstants";
-import { compileScript } from "vue/compiler-sfc";
 
 export default {
   created() {
