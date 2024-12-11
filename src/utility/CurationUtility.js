@@ -63,6 +63,8 @@ export const getInitialInputForNewCuration = () => {
 export const updateInputWithPublicationsData = (input, publicationsData) => {
   let updatedInput = { ...input };
 
+  // update publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
+
   publicationsData.results.forEach((item) => {
     updatedInput.publications[item.pmid] = {
       families: null,
@@ -95,14 +97,6 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
     };
   });
 
-  for (let primaryTypeKey in updatedInput.variant_types) {
-    for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
-      updatedInput.variant_types[primaryTypeKey][
-        secondaryTypeKey
-      ].supporting_papers = [];
-    }
-  }
-
   return updatedInput;
 };
 
@@ -122,17 +116,20 @@ const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   return variantConsequenceObj;
 };
 
-export const updateHpoTermsInputHelperWithPublicationsData = (pmidList) => {
-  let hpoTermsInputHelper = {};
+export const updateHpoTermsInputHelperWithPublicationsData = (
+  hpoTermsInputHelper,
+  pmidList
+) => {
+  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
   pmidList.forEach((pmid) => {
-    hpoTermsInputHelper[pmid] = {
+    updatedHpoTermsInputHelper[pmid] = {
       isHpoTermsDataLoading: false,
       hpoTermsErrorMsg: "",
       isHpoTermsValid: true,
       hpoTermsInput: "",
     };
   });
-  return hpoTermsInputHelper;
+  return updatedHpoTermsInputHelper;
 };
 
 export const prepareInputForDataSubmission = (input) => {

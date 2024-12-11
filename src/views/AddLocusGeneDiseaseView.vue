@@ -310,7 +310,10 @@ export default {
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
               this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithPublicationsData(pmidList);
+                updateHpoTermsInputHelperWithPublicationsData(
+                  this.hpoTermsInputHelper,
+                  pmidList
+                );
             }
           } else if (responseStatus === 404) {
             this.publicationsErrorMsg = responseJson.detail
