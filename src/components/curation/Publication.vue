@@ -93,6 +93,15 @@ export default {
             </div>
           </div>
           <div v-if="publications && Object.keys(publications).length > 0">
+            <div class="text-end">
+              <button
+                class="btn btn-outline-danger"
+                data-bs-toggle="modal"
+                data-bs-target="#remove-publication-modal"
+              >
+                <i class="bi bi-trash-fill"></i> Remove Publication(s)
+              </button>
+            </div>
             <div>
               <strong><p>Enter Publications Data</p></strong>
             </div>

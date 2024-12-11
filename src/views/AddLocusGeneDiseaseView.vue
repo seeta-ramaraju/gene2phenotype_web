@@ -17,9 +17,12 @@ import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
   updateHpoTermsInputHelperWithPublicationsData,
+  updateInputWithRemovedPublications,
+  updateHpoTermsInputHelperWithRemovedPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
 import AlertModal from "../components/modal/AlertModal.vue";
+import RemovePublicationModal from "../components/modal/RemovePublicationModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import {
   appendAuthenticationHeaders,
@@ -91,6 +94,7 @@ export default {
     SaveNotPublishSuccessAlert,
     SaveSuccessAlert,
     AlertModal,
+    RemovePublicationModal,
     LoginErrorAlert,
     ExistingGeneInformation,
   },
@@ -330,6 +334,17 @@ export default {
           this.publicationsErrorMsg = "Unable to fetch publications data.";
           console.log(error);
         });
+    },
+    removePublication(removedPmidList) {
+      this.input = updateInputWithRemovedPublications(
+        this.input,
+        removedPmidList
+      );
+      this.hpoTermsInputHelper =
+        updateHpoTermsInputHelperWithRemovedPublications(
+          this.hpoTermsInputHelper,
+          removedPmidList
+        );
     },
     saveDraft() {
       if (!isUserLoggedIn()) {
@@ -731,6 +746,10 @@ export default {
       modalId="all-input-alert-modal"
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
       @confirm-click-handler="existingGeneDataSearchHandler"
+    />
+    <RemovePublicationModal
+      :pmidList="Object.keys(input.publications)"
+      @removePublication="(pmid) => removePublication(pmid)"
     />
   </div>
 </template>

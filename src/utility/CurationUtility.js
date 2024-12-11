@@ -100,6 +100,29 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   return updatedInput;
 };
 
+export const updateInputWithRemovedPublications = (input, removedPmidList) => {
+  let updatedInput = { ...input };
+
+  removedPmidList.forEach((pmid) => {
+    delete updatedInput.publications(pmid);
+    delete updatedInput.phenotypes(pmid);
+    delete updatedInput.variant_descriptions(pmid);
+    delete updatedInput.mechanism_evidence(pmid);
+  });
+
+  for (let primaryTypeKey in updatedInput.variant_types) {
+    for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
+      let supportingPapers = secondaryTypeKey.supporting_papers;
+
+      let RemovedsupportingPapers = supportingPapers.filter(
+        (paper) => paper !== removedPmidList
+      );
+
+      supportingPapers = RemovedsupportingPapers;
+    }
+  }
+};
+
 const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   let variantConsequenceObj = {};
 
@@ -128,6 +151,17 @@ export const updateHpoTermsInputHelperWithPublicationsData = (
       isHpoTermsValid: true,
       hpoTermsInput: "",
     };
+  });
+  return updatedHpoTermsInputHelper;
+};
+
+export const updateHpoTermsInputHelperWithRemovedPublications = (
+  hpoTermsInputHelper,
+  removedPmidList
+) => {
+  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
+  removedPmidList.forEach((pmid) => {
+    delete updatedHpoTermsInputHelper[pmid];
   });
   return updatedHpoTermsInputHelper;
 };
