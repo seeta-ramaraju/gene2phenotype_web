@@ -314,8 +314,8 @@ export default {
         });
     },
     removePublication(removedPmidList) {
-      this.previousInputinput = updateInputWithRemovedPublications(
-        this.publications,
+      this.previousInput= updateInputWithRemovedPublications(
+        this.previousInput,
         removedPmidList
       );
       this.hpoTermsInputHelper =
@@ -670,7 +670,7 @@ export default {
     />
     <PublishModal @publish="saveAndPublishEntry" />
     <RemovePublicationModal
-      :pmidList="Object.keys(publications || {})"
+      :pmidList="Object.keys(previousInput?.publications || {})"
       @removePublication="(pmid) => removePublication(pmid)"
     />
   </div>

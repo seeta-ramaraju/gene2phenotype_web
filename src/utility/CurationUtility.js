@@ -116,13 +116,13 @@ export const updateInputWithRemovedPublications = (input, removedPmidList) => {
         updatedInput.variant_types[primaryTypeKey][secondaryTypeKey]
           .supporting_papers;
 
-      let RemovedsupportingPapers = supportingPapers.filter(
-        (paper) => paper !== removedPmidList
+      let filteredSupportingPapers = supportingPapers.filter(
+        (paper) => !removedPmidList.includes(paper)
       );
 
       updatedInput.variant_types[primaryTypeKey][
         secondaryTypeKey
-      ].supporting_papers = RemovedsupportingPapers;
+      ].supporting_papers = filteredSupportingPapers;
     }
   }
   return updatedInput;
