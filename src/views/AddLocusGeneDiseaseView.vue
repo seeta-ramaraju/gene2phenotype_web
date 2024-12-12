@@ -17,9 +17,12 @@ import {
   updateInputWithPublicationsData,
   prepareInputForDataSubmission,
   updateHpoTermsInputHelperWithPublicationsData,
+  updateInputWithRemovedPublications,
+  updateHpoTermsInputHelperWithRemovedPublications,
 } from "../utility/CurationUtility.js";
 import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
 import AlertModal from "../components/modal/AlertModal.vue";
+import RemovePublicationModal from "../components/modal/RemovePublicationModal.vue";
 import cloneDeep from "lodash/cloneDeep";
 import {
   appendAuthenticationHeaders,
@@ -104,6 +107,7 @@ export default {
     SaveNotPublishSuccessAlert,
     SaveSuccessAlert,
     AlertModal,
+    RemovePublicationModal,
     LoginErrorAlert,
     ExistingGeneInformation,
   },
@@ -315,7 +319,7 @@ export default {
         .then((responseJson) => {
           this.isPublicationsDataLoading = false;
           if (responseStatus === 200) {
-            const publicationsData = responseJson;
+            let publicationsData = responseJson;
             if (publicationsData && publicationsData.results) {
               this.input = updateInputWithPublicationsData(
                 this.input,
@@ -323,7 +327,10 @@ export default {
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
               this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithPublicationsData(pmidList);
+                updateHpoTermsInputHelperWithPublicationsData(
+                  this.hpoTermsInputHelper,
+                  pmidList
+                );
             }
           } else if (responseStatus === 404) {
             this.publicationsErrorMsg = responseJson.detail
@@ -340,6 +347,17 @@ export default {
           this.publicationsErrorMsg = "Unable to fetch publications data.";
           console.log(error);
         });
+    },
+    removePublication(removedPmidList) {
+      this.input = updateInputWithRemovedPublications(
+        this.input,
+        removedPmidList
+      );
+      this.hpoTermsInputHelper =
+        updateHpoTermsInputHelperWithRemovedPublications(
+          this.hpoTermsInputHelper,
+          removedPmidList
+        );
     },
     saveDraft() {
       if (!isUserLoggedIn()) {
@@ -742,10 +760,9 @@ export default {
       alertText="The data you have input will be lost. Are you sure you want to proceed?"
       @confirm-click-handler="existingGeneDataSearchHandler"
     />
-    <AlertModal
-      modalId="publications-input-alert-modal"
-      alertText="The data you have input under Publications, Phenotypic Features, Variant Types, Variant Description, and Mechanism Evidence will be lost. Are you sure you want to proceed?"
-      @confirm-click-handler="fetchPublications"
+    <RemovePublicationModal
+      :pmidList="Object.keys(input.publications)"
+      @removePublication="(pmid) => removePublication(pmid)"
     />
   </div>
 </template>

@@ -64,13 +64,9 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
   let updatedInput = { ...input };
 
   // update publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
-  let updatedPublicationsObj = {};
-  let updatedPhenotypesObj = {};
-  let updatedVariantDescriptionsObj = {};
-  let updatedMechanismEvidenceObj = {};
 
   publicationsData.results.forEach((item) => {
-    updatedPublicationsObj[item.pmid] = {
+    updatedInput.publications[item.pmid] = {
       families: null,
       affectedIndividuals: null,
       consanguineous: "unknown",
@@ -82,12 +78,12 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
       authors: item.authors,
     };
 
-    updatedPhenotypesObj[item.pmid] = {
+    updatedInput.phenotypes[item.pmid] = {
       summary: "",
       hpo_terms: [],
     };
 
-    updatedVariantDescriptionsObj[item.pmid] = {
+    updatedInput.variant_descriptions[item.pmid] = {
       description: "",
     };
 
@@ -95,25 +91,40 @@ export const updateInputWithPublicationsData = (input, publicationsData) => {
     EvidenceTypesAttribs.forEach((item) => {
       evidenceTypesObj[item.primaryType] = [];
     });
-    updatedMechanismEvidenceObj[item.pmid] = {
+    updatedInput.mechanism_evidence[item.pmid] = {
       description: "",
       evidence_types: evidenceTypesObj,
     };
   });
 
-  updatedInput.publications = updatedPublicationsObj;
-  updatedInput.phenotypes = updatedPhenotypesObj;
-  updatedInput.variant_descriptions = updatedVariantDescriptionsObj;
-  updatedInput.mechanism_evidence = updatedMechanismEvidenceObj;
+  return updatedInput;
+};
+
+export const updateInputWithRemovedPublications = (input, removedPmidList) => {
+  let updatedInput = { ...input };
+
+  removedPmidList.forEach((pmid) => {
+    delete updatedInput.publications[pmid];
+    delete updatedInput.phenotypes[pmid];
+    delete updatedInput.variant_descriptions[pmid];
+    delete updatedInput.mechanism_evidence[pmid];
+  });
 
   for (let primaryTypeKey in updatedInput.variant_types) {
     for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
+      let supportingPapers =
+        updatedInput.variant_types[primaryTypeKey][secondaryTypeKey]
+          .supporting_papers;
+
+      let filteredSupportingPapers = supportingPapers.filter(
+        (paper) => !removedPmidList.includes(paper)
+      );
+
       updatedInput.variant_types[primaryTypeKey][
         secondaryTypeKey
-      ].supporting_papers = [];
+      ].supporting_papers = filteredSupportingPapers;
     }
   }
-
   return updatedInput;
 };
 
@@ -133,17 +144,31 @@ const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   return variantConsequenceObj;
 };
 
-export const updateHpoTermsInputHelperWithPublicationsData = (pmidList) => {
-  let hpoTermsInputHelper = {};
+export const updateHpoTermsInputHelperWithPublicationsData = (
+  hpoTermsInputHelper,
+  pmidList
+) => {
+  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
   pmidList.forEach((pmid) => {
-    hpoTermsInputHelper[pmid] = {
+    updatedHpoTermsInputHelper[pmid] = {
       isHpoTermsDataLoading: false,
       hpoTermsErrorMsg: "",
       isHpoTermsValid: true,
       hpoTermsInput: "",
     };
   });
-  return hpoTermsInputHelper;
+  return updatedHpoTermsInputHelper;
+};
+
+export const updateHpoTermsInputHelperWithRemovedPublications = (
+  hpoTermsInputHelper,
+  removedPmidList
+) => {
+  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
+  removedPmidList.forEach((pmid) => {
+    delete updatedHpoTermsInputHelper[pmid];
+  });
+  return updatedHpoTermsInputHelper;
 };
 
 export const prepareInputForDataSubmission = (input) => {
