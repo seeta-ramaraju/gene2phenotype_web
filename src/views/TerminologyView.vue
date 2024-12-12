@@ -6,7 +6,10 @@ import {
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
-import { ConfidenceAttribsOrder } from "../utility/CurationConstants.js";
+import {
+  ConfidenceAttribsOrder,
+  VariantConsequencesAttribs,
+} from "../utility/CurationConstants.js";
 export default {
   data() {
     return {
@@ -16,6 +19,7 @@ export default {
       variantDescriptionData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      VariantConsequencesAttribs,
     };
   },
   created() {
@@ -287,8 +291,46 @@ export default {
         </div>
       </section>
       <br />
-      <section id="variant-consequences">
-        <h4>Variant Consequences</h4>
+      <section id="variant-consequence">
+        <h4>Variant Consequence</h4>
+        <strong
+          >The consequence of the reported variants at the protein (for
+          protein-coding genes) or the RNA (for non-protein coding genes), per
+          allele.</strong
+        >
+        <div class="pt-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>SO term</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(consequences, index) in Object.keys(
+                  variantDescriptionData.other_variants
+                )"
+                :key="index"
+              >
+                <td
+                  v-if="
+                    VariantConsequencesAttribs.some(
+                      (attr) =>
+                        attr.inputKey === consequences.replace(/ /g, '_')
+                    )
+                  "
+                >
+                  {{ consequences }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="variant-types">
+        <h4>Variant Types</h4>
         <strong
           >The types of variants associated with the curated gene-disease pair
           reported in the publication</strong
@@ -321,8 +363,22 @@ export default {
                   >
                     {{ consequences }}
                   </td>
-                  <td>{{ term.term }}</td>
-                  <td>
+                  <td
+                    v-if="
+                      !VariantConsequencesAttribs.some(
+                        (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                      )
+                    "
+                  >
+                    {{ term.term }}
+                  </td>
+                  <td
+                    v-if="
+                      !VariantConsequencesAttribs.some(
+                        (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                      )
+                    "
+                  >
                     <a
                       :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
                       style="text-decoration: none"
