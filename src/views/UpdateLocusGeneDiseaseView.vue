@@ -83,7 +83,6 @@ export default {
       panelData: null,
       stableID: null,
       isLogInSessionExpired: false,
-      publications: null,
     };
   },
   components: {
@@ -133,7 +132,6 @@ export default {
         .then((responseJson) => {
           this.isPreviousInputDataLoading = false;
           this.previousInput = prepareInputForUpdating(responseJson.data);
-          this.publications = this.previousInput.publications || [];
           let pmidList = Object.keys(this.previousInput.publications);
           this.hpoTermsInputHelper =
             updateHpoTermsInputHelperWithPublicationsData(
@@ -314,7 +312,7 @@ export default {
         });
     },
     removePublication(removedPmidList) {
-      this.previousInput= updateInputWithRemovedPublications(
+      this.previousInput = updateInputWithRemovedPublications(
         this.previousInput,
         removedPmidList
       );
