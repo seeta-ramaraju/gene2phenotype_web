@@ -81,15 +81,11 @@ export default {
         });
     },
     reorderedConfidenceCategoryList() {
-      return this.terminologyDescriptionData.confidence_category
-        .sort(
-          (a, b) =>
-            ConfidenceAttribsOrder.indexOf(a) -
-            ConfidenceAttribsOrder.indexOf(b)
-        )
-        .map((item, index) => {
-          return { ...item, index };
-        });
+      return this.terminologyDescriptionData.confidence_category.sort(
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(Object.keys(a)[0]) -
+          ConfidenceAttribsOrder.indexOf(Object.keys(b)[0])
+      );
     },
   },
 };
@@ -112,6 +108,7 @@ export default {
     <div v-if="terminologyDescriptionData">
       <section id="g2p-confidence">
         <h4>G2P Confidence Category</h4>
+        <strong>GenCC confidence terms are used</strong>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -163,6 +160,10 @@ export default {
       <br />
       <section id="allelic-requirement">
         <h4>Allelic Requirement</h4>
+        <strong
+          >HPO Mode of inheritance terminology is used. G2P uses synonyms of the
+          MOI terms as many of the disorders described are de novo.</strong
+        >
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -193,6 +194,7 @@ export default {
       <br />
       <section id="cross-cutting-modifier">
         <h4>Cross Cutting Modifier</h4>
+        <strong>HPO inheriance qualifier terms are used where available</strong>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -287,6 +289,10 @@ export default {
       <br />
       <section id="variant-consequences">
         <h4>Variant Consequences</h4>
+        <strong
+          >The types of variants associated with the curated gene-disease pair
+          reported in the publication</strong
+        >
         <div class="pt-3">
           <table class="table">
             <thead>
