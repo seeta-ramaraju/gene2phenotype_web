@@ -303,26 +303,37 @@ export default {
             <thead>
               <tr>
                 <th>Type</th>
-                <th>Description</th>
                 <th>SO term</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="(consequences, index) in Object.keys(
-                  variantDescriptionData.other_variants
-                )"
-                :key="index"
+                v-for="(term, index) in variantDescriptionData.other_variants"
+                :key="term.accession"
               >
                 <td
                   v-if="
                     VariantConsequencesAttribs.some(
-                      (attr) =>
-                        attr.inputKey === consequences.replace(/ /g, '_')
+                      (attr) => attr.inputKey === term.term.replace(/ /g, '_')
                     )
                   "
                 >
-                  {{ consequences }}
+                  {{ term.term }}
+                </td>
+                <td
+                  v-if="
+                    VariantConsequencesAttribs.some(
+                      (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                    )
+                  "
+                >
+                  <a
+                    :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
+                    style="text-decoration: none"
+                    target="_blank"
+                  >
+                    {{ term.accession }}
+                  </a>
                 </td>
               </tr>
             </tbody>
