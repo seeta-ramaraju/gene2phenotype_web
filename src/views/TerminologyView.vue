@@ -302,8 +302,8 @@ export default {
           <table class="table">
             <thead>
               <tr>
-                <th>Type</th>
-                <th>SO term</th>
+                <th>Consequence</th>
+                <th>Description in SO</th>
               </tr>
             </thead>
             <tbody>
@@ -350,8 +350,8 @@ export default {
           <table class="table">
             <thead>
               <tr>
-                <th>Primary Consequence</th>
-                <th>Variant Consequence</th>
+                <th>Primary Type</th>
+                <th>Variant Type</th>
                 <th>Description in SO</th>
               </tr>
             </thead>
