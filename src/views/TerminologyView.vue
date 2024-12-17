@@ -112,7 +112,7 @@ export default {
     <div v-if="terminologyDescriptionData">
       <section id="g2p-confidence">
         <h4>G2P Confidence Category</h4>
-        <strong>GenCC confidence terms are used</strong>
+        <h6>GenCC confidence terms are used</h6>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -164,10 +164,10 @@ export default {
       <br />
       <section id="allelic-requirement">
         <h4>Allelic Requirement</h4>
-        <strong
-          >HPO Mode of inheritance terminology is used. G2P uses synonyms of the
-          MOI terms as many of the disorders described are de novo.</strong
-        >
+        <h6>
+          HPO Mode of inheritance terminology is used. G2P uses synonyms of the
+          MOI terms as many of the disorders described are de novo.
+        </h6>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -198,7 +198,7 @@ export default {
       <br />
       <section id="cross-cutting-modifier">
         <h4>Cross Cutting Modifier</h4>
-        <strong>HPO inheriance qualifier terms are used where available</strong>
+        <h6>HPO inheriance qualifier terms are used where available</h6>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -293,11 +293,11 @@ export default {
       <br />
       <section id="variant-consequence">
         <h4>Variant Consequence</h4>
-        <strong
-          >The consequence of the reported variants at the protein (for
+        <h6>
+          The consequence of the reported variants at the protein (for
           protein-coding genes) or the RNA (for non-protein coding genes), per
-          allele.</strong
-        >
+          allele.
+        </h6>
         <div class="pt-3">
           <table class="table">
             <thead>
@@ -342,10 +342,10 @@ export default {
       </section>
       <section id="variant-types">
         <h4>Variant Types</h4>
-        <strong
-          >The types of variants associated with the curated gene-disease pair
-          reported in the publication</strong
-        >
+        <h6>
+          The types of variants associated with the curated gene-disease pair
+          reported in the publication
+        </h6>
         <div class="pt-3">
           <table class="table">
             <thead>
