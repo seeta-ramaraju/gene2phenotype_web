@@ -335,7 +335,7 @@ export default {
               <td>{{ item.genotype }}</td>
               <td>{{ item.variant_consequence.join(", ") }}</td>
               <td>{{ item.variant_type.join(", ") }}</td>
-              <td>{{ item.molecular_mechanism.join(", ") }}</td>
+              <td>{{ item.molecular_mechanism }}</td>
               <td>
                 <span
                   v-if="item.confidence"
