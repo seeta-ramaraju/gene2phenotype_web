@@ -532,11 +532,13 @@ export default {
                 {{ locusGeneDiseaseData.molecular_mechanism.mechanism }}
                 <span
                   v-if="
-                    locusGeneDiseaseData.molecular_mechanism?.support ===
-                    'inferred'
+                    locusGeneDiseaseData.molecular_mechanism
+                      ?.mechanism_support === 'inferred'
                   "
                 >
-                  ({{ locusGeneDiseaseData.molecular_mechanism.support }})
+                  ({{
+                    locusGeneDiseaseData.molecular_mechanism.mechanism_support
+                  }})
                 </span>
               </p>
               <p v-else class="text-muted">Not Available</p>
@@ -547,19 +549,61 @@ export default {
               <h6>Categorization</h6>
             </td>
             <td class="w-75">
-              <p v-if="locusGeneDiseaseData.molecular_mechanism?.synopsis">
-                {{ locusGeneDiseaseData.molecular_mechanism.synopsis }}
-                <span
-                  v-if="
-                    locusGeneDiseaseData.molecular_mechanism
-                      ?.synopsis_support === 'inferred'
-                  "
-                >
-                  ({{
-                    locusGeneDiseaseData.molecular_mechanism.synopsis_support
-                  }})
-                </span>
-              </p>
+              <div
+                v-if="
+                  locusGeneDiseaseData.molecular_mechanism?.synopsis &&
+                  locusGeneDiseaseData.molecular_mechanism.synopsis.length > 0
+                "
+                class="accordion accordion-flush"
+                id="accordionMechanismSynopsis"
+              >
+                <div class="accordion-item">
+                  <h2 class="accordion-header border">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapsibleMechanismSynopsisTable"
+                      aria-expanded="false"
+                      aria-controls="collapsibleMechanismSynopsisTable"
+                    >
+                      Categorization ({{
+                        locusGeneDiseaseData.molecular_mechanism.synopsis
+                          .length
+                      }})
+                    </button>
+                  </h2>
+                  <div
+                    id="collapsibleMechanismSynopsisTable"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionMechanismSynopsis"
+                  >
+                    <div class="accordion-body p-0">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <tr>
+                            <th>Categorization</th>
+                            <th>Support</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="item in locusGeneDiseaseData
+                              .molecular_mechanism.synopsis"
+                          >
+                            <td>
+                              {{ item.synopsis }}
+                            </td>
+                            <td>
+                              {{ item.support }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>

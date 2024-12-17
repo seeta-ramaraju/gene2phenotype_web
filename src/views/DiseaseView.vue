@@ -156,11 +156,7 @@ export default {
                 }}
               </td>
               <td>
-                {{
-                  Array.isArray(item.molecular_mechanism)
-                    ? item.molecular_mechanism.join(", ")
-                    : item.molecular_mechanism
-                }}
+                {{ item.molecular_mechanism }}
               </td>
               <td>
                 <span
