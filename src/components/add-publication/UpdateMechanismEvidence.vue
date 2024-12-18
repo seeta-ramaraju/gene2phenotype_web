@@ -106,7 +106,7 @@ export default {
                 <label for="mechanism-input" class="col-form-label">
                   Mechanism
                   <ToolTip
-                    toolTipText="Mechanism can only be updated if it is 'undetermined'. For other changes, please contact Admin."
+                    toolTipText="To change Mechanism, please contact Admin at g2p-help@ebi.ac.uk"
                   />
                 </label>
               </div>
