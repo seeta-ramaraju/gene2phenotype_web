@@ -191,11 +191,11 @@ export default {
     kebabCase,
   },
   computed: {
-    isDisplayMechanismForm() {
-      return this.currentMechanism?.mechanism_support === "inferred";
-    },
     canUpdateMechanismInput() {
       return this.currentMechanism?.mechanism === "undetermined";
+    },
+    canUpdateMechanismSourceInput() {
+      return this.currentMechanism?.mechanism_support === "inferred";
     },
     isDisplayEvidenceForm() {
       return (
@@ -278,7 +278,7 @@ export default {
               </div>
             </div>
             <div v-else>
-              <div v-if="isDisplayMechanismForm" class="row">
+              <div class="row">
                 <div class="col-lg-2">
                   <label for="mechanism-input" class="col-form-label">
                     Mechanism
@@ -305,6 +305,7 @@ export default {
                     id="mechanism-input-source"
                     class="form-select"
                     v-model="mechanismSupport"
+                    :disabled="!canUpdateMechanismSourceInput"
                   >
                     <option value="">Select Source</option>
                     <option
@@ -316,11 +317,6 @@ export default {
                   </select>
                 </div>
               </div>
-              <p v-else>
-                <b>Mechanism:</b>
-                {{ currentMechanism?.mechanism || "Not Available" }}
-                ({{ currentMechanism.mechanism_support }})
-              </p>
               <div class="row py-3">
                 <div class="col-lg-2">
                   <label for="categorisation-input" class="col-form-label">

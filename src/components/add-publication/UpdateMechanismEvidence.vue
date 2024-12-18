@@ -55,11 +55,11 @@ export default {
     };
   },
   computed: {
-    isDisplayMechanismForm() {
-      return this.currentMechanism?.mechanism_support === "inferred";
-    },
     canUpdateMechanismInput() {
       return this.currentMechanism?.mechanism === "undetermined";
+    },
+    canUpdateMechanismSourceInput() {
+      return this.currentMechanism?.mechanism_support === "inferred";
     },
     isDisplayNewEvidenceForm() {
       return (
@@ -101,7 +101,7 @@ export default {
       <div id="mechanism-section-body" class="accordion-collapse collapse">
         <div class="accordion-body">
           <div class="row g-3 px-3 pt-3">
-            <div v-if="isDisplayMechanismForm" class="row pt-3">
+            <div class="row pt-3">
               <div class="col-lg-2">
                 <label for="mechanism-input" class="col-form-label">
                   Mechanism
@@ -137,6 +137,7 @@ export default {
                       $event.target.value
                     )
                   "
+                  :disabled="!canUpdateMechanismSourceInput"
                 >
                   <option value="">Select Source</option>
                   <option v-for="item in mechanismSupportAttribs" :value="item">
@@ -145,11 +146,6 @@ export default {
                 </select>
               </div>
             </div>
-            <p v-else>
-              <b>Mechanism:</b>
-              {{ currentMechanism?.mechanism || "Not Available" }}
-              ({{ currentMechanism.mechanism_support }})
-            </p>
             <div class="row py-3">
               <div class="col-lg-2">
                 <label for="categorisation-input" class="col-form-label">
