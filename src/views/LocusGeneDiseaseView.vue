@@ -7,8 +7,9 @@ import {
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
 import AddPanelModal from "../components/modal/AddPanelModal.vue";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
 import UpdateRecordModal from "../components/modal/UpdateRecordModal.vue";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -17,6 +18,7 @@ export default {
       locusGeneDiseaseData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
       isRecordPartOfUserPanels: false,
       stableId: null,
       userPanels: null,
@@ -26,6 +28,7 @@ export default {
   components: {
     AddPanelModal,
     UpdateRecordModal,
+    ToolTip,
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -186,7 +189,10 @@ export default {
         <tbody>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h5>Allelic Requirement</h5>
+              <h5>
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </h5>
             </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.genotype">
@@ -209,7 +215,10 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h5>Cross Cutting Modifier(s)</h5>
+              <h5>
+                Cross Cutting Modifier(s)
+                <ToolTip :toolTipText="helpText.CROSS_CUTTING_MODIFIER" />
+              </h5>
             </td>
             <td class="w-75">
               <p
@@ -268,7 +277,9 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h6>Variant Type(s)</h6>
+              <h6>
+                Variant Type(s) <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+              </h6>
             </td>
             <td class="w-75">
               <div
@@ -481,7 +492,10 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h6>Variant Consequence(s)</h6>
+              <h6>
+                Variant Consequence(s)
+                <ToolTip :toolTipText="helpText.VARIANT_CONSEQUENCE" />
+              </h6>
             </td>
             <td class="w-75">
               <div
@@ -558,7 +572,7 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h6>Mechanism</h6>
+              <h6>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></h6>
             </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.molecular_mechanism?.mechanism">
@@ -579,7 +593,10 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h6>Categorization</h6>
+              <h6>
+                Categorization
+                <ToolTip :toolTipText="helpText.CATEGORIZATION" />
+              </h6>
             </td>
             <td class="w-75">
               <div
@@ -731,7 +748,10 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h5>Phenotypic Feature(s)</h5>
+              <h5>
+                Phenotypic Feature(s)
+                <ToolTip :toolTipText="helpText.PHENOTYPIC_FEATURE" />
+              </h5>
             </td>
             <td class="w-75">
               <div
@@ -1024,7 +1044,10 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h6>External Links</h6>
+              <h6>
+                External Links
+                <ToolTip :toolTipText="helpText.EXTERNAL_LINKS" />
+              </h6>
             </td>
             <td class="w-75">
               <table class="table table-bordered mb-0">
@@ -1106,7 +1129,10 @@ export default {
           </tr>
           <tr>
             <td class="w-25 text-end">
-              <h6>Cross Reference(s)</h6>
+              <h6>
+                Cross Reference(s)
+                <ToolTip :toolTipText="helpText.CROSS_REFERENCES" />
+              </h6>
             </td>
             <td class="w-75">
               <div
@@ -1184,7 +1210,7 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h5>G2P ID</h5>
+              <h5>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></h5>
             </td>
             <td class="w-75">
               <p v-if="locusGeneDiseaseData.stable_id">

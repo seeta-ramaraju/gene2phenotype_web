@@ -17,6 +17,7 @@ export default {
   position: relative;
   display: inline-block;
   color: #0d6efd;
+  white-space: normal;
 }
 
 .custom-tooltip .custom-tooltip-text {

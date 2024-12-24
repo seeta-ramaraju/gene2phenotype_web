@@ -1,7 +1,8 @@
 <script>
 import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -11,6 +12,7 @@ export default {
       diseaseData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
     };
   },
   created() {
@@ -24,7 +26,7 @@ export default {
       { immediate: true }
     );
   },
-  //adding methods
+  components: { ToolTip },
   methods: {
     fetchData() {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
@@ -91,7 +93,7 @@ export default {
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
       <h4 class="py-3">Synonyms</h4>
-      <div class="row">
+      <div>
         <ul v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
           <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
         </ul>
@@ -194,7 +196,7 @@ export default {
         "
         class="py-3"
       >
-        Cross references
+        Cross references <ToolTip :toolTipText="helpText.CROSS_REFERENCES" />
       </h4>
       <table
         class="table table-bordered table-hover w-50 shadow-sm"

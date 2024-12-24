@@ -6,7 +6,7 @@ import {
 } from "../utility/UrlConstants";
 import BarChart from "../components/chart/BarChart.vue";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
@@ -19,6 +19,7 @@ export default {
       errorMsg: null,
       downloadAllDataErrorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
       chartData: {},
       chartOptions: {
         responsive: true,
@@ -263,6 +264,9 @@ export default {
           @click="downloadAllData"
         >
           <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
+          <ToolTip
+            toolTipText="Download all records for this panel, including all attributes, not just those displayed here."
+          />
         </button>
         <button v-else disabled class="btn btn-outline-primary" type="button">
           <span
@@ -296,11 +300,19 @@ export default {
               <th>G2P ID</th>
               <th>Gene</th>
               <th>Disease</th>
-              <th>Allelic Requirement</th>
-              <th>Variant Consequence</th>
-              <th>Variant Type</th>
-              <th>Mechanism</th>
-              <th>Confidence</th>
+              <th style="white-space: nowrap">
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </th>
+              <th style="white-space: nowrap">
+                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+              </th>
+              <th style="white-space: nowrap">
+                Mechanism <ToolTip :toolTipText="helpText.MECHANISM" />
+              </th>
+              <th style="white-space: nowrap">
+                Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -333,7 +345,6 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.variant_consequence.join(", ") }}</td>
               <td>{{ item.variant_type.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
