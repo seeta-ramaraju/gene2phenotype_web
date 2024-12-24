@@ -113,7 +113,7 @@ export default {
       <section id="g2p-confidence">
         <h4>G2P Confidence Category</h4>
         <h6>GenCC confidence terms are used</h6>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -124,51 +124,49 @@ export default {
             <tbody>
               <tr
                 v-for="(item, index) in reorderedConfidenceCategoryList()"
-                :key="item.index"
+                :key="index"
               >
                 <td>
                   <span
-                    v-if="Object.entries(item)[0][0]"
+                    v-if="Object.keys(item)[0]"
                     class="badge text-white"
                     :style="{
                       backgroundColor:
-                        confidenceColorMap[
-                          Object.entries(item)[0][0].toLowerCase()
-                        ],
+                        confidenceColorMap[Object.keys(item)[0].toLowerCase()],
                     }"
                   >
-                    {{ Object.entries(item)[0][0] }}
+                    {{ Object.keys(item)[0] }}
                   </span>
                 </td>
                 <td>
-                  <span v-if="Object.entries(item)[0][1]">{{
-                    Object.entries(item)[0][1]
-                  }}</span>
-                  <span v-else class="text-muted"
-                    >No description available</span
-                  >
+                  <span v-if="Object.values(item)[0]">
+                    {{ Object.values(item)[0] }}
+                  </span>
+                  <span v-else class="text-muted">
+                    No description available
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
-          <p>
-            Operationally several groups use <b>definitive</b>,
-            <b>strong</b> and <b>moderate</b> for clinical reporting.
-          </p>
-          <p>
-            <b>Limited</b>, <b>disputed</b> and <b>refuted</b> are not used for
-            clinical reporting.
-          </p>
         </div>
+        <p class="mb-0">
+          <i class="bi bi-info-circle"></i> Operationally several groups use
+          <b>definitive</b>, <b>strong</b> and <b>moderate</b> for clinical
+          reporting.
+        </p>
+        <p>
+          <i class="bi bi-info-circle"></i> <b>Limited</b>, <b>disputed</b> and
+          <b>refuted</b> are not used for clinical reporting.
+        </p>
       </section>
-      <br />
-      <section id="allelic-requirement">
+      <section id="allelic-requirement" class="pt-3">
         <h4>Allelic Requirement</h4>
         <h6>
           HPO Mode of inheritance terminology is used. G2P uses synonyms of the
           MOI terms as many of the disorders described are de novo.
         </h6>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -181,25 +179,24 @@ export default {
                 v-for="(item, index) in terminologyDescriptionData.genotype"
                 :key="index"
               >
-                <td>{{ Object.entries(item)[0][0] }}</td>
+                <td>{{ Object.keys(item)[0] }}</td>
                 <td>
-                  <span v-if="Object.entries(item)[0][1]">{{
-                    Object.entries(item)[0][1]
-                  }}</span>
-                  <span v-else class="text-muted"
-                    >No description available</span
-                  >
+                  <span v-if="Object.values(item)[0]">
+                    {{ Object.values(item)[0] }}
+                  </span>
+                  <span v-else class="text-muted">
+                    No description available
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <br />
-      <section id="cross-cutting-modifier">
+      <section id="cross-cutting-modifier" class="pt-3">
         <h4>Cross Cutting Modifier</h4>
         <h6>HPO inheriance qualifier terms are used where available</h6>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -214,24 +211,23 @@ export default {
                 ) in terminologyDescriptionData.cross_cutting_modifier"
                 :key="index"
               >
-                <td>{{ Object.entries(item)[0][0] }}</td>
+                <td>{{ Object.keys(item)[0] }}</td>
                 <td>
-                  <span v-if="Object.entries(item)[0][1]">{{
-                    Object.entries(item)[0][1]
-                  }}</span>
-                  <span v-else class="text-muted"
-                    >No description available</span
-                  >
+                  <span v-if="Object.values(item)[0]">
+                    {{ Object.values(item)[0] }}
+                  </span>
+                  <span v-else class="text-muted">
+                    No description available
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <br />
-      <section id="molecular-mechanism">
+      <section id="molecular-mechanism" class="pt-3">
         <h4>Molecular Mechanism</h4>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -244,24 +240,23 @@ export default {
                 v-for="(item, index) in molecularDescriptionData.mechanism"
                 :key="index"
               >
-                <td>{{ Object.entries(item)[0][0] }}</td>
+                <td>{{ Object.keys(item)[0] }}</td>
                 <td>
-                  <span v-if="Object.entries(item)[0][1]">{{
-                    Object.entries(item)[0][1]
-                  }}</span>
-                  <span v-else class="text-muted"
-                    >No description available</span
-                  >
+                  <span v-if="Object.values(item)[0]">
+                    {{ Object.values(item)[0] }}
+                  </span>
+                  <span v-else class="text-muted">
+                    No description available
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <br />
-      <section id="mechanism-synopsis">
+      <section id="mechanism-synopsis" class="pt-3">
         <h4>Molecular Mechanism Synopsis</h4>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -276,29 +271,28 @@ export default {
                 ) in molecularDescriptionData.mechanism_synopsis"
                 :key="index"
               >
-                <td>{{ Object.entries(item)[0][0] }}</td>
+                <td>{{ Object.keys(item)[0] }}</td>
                 <td>
-                  <span v-if="Object.entries(item)[0][1]">{{
-                    Object.entries(item)[0][1]
-                  }}</span>
-                  <span v-else class="text-muted"
-                    >No description available</span
-                  >
+                  <span v-if="Object.values(item)[0]">
+                    {{ Object.values(item)[0] }}
+                  </span>
+                  <span v-else class="text-muted">
+                    No description available
+                  </span>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </section>
-      <br />
-      <section id="variant-consequence">
+      <section id="variant-consequence" class="pt-3">
         <h4>Variant Consequence</h4>
         <h6>
           The consequence of the reported variants at the protein (for
           protein-coding genes) or the RNA (for non-protein coding genes), per
           allele.
         </h6>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
@@ -308,7 +302,7 @@ export default {
             </thead>
             <tbody>
               <tr
-                v-for="(term, index) in variantDescriptionData.other_variants"
+                v-for="term in variantDescriptionData.other_variants"
                 :key="term.accession"
               >
                 <td
@@ -340,13 +334,13 @@ export default {
           </table>
         </div>
       </section>
-      <section id="variant-types">
+      <section id="variant-types" class="pt-3">
         <h4>Variant Types</h4>
         <h6>
           The types of variants associated with the curated gene-disease pair
           reported in the publication
         </h6>
-        <div class="pt-3">
+        <div class="pt-1 table-responsive-xl">
           <table class="table">
             <thead>
               <tr>
