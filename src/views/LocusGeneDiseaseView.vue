@@ -229,6 +229,39 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
+              <h5>Panel(s)</h5>
+            </td>
+            <td class="w-75">
+              <span
+                v-if="
+                  locusGeneDiseaseData.panels &&
+                  locusGeneDiseaseData.panels.length > 0
+                "
+              >
+                <span v-for="(item, index) in locusGeneDiseaseData.panels">
+                  <span v-if="index < locusGeneDiseaseData.panels.length - 1">
+                    <router-link
+                      :to="`/panel/${item.name}`"
+                      style="text-decoration: none"
+                    >
+                      {{ item.description ? item.description : item.name }}
+                    </router-link>
+                    ,
+                  </span>
+                  <router-link
+                    :to="`/panel/${item.name}`"
+                    v-else
+                    style="text-decoration: none"
+                  >
+                    {{ item.description ? item.description : item.name }}
+                  </router-link>
+                </span>
+              </span>
+              <p v-else class="text-muted">Not Available</p>
+            </td>
+          </tr>
+          <tr class="align-middle">
+            <td class="w-25 text-end">
               <h5>Variant Information</h5>
             </td>
             <td></td>
@@ -917,39 +950,6 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h5>Panel(s)</h5>
-            </td>
-            <td class="w-75">
-              <span
-                v-if="
-                  locusGeneDiseaseData.panels &&
-                  locusGeneDiseaseData.panels.length > 0
-                "
-              >
-                <span v-for="(item, index) in locusGeneDiseaseData.panels">
-                  <span v-if="index < locusGeneDiseaseData.panels.length - 1">
-                    <router-link
-                      :to="`/panel/${item.name}`"
-                      style="text-decoration: none"
-                    >
-                      {{ item.description ? item.description : item.name }}
-                    </router-link>
-                    ,
-                  </span>
-                  <router-link
-                    :to="`/panel/${item.name}`"
-                    v-else
-                    style="text-decoration: none"
-                  >
-                    {{ item.description ? item.description : item.name }}
-                  </router-link>
-                </span>
-              </span>
-              <p v-else class="text-muted">Not Available</p>
-            </td>
-          </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
               <h5>Gene Information</h5>
             </td>
             <td></td>
@@ -1211,17 +1211,6 @@ export default {
               <h5>Curation Information</h5>
             </td>
             <td></td>
-          </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
-              <h6>Curator(s)</h6>
-            </td>
-            <td class="w-75">
-              <p v-if="locusGeneDiseaseData.curators">
-                {{ locusGeneDiseaseData.curators.join(", ") }}
-              </p>
-              <p v-else class="text-muted">Not Available</p>
-            </td>
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
