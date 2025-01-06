@@ -60,11 +60,10 @@ export const getInitialInputForNewCuration = () => {
   return input;
 };
 
-export const updateInputWithPublicationsData = (input, publicationsData) => {
+export const updateInputWithNewPublicationsData = (input, publicationsData) => {
   let updatedInput = { ...input };
 
   // update publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
-
   publicationsData.results.forEach((item) => {
     updatedInput.publications[item.pmid] = {
       families: null,
@@ -104,27 +103,29 @@ export const updateInputWithRemovedPublications = (input, removedPmidList) => {
   let updatedInput = { ...input };
 
   removedPmidList.forEach((pmid) => {
+    // remove pmid from publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
     delete updatedInput.publications[pmid];
     delete updatedInput.phenotypes[pmid];
     delete updatedInput.variant_descriptions[pmid];
     delete updatedInput.mechanism_evidence[pmid];
   });
 
+  // remove pmid from supporting papers list of variant_types
   for (let primaryTypeKey in updatedInput.variant_types) {
     for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
-      let supportingPapers =
+      const supportingPapers =
         updatedInput.variant_types[primaryTypeKey][secondaryTypeKey]
           .supporting_papers;
-
-      let filteredSupportingPapers = supportingPapers.filter(
-        (paper) => !removedPmidList.includes(paper)
+      // filter supporting papers by removing pmids
+      const filteredSupportingPapers = supportingPapers.filter(
+        (supportingPaper) => !removedPmidList.includes(supportingPaper)
       );
-
       updatedInput.variant_types[primaryTypeKey][
         secondaryTypeKey
       ].supporting_papers = filteredSupportingPapers;
     }
   }
+
   return updatedInput;
 };
 
@@ -144,7 +145,7 @@ const convertVariantConsequencesArrayToObject = (variantConsequencesArray) => {
   return variantConsequenceObj;
 };
 
-export const updateHpoTermsInputHelperWithPublicationsData = (
+export const updateHpoTermsInputHelperWithNewPublicationsData = (
   hpoTermsInputHelper,
   pmidList
 ) => {
@@ -206,33 +207,38 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.phenotypes = phenotypesArray;
 
-  // convert mechanism evidence from object to array of objects and include evidence that have non empty description or non empty evidence types
-  let mechanismEvidenceArray = [];
-  for (const [publicationPmid, valueObj] of Object.entries(
-    preparedInput.mechanism_evidence
-  )) {
-    let evidenceTypesArray = [];
-    for (const [primaryType, secondaryTypesArray] of Object.entries(
-      valueObj.evidence_types
+  if (preparedInput.molecular_mechanism.support !== "evidence") {
+    // if molecular_mechanism.support is not evidence then set mechanism_evidence as []
+    preparedInput.mechanism_evidence = [];
+  } else {
+    // else convert mechanism evidence from object to array of objects and include evidence that have non empty description or non empty evidence types
+    let mechanismEvidenceArray = [];
+    for (const [publicationPmid, valueObj] of Object.entries(
+      preparedInput.mechanism_evidence
     )) {
-      if (secondaryTypesArray.length > 0) {
-        let evidenceTypeObj = {
-          primary_type: primaryType,
-          secondary_type: secondaryTypesArray,
+      let evidenceTypesArray = [];
+      for (const [primaryType, secondaryTypesArray] of Object.entries(
+        valueObj.evidence_types
+      )) {
+        if (secondaryTypesArray.length > 0) {
+          let evidenceTypeObj = {
+            primary_type: primaryType,
+            secondary_type: secondaryTypesArray,
+          };
+          evidenceTypesArray.push(evidenceTypeObj);
+        }
+      }
+      if (valueObj.description.trim() !== "" || evidenceTypesArray.length > 0) {
+        let mechanismEvidenceObj = {
+          pmid: publicationPmid,
+          description: valueObj.description.trim(), // trim description value
+          evidence_types: evidenceTypesArray,
         };
-        evidenceTypesArray.push(evidenceTypeObj);
+        mechanismEvidenceArray.push(mechanismEvidenceObj);
       }
     }
-    if (valueObj.description.trim() !== "" || evidenceTypesArray.length > 0) {
-      let mechanismEvidenceObj = {
-        pmid: publicationPmid,
-        description: valueObj.description.trim(), // trim description value
-        evidence_types: evidenceTypesArray,
-      };
-      mechanismEvidenceArray.push(mechanismEvidenceObj);
-    }
+    preparedInput.mechanism_evidence = mechanismEvidenceArray;
   }
-  preparedInput.mechanism_evidence = mechanismEvidenceArray;
 
   // convert variant types from object to array of objects and include variant types that have any non empty field data
   let variantTypesArray = [];

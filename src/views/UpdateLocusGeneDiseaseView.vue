@@ -13,10 +13,10 @@ import PublishModal from "../components/modal/PublishModal.vue";
 import PublishSuccessAlert from "../components/alert/PublishSuccessAlert.vue";
 import SaveNotPublishSuccessAlert from "../components/alert/SaveNotPublishSuccessAlert.vue";
 import {
-  updateInputWithPublicationsData,
+  updateInputWithNewPublicationsData,
   prepareInputForDataSubmission,
   prepareInputForUpdating,
-  updateHpoTermsInputHelperWithPublicationsData,
+  updateHpoTermsInputHelperWithNewPublicationsData,
   updateInputWithRemovedPublications,
   updateHpoTermsInputHelperWithRemovedPublications,
 } from "../utility/CurationUtility.js";
@@ -147,7 +147,7 @@ export default {
           this.previousInput = prepareInputForUpdating(responseJson.data);
           let pmidList = Object.keys(this.previousInput.publications);
           this.hpoTermsInputHelper =
-            updateHpoTermsInputHelperWithPublicationsData(
+            updateHpoTermsInputHelperWithNewPublicationsData(
               this.hpoTermsInputHelper,
               pmidList
             );
@@ -297,13 +297,13 @@ export default {
           if (responseStatus === 200) {
             let publicationsData = responseJson;
             if (publicationsData && publicationsData.results) {
-              this.previousInput = updateInputWithPublicationsData(
+              this.previousInput = updateInputWithNewPublicationsData(
                 this.previousInput,
                 publicationsData
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
               this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithPublicationsData(
+                updateHpoTermsInputHelperWithNewPublicationsData(
                   this.hpoTermsInputHelper,
                   pmidList
                 );

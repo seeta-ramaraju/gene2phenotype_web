@@ -14,9 +14,9 @@ import PublishSuccessAlert from "../components/alert/PublishSuccessAlert.vue";
 import SaveNotPublishSuccessAlert from "../components/alert/SaveNotPublishSuccessAlert.vue";
 import {
   getInitialInputForNewCuration,
-  updateInputWithPublicationsData,
+  updateInputWithNewPublicationsData,
   prepareInputForDataSubmission,
-  updateHpoTermsInputHelperWithPublicationsData,
+  updateHpoTermsInputHelperWithNewPublicationsData,
   updateInputWithRemovedPublications,
   updateHpoTermsInputHelperWithRemovedPublications,
 } from "../utility/CurationUtility.js";
@@ -321,13 +321,13 @@ export default {
           if (responseStatus === 200) {
             let publicationsData = responseJson;
             if (publicationsData && publicationsData.results) {
-              this.input = updateInputWithPublicationsData(
+              this.input = updateInputWithNewPublicationsData(
                 this.input,
                 publicationsData
               );
               let pmidList = publicationsData.results.map((item) => item.pmid);
               this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithPublicationsData(
+                updateHpoTermsInputHelperWithNewPublicationsData(
                   this.hpoTermsInputHelper,
                   pmidList
                 );

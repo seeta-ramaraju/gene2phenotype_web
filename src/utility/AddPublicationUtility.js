@@ -1,4 +1,4 @@
-import { VariantTypesAttribs, EvidenceTypesAttribs } from "./CurationConstants";
+import { VariantTypesAttribs } from "./CurationConstants";
 import cloneDeep from "lodash/cloneDeep";
 
 export const getInitialInputForAddingNewPublicationData = (
@@ -42,102 +42,6 @@ export const getInitialInputForAddingNewPublicationData = (
   return input;
 };
 
-export const updateInputWithNewPublicationsData = (input, publicationsData) => {
-  let updatedInput = { ...input };
-
-  // update publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
-  publicationsData.results.forEach((item) => {
-    updatedInput.publications[item.pmid] = {
-      families: null,
-      affectedIndividuals: null,
-      consanguineous: "unknown",
-      ancestries: "",
-      comment: "",
-      source: item.source,
-      year: item.year,
-      title: item.title,
-      authors: item.authors,
-    };
-
-    updatedInput.phenotypes[item.pmid] = {
-      summary: "",
-      hpo_terms: [],
-    };
-
-    updatedInput.variant_descriptions[item.pmid] = {
-      description: "",
-    };
-
-    let evidenceTypesObj = {};
-    EvidenceTypesAttribs.forEach((item) => {
-      evidenceTypesObj[item.primaryType] = [];
-    });
-    updatedInput.mechanism_evidence[item.pmid] = {
-      description: "",
-      evidence_types: evidenceTypesObj,
-    };
-  });
-
-  return updatedInput;
-};
-
-export const updateInputWithRemovedPublications = (input, removedPmidList) => {
-  let updatedInput = { ...input };
-
-  removedPmidList.forEach((pmid) => {
-    // remove pmid from publications, phenotypes, variant_descriptions, mechanism_evidence fields of input
-    delete updatedInput.publications[pmid];
-    delete updatedInput.phenotypes[pmid];
-    delete updatedInput.variant_descriptions[pmid];
-    delete updatedInput.mechanism_evidence[pmid];
-  });
-
-  // remove pmid from supporting papers list of variant_types
-  for (let primaryTypeKey in updatedInput.variant_types) {
-    for (let secondaryTypeKey in updatedInput.variant_types[primaryTypeKey]) {
-      const supportingPapers =
-        updatedInput.variant_types[primaryTypeKey][secondaryTypeKey]
-          .supporting_papers;
-      // filter supporting papers by removing pmids
-      const filteredSupportingPapers = supportingPapers.filter(
-        (supportingPaper) => !removedPmidList.includes(supportingPaper)
-      );
-      updatedInput.variant_types[primaryTypeKey][
-        secondaryTypeKey
-      ].supporting_papers = filteredSupportingPapers;
-    }
-  }
-
-  return updatedInput;
-};
-
-export const updateHpoTermsInputHelperWithNewPublicationsData = (
-  hpoTermsInputHelper,
-  pmidList
-) => {
-  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
-  pmidList.forEach((pmid) => {
-    updatedHpoTermsInputHelper[pmid] = {
-      isHpoTermsDataLoading: false,
-      hpoTermsErrorMsg: "",
-      isHpoTermsValid: true,
-      hpoTermsInput: "",
-    };
-  });
-  return updatedHpoTermsInputHelper;
-};
-
-export const updateHpoTermsInputHelperWithRemovedPublications = (
-  hpoTermsInputHelper,
-  removedPmidList
-) => {
-  let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
-  removedPmidList.forEach((pmid) => {
-    delete updatedHpoTermsInputHelper[pmid];
-  });
-  return updatedHpoTermsInputHelper;
-};
-
 export const prepareInputForNewPublicationDataSubmission = (
   input,
   locusGeneDiseaseData
@@ -179,35 +83,38 @@ export const prepareInputForNewPublicationDataSubmission = (
     preparedInput.phenotypes = phenotypesArray;
   }
 
-  // convert mechanism evidence from object to array of objects and include evidence that have non empty description or non empty evidence types
-  let mechanismEvidenceArray = [];
-  for (const [publicationPmid, valueObj] of Object.entries(
-    clonedInput.mechanism_evidence
-  )) {
-    let evidenceTypesArray = [];
-    for (const [primaryType, secondaryTypesArray] of Object.entries(
-      valueObj.evidence_types
+  // IF molecular_mechanism.support is evidence THEN process mechanism_evidence
+  if (clonedInput.molecular_mechanism.support === "evidence") {
+    // convert mechanism evidence from object to array of objects and include evidence that have non empty description or non empty evidence types
+    let mechanismEvidenceArray = [];
+    for (const [publicationPmid, valueObj] of Object.entries(
+      clonedInput.mechanism_evidence
     )) {
-      if (secondaryTypesArray.length > 0) {
-        let evidenceTypeObj = {
-          primary_type: primaryType,
-          secondary_type: secondaryTypesArray,
+      let evidenceTypesArray = [];
+      for (const [primaryType, secondaryTypesArray] of Object.entries(
+        valueObj.evidence_types
+      )) {
+        if (secondaryTypesArray.length > 0) {
+          let evidenceTypeObj = {
+            primary_type: primaryType,
+            secondary_type: secondaryTypesArray,
+          };
+          evidenceTypesArray.push(evidenceTypeObj);
+        }
+      }
+      if (valueObj.description.trim() !== "" || evidenceTypesArray.length > 0) {
+        let mechanismEvidenceObj = {
+          pmid: publicationPmid,
+          description: valueObj.description.trim(), // trim description value
+          evidence_types: evidenceTypesArray,
         };
-        evidenceTypesArray.push(evidenceTypeObj);
+        mechanismEvidenceArray.push(mechanismEvidenceObj);
       }
     }
-    if (valueObj.description.trim() !== "" || evidenceTypesArray.length > 0) {
-      let mechanismEvidenceObj = {
-        pmid: publicationPmid,
-        description: valueObj.description.trim(), // trim description value
-        evidence_types: evidenceTypesArray,
-      };
-      mechanismEvidenceArray.push(mechanismEvidenceObj);
+    // IF mechanismEvidenceArray is not empty THEN include it in preparedInput object
+    if (mechanismEvidenceArray.length > 0) {
+      preparedInput.mechanism_evidence = mechanismEvidenceArray;
     }
-  }
-  // IF mechanismEvidenceArray is not empty THEN include it in preparedInput object
-  if (mechanismEvidenceArray.length > 0) {
-    preparedInput.mechanism_evidence = mechanismEvidenceArray;
   }
 
   // IF molecular_mechanism.name or molecular_mechanism.support is updated THEN include molecular_mechanism in preparedInput object
