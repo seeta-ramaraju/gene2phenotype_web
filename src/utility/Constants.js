@@ -23,7 +23,7 @@ export const HELP_TEXT = {
     "Additional information reported in the publication that is relevant to the gene-disease inheritance",
   CATEGORIZATION:
     "More detailed synopsis of molecular mechanism, where available",
-  PHENOTYPIC_FEATURE: "Phenotypic Features reported in the publication",
+  PHENOTYPIC_FEATURE: "Phenotypic features reported in the publication",
   G2P_ID: "The unique stable identifier for this record in G2P",
   EXTERNAL_LINKS: "Information for this gene in other resources",
   CROSS_REFERENCES: "Ontology/ OMIM terms related to this disease record",
