@@ -69,10 +69,7 @@ export default {
       );
     },
     isDisplayCurrentCategorization() {
-      return (
-        this.currentMechanism?.synopsis &&
-        this.currentMechanism.synopsis.length > 0
-      );
+      return this.currentMechanism?.synopsis?.length > 0;
     },
     isDisplayCurrentEvidence() {
       return (
