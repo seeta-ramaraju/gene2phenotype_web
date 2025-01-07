@@ -111,7 +111,7 @@ export default {
             /attachment; filename="([^"]+)"/
           ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
           let csvFileName = "data.csv"; // default csv file name
-          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+          if (regexMatch?.length > 0 && regexMatch[1]) {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
@@ -266,13 +266,7 @@ export default {
                     G2P ID
                   </label>
                 </div>
-                <div
-                  v-if="
-                    panelData &&
-                    panelData.results &&
-                    panelData.results.length > 0
-                  "
-                >
+                <div v-if="panelData?.results?.length > 0">
                   <hr class="dropdown-divider" />
                   <p class="fw-bold mb-1">Filter by panel</p>
                   <div class="form-check">
@@ -350,10 +344,7 @@ export default {
             {{ errorMsg || dataDownloadErrorMsg }}
           </div>
         </div>
-        <div
-          v-if="panelData && panelData.results && panelData.results.length > 0"
-          class="col-lg-7 mx-auto"
-        >
+        <div v-if="panelData?.results?.length > 0" class="col-lg-7 mx-auto">
           <table class="table table-hover table-bordered shadow-sm">
             <thead>
               <tr>

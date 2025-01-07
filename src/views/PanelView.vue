@@ -160,7 +160,7 @@ export default {
             /attachment; filename="([^"]+)"/
           ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
           let csvFileName = "data.csv"; // default csv file name
-          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+          if (regexMatch?.length > 0 && regexMatch[1]) {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
@@ -252,10 +252,7 @@ export default {
       <h3 class="pt-5 pb-2">Latest records</h3>
       <div
         class="d-flex justify-content-end mb-2"
-        v-if="
-          panelSummaryData.records_summary &&
-          panelSummaryData.records_summary.length > 0
-        "
+        v-if="panelSummaryData.records_summary?.length > 0"
       >
         <button
           v-if="!isDownloadAllDataLoading"
@@ -290,10 +287,7 @@ export default {
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
-          v-if="
-            panelSummaryData.records_summary &&
-            panelSummaryData.records_summary.length > 0
-          "
+          v-if="panelSummaryData.records_summary?.length > 0"
         >
           <thead>
             <tr>
@@ -366,7 +360,7 @@ export default {
       </div>
       <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
-        <ul v-if="panelData.curators && panelData.curators.length > 0">
+        <ul v-if="panelData.curators?.length > 0">
           <li v-for="curator in panelData.curators">
             {{ curator }}
           </li>

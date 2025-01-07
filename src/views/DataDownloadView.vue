@@ -84,7 +84,7 @@ export default {
             /attachment; filename="([^"]+)"/
           ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
           let csvFileName = "data.csv"; // default csv file name
-          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+          if (regexMatch?.length > 0 && regexMatch[1]) {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
@@ -124,14 +124,7 @@ export default {
         <i class="bi bi-exclamation-circle-fill"></i> {{ panelErrorMsg }}
       </div>
     </div>
-    <div
-      v-if="
-        !isDataLoading &&
-        panelData &&
-        panelData.results &&
-        panelData.results.length > 0
-      "
-    >
+    <div v-if="!isDataLoading && panelData?.results?.length > 0">
       <ul class="list-unstyled">
         <li v-for="item in panelData.results">
           <button

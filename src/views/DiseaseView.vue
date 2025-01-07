@@ -94,7 +94,7 @@ export default {
       <h2 v-else class="text-muted">Not Available</h2>
       <h4 class="py-3">Synonyms</h4>
       <div>
-        <ul v-if="diseaseData.synonyms && diseaseData.synonyms.length > 0">
+        <ul v-if="diseaseData.synonyms?.length > 0">
           <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
         </ul>
         <p v-else class="text-muted">Not Available</p>
@@ -103,10 +103,7 @@ export default {
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
-          v-if="
-            diseaseSummaryData.records_summary &&
-            diseaseSummaryData.records_summary.length > 0
-          "
+          v-if="diseaseSummaryData.records_summary?.length > 0"
         >
           <thead>
             <tr>
@@ -174,7 +171,7 @@ export default {
               </td>
               <td>
                 <span
-                  v-if="item.panels && item.panels.length > 0"
+                  v-if="item.panels?.length > 0"
                   v-for="(panelName, index) in item.panels"
                 >
                   <router-link
@@ -190,19 +187,12 @@ export default {
         </table>
         <p v-else>No Records found</p>
       </div>
-      <h4
-        v-if="
-          diseaseData.ontology_terms && diseaseData.ontology_terms.length > 0
-        "
-        class="py-3"
-      >
+      <h4 v-if="diseaseData.ontology_terms?.length > 0" class="py-3">
         Cross references <ToolTip :toolTipText="helpText.CROSS_REFERENCES" />
       </h4>
       <table
         class="table table-bordered table-hover w-50 shadow-sm"
-        v-if="
-          diseaseData.ontology_terms && diseaseData.ontology_terms.length > 0
-        "
+        v-if="diseaseData.ontology_terms?.length > 0"
         width="50%"
       >
         <thead>
@@ -238,15 +228,12 @@ export default {
           </tr>
         </tbody>
       </table>
-      <h4
-        v-if="diseaseData.publications && diseaseData.publications.length > 0"
-        class="py-3"
-      >
+      <h4 v-if="diseaseData.publications?.length > 0" class="py-3">
         Publications
       </h4>
       <ul
+        v-if="diseaseData.publications?.length > 0"
         v-for="item in diseaseData.publications"
-        v-if="diseaseData.publications && diseaseData.publications.length > 0"
       >
         <li>
           <a

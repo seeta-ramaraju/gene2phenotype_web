@@ -107,7 +107,7 @@ export default {
       <h2 v-else class="text-muted">Not Available</h2>
       <h4 class="py-3">Synonyms</h4>
       <div class="row">
-        <p v-if="geneData.synonyms && geneData.synonyms.length > 0">
+        <p v-if="geneData.synonyms?.length > 0">
           {{ geneData.synonyms.join(", ") }}
         </p>
         <p v-else class="text-muted">Not Available</p>
@@ -156,10 +156,7 @@ export default {
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
-          v-if="
-            geneSummaryData.records_summary &&
-            geneSummaryData.records_summary.length > 0
-          "
+          v-if="geneSummaryData.records_summary?.length > 0"
         >
           <thead>
             <tr>
@@ -211,7 +208,7 @@ export default {
               </td>
               <td>
                 <span
-                  v-if="item.panels && item.panels.length > 0"
+                  v-if="item.panels?.length > 0"
                   v-for="(panelName, index) in item.panels"
                 >
                   <router-link
