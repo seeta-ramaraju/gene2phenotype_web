@@ -11,10 +11,6 @@ import {
 import {
   prepareInputForNewPublicationDataSubmission,
   getInitialInputForAddingNewPublicationData,
-  updateInputWithNewPublicationsData,
-  updateHpoTermsInputHelperWithNewPublicationsData,
-  updateInputWithRemovedPublications,
-  updateHpoTermsInputHelperWithRemovedPublications,
 } from "../../utility/AddPublicationUtility.js";
 import LoginErrorAlert from "../alert/LoginErrorAlert.vue";
 import UpdatePublication from "./UpdatePublication.vue";
@@ -23,6 +19,12 @@ import UpdateVariantInformation from "./UpdateVariantInformation.vue";
 import UpdatePhenotype from "./UpdatePhenotype.vue";
 import UpdateMechanismEvidence from "./UpdateMechanismEvidence.vue";
 import AddPublicationSuccessAlert from "../alert/AddPublicationSuccessAlert.vue";
+import {
+  updateHpoTermsInputHelperWithNewPublicationsData,
+  updateHpoTermsInputHelperWithRemovedPublications,
+  updateInputWithNewPublicationsData,
+  updateInputWithRemovedPublications,
+} from "../../utility/CurationUtility.js";
 export default {
   props: {
     stableId: String,

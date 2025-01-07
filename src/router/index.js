@@ -24,6 +24,7 @@ import {
 import UpdateRecordView from "../views/UpdateRecordView.vue";
 import ContactPageView from "../views/ContactPageView.vue";
 import AddPublicationView from "../views/AddPublicationView.vue";
+import NotFoundView from "../views/NotFoundView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -139,6 +140,12 @@ const router = createRouter({
       path: "/contact",
       name: "contact",
       component: ContactPageView,
+    },
+    // 404 page route, should always be at end of routes list
+    {
+      path: "/:pathMatch(.*)*",
+      name: "NotFound",
+      component: NotFoundView,
     },
   ],
   scrollBehavior() {
