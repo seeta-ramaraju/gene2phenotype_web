@@ -6,7 +6,7 @@ import {
 } from "../utility/UrlConstants";
 import BarChart from "../components/chart/BarChart.vue";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
@@ -19,6 +19,7 @@ export default {
       errorMsg: null,
       downloadAllDataErrorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
       chartData: {},
       chartOptions: {
         responsive: true,
@@ -159,7 +160,7 @@ export default {
             /attachment; filename="([^"]+)"/
           ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
           let csvFileName = "data.csv"; // default csv file name
-          if (regexMatch && regexMatch.length > 0 && regexMatch[1]) {
+          if (regexMatch?.length > 0 && regexMatch[1]) {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
@@ -251,10 +252,7 @@ export default {
       <h3 class="pt-5 pb-2">Latest records</h3>
       <div
         class="d-flex justify-content-end mb-2"
-        v-if="
-          panelSummaryData.records_summary &&
-          panelSummaryData.records_summary.length > 0
-        "
+        v-if="panelSummaryData.records_summary?.length > 0"
       >
         <button
           v-if="!isDownloadAllDataLoading"
@@ -263,6 +261,9 @@ export default {
           @click="downloadAllData"
         >
           <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
+          <ToolTip
+            toolTipText="Download all records for this panel, including all attributes, not just those displayed here."
+          />
         </button>
         <button v-else disabled class="btn btn-outline-primary" type="button">
           <span
@@ -286,21 +287,26 @@ export default {
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
-          v-if="
-            panelSummaryData.records_summary &&
-            panelSummaryData.records_summary.length > 0
-          "
+          v-if="panelSummaryData.records_summary?.length > 0"
         >
           <thead>
             <tr>
               <th>G2P ID</th>
               <th>Gene</th>
               <th>Disease</th>
-              <th>Allelic Requirement</th>
-              <th>Variant Consequence</th>
-              <th>Variant Type</th>
-              <th>Mechanism</th>
-              <th>Confidence</th>
+              <th style="white-space: nowrap">
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </th>
+              <th style="white-space: nowrap">
+                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+              </th>
+              <th style="white-space: nowrap">
+                Mechanism <ToolTip :toolTipText="helpText.MECHANISM" />
+              </th>
+              <th style="white-space: nowrap">
+                Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -333,7 +339,6 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.variant_consequence.join(", ") }}</td>
               <td>{{ item.variant_type.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
@@ -355,7 +360,7 @@ export default {
       </div>
       <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
-        <ul v-if="panelData.curators && panelData.curators.length > 0">
+        <ul v-if="panelData.curators?.length > 0">
           <li v-for="curator in panelData.curators">
             {{ curator }}
           </li>

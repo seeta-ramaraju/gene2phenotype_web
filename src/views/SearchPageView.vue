@@ -137,7 +137,7 @@ export default {
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
-          v-if="searchData.results && searchData.results.length > 0"
+          v-if="searchData.results?.length > 0"
         >
           <thead>
             <tr>
@@ -183,7 +183,7 @@ export default {
               <td>{{ item.mechanism }}</td>
               <td>
                 <span
-                  v-if="item.panel && item.panel.length > 0"
+                  v-if="item.panel?.length > 0"
                   v-for="(panelName, index) in item.panel"
                 >
                   <router-link

@@ -180,11 +180,7 @@ export default {
           published records for this Gene.
         </p>
       </div>
-      <div
-        v-if="
-          geneExistingDrafts?.results && geneExistingDrafts.results.length > 0
-        "
-      >
+      <div v-if="geneExistingDrafts?.results?.length > 0">
         <h3 class="pt-3">Saved drafts for Gene</h3>
         <div class="mx-1 pt-3 table-responsive-xl">
           <table class="table table-hover table-bordered">
@@ -213,7 +209,7 @@ export default {
                 </td>
                 <td>{{ item.genotype }}</td>
                 <td>
-                  <span v-if="item.panels && item.panels.length > 0">
+                  <span v-if="item.panels?.length > 0">
                     {{ item.panels.join(", ") }}
                   </span>
                 </td>
@@ -281,11 +277,7 @@ export default {
           </div>
         </div>
       </div>
-      <div
-        v-if="
-          geneExistingRecords?.results && geneExistingRecords.results.length > 0
-        "
-      >
+      <div v-if="geneExistingRecords?.results?.length > 0">
         <h3 class="pt-3">Published records for Gene</h3>
         <div class="mx-1 pt-3 table-responsive-xl">
           <table class="table table-hover table-bordered">
@@ -328,7 +320,7 @@ export default {
                 <td>{{ item.mechanism }}</td>
                 <td>
                   <span
-                    v-if="item.panel && item.panel.length > 0"
+                    v-if="item.panel?.length > 0"
                     v-for="(panelName, index) in item.panel"
                   >
                     <router-link

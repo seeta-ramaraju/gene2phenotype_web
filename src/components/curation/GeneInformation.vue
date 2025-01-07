@@ -57,7 +57,7 @@ export default {
               <strong><p>Synonyms</p></strong>
             </div>
             <div style="width: 90%">
-              <p v-if="geneData.synonyms && geneData.synonyms.length > 0">
+              <p v-if="geneData.synonyms?.length > 0">
                 {{ geneData.synonyms.join(", ") }}
               </p>
               <p v-else class="text-muted">Not Available</p>

@@ -126,10 +126,7 @@ export default {
             </li>
           </ul>
         </li>
-        <li
-          class="nav-item dropdown"
-          v-if="panelData && panelData.results && panelData.results.length > 0"
-        >
+        <li class="nav-item dropdown" v-if="panelData?.results?.length > 0">
           <a
             class="nav-link dropdown-toggle px-1 text-white fw-bold"
             href="#"
