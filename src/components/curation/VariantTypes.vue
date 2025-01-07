@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     isPublicationsDataAvailable() {
-      return this.publicationsData && this.publicationsData.length > 0;
+      return this.publicationsData?.length > 0;
     },
   },
 };

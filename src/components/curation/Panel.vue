@@ -58,7 +58,7 @@ export default {
               {{ panelErrorMsg }}
             </div>
           </div>
-          <form v-if="panelData && panelData.length > 0">
+          <form v-if="panelData?.length > 0">
             <fieldset class="row mb-3">
               <legend class="col-form-label col-lg-1 pt-0">
                 Panel(s)<span class="text-danger">*</span>

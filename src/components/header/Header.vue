@@ -204,11 +204,7 @@ export default {
                 G2P ID
               </label>
             </div>
-            <div
-              v-if="
-                panelData && panelData.results && panelData.results.length > 0
-              "
-            >
+            <div v-if="panelData?.results?.length > 0">
               <hr class="dropdown-divider" />
               <p class="fw-bold mb-1">Filter by panel</p>
               <div class="form-check">
@@ -308,10 +304,7 @@ export default {
             </li>
           </ul>
         </li>
-        <li
-          class="nav-item dropdown"
-          v-if="panelData && panelData.results && panelData.results.length > 0"
-        >
+        <li class="nav-item dropdown" v-if="panelData?.results?.length > 0">
           <a
             class="nav-link dropdown-toggle px-1 text-white fw-bold"
             href="#"

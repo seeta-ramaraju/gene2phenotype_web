@@ -82,10 +82,7 @@ export default {
             <div
               class="row g-3 px-3"
               v-if="
-                !geneDiseaseErrorMsg &&
-                geneDiseaseData &&
-                geneDiseaseData.results &&
-                geneDiseaseData.results.length > 0
+                !geneDiseaseErrorMsg && geneDiseaseData?.results?.length > 0
               "
             >
               <strong class="p-0">

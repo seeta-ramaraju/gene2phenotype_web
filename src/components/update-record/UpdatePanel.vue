@@ -57,7 +57,7 @@ export default {
         })
         .then((responseJson) => {
           this.isUserPanelsDataLoading = false;
-          if (responseJson && responseJson.length > 0) {
+          if (responseJson?.length > 0) {
             this.userPanels = responseJson;
             this.setUserPanelOptionsToAdd(this.panels, this.userPanels);
           }
@@ -106,10 +106,7 @@ export default {
             this.setUserPanelOptionsToAdd(this.panels, this.userPanels);
           } else {
             let errorMsg = "Unable to add panel. Please try again later.";
-            if (
-              responseJson.errors?.message &&
-              responseJson.errors?.message.length > 0
-            ) {
+            if (responseJson.errors?.message?.length > 0) {
               errorMsg =
                 "Unable to add panel. Error: " + responseJson.errors.message[0];
             }
@@ -188,9 +185,7 @@ export default {
                   </tr>
                 </tbody>
               </table>
-              <div
-                v-if="userPanelOptionsToAdd && userPanelOptionsToAdd.length > 0"
-              >
+              <div v-if="userPanelOptionsToAdd?.length > 0">
                 <hr />
                 <h5 class="mb-0">Add to panel</h5>
                 <div class="row py-4 w-50">

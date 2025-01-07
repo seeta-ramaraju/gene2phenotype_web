@@ -62,10 +62,7 @@ export default {
             this.addPanelSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to add panel. Please try again later.";
-            if (
-              responseJson.errors?.message &&
-              responseJson.errors?.message.length > 0
-            ) {
+            if (responseJson.errors?.message?.length > 0) {
               errorMsg =
                 "Unable to add panel. Error: " + responseJson.errors.message[0];
             }
