@@ -49,10 +49,7 @@ export default {
             <div class="row g-3 px-3 pt-3">
               <h5>Variant Descriptions</h5>
               <div
-                v-if="
-                  currentVariantDescription &&
-                  currentVariantDescription.length > 0
-                "
+                v-if="currentVariantDescription?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionVariantDescription"
               >
@@ -90,12 +87,7 @@ export default {
                               {{ item.description }}
                             </td>
                             <td>
-                              <span
-                                v-if="
-                                  item.publications &&
-                                  item.publications.length > 0
-                                "
-                              >
+                              <span v-if="item.publications?.length > 0">
                                 <span
                                   v-for="(
                                     publicationItem, index

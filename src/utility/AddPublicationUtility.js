@@ -69,7 +69,7 @@ export const prepareInputForNewPublicationDataSubmission = (
   // convert phenotypes from object to array of objects and include phenotypes that have non empty hpo terms
   let phenotypesArray = [];
   for (const [pmidKey, valueObj] of Object.entries(clonedInput.phenotypes)) {
-    if (valueObj.hpo_terms && valueObj.hpo_terms.length > 0) {
+    if (valueObj.hpo_terms?.length > 0) {
       let phenotypeObj = {
         pmid: pmidKey,
         summary: valueObj.summary.trim(), // trim summary value

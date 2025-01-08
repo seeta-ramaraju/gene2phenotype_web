@@ -98,7 +98,7 @@ export default {
         })
         .then((responseJson) => {
           this.isPanelDataLoading = false;
-          if (responseJson && responseJson.length > 0) {
+          if (responseJson?.length > 0) {
             this.userPanels = responseJson;
             this.validateIsRecordPartOfUserPanels(
               this.locusGeneDiseaseData?.panels,
@@ -161,8 +161,7 @@ export default {
           data-bs-target="#add-panel-modal"
           v-if="
             !isPanelDataLoading &&
-            userPanels &&
-            userPanels.length > 0 &&
+            userPanels?.length > 0 &&
             isLoggedIn() &&
             !isRecordPartOfUserPanels
           "
@@ -221,12 +220,7 @@ export default {
               </h5>
             </td>
             <td class="w-75">
-              <p
-                v-if="
-                  locusGeneDiseaseData.cross_cutting_modifier &&
-                  locusGeneDiseaseData.cross_cutting_modifier.length > 0
-                "
-              >
+              <p v-if="locusGeneDiseaseData.cross_cutting_modifier?.length > 0">
                 {{
                   locusGeneDiseaseData.cross_cutting_modifier
                     .map((item) => item.term)
@@ -241,12 +235,7 @@ export default {
               <h5>Panel(s)</h5>
             </td>
             <td class="w-75">
-              <span
-                v-if="
-                  locusGeneDiseaseData.panels &&
-                  locusGeneDiseaseData.panels.length > 0
-                "
-              >
+              <span v-if="locusGeneDiseaseData.panels?.length > 0">
                 <span v-for="(item, index) in locusGeneDiseaseData.panels">
                   <span v-if="index < locusGeneDiseaseData.panels.length - 1">
                     <router-link
@@ -283,10 +272,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.variant_type &&
-                  locusGeneDiseaseData.variant_type.length > 0
-                "
+                v-if="locusGeneDiseaseData.variant_type?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionVariantTypes"
               >
@@ -352,12 +338,7 @@ export default {
                               </ul>
                             </td>
                             <td>
-                              <span
-                                v-if="
-                                  item.publications &&
-                                  item.publications.length > 0
-                                "
-                              >
+                              <span v-if="item.publications?.length > 0">
                                 <span
                                   v-for="(
                                     publicationItem, index
@@ -403,10 +384,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.variant_description &&
-                  locusGeneDiseaseData.variant_description.length > 0
-                "
+                v-if="locusGeneDiseaseData.variant_description?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionVariantDescription"
               >
@@ -446,12 +424,7 @@ export default {
                               {{ item.description }}
                             </td>
                             <td>
-                              <span
-                                v-if="
-                                  item.publications &&
-                                  item.publications.length > 0
-                                "
-                              >
+                              <span v-if="item.publications?.length > 0">
                                 <span
                                   v-for="(
                                     publicationItem, index
@@ -499,10 +472,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.variant_consequence &&
-                  locusGeneDiseaseData.variant_consequence.length > 0
-                "
+                v-if="locusGeneDiseaseData.variant_consequence?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionVariantConsequences"
               >
@@ -601,8 +571,7 @@ export default {
             <td class="w-75">
               <div
                 v-if="
-                  locusGeneDiseaseData.molecular_mechanism?.synopsis &&
-                  locusGeneDiseaseData.molecular_mechanism.synopsis.length > 0
+                  locusGeneDiseaseData.molecular_mechanism?.synopsis?.length > 0
                 "
                 class="accordion accordion-flush"
                 id="accordionMechanismSynopsis"
@@ -720,8 +689,7 @@ export default {
                                 >
                                   {{ primaryEvidenceType }} :
                                   {{
-                                    secondaryEvidenceTypeArray &&
-                                    secondaryEvidenceTypeArray.length > 0
+                                    secondaryEvidenceTypeArray?.length > 0
                                       ? secondaryEvidenceTypeArray.join(", ")
                                       : null
                                   }}
@@ -755,10 +723,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.phenotypes &&
-                  locusGeneDiseaseData.phenotypes.length > 0
-                "
+                v-if="locusGeneDiseaseData.phenotypes?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionPhenotypicFeatures"
               >
@@ -810,12 +775,7 @@ export default {
                               {{ item.term }}
                             </td>
                             <td style="width: 30%">
-                              <span
-                                v-if="
-                                  item.publications &&
-                                  item.publications.length > 0
-                                "
-                              >
+                              <span v-if="item.publications?.length > 0">
                                 <span
                                   v-for="(
                                     publicationItem, index
@@ -866,10 +826,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.publications &&
-                  locusGeneDiseaseData.publications.length > 0
-                "
+                v-if="locusGeneDiseaseData.publications?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionPublications"
               >
@@ -920,10 +877,7 @@ export default {
                             </td>
                             <td>
                               <span
-                                v-if="
-                                  item.publication?.families &&
-                                  item.publication?.families.length > 0
-                                "
+                                v-if="item.publication?.families?.length > 0"
                               >
                                 Number of Families:
                                 {{
@@ -946,10 +900,7 @@ export default {
                             </td>
                             <td>
                               <span
-                                v-if="
-                                  item.publication?.comments &&
-                                  item.publication?.comments.length > 0
-                                "
+                                v-if="item.publication?.comments?.length > 0"
                               >
                                 {{
                                   item.publication.comments[
@@ -994,12 +945,7 @@ export default {
               <h6>Synonym(s)</h6>
             </td>
             <td>
-              <p
-                v-if="
-                  locusGeneDiseaseData.locus?.synonyms &&
-                  locusGeneDiseaseData.locus?.synonyms.length > 0
-                "
-              >
+              <p v-if="locusGeneDiseaseData.locus?.synonyms?.length > 0">
                 {{ locusGeneDiseaseData.locus.synonyms.join(", ") }}
               </p>
               <p v-else class="text-muted">Not Available</p>
@@ -1136,10 +1082,7 @@ export default {
             </td>
             <td class="w-75">
               <div
-                v-if="
-                  locusGeneDiseaseData.disease?.ontology_terms &&
-                  locusGeneDiseaseData.disease?.ontology_terms.length > 0
-                "
+                v-if="locusGeneDiseaseData.disease?.ontology_terms?.length > 0"
                 class="accordion accordion-flush"
                 id="accordionCrossReferences"
               >

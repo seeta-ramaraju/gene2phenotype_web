@@ -176,8 +176,7 @@ export default {
                   </div>
                   <div
                     v-if="
-                      HPOsearchResponseJson[pmid] &&
-                      HPOsearchResponseJson[pmid].length > 0 &&
+                      HPOsearchResponseJson[pmid]?.length > 0 &&
                       showDropDown[pmid]
                     "
                   >
@@ -219,10 +218,7 @@ export default {
             </div>
             <div
               class="row pt-3"
-              v-if="
-                clinicalPhenotype[pmid].hpo_terms &&
-                clinicalPhenotype[pmid].hpo_terms.length > 0
-              "
+              v-if="clinicalPhenotype[pmid].hpo_terms?.length > 0"
             >
               <div class="col-12">
                 <p>Selected HPO Term(s)</p>

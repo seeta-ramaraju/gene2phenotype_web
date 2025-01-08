@@ -282,8 +282,7 @@ export default {
                               >
                                 {{ primaryEvidenceType }} :
                                 {{
-                                  secondaryEvidenceTypeArray &&
-                                  secondaryEvidenceTypeArray.length > 0
+                                  secondaryEvidenceTypeArray?.length > 0
                                     ? secondaryEvidenceTypeArray.join(", ")
                                     : null
                                 }}

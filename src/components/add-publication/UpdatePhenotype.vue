@@ -118,7 +118,7 @@ export default {
         <div class="accordion-body">
           <div class="row g-3 px-3 py-3">
             <div
-              v-if="currentPhenotypes && currentPhenotypes.length > 0"
+              v-if="currentPhenotypes?.length > 0"
               class="accordion accordion-flush"
               id="accordionPhenotypicFeatures"
             >
@@ -168,12 +168,7 @@ export default {
                             {{ item.term }}
                           </td>
                           <td style="width: 30%">
-                            <span
-                              v-if="
-                                item.publications &&
-                                item.publications.length > 0
-                              "
-                            >
+                            <span v-if="item.publications?.length > 0">
                               <span
                                 v-for="(
                                   publicationItem, index
@@ -270,8 +265,7 @@ export default {
                       </div>
                       <div
                         v-if="
-                          HPOsearchResponseJson[pmid] &&
-                          HPOsearchResponseJson[pmid].length > 0 &&
+                          HPOsearchResponseJson[pmid]?.length > 0 &&
                           showDropDown[pmid]
                         "
                       >
@@ -315,10 +309,7 @@ export default {
                 </div>
                 <div
                   class="row pt-3"
-                  v-if="
-                    clinicalPhenotype[pmid].hpo_terms &&
-                    clinicalPhenotype[pmid].hpo_terms.length > 0
-                  "
+                  v-if="clinicalPhenotype[pmid].hpo_terms?.length > 0"
                 >
                   <div class="col-12">
                     <p>Selected HPO Term(s)</p>

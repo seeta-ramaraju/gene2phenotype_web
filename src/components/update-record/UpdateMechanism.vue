@@ -99,7 +99,7 @@ export default {
     getInitialMechanismEvidence(publications) {
       let initialMechanismEvidence = {};
 
-      if (publications && publications.length > 0) {
+      if (publications?.length > 0) {
         let evidenceTypesObj = {};
         EvidenceTypesAttribs.forEach((item) => {
           evidenceTypesObj[item.primaryType] = [];
@@ -451,8 +451,7 @@ export default {
                                 >
                                   {{ primaryEvidenceType }} :
                                   {{
-                                    secondaryEvidenceTypeArray &&
-                                    secondaryEvidenceTypeArray.length > 0
+                                    secondaryEvidenceTypeArray?.length > 0
                                       ? secondaryEvidenceTypeArray.join(", ")
                                       : null
                                   }}

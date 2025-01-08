@@ -57,7 +57,7 @@ export default {
   <div class="row g-3 px-3 pt-3">
     <h5>Variant Types</h5>
     <div
-      v-if="currentVariantTypes && currentVariantTypes.length > 0"
+      v-if="currentVariantTypes?.length > 0"
       class="accordion accordion-flush"
       id="accordionVariantTypes"
     >
@@ -119,9 +119,7 @@ export default {
                     </ul>
                   </td>
                   <td>
-                    <span
-                      v-if="item.publications && item.publications.length > 0"
-                    >
+                    <span v-if="item.publications?.length > 0">
                       <span
                         v-for="(publicationItem, index) in item.publications"
                       >
