@@ -814,15 +814,9 @@ export default {
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
-          <tr class="align-middle">
-            <td class="w-25 text-end">
-              <h5>Evidence</h5>
-            </td>
-            <td></td>
-          </tr>
           <tr>
             <td class="w-25 text-end">
-              <h6>Publication(s)</h6>
+              <h5>Evidence</h5>
             </td>
             <td class="w-75">
               <div
@@ -1118,7 +1112,7 @@ export default {
                         <tbody>
                           <tr
                             v-for="ontologyTerm in locusGeneDiseaseData.disease
-                              ?.ontology_terms"
+                              .ontology_terms"
                           >
                             <td>
                               <a
@@ -1162,17 +1156,59 @@ export default {
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
-          <tr
-            class="align-middle"
-            v-if="locusGeneDiseaseData.confidence_support"
-          >
+          <tr v-if="locusGeneDiseaseData.comments?.length > 0">
             <td class="w-25 text-end">
-              <h5>Comment</h5>
+              <h5>Comment(s)</h5>
             </td>
             <td class="w-75">
-              <p>
-                {{ locusGeneDiseaseData.confidence_support }}
-              </p>
+              <div class="accordion accordion-flush" id="accordionComments">
+                <div class="accordion-item">
+                  <h2 class="accordion-header border">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapsibleCommentsTable"
+                      aria-expanded="false"
+                      aria-controls="collapsibleCommentsTable"
+                    >
+                      Comments ({{ locusGeneDiseaseData.comments.length }})
+                    </button>
+                  </h2>
+                  <div
+                    id="collapsibleCommentsTable"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionComments"
+                  >
+                    <div class="accordion-body p-0">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <tr>
+                            <th>Comment</th>
+                            <th>Type</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="commentObj in locusGeneDiseaseData.comments"
+                          >
+                            <td>{{ commentObj.text }}</td>
+                            <td>
+                              {{
+                                commentObj.is_public == 1
+                                  ? "Public"
+                                  : commentObj.is_public == 0
+                                  ? "Private"
+                                  : ""
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </td>
           </tr>
           <tr>
