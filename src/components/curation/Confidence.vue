@@ -3,11 +3,10 @@ import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
 export default {
   props: {
     attributesData: Object,
-    justification: String,
-    level: String,
     inputPublications: Object,
+    confidence: String,
   },
-  emits: ["update:justification", "update:level"],
+  emits: ["update:confidence"],
   computed: {
     reorderedConfidenceCategoryList() {
       return this.attributesData.confidence_category.sort(
@@ -90,8 +89,8 @@ export default {
               <select
                 id="confidence-level-input"
                 class="form-select"
-                :value="level"
-                @input="$emit('update:level', $event.target.value)"
+                :value="confidence"
+                @input="$emit('update:confidence', $event.target.value)"
               >
                 <option value="">Select</option>
                 <option
@@ -101,22 +100,6 @@ export default {
                   {{ item }}
                 </option>
               </select>
-            </div>
-          </div>
-          <div class="row g-3 py-3 w-50">
-            <label for="justification-input" class="col-lg-3 col-form-label">
-              Justification<span class="text-danger">*</span>
-            </label>
-            <div class="col-lg-9">
-              <textarea
-                class="form-control"
-                id="justification-input"
-                rows="3"
-                type="text"
-                :value="justification"
-                @input="$emit('update:justification', $event.target.value)"
-              >
-              </textarea>
             </div>
           </div>
         </div>

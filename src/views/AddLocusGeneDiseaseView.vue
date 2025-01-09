@@ -42,6 +42,7 @@ import {
   USER_PANELS_URL,
 } from "../utility/UrlConstants.js";
 import ExistingGeneInformation from "../components/curation/ExistingGeneInformation.vue";
+import Comment from "../components/curation/Comment.vue";
 
 export default {
   data() {
@@ -110,6 +111,7 @@ export default {
     RemovePublicationModal,
     LoginErrorAlert,
     ExistingGeneInformation,
+    Comment,
   },
   methods: {
     geneSearchBtnClickHandler() {
@@ -403,10 +405,7 @@ export default {
             this.submitSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to save draft. Please try again later.";
-            if (
-              responseJson.errors?.message &&
-              responseJson.errors?.message.length > 0
-            ) {
+            if (responseJson.errors?.message?.length > 0) {
               errorMsg =
                 "Unable to save draft. Error: " +
                 responseJson.errors.message[0];
@@ -467,10 +466,7 @@ export default {
           this.isSubmitDataLoading = false;
           let errorMsg =
             "Unable to save and publish data. Please try again later.";
-          if (
-            submitResponseJson.errors?.message &&
-            submitResponseJson.errors?.message.length > 0
-          ) {
+          if (submitResponseJson.errors?.message?.length > 0) {
             errorMsg =
               "Unable to save and publish data. Error: " +
               submitResponseJson.errors.message[0];
@@ -679,8 +675,11 @@ export default {
       <Confidence
         :attributesData="attributesData"
         :inputPublications="input.publications"
-        v-model:justification="input.confidence.justification"
-        v-model:level="input.confidence.level"
+        v-model:confidence="input.confidence"
+      />
+      <Comment
+        v-model:private-comment="input.private_comment"
+        v-model:public-comment="input.public_comment"
       />
       <p class="pt-2">
         <span class="text-danger">*</span> mandatory fields to publish

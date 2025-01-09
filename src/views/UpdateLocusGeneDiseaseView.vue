@@ -29,7 +29,7 @@ import {
   isUserLoggedIn,
   logOutUser,
 } from "../utility/AuthenticationUtility.js";
-import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import LoginErrorAlert from "../components/alert/LoginErrorAlert.vue";
 import {
   ATTRIBS_URL,
   GENE_DISEASE_URL,
@@ -41,6 +41,7 @@ import {
   UPDATE_SAVED_DRAFT_URL,
   USER_PANELS_URL,
 } from "../utility/UrlConstants";
+import Comment from "../components/curation/Comment.vue";
 
 export default {
   created() {
@@ -116,6 +117,7 @@ export default {
     AlertModal,
     RemovePublicationModal,
     LoginErrorAlert,
+    Comment,
   },
   methods: {
     fetchPreviousCurationInput() {
@@ -381,10 +383,7 @@ export default {
             this.submitSuccessMsg = responseJson.message;
           } else {
             let errorMsg = "Unable to save draft. Please try again later.";
-            if (
-              responseJson.errors?.message &&
-              responseJson.errors?.message.length > 0
-            ) {
+            if (responseJson.errors?.message?.length > 0) {
               errorMsg =
                 "Unable to save draft. Error: " +
                 responseJson.errors.message[0];
@@ -448,10 +447,7 @@ export default {
           this.isSubmitDataLoading = false;
           let errorMsg =
             "Unable to save and publish data. Please try again later.";
-          if (
-            submitResponseJson.errors?.message &&
-            submitResponseJson.errors?.message.length > 0
-          ) {
+          if (submitResponseJson.errors?.message?.length > 0) {
             errorMsg =
               "Unable to save and publish data. Error: " +
               submitResponseJson.errors.message[0];
@@ -613,8 +609,11 @@ export default {
       <Confidence
         :attributesData="attributesData"
         :inputPublications="previousInput.publications"
-        v-model:justification="previousInput.confidence.justification"
-        v-model:level="previousInput.confidence.level"
+        v-model:confidence="previousInput.confidence"
+      />
+      <Comment
+        v-model:private-comment="previousInput.private_comment"
+        v-model:public-comment="previousInput.public_comment"
       />
       <p class="pt-2">
         <span class="text-danger">*</span> mandatory fields to publish
