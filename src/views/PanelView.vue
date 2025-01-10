@@ -291,22 +291,19 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID</th>
+              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
               <th>Gene</th>
               <th>Disease</th>
-              <th style="white-space: nowrap">
+              <th>
                 Allelic Requirement
                 <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
               </th>
-              <th style="white-space: nowrap">
+              <th>
                 Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
               </th>
-              <th style="white-space: nowrap">
-                Mechanism <ToolTip :toolTipText="helpText.MECHANISM" />
-              </th>
-              <th style="white-space: nowrap">
-                Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
-              </th>
+              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
+              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
+              <th>Last Update</th>
             </tr>
           </thead>
           <tbody>
@@ -353,6 +350,7 @@ export default {
                   {{ item.confidence }}
                 </span>
               </td>
+              <td>{{ item.last_updated }}</td>
             </tr>
           </tbody>
         </table>
@@ -377,3 +375,8 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+th {
+  white-space: nowrap;
+}
+</style>
