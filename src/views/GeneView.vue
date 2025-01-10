@@ -5,7 +5,12 @@ import {
   GENE_URL,
 } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP, MAX_CHARACTERS } from "../utility/Constants.js";
+import {
+  CONFIDENCE_COLOR_MAP,
+  HELP_TEXT,
+  MAX_CHARACTERS,
+} from "../utility/Constants.js";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -18,6 +23,7 @@ export default {
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
       isReadMoreActivated: false,
       maxCharacters: MAX_CHARACTERS,
+      helpText: { ...HELP_TEXT },
     };
   },
   created() {
@@ -32,6 +38,7 @@ export default {
       { immediate: true }
     );
   },
+  components: { ToolTip },
   methods: {
     fetchData() {
       this.errorMsg =
@@ -160,13 +167,21 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID</th>
+              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
               <th>Disease</th>
-              <th>Genotype</th>
-              <th>Variant Consequence</th>
-              <th>Variant Type</th>
-              <th>Mechanism</th>
-              <th>Confidence</th>
+              <th>
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </th>
+              <th>
+                Variant Consequence
+                <ToolTip :toolTipText="helpText.VARIANT_CONSEQUENCE" />
+              </th>
+              <th>
+                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+              </th>
+              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
+              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -289,3 +304,8 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+th {
+  white-space: nowrap;
+}
+</style>
