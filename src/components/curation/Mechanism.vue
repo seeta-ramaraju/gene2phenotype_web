@@ -6,7 +6,10 @@ import {
   MechanismSynopsisAttribs,
   MechanismSupportAttribs,
 } from "../../utility/CurationConstants";
-import { MARSH_PROBABILITY_THRESHOLD } from "../../utility/Constants";
+import {
+  HELP_TEXT,
+  MARSH_PROBABILITY_THRESHOLD,
+} from "../../utility/Constants";
 
 export default {
   props: {
@@ -34,6 +37,7 @@ export default {
       mechanismSynopsisAttribs: [...MechanismSynopsisAttribs],
       mechanismSupportAttribs: [...MechanismSupportAttribs],
       marshProbabilityThreshold: { ...MARSH_PROBABILITY_THRESHOLD },
+      helpText: { ...HELP_TEXT },
     };
   },
 };
@@ -59,12 +63,7 @@ export default {
             <div class="row g-3 px-3">
               <p class="mb-0 fw-bold">
                 Badoyni et al probabilities
-                <ToolTip
-                  toolTipText="These scores were calculated using a tripartite statistical model based on diverse gene and protein level features 
-                  that are known to discriminate between molecular mechanisms. It is made up of machine classifiers trained to predict 
-                  whether human protein coding genes are likely to be associated with dominant-negative, gain-of-function, or loss-of-function 
-                  molecular disease mechanisms In many cases, the different dominant molecular mechanisms are not mutually exclusive in a gene."
-                />
+                <ToolTip :toolTipText="helpText.MARSH_PROBABILITY" />
               </p>
               <p class="mb-0 mt-1">
                 See
@@ -81,12 +80,7 @@ export default {
                     <tr>
                       <td width="60%">
                         Gain of Function (pGOF)
-                        <ToolTip
-                          toolTipText="Badonyi and Marsh pGOF:
-                          the probability that the protein is associated with a gain-of-function disease mechanism 
-                          (pGOF). Gain-of-function mechanisms are characterized by an altered or newly appeared function in the mutant protein. 
-                          Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism."
-                        />
+                        <ToolTip :toolTipText="helpText.GAIN_OF_FUNCTION" />
                       </td>
                       <td width="40%">
                         <span
@@ -113,12 +107,7 @@ export default {
                     <tr>
                       <td width="60%">
                         Loss of Function (pLOF)
-                        <ToolTip
-                          toolTipText="Badonyi and Marsh pLOF:
-                          the probability that the protein is associated with a loss-of-function disease mechanism (pLOF).
-                          A loss-of-function mechanism is characterised by complete ablation of the function of the proteinGenes
-                          with higher scores are more likely to be associated with a dominant-negative disease mechanism."
-                        />
+                        <ToolTip :toolTipText="helpText.LOSS_OF_FUNCTION" />
                       </td>
                       <td width="40%">
                         <span
@@ -145,12 +134,7 @@ export default {
                     <tr>
                       <td width="60%">
                         Dominant Negative (pDN)
-                        <ToolTip
-                          toolTipText="Badonyi and Marsh pDN: 
-                          the probability that the protein is associated with a dominant-negative disease mechanism (pDN). 
-                          Dominant-negative mechanisms are characterized by the mutant protein directly or indirectly disrupting the function of the wild type protein.
-                          Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism."
-                        />
+                        <ToolTip :toolTipText="helpText.DOMINANT_NEGATIVE" />
                       </td>
                       <td width="40%">
                         <span
