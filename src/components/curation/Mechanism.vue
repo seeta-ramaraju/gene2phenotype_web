@@ -6,6 +6,7 @@ import {
   MechanismSynopsisAttribs,
   MechanismSupportAttribs,
 } from "../../utility/CurationConstants";
+import { MARSH_PROBABILITY_THRESHOLD } from "../../utility/Constants";
 
 export default {
   props: {
@@ -32,6 +33,7 @@ export default {
       mechanismAttribs: [...MechanismAttribs],
       mechanismSynopsisAttribs: [...MechanismSynopsisAttribs],
       mechanismSupportAttribs: [...MechanismSupportAttribs],
+      marshProbabilityThreshold: { ...MARSH_PROBABILITY_THRESHOLD },
     };
   },
 };
@@ -87,7 +89,22 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <span v-if="mechanismGeneStats.gain_of_function_mp">
+                        <span
+                          v-if="
+                            mechanismGeneStats?.gain_of_function_mp >
+                            marshProbabilityThreshold.GAIN_OF_FUNCTION
+                          "
+                          class="badge red-text-box"
+                        >
+                          {{ mechanismGeneStats.gain_of_function_mp }}
+                        </span>
+                        <span
+                          v-else-if="
+                            mechanismGeneStats?.gain_of_function_mp <=
+                            marshProbabilityThreshold.GAIN_OF_FUNCTION
+                          "
+                          class="badge green-text-box"
+                        >
                           {{ mechanismGeneStats.gain_of_function_mp }}
                         </span>
                         <span v-else class="text-muted">Not Available</span>
@@ -104,7 +121,22 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <span v-if="mechanismGeneStats.loss_of_function_mp">
+                        <span
+                          v-if="
+                            mechanismGeneStats?.loss_of_function_mp >
+                            marshProbabilityThreshold.LOSS_OF_FUNCTION
+                          "
+                          class="badge red-text-box"
+                        >
+                          {{ mechanismGeneStats.loss_of_function_mp }}
+                        </span>
+                        <span
+                          v-else-if="
+                            mechanismGeneStats?.loss_of_function_mp <=
+                            marshProbabilityThreshold.LOSS_OF_FUNCTION
+                          "
+                          class="badge green-text-box"
+                        >
                           {{ mechanismGeneStats.loss_of_function_mp }}
                         </span>
                         <span v-else class="text-muted">Not Available</span>
@@ -121,7 +153,22 @@ export default {
                         />
                       </td>
                       <td width="40%">
-                        <span v-if="mechanismGeneStats.dominant_negative_mp">
+                        <span
+                          v-if="
+                            mechanismGeneStats?.dominant_negative_mp >
+                            marshProbabilityThreshold.DOMINANT_NEGATIVE
+                          "
+                          class="badge red-text-box"
+                        >
+                          {{ mechanismGeneStats.dominant_negative_mp }}
+                        </span>
+                        <span
+                          v-else-if="
+                            mechanismGeneStats?.dominant_negative_mp <=
+                            marshProbabilityThreshold.DOMINANT_NEGATIVE
+                          "
+                          class="badge green-text-box"
+                        >
                           {{ mechanismGeneStats.dominant_negative_mp }}
                         </span>
                         <span v-else class="text-muted">Not Available</span>
@@ -230,3 +277,13 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+.red-text-box {
+  color: white;
+  background-color: rgb(255, 21, 0);
+}
+.green-text-box {
+  color: black;
+  background-color: rgb(0, 243, 148);
+}
+</style>

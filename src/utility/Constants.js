@@ -28,3 +28,9 @@ export const HELP_TEXT = {
   EXTERNAL_LINKS: "Information for this gene in other resources",
   CROSS_REFERENCES: "Ontology/ OMIM terms related to this disease record",
 };
+
+export const MARSH_PROBABILITY_THRESHOLD = {
+  LOSS_OF_FUNCTION: 0.64,
+  GAIN_OF_FUNCTION: 0.63,
+  DOMINANT_NEGATIVE: 0.61,
+};
