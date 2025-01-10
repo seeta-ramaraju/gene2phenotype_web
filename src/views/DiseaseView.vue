@@ -107,13 +107,21 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID</th>
+              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
               <th>Gene</th>
-              <th>Genotype</th>
-              <th>Variant Consequence</th>
-              <th>Variant Type</th>
-              <th>Mechanism</th>
-              <th>Confidence</th>
+              <th>
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </th>
+              <th>
+                Variant Consequence
+                <ToolTip :toolTipText="helpText.VARIANT_CONSEQUENCE" />
+              </th>
+              <th>
+                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+              </th>
+              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
+              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -254,3 +262,8 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+th {
+  white-space: nowrap;
+}
+</style>
