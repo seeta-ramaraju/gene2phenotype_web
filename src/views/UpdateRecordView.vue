@@ -123,8 +123,7 @@ export default {
       <UpdateConfidence
         :stableId="stableId"
         :attributesData="attributesData"
-        :currentLevel="locusGeneDiseaseData.confidence"
-        :currentJustification="locusGeneDiseaseData.confidence_support"
+        :currentConfidence="locusGeneDiseaseData.confidence"
       />
     </div>
   </div>

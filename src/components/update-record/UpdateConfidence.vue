@@ -12,16 +12,14 @@ export default {
   props: {
     stableId: String,
     attributesData: Object,
-    currentJustification: String,
-    currentLevel: String,
+    currentConfidence: String,
   },
   components: {
     LoginErrorAlert,
   },
   data() {
     return {
-      justification: this.currentJustification,
-      level: this.currentLevel,
+      confidence: this.currentConfidence,
       isLogInSessionExpired: false,
       isUpdateApiCallLoading: false,
       updateConfidenceErrorMsg: null,
@@ -50,9 +48,7 @@ export default {
       this.isUpdateApiCallLoading = true;
 
       const requestBody = {
-        confidence: this.level,
-        confidence_support: this.justification,
-        is_reviewed: 1, // at the moment, api expects this default value to be set
+        confidence: this.confidence,
       };
       let responseStatus = null;
       let apiHeaders = appendAuthenticationHeaders({
@@ -132,18 +128,18 @@ export default {
               </div>
             </div>
             <div v-else>
-              <div class="row w-50">
+              <div class="row pb-4 w-50">
                 <label
                   for="update-confidence-level-input"
-                  class="col-lg-3 col-form-label"
+                  class="col-lg-2 col-form-label"
                 >
                   Level<span class="text-danger">*</span>
                 </label>
-                <div class="col-lg-6">
+                <div class="col-lg-7">
                   <select
                     id="update-confidence-level-input"
                     class="form-select"
-                    v-model="level"
+                    v-model="confidence"
                   >
                     <option
                       v-for="item in reorderedConfidenceCategoryList"
@@ -152,24 +148,6 @@ export default {
                       {{ item }}
                     </option>
                   </select>
-                </div>
-              </div>
-              <div class="row pt-3 pb-4 w-50">
-                <label
-                  for="update-justification-input"
-                  class="col-lg-3 col-form-label"
-                >
-                  Justification<span class="text-danger">*</span>
-                </label>
-                <div class="col-lg-9">
-                  <textarea
-                    class="form-control"
-                    id="update-justification-input"
-                    rows="3"
-                    type="text"
-                    v-model="justification"
-                  >
-                  </textarea>
                 </div>
               </div>
               <button

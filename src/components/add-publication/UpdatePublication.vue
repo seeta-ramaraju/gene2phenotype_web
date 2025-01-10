@@ -32,7 +32,7 @@ export default {
       <div id="publication-section-body" class="accordion-collapse collapse">
         <div class="accordion-body">
           <div
-            v-if="currentPublications && currentPublications.length > 0"
+            v-if="currentPublications?.length > 0"
             class="accordion accordion-flush"
             id="accordionPublications"
           >
@@ -80,12 +80,7 @@ export default {
                           {{ item.publication?.title }}
                         </td>
                         <td>
-                          <span
-                            v-if="
-                              item.publication?.families &&
-                              item.publication?.families.length > 0
-                            "
-                          >
+                          <span v-if="item.publication?.families?.length > 0">
                             Number of Families:
                             {{
                               item.publication.families[0].number_of_families
@@ -104,12 +99,7 @@ export default {
                           </span>
                         </td>
                         <td>
-                          <span
-                            v-if="
-                              item.publication?.comments &&
-                              item.publication?.comments.length > 0
-                            "
-                          >
+                          <span v-if="item.publication?.comments?.length > 0">
                             {{
                               item.publication.comments[
                                 item.publication.comments.length - 1

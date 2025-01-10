@@ -27,10 +27,9 @@ export const getInitialInputForNewCuration = () => {
     mechanism_evidence: {},
     disease: { disease_name: "", cross_references: [] },
     panels: [],
-    confidence: {
-      justification: "",
-      level: "",
-    },
+    confidence: "",
+    public_comment: "",
+    private_comment: "",
   };
 
   // initialize variant_types field of input with VariantTypesAttribs
@@ -196,7 +195,7 @@ export const prepareInputForDataSubmission = (input) => {
   // convert phenotypes from object to array of objects and include phenotypes that have non empty hpo terms
   let phenotypesArray = [];
   for (const [pmidKey, valueObj] of Object.entries(preparedInput.phenotypes)) {
-    if (valueObj.hpo_terms && valueObj.hpo_terms.length > 0) {
+    if (valueObj.hpo_terms?.length > 0) {
       let phenotypeObj = {
         pmid: pmidKey,
         summary: valueObj.summary.trim(), // trim summary value
@@ -315,9 +314,11 @@ export const prepareInputForDataSubmission = (input) => {
   // trim session name
   preparedInput.session_name = preparedInput.session_name.trim();
 
-  // trim confidence justification
-  preparedInput.confidence.justification =
-    preparedInput.confidence.justification.trim();
+  // trim public comment text
+  preparedInput.public_comment = preparedInput.public_comment.trim();
+
+  // trim private comment text
+  preparedInput.private_comment = preparedInput.private_comment.trim();
 
   return preparedInput;
 };
@@ -517,9 +518,8 @@ export const prepareInputForUpdating = (previousInput) => {
       cross_references: clonedpreviousInput.disease.cross_references,
     },
     panels: clonedpreviousInput.panels,
-    confidence: {
-      justification: clonedpreviousInput.confidence.justification,
-      level: clonedpreviousInput.confidence.level,
-    },
+    confidence: clonedpreviousInput.confidence,
+    public_comment: clonedpreviousInput.public_comment,
+    private_comment: clonedpreviousInput.private_comment,
   };
 };
