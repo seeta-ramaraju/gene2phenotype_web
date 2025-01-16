@@ -36,6 +36,7 @@ import {
   GENE_DISEASE_URL,
   GENE_FUNCTION_URL,
   GENE_URL,
+  HPO_SEARCH_API_URL,
   PUBLICATIONS_URL,
   PUBLISH_URL,
   SAVE_DRAFT_URL,
@@ -361,6 +362,48 @@ export default {
           removedPmidList
         );
     },
+    fetchAndSearchHPO(pmid, inputValue) {
+      this.hpoTermsInputHelper[pmid].searchTerm = inputValue;
+      this.hpoTermsInputHelper[pmid].HPOsearchResponseJson = [];
+      this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = null;
+
+      if (!inputValue || inputValue.length < 3) {
+        this.hpoTermsInputHelper[pmid].isLoadingValue = false;
+        return;
+      }
+
+      this.hpoTermsInputHelper[pmid].isLoadingValue = true;
+
+      fetch(`${HPO_SEARCH_API_URL}?q=${inputValue}&page=0&limit=10`)
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            return Promise.reject(
+              new Error("Failed to fetch HPO data. Please try again later.")
+            );
+          }
+        })
+        .then((responseJson) => {
+          this.hpoTermsInputHelper[pmid].isLoadingValue = false;
+          if (responseJson?.terms?.length > 0) {
+            this.hpoTermsInputHelper[pmid].HPOsearchResponseJson =
+              responseJson.terms;
+          } else {
+            const errorMsg = "No results found. Try another term.";
+            this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
+            console.log(errorMsg);
+          }
+        })
+        .catch((error) => {
+          const errorMsg = error?.message
+            ? error.message
+            : "Failed to fetch HPO data. Please try again later.";
+          this.hpoTermsInputHelper[pmid].isLoadingValue = false;
+          this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
+          console.log(errorMsg);
+        });
+    },
     saveDraft() {
       if (!isUserLoggedIn()) {
         logOutUser();
@@ -627,6 +670,7 @@ export default {
       <ClinicalPhenotype
         v-model:clinical-phenotype="input.phenotypes"
         v-model:hpo-terms-input-helper="hpoTermsInputHelper"
+        :fetchAndSearchHPO="fetchAndSearchHPO"
       />
       <Genotype
         :attributesData="attributesData"

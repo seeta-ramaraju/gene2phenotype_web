@@ -1,94 +1,45 @@
 <script>
-import { HPO_SEARCH_API_URL } from "../../utility/UrlConstants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
 export default {
-  data() {
-    return {
-      isLoadingValue: {},
-      HPOsearchResponseJson: {},
-      HPOAPIerrormsg: {},
-      showDropDown: {},
-      searchTerm: {},
-    };
-  },
   props: {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
+    fetchAndSearchHPO: Function,
   },
   components: { ToolTip },
   emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
   methods: {
-    initializeStateForPmid(pmid) {
-      if (!this.searchTerm[pmid]) this.searchTerm[pmid] = "";
-      if (!this.isLoadingValue[pmid]) this.isLoadingValue[pmid] = false;
-      if (!this.HPOsearchResponseJson[pmid])
-        this.HPOsearchResponseJson[pmid] = [];
-      if (!this.HPOAPIerrormsg[pmid]) this.HPOAPIerrormsg[pmid] = null;
-      if (!this.showDropDown[pmid]) this.showDropDown[pmid] = false;
-    },
-    async fetchAndSearchHPO(pmid) {
-      this.isLoadingValue[pmid] = true;
-      this.HPOsearchResponseJson[pmid] = [];
-      this.HPOAPIerrormsg[pmid] = null;
-
-      if (!this.searchTerm[pmid] || this.searchTerm[pmid].length < 3) {
-        this.isLoadingValue[pmid] = false;
-        return;
-      }
-
-      try {
-        const hpoApiResponse = await fetch(
-          `${HPO_SEARCH_API_URL}?q=${this.searchTerm[pmid]}&page=0&limit=10`
-        );
-        if (!hpoApiResponse.ok) throw new Error("Failed to fetch HPO data");
-
-        const ontology_data = await hpoApiResponse.json();
-        this.HPOsearchResponseJson[pmid] = ontology_data.terms;
-      } catch (error) {
-        this.HPOsearchResponseJson[pmid] = [];
-        this.HPOAPIerrormsg[pmid] =
-          "Failed to fetch HPO data, please try again later.";
-        console.log(this.HPOAPIerrormsg[pmid]);
-      } finally {
-        this.isLoadingValue[pmid] = false;
-      }
-    },
-    onInput(pmid) {
-      this.initializeStateForPmid(pmid);
-      this.showDropDown[pmid] = true;
-      this.fetchAndSearchHPO(pmid);
-    },
     selectTerm(pmid, term) {
-      if (!term || !pmid) return;
-      this.initializeStateForPmid(pmid);
-
-      this.hpoTermsInputHandler(pmid, term.id);
-      this.searchTerm[pmid] = "";
-      this.HPOsearchResponseJson[pmid] = []; // to make the dropdown have nothing to dropdown since a term has been selected
-
-      // Ensure clinicalPhenotype is not mutated directly
-      let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
-      updatedClinicalPhenotype[pmid].hpo_terms.push({
-        accession: term.id,
-        term: term.name,
-      });
-
-      this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
-      this.showDropDown[pmid] = false;
-    },
-    hpoTermsInputHandler(pmid, inputValue) {
+      // searchTerm should be cleared and HPOsearchResponseJson should be set to empty list
       let updatedHpoTermsInputHelper = { ...this.hpoTermsInputHelper };
-      if (!updatedHpoTermsInputHelper[pmid].hpoTermsInput) {
-        updatedHpoTermsInputHelper[pmid].hpoTermsInput = inputValue;
-      } else {
-        updatedHpoTermsInputHelper[pmid].hpoTermsInput += `;${inputValue}`;
-      }
-
+      updatedHpoTermsInputHelper[pmid].searchTerm = "";
+      updatedHpoTermsInputHelper[pmid].HPOsearchResponseJson = [];
       this.$emit("update:hpoTermsInputHelper", updatedHpoTermsInputHelper);
+
+      // IF the selected term is not already present in hpo_terms list THEN add it
+      if (
+        !this.clinicalPhenotype[pmid].hpo_terms.find(
+          (item) => item.accession === term.id
+        )
+      ) {
+        let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
+        updatedClinicalPhenotype[pmid].hpo_terms.push({
+          accession: term.id,
+          term: term.name,
+        });
+        this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
+      }
+    },
+    removeSelectedTerm(pmid, removedTermAccession) {
+      let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
+      // remove term from hpo_terms list
+      updatedClinicalPhenotype[pmid].hpo_terms = updatedClinicalPhenotype[
+        pmid
+      ].hpo_terms.filter((item) => item.accession !== removedTermAccession);
+      this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
     },
     summaryInputHandler(pmid, inputValue) {
       let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
-      if (!updatedClinicalPhenotype[pmid]) updatedClinicalPhenotype[pmid] = {};
       updatedClinicalPhenotype[pmid].summary = inputValue;
       this.$emit("update:clinicalPhenotype", updatedClinicalPhenotype);
     },
@@ -140,44 +91,52 @@ export default {
                 >
                   Click to search HPO terms
                 </button>
-                <div class="dropdown-menu w-50">
+                <div class="dropdown-menu">
                   <form class="p-3">
                     <label :for="`search-phenotype-${pmid}`" class="form-label">
                       Search and select Human Phenotype Ontology terms
-                      <ToolTip
-                        toolTipText="Atleast 3 letters required to display HPO term suggestions."
-                      />
                     </label>
                     <input
                       type="text"
                       :id="`search-phenotype-${pmid}`"
                       placeholder="E.g. Abnormality of the kidney"
-                      v-model="searchTerm[pmid]"
-                      @input="onInput(pmid)"
+                      :value="hpoTermsInputHelper[pmid].searchTerm"
+                      @input="fetchAndSearchHPO(pmid, $event.target.value)"
                       class="form-control"
                     />
                     <div
                       class="form-text"
                       :id="`search-phenotype-${pmid}-input-help-text`"
                     >
-                      Enter atleast 3 letters to find and select HPO term(s)
+                      Enter at least 3 letters to find and select HPO term(s)
                       then click outside to close.
                     </div>
                   </form>
                   <div
-                    class="alert alert-danger m-3"
+                    v-if="hpoTermsInputHelper[pmid].isLoadingValue"
+                    class="d-flex justify-content-center my-1"
+                  >
+                    <div
+                      class="spinner-border text-secondary spinner-border-sm"
+                      role="status"
+                    >
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </div>
+                  <div
+                    class="alert alert-danger mx-3 mb-3 mt-1"
                     role="alert"
-                    v-if="HPOAPIerrormsg[pmid]"
+                    v-if="hpoTermsInputHelper[pmid].HPOAPIerrormsg"
                   >
                     <div>
                       <i class="bi bi-exclamation-circle-fill"></i>
-                      {{ HPOAPIerrormsg[pmid] }}
+                      {{ hpoTermsInputHelper[pmid].HPOAPIerrormsg }}
                     </div>
                   </div>
                   <div
                     v-if="
-                      HPOsearchResponseJson[pmid]?.length > 0 &&
-                      showDropDown[pmid]
+                      hpoTermsInputHelper[pmid].HPOsearchResponseJson?.length >
+                      0
                     "
                   >
                     <div class="dropdown-divider"></div>
@@ -188,10 +147,11 @@ export default {
                       </h6>
                     </li>
                     <li
-                      v-for="term in HPOsearchResponseJson[pmid]"
+                      v-for="term in hpoTermsInputHelper[pmid]
+                        .HPOsearchResponseJson"
                       :key="term.id"
                       @mousedown="selectTerm(pmid, term)"
-                      class="dropdown-item"
+                      class="dropdown-item text-wrap"
                     >
                       {{ term.name }}
                     </li>
@@ -223,18 +183,32 @@ export default {
               <div class="col-12">
                 <p>Selected HPO Term(s)</p>
               </div>
-              <div class="col-6">
+              <div class="col-7">
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th width="30%">Accession</th>
-                      <th width="70%">Term</th>
+                      <th>Accession</th>
+                      <th>Term</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in clinicalPhenotype[pmid].hpo_terms">
+                    <tr
+                      v-for="item in clinicalPhenotype[pmid].hpo_terms"
+                      :key="item.accession"
+                    >
                       <td>{{ item.accession }}</td>
                       <td>{{ item.term }}</td>
+                      <td class="text-nowrap">
+                        <button
+                          type="button"
+                          class="btn btn-link p-0 text-danger"
+                          style="text-decoration: none"
+                          @click="removeSelectedTerm(pmid, item.accession)"
+                        >
+                          <i class="bi bi-trash-fill"></i> Remove
+                        </button>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
