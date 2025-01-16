@@ -1,7 +1,8 @@
 <script>
 import { SEARCH_URL } from "../utility/UrlConstants.js";
 import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
+import ToolTip from "../components/tooltip/ToolTip.vue";
 
 export default {
   data() {
@@ -12,6 +13,7 @@ export default {
       routeQuery: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
     };
   },
   created() {
@@ -25,6 +27,9 @@ export default {
       // already being observed
       { immediate: true }
     );
+  },
+  components: {
+    ToolTip,
   },
   methods: {
     fetchData(dataUrl) {
@@ -141,13 +146,16 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID</th>
+              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
               <th>Gene</th>
               <th>Disease</th>
-              <th>Allelic Requirement</th>
-              <th>Mechanism</th>
+              <th>
+                Allelic Requirement
+                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+              </th>
+              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
               <th>Panels</th>
-              <th>Confidence</th>
+              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
             </tr>
           </thead>
           <tbody>
@@ -245,3 +253,8 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+th {
+  white-space: nowrap;
+}
+</style>
