@@ -151,10 +151,10 @@ export const updateHpoTermsInputHelperWithNewPublicationsData = (
   let updatedHpoTermsInputHelper = { ...hpoTermsInputHelper };
   pmidList.forEach((pmid) => {
     updatedHpoTermsInputHelper[pmid] = {
-      isHpoTermsDataLoading: false,
-      hpoTermsErrorMsg: "",
-      isHpoTermsValid: true,
-      hpoTermsInput: "",
+      isLoadingValue: false,
+      HPOsearchResponseJson: [],
+      HPOAPIerrormsg: null,
+      searchTerm: "",
     };
   });
   return updatedHpoTermsInputHelper;
