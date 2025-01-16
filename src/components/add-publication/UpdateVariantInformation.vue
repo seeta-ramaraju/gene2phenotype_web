@@ -82,7 +82,10 @@ export default {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr v-for="item in currentVariantDescription">
+                          <tr
+                            v-for="item in currentVariantDescription"
+                            :key="item.description"
+                          >
                             <td>
                               {{ item.description }}
                             </td>
@@ -92,6 +95,7 @@ export default {
                                   v-for="(
                                     publicationItem, index
                                   ) in item.publications"
+                                  :key="publicationItem"
                                 >
                                   <span
                                     v-if="index < item.publications.length - 1"

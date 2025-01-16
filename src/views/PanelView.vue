@@ -307,7 +307,10 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in panelSummaryData.records_summary">
+            <tr
+              v-for="item in panelSummaryData.records_summary"
+              :key="item.stable_id"
+            >
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
@@ -359,7 +362,7 @@ export default {
       <h3 class="pt-3 pb-2">Curators</h3>
       <div class="row mx-3">
         <ul v-if="panelData.curators?.length > 0">
-          <li v-for="curator in panelData.curators">
+          <li v-for="curator in panelData.curators" :key="curator">
             {{ curator }}
           </li>
         </ul>

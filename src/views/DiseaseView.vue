@@ -126,7 +126,10 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in diseaseSummaryData.records_summary">
+            <tr
+              v-for="item in diseaseSummaryData.records_summary"
+              :key="item.stable_id"
+            >
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
@@ -211,7 +214,7 @@ export default {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in diseaseData.ontology_terms">
+          <tr v-for="item in diseaseData.ontology_terms" :key="item.accession">
             <td>
               <a
                 :href="`https://www.omim.org/entry/${item.accession}`"

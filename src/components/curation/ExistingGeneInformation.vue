@@ -205,7 +205,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in geneExistingDrafts.results">
+              <tr v-for="item in geneExistingDrafts.results" :key="item.id">
                 <td>
                   {{ item.id }}
                 </td>
@@ -307,7 +307,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in geneExistingRecords.results">
+              <tr v-for="item in geneExistingRecords.results" :key="item.id">
                 <td>
                   {{ item.id }}
                 </td>

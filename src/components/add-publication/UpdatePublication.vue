@@ -65,7 +65,10 @@ export default {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in currentPublications">
+                      <tr
+                        v-for="item in currentPublications"
+                        :key="item.publication?.pmid"
+                      >
                         <td>
                           <a
                             v-if="item.publication?.pmid"

@@ -159,7 +159,7 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in searchData.results">
+            <tr v-for="item in searchData.results" :key="item.id">
               <td>
                 <router-link
                   :to="`/lgd/${item.id}`"

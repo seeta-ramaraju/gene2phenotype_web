@@ -186,7 +186,10 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in geneSummaryData.records_summary">
+            <tr
+              v-for="item in geneSummaryData.records_summary"
+              :key="item.stable_id"
+            >
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
