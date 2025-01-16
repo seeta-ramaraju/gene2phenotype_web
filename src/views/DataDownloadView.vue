@@ -126,7 +126,7 @@ export default {
     </div>
     <div v-if="!isDataLoading && panelData?.results?.length > 0">
       <ul class="list-unstyled">
-        <li v-for="item in panelData.results">
+        <li v-for="item in panelData.results" :key="item.name">
           <button
             @click="downloadPanelData(item.name)"
             type="button"

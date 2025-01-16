@@ -98,7 +98,7 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in curationListData.results">
+            <tr v-for="item in curationListData.results" :key="item.stable_id">
               <td>
                 <router-link
                   :to="`/lgd/update-draft/${item.stable_id}`"

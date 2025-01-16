@@ -90,7 +90,7 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in currentVariantTypes">
+                <tr v-for="item in currentVariantTypes" :key="item.accession">
                   <td>
                     <a
                       v-if="item.accession"
@@ -122,6 +122,7 @@ export default {
                     <span v-if="item.publications?.length > 0">
                       <span
                         v-for="(publicationItem, index) in item.publications"
+                        :key="publicationItem"
                       >
                         <span v-if="index < item.publications.length - 1">
                           <a

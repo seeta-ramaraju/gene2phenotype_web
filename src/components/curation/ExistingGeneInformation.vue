@@ -3,8 +3,9 @@ import {
   appendAuthenticationHeaders,
   getUserEmail,
 } from "../../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP } from "../../utility/Constants.js";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../../utility/Constants.js";
 import { SEARCH_URL } from "../../utility/UrlConstants.js";
+import ToolTip from "../tooltip/ToolTip.vue";
 
 export default {
   props: {
@@ -38,8 +39,10 @@ export default {
       geneExistingDraftsErrorMsg: null,
       geneExistingRecordsErrorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
+      helpText: { ...HELP_TEXT },
     };
   },
+  components: { ToolTip },
   methods: {
     fetchExistingGeneDrafts(dataUrl) {
       this.geneExistingDraftsErrorMsg = this.geneExistingDrafts = null;
@@ -186,18 +189,23 @@ export default {
           <table class="table table-hover table-bordered">
             <thead>
               <tr>
-                <th>G2P ID</th>
+                <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
                 <th>Gene</th>
                 <th>Disease</th>
-                <th>Allelic Requirement</th>
+                <th>
+                  Allelic Requirement
+                  <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                </th>
                 <th>Panels</th>
-                <th>Confidence</th>
+                <th>
+                  Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+                </th>
                 <th>Curator</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in geneExistingDrafts.results">
+              <tr v-for="item in geneExistingDrafts.results" :key="item.id">
                 <td>
                   {{ item.id }}
                 </td>
@@ -230,7 +238,7 @@ export default {
                   <br />
                   Email: {{ item.curator_email }}
                 </td>
-                <td>
+                <td class="text-nowrap">
                   <router-link
                     :to="`/lgd/update-draft/${item.id}`"
                     style="text-decoration: none"
@@ -283,18 +291,23 @@ export default {
           <table class="table table-hover table-bordered">
             <thead>
               <tr>
-                <th>G2P ID</th>
+                <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
                 <th>Gene</th>
                 <th>Disease</th>
-                <th>Allelic Requirement</th>
-                <th>Mechanism</th>
+                <th>
+                  Allelic Requirement
+                  <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                </th>
+                <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
                 <th>Panels</th>
-                <th>Confidence</th>
+                <th>
+                  Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+                </th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in geneExistingRecords.results">
+              <tr v-for="item in geneExistingRecords.results" :key="item.id">
                 <td>
                   {{ item.id }}
                 </td>
@@ -343,7 +356,7 @@ export default {
                     {{ item.confidence }}
                   </span>
                 </td>
-                <td>
+                <td class="text-nowrap">
                   <router-link
                     :to="`/lgd/${item.id}`"
                     style="text-decoration: none"
@@ -386,3 +399,8 @@ export default {
     </div>
   </div>
 </template>
+<style scoped>
+th {
+  white-space: nowrap;
+}
+</style>

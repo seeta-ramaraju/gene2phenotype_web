@@ -361,7 +361,7 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in panelData.results">
+              <tr v-for="item in panelData.results" :key="item.name">
                 <td>
                   <router-link
                     :to="`/panel/${item.name}`"
