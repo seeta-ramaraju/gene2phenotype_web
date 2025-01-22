@@ -1,8 +1,12 @@
 <script>
 import { SEARCH_URL } from "../utility/UrlConstants.js";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
+import api from "../services/api.js";
+import {
+  fetchAndLogGeneralErrorMsg,
+  fetchAndLogApiResponseErrorMsg,
+} from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -39,7 +43,6 @@ export default {
         this.routeQuery =
           null;
       this.isDataLoading = true;
-      let isSearchDataFound = false;
       let url = "";
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
@@ -58,39 +61,29 @@ export default {
         }
         url += queryParamsArr.join("&");
       }
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(url, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(url)
         .then((response) => {
-          if (response.status === 200) {
-            isSearchDataFound = true;
-            return response.json();
-          } else if (response.status === 404) {
-            isSearchDataFound = false;
-            return response.json();
-          } else {
-            isSearchDataFound = false;
-            return Promise.reject(new Error("Unable to fetch search results"));
-          }
-        })
-        .then((responseJson) => {
           this.routeQuery = this.$route.query;
-          if (isSearchDataFound) {
-            this.isDataLoading = false;
-            this.searchData = responseJson;
-          } else {
-            this.isDataLoading = false;
-            this.searchDataNotFoundMsg = responseJson.message;
-          }
+          this.searchData = response.data;
         })
         .catch((error) => {
+          if (error.response?.status === 404) {
+            this.routeQuery = this.$route.query;
+            this.searchDataNotFoundMsg = fetchAndLogApiResponseErrorMsg(
+              error,
+              error?.response?.data?.message,
+              "No results found. Please try another search."
+            );
+          } else {
+            this.errorMsg = fetchAndLogGeneralErrorMsg(
+              error,
+              "Unable to fetch search results. Please try again later."
+            );
+          }
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     nextPageClickHandler() {

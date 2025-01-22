@@ -1,7 +1,8 @@
 <script>
 import { LGD_RECORD_URL } from "../utility/UrlConstants.js";
-import { appendAuthenticationHeaders } from "../utility/AuthenticationUtility.js";
 import AddPublication from "../components/add-publication/AddPublication.vue";
+import api from "../services/api.js";
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -32,34 +33,20 @@ export default {
       this.stableId = this.$route.params.stableId;
       this.errorMsg = this.locusGeneDiseaseData = null;
       this.isApiCallLoading = true;
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(LGD_RECORD_URL.replace(":stableid", this.stableId), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(LGD_RECORD_URL.replace(":stableid", this.stableId))
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch locus gene disease data")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.isApiCallLoading = false;
-          this.locusGeneDiseaseData = responseJson;
+          this.locusGeneDiseaseData = response.data;
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch record data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isApiCallLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
-    },
-    goToRecordPage() {
-      this.$router.push(`/lgd/${this.stableId}`);
     },
   },
 };
@@ -68,9 +55,9 @@ export default {
   <div class="container px-5 py-3" style="min-height: 60vh">
     <div class="d-flex justify-content-between pb-2">
       <h2>Add Publication(s) to G2P Record</h2>
-      <button class="btn btn-outline-primary" @click="goToRecordPage">
+      <router-link class="btn btn-outline-primary" :to="`/lgd/${stableId}`">
         Go to record page
-      </button>
+      </router-link>
     </div>
     <div
       class="d-flex justify-content-center"

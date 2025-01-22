@@ -1,12 +1,8 @@
 <script>
-import LoginErrorAlert from "../alert/LoginErrorAlert.vue";
+import api from "@/services/api";
 import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
-import {
-  isUserLoggedIn,
-  logOutUser,
-  appendAuthenticationHeaders,
-} from "../../utility/AuthenticationUtility";
 import { UPDATE_CONFIDENCE_URL } from "../../utility/UrlConstants";
+import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 
 export default {
   props: {
@@ -14,13 +10,9 @@ export default {
     attributesData: Object,
     currentConfidence: String,
   },
-  components: {
-    LoginErrorAlert,
-  },
   data() {
     return {
       confidence: this.currentConfidence,
-      isLogInSessionExpired: false,
       isUpdateApiCallLoading: false,
       updateConfidenceErrorMsg: null,
       isUpdateConfidenceSuccess: false,
@@ -37,54 +29,31 @@ export default {
   },
   methods: {
     updateConfidence() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.updateConfidenceErrorMsg = this.updateConfidenceSuccessMsg = null;
       this.isUpdateConfidenceSuccess = false;
       this.isUpdateApiCallLoading = true;
-
       const requestBody = {
         confidence: this.confidence,
       };
-      let responseStatus = null;
-      let apiHeaders = appendAuthenticationHeaders({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      });
-      fetch(UPDATE_CONFIDENCE_URL.replace(":stableid", this.stableId), {
-        method: "PUT",
-        body: JSON.stringify(requestBody),
-        headers: apiHeaders,
-      })
+      api
+        .put(
+          UPDATE_CONFIDENCE_URL.replace(":stableid", this.stableId),
+          requestBody
+        )
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isUpdateApiCallLoading = false;
-          if (responseStatus === 200) {
-            this.isUpdateConfidenceSuccess = true;
-            this.updateConfidenceSuccessMsg = responseJson.message;
-          } else {
-            let errorMsg =
-              "Unable to update confidence. Please try again later.";
-            if (responseJson.error) {
-              errorMsg =
-                "Unable to update confidence. Error: " + responseJson.error;
-            }
-            this.updateConfidenceErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
+          this.isUpdateConfidenceSuccess = true;
+          this.updateConfidenceSuccessMsg = response.data.message;
         })
         .catch((error) => {
+          this.updateConfidenceErrorMsg = fetchAndLogApiResponseErrorMsg(
+            error,
+            error?.response?.data?.error,
+            "Unable to update confidence. Please try again later.",
+            "Unable to update confidence."
+          );
+        })
+        .finally(() => {
           this.isUpdateApiCallLoading = false;
-          this.updateConfidenceErrorMsg =
-            "Unable to update confidence. Please try again later.";
-          console.log(error);
         });
     },
   },
@@ -178,7 +147,6 @@ export default {
                 {{ updateConfidenceSuccessMsg }}
               </div>
             </div>
-            <LoginErrorAlert v-if="isLogInSessionExpired" />
           </div>
         </div>
       </div>

@@ -4,12 +4,13 @@ import {
   MECHANISMS_URL,
   VARIANT_TYPES_URL,
 } from "../utility/UrlConstants.js";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import { CONFIDENCE_COLOR_MAP } from "../utility/Constants.js";
 import {
   ConfidenceAttribsOrder,
   VariantConsequencesAttribs,
 } from "../utility/CurationConstants.js";
+import api from "../services/api.js";
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 export default {
   data() {
     return {
@@ -36,52 +37,24 @@ export default {
     fetchData() {
       this.errorMsg = this.terminologyDescriptionData = null;
       this.isDataLoading = true;
-
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
       Promise.all([
-        fetch(ATTRIBS_DESCRIPTION_URL, {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(MECHANISMS_URL, {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(VARIANT_TYPES_URL, {
-          method: "GET",
-          headers: apiHeaders,
-        }),
+        api.get(ATTRIBS_DESCRIPTION_URL),
+        api.get(MECHANISMS_URL),
+        api.get(VARIANT_TYPES_URL),
       ])
-        .then((responseArr) => {
-          return Promise.all(
-            responseArr.map((response) => {
-              if (response.status === 200) {
-                return response.json();
-              } else {
-                return Promise.reject(
-                  new Error("Unable to fetch descriptions data")
-                );
-              }
-            })
-          );
-        })
-        .then((responseJsonArr) => {
-          const [
-            terminologyDescriptionData,
-            molecularDescriptionData,
-            variantDescriptionData,
-          ] = responseJsonArr;
-          this.isDataLoading = false;
-          this.terminologyDescriptionData = terminologyDescriptionData;
-          this.molecularDescriptionData = molecularDescriptionData;
-          this.variantDescriptionData = variantDescriptionData;
+        .then(([response1, response2, response3]) => {
+          this.terminologyDescriptionData = response1.data;
+          this.molecularDescriptionData = response2.data;
+          this.variantDescriptionData = response3.data;
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch terminology data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     reorderedConfidenceCategoryList() {

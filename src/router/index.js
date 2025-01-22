@@ -17,14 +17,14 @@ import TerminologyView from "../views/TerminologyView.vue";
 import DataDownloadView from "../views/DataDownloadView.vue";
 import LoginView from "../views/LoginView.vue";
 import ProfileView from "../views/ProfileView.vue";
-import {
-  isUserLoggedIn,
-  logOutUser,
-} from "../utility/AuthenticationUtility.js";
 import UpdateRecordView from "../views/UpdateRecordView.vue";
 import ContactPageView from "../views/ContactPageView.vue";
 import AddPublicationView from "../views/AddPublicationView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
+import { useAuthStore } from "../store/auth.js";
+import ChangePasswordView from "../views/ChangePasswordView.vue";
+import ResetPasswordView from "../views/ResetPasswordView.vue";
+import VerifyEmailView from "../views/VerifyEmailView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -132,6 +132,22 @@ const router = createRouter({
       meta: { requiresLogIn: true },
     },
     {
+      path: "/change-password",
+      name: "change-password",
+      component: ChangePasswordView,
+      meta: { requiresLogIn: true },
+    },
+    {
+      path: "/verify-email",
+      name: "verify-email",
+      component: VerifyEmailView,
+    },
+    {
+      path: "/reset-password/:uid/:token",
+      name: "reset-password",
+      component: ResetPasswordView,
+    },
+    {
       path: "/about/terminology",
       name: "terminology",
       component: TerminologyView,
@@ -155,10 +171,10 @@ const router = createRouter({
 });
 
 router.beforeEach(function (to, _, next) {
-  if (to.meta.requiresLogIn && !isUserLoggedIn()) {
-    logOutUser();
-    next("/login");
-  } else if (to.meta.requiresLogOut && isUserLoggedIn()) {
+  const authStore = useAuthStore();
+  if (to.meta.requiresLogIn && !authStore.isAuthenticated) {
+    next({ path: "/login", query: { redirect: to.fullPath } });
+  } else if (to.meta.requiresLogOut && authStore.isAuthenticated) {
     next("/");
   } else {
     next();

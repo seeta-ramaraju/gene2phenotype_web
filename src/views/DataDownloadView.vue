@@ -1,6 +1,7 @@
 <script>
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 import { ALL_PANELS_URL, DOWNLOAD_PANEL_URL } from "../utility/UrlConstants.js";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
+import api from "../services/api.js";
 
 export default {
   data() {
@@ -27,58 +28,35 @@ export default {
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-      });
-      fetch(ALL_PANELS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(ALL_PANELS_URL)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch panels data. Please try again later.")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.isDataLoading = false;
-          this.panelData = responseJson;
+          this.panelData = response.data;
         })
         .catch((error) => {
+          this.panelErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch panels data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.panelErrorMsg = error.message;
-          console.log(error);
         });
     },
     downloadPanelData(panelName) {
-      let responseContentDisposition = null;
       this.dataDownloadErrorMsg = null;
       this.isDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "text/csv;charset=UTF-8",
-      });
-      fetch(DOWNLOAD_PANEL_URL.replace(":panelname", panelName), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(DOWNLOAD_PANEL_URL.replace(":panelname", panelName), {
+          headers: {
+            "Content-Type": "text/csv;charset=UTF-8",
+          },
+          responseType: "text",
+        })
         .then((response) => {
-          responseContentDisposition = response.headers.get(
+          const responseContentDisposition = response.headers.get(
             "Content-Disposition"
           );
-          if (response.status === 200) {
-            return response.text();
-          } else {
-            return Promise.reject(
-              new Error("Unable to download data. Please try again later.")
-            );
-          }
-        })
-        .then((responseText) => {
-          this.isDataLoading = false;
           // get csv file name from response Content-Disposition header
           const regexMatch = responseContentDisposition.match(
             /attachment; filename="([^"]+)"/
@@ -88,7 +66,7 @@ export default {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
-          const csvDataText = responseText;
+          const csvDataText = response.data;
           const anchor = document.createElement("a");
           anchor.href =
             "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
@@ -98,10 +76,13 @@ export default {
           anchor.remove();
         })
         .catch((error) => {
-          this.isDataLoading = false;
-          this.dataDownloadErrorMsg =
-            error.message || "Unable to download data. Please try again later.";
-          console.log(error);
+          this.dataDownloadErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to download data. Please try again later."
+          );
+        })
+        .finally(() => {
+          this.isDataLoading = null;
         });
     },
   },

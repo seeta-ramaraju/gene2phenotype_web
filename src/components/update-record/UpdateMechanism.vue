@@ -1,20 +1,15 @@
 <script>
-import LoginErrorAlert from "../alert/LoginErrorAlert.vue";
-import {
-  isUserLoggedIn,
-  logOutUser,
-  appendAuthenticationHeaders,
-} from "../../utility/AuthenticationUtility";
 import {
   EvidenceTypesAttribs,
   MechanismAttribs,
   MechanismSupportAttribs,
   MechanismSynopsisAttribs,
-} from "../../utility/CurationConstants";
-import { UPDATE_MECHANISM_URL } from "../../utility/UrlConstants";
+} from "../../utility/CurationConstants.js";
+import { UPDATE_MECHANISM_URL } from "../../utility/UrlConstants.js";
 import cloneDeep from "lodash/cloneDeep";
 import kebabCase from "lodash/kebabCase";
 import ToolTip from "../tooltip/ToolTip.vue";
+import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 
 export default {
   props: {
@@ -23,7 +18,6 @@ export default {
     currentMechanism: Object,
   },
   components: {
-    LoginErrorAlert,
     ToolTip,
   },
   data() {
@@ -35,7 +29,6 @@ export default {
       mechanismEvidence: this.getInitialMechanismEvidence(
         this.currentPublications
       ),
-      isLogInSessionExpired: false,
       isUpdateApiCallLoading: false,
       updateMechanismErrorMsg: null,
       isUpdateMechanismSuccess: false,
@@ -48,52 +41,29 @@ export default {
   },
   methods: {
     updateMechanism() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.updateMechanismErrorMsg = this.updateMechanismSuccessMsg = null;
       this.isUpdateMechanismSuccess = false;
       this.isUpdateApiCallLoading = true;
-
       const requestBody = this.prepareInputForDataSubmission();
-      let responseStatus = null;
-      let apiHeaders = appendAuthenticationHeaders({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      });
-      fetch(UPDATE_MECHANISM_URL.replace(":stableid", this.stableId), {
-        method: "PATCH",
-        body: JSON.stringify(requestBody),
-        headers: apiHeaders,
-      })
+      api
+        .patch(
+          UPDATE_MECHANISM_URL.replace(":stableid", this.stableId),
+          requestBody
+        )
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isUpdateApiCallLoading = false;
-          if (responseStatus === 200) {
-            this.isUpdateMechanismSuccess = true;
-            this.updateMechanismSuccessMsg = responseJson.message;
-          } else {
-            let errorMsg =
-              "Unable to update mechanism. Please try again later.";
-            if (responseJson.error) {
-              errorMsg =
-                "Unable to update mechanism. Error: " + responseJson.error;
-            }
-            this.updateMechanismErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
+          this.isUpdateMechanismSuccess = true;
+          this.updateMechanismSuccessMsg = response.data.message;
         })
         .catch((error) => {
+          this.updateMechanismErrorMsg = fetchAndLogApiResponseErrorMsg(
+            error,
+            error?.response?.data?.error,
+            "Unable to update mechanism. Please try again later.",
+            "Unable to update mechanism."
+          );
+        })
+        .finally(() => {
           this.isUpdateApiCallLoading = false;
-          this.updateMechanismErrorMsg =
-            "Unable to update mechanism. Please try again later.";
-          console.log(error);
         });
     },
     getInitialMechanismEvidence(publications) {
@@ -559,7 +529,6 @@ export default {
                 {{ updateMechanismErrorMsg }}
               </div>
             </div>
-            <LoginErrorAlert v-if="isLogInSessionExpired" />
           </div>
         </div>
       </div>

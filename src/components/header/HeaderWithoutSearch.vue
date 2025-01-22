@@ -1,17 +1,20 @@
 <script>
-import { ALL_PANELS_URL } from "../../utility/UrlConstants.js";
-import {
-  checkLogInAndAppendAuthHeaders,
-  getUsername,
-  isUserLoggedIn,
-  logOutUser,
-} from "../../utility/AuthenticationUtility.js";
+import router from "../../router/index.js";
+import { ALL_PANELS_URL, LOGOUT_URL } from "../../utility/UrlConstants.js";
+import api from "../../services/api.js";
+import { useAuthStore } from "../../store/auth.js";
+import { mapState } from "pinia";
+import { logGeneralErrorMsg } from "../../utility/ErrorUtility.js";
 
 export default {
   data() {
     return {
       panelData: null,
+      isLogoutInProgress: false,
     };
+  },
+  computed: {
+    ...mapState(useAuthStore, ["isAuthenticated", "userName"]),
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -28,36 +31,40 @@ export default {
   methods: {
     fetchPanelData() {
       this.panelData = null;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-      });
-      fetch(ALL_PANELS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(ALL_PANELS_URL)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(new Error("Unable to fetch panel data"));
-          }
-        })
-        .then((responseJson) => {
-          this.panelData = responseJson;
+          this.panelData = response.data;
         })
         .catch((error) => {
-          console.log(error);
+          logGeneralErrorMsg(error);
+        })
+        .finally(() => {
+          this.isDataLoading = false;
         });
     },
-    logout() {
-      logOutUser();
-      this.$router.go(); // Reloads current route
+    logoutBtnClickHandler() {
+      this.isLogoutInProgress = true;
+      api
+        .post(LOGOUT_URL)
+        .then(() => {
+          const authStore = useAuthStore();
+          authStore.logout();
+          this.$router.go(); // Reloads current page
+        })
+        .catch((error) => {
+          logGeneralErrorMsg(error);
+        })
+        .finally(() => {
+          this.isLogoutInProgress = false;
+        });
     },
-    isLoggedIn() {
-      return isUserLoggedIn();
+    loginBtnClickHandler() {
+      router.push({
+        path: "/login",
+        query: { redirect: router.currentRoute.value.fullPath },
+      });
     },
-    getUsername,
   },
 };
 </script>
@@ -153,7 +160,7 @@ export default {
             Browse panels
           </router-link>
         </li>
-        <li class="nav-item dropdown" v-if="isLoggedIn()">
+        <li class="nav-item dropdown" v-if="isAuthenticated">
           <a
             class="nav-link dropdown-toggle px-1 text-white fw-bold"
             href="#"
@@ -178,7 +185,7 @@ export default {
         </li>
       </ul>
       <ul class="nav nav-underline">
-        <li class="nav-item" v-if="isLoggedIn() && !!getUsername()">
+        <li class="nav-item" v-if="isAuthenticated && !!userName">
           <span class="nav-link text-white fw-bold">
             <i class="bi bi-person-fill"></i>
             <router-link
@@ -186,19 +193,38 @@ export default {
               class="text-white"
               style="text-decoration: none"
             >
-              {{ getUsername() }}
+              {{ userName }}
             </router-link>
           </span>
         </li>
-        <li class="nav-item" v-if="isLoggedIn()">
-          <button class="nav-link text-white fw-bold" @click="logout">
+        <li class="nav-item" v-if="isAuthenticated">
+          <button
+            class="nav-link text-white fw-bold"
+            disabled="true"
+            v-if="isLogoutInProgress"
+          >
+            Logging Out
+            <span
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          </button>
+          <button
+            class="nav-link text-white fw-bold"
+            @click="logoutBtnClickHandler"
+            v-else
+          >
             Log Out
           </button>
         </li>
         <li class="nav-item" v-else>
-          <router-link to="/login" class="nav-link text-white fw-bold">
+          <button
+            class="nav-link text-white fw-bold"
+            @click="loginBtnClickHandler"
+          >
             Log In
-          </router-link>
+          </button>
         </li>
       </ul>
     </div>
