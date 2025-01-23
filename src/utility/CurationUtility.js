@@ -298,11 +298,14 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.variant_consequences = variantConsequencesArray;
 
+  // convert locus to uppercase
+  preparedInput.locus = preparedInput.locus.toUpperCase();
+
   // trim disease name
   preparedInput.disease.disease_name =
     preparedInput.disease.disease_name.trim();
 
-  // if disease name is not empty then prefix locus to disease name and disease name does not contain gene-related
+  // if disease name is not empty and disease name does not contain gene-related then prefix locus to disease name
   const regex = new RegExp(`${preparedInput.locus}-related`, "i");
   if (
     preparedInput.disease.disease_name !== "" &&
@@ -492,7 +495,7 @@ export const prepareInputForUpdating = (previousInput) => {
     });
   }
   //cleaning the disease name
-  let prefix_to_remove = clonedpreviousInput.locus + "-related";
+  let prefix_to_remove = clonedpreviousInput.locus + "-related ";
   let disease_name = clonedpreviousInput.disease.disease_name.replace(
     prefix_to_remove,
     ""
