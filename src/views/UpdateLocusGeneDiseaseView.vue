@@ -374,7 +374,7 @@ export default {
 
         // Call API to Publish Data
         const publishResponse = await api.post(
-          PUBLISH_URL.replace(":stableid", this.stableId),
+          PUBLISH_URL.replace(":stableid", this.stableID),
           {
             headers: {
               "Content-Length": 0,
