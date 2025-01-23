@@ -37,7 +37,9 @@ export const fetchAndLogApiResponseErrorMsg = (
       } else {
         errorMsg = apiResponseErrorMsg;
       }
-      console.log(`Error code: ${error.response.status}, Error: ${errorMsg}`);
+      console.log(
+        `Error code: ${error.response.status}, Error: ${apiResponseErrorMsg}`
+      );
     } else {
       console.log(
         `Error code: ${error.response.status}, Error: ${JSON.stringify(
@@ -64,7 +66,9 @@ export const fetchAndLogApiResponseErrorListMsg = (
       } else {
         errorMsg = error.response.data.errors.message[0];
       }
-      console.log(`Error code: ${error.response.status}, Error: ${errorMsg}`);
+      console.log(
+        `Error code: ${error.response.status}, Error: ${error.response.data.errors.message[0]}`
+      );
     } else {
       console.log(
         `Error code: ${error.response.status}, Error: ${JSON.stringify(
