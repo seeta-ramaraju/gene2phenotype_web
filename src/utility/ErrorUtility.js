@@ -1,10 +1,12 @@
 export const fetchAndLogGeneralErrorMsg = (error, defaultMsg) => {
   if (error.response) {
     console.log(
-      `Error code: ${error.response.status}, Error: ${error.response.data}`
+      `Error code: ${error.response.status}, Error: ${JSON.stringify(
+        error.response.data
+      )}`
     );
   } else {
-    console.log("Error message: ", error.message);
+    console.log("Error message: ", JSON.stringify(error.message));
   }
   return defaultMsg;
 };
@@ -12,10 +14,12 @@ export const fetchAndLogGeneralErrorMsg = (error, defaultMsg) => {
 export const logGeneralErrorMsg = (error) => {
   if (error.response) {
     console.log(
-      `Error code: ${error.response.status}, Error: ${error.response.data}`
+      `Error code: ${error.response.status}, Error: ${JSON.stringify(
+        error.response.data
+      )}`
     );
   } else {
-    console.log("Error message: ", error.message);
+    console.log("Error message: ", JSON.stringify(error.message));
   }
 };
 
@@ -36,11 +40,13 @@ export const fetchAndLogApiResponseErrorMsg = (
       console.log(`Error code: ${error.response.status}, Error: ${errorMsg}`);
     } else {
       console.log(
-        `Error code: ${error.response.status}, Error: ${error.response.data}`
+        `Error code: ${error.response.status}, Error: ${JSON.stringify(
+          error.response.data
+        )}`
       );
     }
   } else {
-    console.log("Error message: ", error.message);
+    console.log("Error message: ", JSON.stringify(error.message));
   }
   return errorMsg;
 };
@@ -61,11 +67,13 @@ export const fetchAndLogApiResponseErrorListMsg = (
       console.log(`Error code: ${error.response.status}, Error: ${errorMsg}`);
     } else {
       console.log(
-        `Error code: ${error.response.status}, Error: ${error.response.data}`
+        `Error code: ${error.response.status}, Error: ${JSON.stringify(
+          error.response.data
+        )}`
       );
     }
   } else {
-    console.log("Error message: ", error.message);
+    console.log("Error message: ", JSON.stringify(error.message));
   }
   return errorMsg;
 };
