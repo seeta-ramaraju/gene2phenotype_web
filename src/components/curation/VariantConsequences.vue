@@ -31,7 +31,9 @@ export default {
 </script>
 <template>
   <div class="row g-3 px-3 py-3">
-    <div class="col-12"><h5>Variant Consequences</h5></div>
+    <div class="col-12">
+      <h5>Variant Consequences<span class="text-danger">*</span></h5>
+    </div>
     <div class="col-12">
       <table style="width: 70%" class="table table-bordered">
         <thead>
