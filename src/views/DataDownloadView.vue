@@ -133,7 +133,12 @@ export default {
     <div v-if="!isDataLoading">
       <p>
         Download format is available
-        <a href="" target="_blank" style="text-decoration: none">here</a>.
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/download/README.txt"
+          target="_blank"
+          style="text-decoration: none"
+          >here</a
+        >.
       </p>
       <p>
         Downloads are created on the fly to provide the latest information. For
