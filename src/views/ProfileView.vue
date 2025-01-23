@@ -25,7 +25,7 @@ export default {
           <tr>
             <th>Panel(s)</th>
             <td>
-              <span v-if="userPanels.length > 0">
+              <span v-if="userPanels?.length > 0">
                 {{ userPanels.join(", ") }}
               </span>
               <span v-else class="text-muted">No permission to edit</span>
