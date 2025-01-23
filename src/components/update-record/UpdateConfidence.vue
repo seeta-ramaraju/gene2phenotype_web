@@ -1,7 +1,7 @@
 <script>
-import api from "@/services/api";
+import api from "../../services/api.js";
 import { ConfidenceAttribsOrder } from "../../utility/CurationConstants.js";
-import { UPDATE_CONFIDENCE_URL } from "../../utility/UrlConstants";
+import { UPDATE_CONFIDENCE_URL } from "../../utility/UrlConstants.js";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 
 export default {

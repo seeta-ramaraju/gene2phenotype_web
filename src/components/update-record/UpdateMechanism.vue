@@ -10,6 +10,7 @@ import cloneDeep from "lodash/cloneDeep";
 import kebabCase from "lodash/kebabCase";
 import ToolTip from "../tooltip/ToolTip.vue";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
+import api from "../../services/api.js";
 
 export default {
   props: {
