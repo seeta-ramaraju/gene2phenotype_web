@@ -1,5 +1,4 @@
 <script>
-import router from "../../router";
 import { ALL_PANELS_URL, LOGOUT_URL } from "../../utility/UrlConstants.js";
 import api from "../../services/api.js";
 import { useAuthStore } from "../../store/auth.js";
@@ -64,7 +63,7 @@ export default {
               ? undefined
               : this.selectedSearchPanel,
         };
-        router.push({ path: "/search", query: routeQuery });
+        this.$router.push({ path: "/search", query: routeQuery });
       }
     },
     logoutBtnClickHandler() {
@@ -74,7 +73,11 @@ export default {
         .then(() => {
           const authStore = useAuthStore();
           authStore.logout();
-          this.$router.push("/"); // Navigate to Home page
+          if (this.$router.currentRoute.value.fullPath === "/") {
+            this.$router.go(); // refresh current page
+          } else {
+            this.$router.push("/"); // navigate to Home page
+          }
         })
         .catch((error) => {
           logGeneralErrorMsg(error);
@@ -84,9 +87,9 @@ export default {
         });
     },
     loginBtnClickHandler() {
-      router.push({
+      this.$router.push({
         path: "/login",
-        query: { redirect: router.currentRoute.value.fullPath },
+        query: { redirect: this.$router.currentRoute.value.fullPath },
       });
     },
   },
