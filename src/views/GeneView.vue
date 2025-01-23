@@ -247,7 +247,7 @@ export default {
           </li>
           <li v-if="geneData.ids?.Ensembl">
             <a
-              :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
+              :href="`https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=${geneData.ids.Ensembl}`"
               style="text-decoration: none"
               target="_blank"
             >
