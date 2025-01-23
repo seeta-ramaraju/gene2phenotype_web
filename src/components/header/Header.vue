@@ -74,7 +74,7 @@ export default {
         .then(() => {
           const authStore = useAuthStore();
           authStore.logout();
-          this.$router.go(); // Reloads current page
+          this.$router.push("/"); // Navigate to Home page
         })
         .catch((error) => {
           logGeneralErrorMsg(error);
