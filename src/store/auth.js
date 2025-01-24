@@ -20,6 +20,7 @@ export const useAuthStore = defineStore("auth", {
       this.userPanels = data.panels;
       this.refreshTokenExpiry = new Date(data.refresh_token_time);
 
+      // auto logout after refresh token is expired
       if (this.expiryTimeOut) clearTimeout(this.expiryTimeOut);
       const timeUntilExpiry = this.refreshTokenExpiry.getTime() - Date.now();
       this.expiryTimeOut = setTimeout(() => {
@@ -36,6 +37,13 @@ export const useAuthStore = defineStore("auth", {
     },
     setRefreshTokenExpiry(value) {
       this.refreshTokenExpiry = new Date(value);
+
+      // auto logout after refresh token is expired
+      if (this.expiryTimeOut) clearTimeout(this.expiryTimeOut);
+      const timeUntilExpiry = this.refreshTokenExpiry.getTime() - Date.now();
+      this.expiryTimeOut = setTimeout(() => {
+        this.logout();
+      }, timeUntilExpiry);
     },
     validateUser() {
       return api
