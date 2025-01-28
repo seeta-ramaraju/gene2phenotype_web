@@ -1,11 +1,10 @@
 <script>
-import {
-  appendAuthenticationHeaders,
-  getUserEmail,
-} from "../../utility/AuthenticationUtility.js";
+import api from "../../services/api.js";
 import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../../utility/Constants.js";
 import { SEARCH_URL } from "../../utility/UrlConstants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
+import { useAuthStore } from "../../store/auth.js";
+import { fetchAndLogGeneralErrorMsg } from "../../utility/ErrorUtility.js";
 
 export default {
   props: {
@@ -47,44 +46,27 @@ export default {
     fetchExistingGeneDrafts(dataUrl) {
       this.geneExistingDraftsErrorMsg = this.geneExistingDrafts = null;
       this.isGeneExistingDraftsDataLoading = true;
-      let isDataFound = false;
       let url = "";
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
       } else {
         url = `${SEARCH_URL}?query=${this.gene}&type=draft`;
       }
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(url, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(url)
         .then((response) => {
-          if (response.status === 200) {
-            isDataFound = true;
-            return response.json();
-          } else if (response.status === 404) {
-            isDataFound = false;
-            return response.json();
-          } else {
-            isDataFound = false;
-            return Promise.reject(
-              new Error("Unable to fetch existing gene drafts")
+          this.geneExistingDrafts = response.data;
+        })
+        .catch((error) => {
+          if (error.response?.status !== 404) {
+            this.geneExistingDraftsErrorMsg = fetchAndLogGeneralErrorMsg(
+              error,
+              "Unable to fetch existing gene drafts. Please try again later."
             );
           }
         })
-        .then((responseJson) => {
+        .finally(() => {
           this.isGeneExistingDraftsDataLoading = false;
-          if (isDataFound) {
-            this.geneExistingDrafts = responseJson;
-          }
-        })
-        .catch((error) => {
-          this.isGeneExistingDraftsDataLoading = false;
-          this.geneExistingDraftsErrorMsg = error.message;
-          console.log(error);
         });
     },
     fetchExistingGeneDraftsNextPage() {
@@ -96,44 +78,27 @@ export default {
     fetchExistingGeneRecords(dataUrl) {
       this.geneExistingRecordsErrorMsg = this.geneExistingRecords = null;
       this.isGeneExistingRecordsDataLoading = true;
-      let isDataFound = false;
       let url = "";
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
       } else {
         url = `${SEARCH_URL}?query=${this.gene}&type=gene`;
       }
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(url, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(url)
         .then((response) => {
-          if (response.status === 200) {
-            isDataFound = true;
-            return response.json();
-          } else if (response.status === 404) {
-            isDataFound = false;
-            return response.json();
-          } else {
-            isDataFound = false;
-            return Promise.reject(
-              new Error("Unable to fetch existing gene records")
+          this.geneExistingRecords = response.data;
+        })
+        .catch((error) => {
+          if (error.response?.status !== 404) {
+            this.geneExistingRecordsErrorMsg = fetchAndLogGeneralErrorMsg(
+              error,
+              "Unable to fetch existing gene records. Please try again later."
             );
           }
         })
-        .then((responseJson) => {
+        .finally(() => {
           this.isGeneExistingRecordsDataLoading = false;
-          if (isDataFound) {
-            this.geneExistingRecords = responseJson;
-          }
-        })
-        .catch((error) => {
-          this.isGeneExistingRecordsDataLoading = false;
-          this.geneExistingRecordsErrorMsg = error.message;
-          console.log(error);
         });
     },
     fetchExistingGeneRecordsNextPage() {
@@ -143,7 +108,8 @@ export default {
       this.fetchExistingGeneRecords(this.geneExistingRecords.previous);
     },
     isUserCreatorOfDraft(email) {
-      return getUserEmail() === email;
+      const authStore = useAuthStore();
+      return authStore.userEmail === email;
     },
   },
 };
@@ -178,7 +144,7 @@ export default {
         Create new record
       </button>
       <div v-if="!geneExistingDrafts && !geneExistingRecords">
-        <p>
+        <p class="pt-3">
           <i class="bi bi-info-circle"></i> There are no saved drafts or
           published records for this Gene.
         </p>

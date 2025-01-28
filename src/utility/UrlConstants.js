@@ -1,6 +1,11 @@
 // G2P API URLS
 export const G2P_API_BASE_URL = "/gene2phenotype/api";
 export const LOGIN_URL = `${G2P_API_BASE_URL}/login/`;
+export const LOGOUT_URL = `${G2P_API_BASE_URL}/logout/`;
+export const REFRESH_TOKEN_URL = `${G2P_API_BASE_URL}/token/refresh/`;
+export const CHANGE_PASSWORD_URL = `${G2P_API_BASE_URL}/change_password/`;
+export const RESET_PASSWORD_URL = `${G2P_API_BASE_URL}/reset_password/:uid/:token/`;
+export const VERIFY_EMAIL_URL = `${G2P_API_BASE_URL}/verify/email/`;
 export const PROFILE_URL = `${G2P_API_BASE_URL}/profile/`;
 export const ALL_PANELS_URL = `${G2P_API_BASE_URL}/panels/`;
 export const PANEL_URL = `${G2P_API_BASE_URL}/panel/:panelname/`;

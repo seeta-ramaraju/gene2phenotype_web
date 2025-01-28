@@ -4,13 +4,14 @@ import {
   GENE_SUMMARY_URL,
   GENE_URL,
 } from "../utility/UrlConstants.js";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import {
   CONFIDENCE_COLOR_MAP,
   HELP_TEXT,
   MAX_CHARACTERS,
 } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
+import api from "../services/api.js";
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -48,45 +49,24 @@ export default {
           null;
       this.isDataLoading = true;
       const geneSymbol = this.$route.params.symbol;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
       Promise.all([
-        fetch(GENE_SUMMARY_URL.replace(":locus", geneSymbol), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(GENE_FUNCTION_URL.replace(":locus", geneSymbol), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(GENE_URL.replace(":locus", geneSymbol), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
+        api.get(GENE_SUMMARY_URL.replace(":locus", geneSymbol)),
+        api.get(GENE_FUNCTION_URL.replace(":locus", geneSymbol)),
+        api.get(GENE_URL.replace(":locus", geneSymbol)),
       ])
-        .then((responseArr) => {
-          return Promise.all(
-            responseArr.map((response) => {
-              if (response.status === 200) {
-                return response.json();
-              } else {
-                return Promise.reject(new Error("Unable to fetch gene data"));
-              }
-            })
-          );
-        })
-        .then((responseJsonArr) => {
-          const [geneSummaryData, geneFunctionData, geneData] = responseJsonArr;
-          this.isDataLoading = false;
-          this.geneData = geneData;
-          this.geneFunctionData = geneFunctionData;
-          this.geneSummaryData = geneSummaryData;
+        .then(([response1, response2, response3]) => {
+          this.geneSummaryData = response1.data;
+          this.geneFunctionData = response2.data;
+          this.geneData = response3.data;
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch gene data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     toggleReadMore() {
@@ -267,7 +247,7 @@ export default {
           </li>
           <li v-if="geneData.ids?.Ensembl">
             <a
-              :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${geneData.ids.Ensembl}`"
+              :href="`https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=${geneData.ids.Ensembl}`"
               style="text-decoration: none"
               target="_blank"
             >

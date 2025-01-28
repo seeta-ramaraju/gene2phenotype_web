@@ -30,11 +30,11 @@ export const HELP_TEXT = {
   MARSH_PROBABILITY:
     "These scores were calculated using a tripartite statistical model based on diverse gene and protein level features that are known to discriminate between molecular mechanisms. It is made up of machine classifiers trained to predict whether human protein coding genes are likely to be associated with dominant-negative, gain-of-function, or loss-of-function molecular disease mechanisms In many cases, the different dominant molecular mechanisms are not mutually exclusive in a gene.",
   GAIN_OF_FUNCTION:
-    "Badonyi and Marsh pGOF: the probability that the protein is associated with a gain-of-function disease mechanism (pGOF). Gain-of-function mechanisms are characterized by an altered or newly appeared function in the mutant protein. Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism.",
+    "Badonyi and Marsh pGOF: The probability that the protein is associated with a gain-of-function disease mechanism (pGOF). Gain-of-function mechanisms are characterized by an altered or newly appeared function in the mutant protein. Genes with higher scores are more likely to be associated with a gain of function disease mechanism. The recommended threshold for pGOF is 0.61.",
   LOSS_OF_FUNCTION:
-    "Badonyi and Marsh pLOF: the probability that the protein is associated with a loss-of-function disease mechanism (pLOF). A loss-of-function mechanism is characterised by complete ablation of the function of the proteinGenes with higher scores are more likely to be associated with a dominant-negative disease mechanism.",
+    "Badonyi and Marsh pLOF: the probability that the protein is associated with a loss-of-function disease mechanism (pLOF). A loss-of-function mechanism is characterised by complete ablation of the function of the proteinGenes with higher scores are more likely to be associated with a loss of function disease mechanism. The recommended threshold for pLOF is 0.64.",
   DOMINANT_NEGATIVE:
-    "Badonyi and Marsh pDN: the probability that the protein is associated with a dominant-negative disease mechanism (pDN). Dominant-negative mechanisms are characterized by the mutant protein directly or indirectly disrupting the function of the wild type protein. Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism.",
+    "Badonyi and Marsh pDN: the probability that the protein is associated with a dominant-negative disease mechanism (pDN). Dominant-negative mechanisms are characterized by the mutant protein directly or indirectly disrupting the function of the wild type protein. Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism. The recommended threshold for pDN is 0.61.",
 };
 
 export const MARSH_PROBABILITY_THRESHOLD = {

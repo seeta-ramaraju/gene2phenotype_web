@@ -1,15 +1,16 @@
 <script>
 import { LGD_RECORD_URL, USER_PANELS_URL } from "../utility/UrlConstants.js";
-import {
-  checkLogInAndAppendAuthHeaders,
-  appendAuthenticationHeaders,
-  isUserLoggedIn,
-  logOutUser,
-} from "../utility/AuthenticationUtility.js";
 import AddPanelModal from "../components/modal/AddPanelModal.vue";
 import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
 import UpdateRecordModal from "../components/modal/UpdateRecordModal.vue";
 import ToolTip from "../components/tooltip/ToolTip.vue";
+import { mapState } from "pinia";
+import { useAuthStore } from "../store/auth.js";
+import api from "../services/api.js";
+import {
+  fetchAndLogGeneralErrorMsg,
+  logGeneralErrorMsg,
+} from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -30,6 +31,9 @@ export default {
     UpdateRecordModal,
     ToolTip,
   },
+  computed: {
+    ...mapState(useAuthStore, ["isAuthenticated"]),
+  },
   created() {
     // watch the params of the route to fetch the data again
     this.$watch(
@@ -47,59 +51,32 @@ export default {
       this.stableId = this.$route.params.stableId;
       this.errorMsg = this.locusGeneDiseaseData = null;
       this.isDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(LGD_RECORD_URL.replace(":stableid", this.stableId), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(LGD_RECORD_URL.replace(":stableid", this.stableId))
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch locus gene disease data")
-            );
+          this.locusGeneDiseaseData = response.data;
+          if (this.isAuthenticated) {
+            this.fetchUserPanels();
           }
         })
-        .then((responseJson) => {
-          this.isDataLoading = false;
-          this.locusGeneDiseaseData = responseJson;
-          this.fetchUserPanels();
-        })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch record data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     fetchUserPanels() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        return;
-      }
-
       this.userPanels = null;
       this.isPanelDataLoading = true;
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(USER_PANELS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(USER_PANELS_URL)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(new Error("Unable to fetch user panels."));
-          }
-        })
-        .then((responseJson) => {
-          this.isPanelDataLoading = false;
-          if (responseJson?.length > 0) {
-            this.userPanels = responseJson;
+          if (response.data?.length > 0) {
+            this.userPanels = response.data;
             this.validateIsRecordPartOfUserPanels(
               this.locusGeneDiseaseData?.panels,
               this.userPanels
@@ -107,8 +84,10 @@ export default {
           }
         })
         .catch((error) => {
+          logGeneralErrorMsg(error);
+        })
+        .finally(() => {
           this.isPanelDataLoading = false;
-          console.log(error);
         });
     },
     validateIsRecordPartOfUserPanels(recordPanels, userPanels) {
@@ -123,9 +102,6 @@ export default {
     },
     refreshPage() {
       this.$router.go(); // refresh current page
-    },
-    isLoggedIn() {
-      return isUserLoggedIn();
     },
   },
 };
@@ -162,7 +138,7 @@ export default {
           v-if="
             !isPanelDataLoading &&
             userPanels?.length > 0 &&
-            isLoggedIn() &&
+            isAuthenticated &&
             !isRecordPartOfUserPanels
           "
         >
@@ -172,11 +148,13 @@ export default {
           class="btn btn-outline-primary"
           data-bs-toggle="modal"
           data-bs-target="#update-record-modal"
-          v-if="!isPanelDataLoading && isLoggedIn() && isRecordPartOfUserPanels"
+          v-if="
+            !isPanelDataLoading && isAuthenticated && isRecordPartOfUserPanels
+          "
         >
           <i class="bi bi-pencil-square"></i> Update record
         </button>
-        <div v-if="isPanelDataLoading && isLoggedIn()" class="my-auto">
+        <div v-if="isPanelDataLoading && isAuthenticated" class="my-auto">
           <span
             class="spinner-border spinner-border-sm text-primary"
             role="status"
@@ -305,7 +283,6 @@ export default {
                             <th>Type</th>
                             <th>Inheritance</th>
                             <th>Publications</th>
-                            <th>Comment</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -367,7 +344,6 @@ export default {
                                 </span>
                               </span>
                             </td>
-                            <td>{{ item.comment }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -1020,7 +996,7 @@ export default {
                     <td>
                       Ensembl ID:
                       <a
-                        :href="`https://www.ensembl.org/Homo_sapiens/Gene?g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
+                        :href="`https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.ids?.Ensembl"
                         target="_blank"

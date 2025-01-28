@@ -1,23 +1,15 @@
 <script>
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 import { ALL_SAVED_DRAFTS_URL } from "../utility/UrlConstants.js";
-import {
-  appendAuthenticationHeaders,
-  isUserLoggedIn,
-  logOutUser,
-} from "../utility/AuthenticationUtility.js";
-import LoginErrorAlert from "@/components/alert/LoginErrorAlert.vue";
+import api from "@/services/api.js";
 
 export default {
   data() {
     return {
       isDataLoading: false,
-      curationListData: null,
+      curationEntries: null,
       errorMsg: null,
-      isLogInSessionExpired: false,
     };
-  },
-  components: {
-    LoginErrorAlert,
   },
   created() {
     // watch the params of this route to fetch this data again
@@ -31,36 +23,21 @@ export default {
   },
   methods: {
     fetchData() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
-      this.errorMsg = this.curationListData = null;
+      this.errorMsg = this.curationEntries = null;
       this.isDataLoading = true;
-      let apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(ALL_SAVED_DRAFTS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(ALL_SAVED_DRAFTS_URL)
         .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Unable to fetch Curation entries");
-          }
-        })
-        .then((responseJson) => {
-          this.curationListData = responseJson;
-          this.isDataLoading = false;
+          this.curationEntries = response.data;
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch Curation entries. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
   },
@@ -78,45 +55,42 @@ export default {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+    <div class="alert alert-danger mt-3" role="alert" v-else-if="errorMsg">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
-    <LoginErrorAlert v-if="isLogInSessionExpired" />
-    <div v-if="curationListData">
-      <div class="py-3">
-        <table
-          class="table table-hover table-bordered"
-          v-if="curationListData && curationListData.count > 0"
-        >
-          <thead>
-            <tr>
-              <th>Session Name</th>
-              <th>G2P ID</th>
-              <th>Locus</th>
-              <th>Date Created</th>
-              <th>Date Last Updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in curationListData.results" :key="item.stable_id">
-              <td>
-                <router-link
-                  :to="`/lgd/update-draft/${item.stable_id}`"
-                  style="text-decoration: none"
-                  v-if="item.session_name"
-                >
-                  {{ item.session_name }}
-                </router-link>
-              </td>
-              <td>{{ item.stable_id }}</td>
-              <td>{{ item.locus }}</td>
-              <td>{{ item.created_on }}</td>
-              <td>{{ item.last_update }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="text-dark" v-else>You currently have no saved drafts.</p>
-      </div>
+    <div class="py-3" v-else>
+      <table
+        class="table table-hover table-bordered"
+        v-if="curationEntries && curationEntries.count > 0"
+      >
+        <thead>
+          <tr>
+            <th>Session Name</th>
+            <th>G2P ID</th>
+            <th>Locus</th>
+            <th>Date Created</th>
+            <th>Date Last Updated</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in curationEntries.results" :key="item.stable_id">
+            <td>
+              <router-link
+                :to="`/lgd/update-draft/${item.stable_id}`"
+                style="text-decoration: none"
+                v-if="item.session_name"
+              >
+                {{ item.session_name }}
+              </router-link>
+            </td>
+            <td>{{ item.stable_id }}</td>
+            <td>{{ item.locus }}</td>
+            <td>{{ item.created_on }}</td>
+            <td>{{ item.last_update }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-dark" v-else>You currently have no saved drafts.</p>
     </div>
   </div>
 </template>

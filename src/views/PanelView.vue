@@ -3,11 +3,12 @@ import {
   DOWNLOAD_PANEL_URL,
   PANEL_SUMMARY_URL,
   PANEL_URL,
-} from "../utility/UrlConstants";
+} from "../utility/UrlConstants.js";
 import BarChart from "../components/chart/BarChart.vue";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants";
+import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
+import api from "../services/api.js";
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -61,48 +62,25 @@ export default {
     fetchData() {
       this.errorMsg = this.panelData = this.panelSummaryData = null;
       this.isDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
       Promise.all([
-        fetch(PANEL_URL.replace(":panelname", this.$route.params.panel), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(
-          PANEL_SUMMARY_URL.replace(":panelname", this.$route.params.panel),
-          {
-            method: "GET",
-            headers: apiHeaders,
-          }
+        api.get(PANEL_URL.replace(":panelname", this.$route.params.panel)),
+        api.get(
+          PANEL_SUMMARY_URL.replace(":panelname", this.$route.params.panel)
         ),
       ])
-        .then((responseArr) => {
-          return Promise.all(
-            responseArr.map((response) => {
-              if (response.status === 200) {
-                return response.json();
-              } else {
-                return Promise.reject(new Error("Unable to fetch panel data"));
-              }
-            })
-          );
-        })
-        .then((responseJsonArr) => {
-          const [panelData, panelSummaryData] = responseJsonArr;
-          this.isDataLoading = false;
-          this.panelData = panelData;
-          this.panelSummaryData = panelSummaryData;
+        .then(([response1, response2]) => {
+          this.panelData = response1.data;
+          this.panelSummaryData = response2.data;
           this.chartData = {
             labels: ["Definitive", "Strong", "Moderate", "Limited"],
             datasets: [
               {
                 label: "Panel Records",
                 data: [
-                  panelData?.stats?.by_confidence?.definitive,
-                  panelData?.stats?.by_confidence?.strong,
-                  panelData?.stats?.by_confidence?.moderate,
-                  panelData?.stats?.by_confidence?.limited,
+                  this.panelData?.stats?.by_confidence?.definitive,
+                  this.panelData?.stats?.by_confidence?.strong,
+                  this.panelData?.stats?.by_confidence?.moderate,
+                  this.panelData?.stats?.by_confidence?.limited,
                 ],
                 backgroundColor: [
                   "rgb(39,103,73)",
@@ -122,39 +100,32 @@ export default {
           };
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch panel data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     downloadAllData() {
-      let responseContentDisposition = null;
       this.downloadAllDataErrorMsg = null;
       this.isDownloadAllDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "text/csv;charset=UTF-8",
-      });
-      fetch(
-        DOWNLOAD_PANEL_URL.replace(":panelname", this.$route.params.panel),
-        {
-          method: "GET",
-          headers: apiHeaders,
-        }
-      )
+      api
+        .get(
+          DOWNLOAD_PANEL_URL.replace(":panelname", this.$route.params.panel),
+          {
+            headers: {
+              "Content-Type": "text/csv;charset=UTF-8",
+            },
+            responseType: "text",
+          }
+        )
         .then((response) => {
-          responseContentDisposition = response.headers.get(
+          const responseContentDisposition = response.headers.get(
             "Content-Disposition"
           );
-          if (response.status === 200) {
-            return response.text();
-          } else {
-            return Promise.reject(
-              new Error("Unable to download data. Please try again later.")
-            );
-          }
-        })
-        .then((responseText) => {
-          this.isDownloadAllDataLoading = false;
           // get csv file name from response Content-Disposition header
           const regexMatch = responseContentDisposition.match(
             /attachment; filename="([^"]+)"/
@@ -164,7 +135,7 @@ export default {
             csvFileName = regexMatch[1];
           }
           // download csv data to file
-          const csvDataText = responseText;
+          const csvDataText = response.data;
           const anchor = document.createElement("a");
           anchor.href =
             "data:text/csv;charset=utf-8," + encodeURIComponent(csvDataText);
@@ -174,10 +145,13 @@ export default {
           anchor.remove();
         })
         .catch((error) => {
-          this.isDownloadAllDataLoading = false;
-          this.downloadAllDataErrorMsg =
-            error.message || "Unable to download data. Please try again later.";
-          console.log(error);
+          this.downloadAllDataErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to download data. Please try again later."
+          );
+        })
+        .finally(() => {
+          this.isDownloadAllDataLoading = null;
         });
     },
   },

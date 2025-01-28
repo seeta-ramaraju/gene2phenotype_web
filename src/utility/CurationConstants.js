@@ -39,7 +39,7 @@ export const VariantTypesAttribs = [
     },
     secondaryType: [
       {
-        displayNmdEscape: true,
+        displayNmdEscape: false,
         labelText: "splice_region_variant",
         inputKey: "splice_region_variant",
       },
@@ -101,7 +101,7 @@ export const VariantTypesAttribs = [
       },
       {
         displayNmdEscape: false,
-        labelText: "Stop lost",
+        labelText: "stop_lost",
         inputKey: "stop_lost",
       },
       {
@@ -207,7 +207,7 @@ export const MechanismSynopsisAttribs = [
   "LOF due to protein mislocalisation",
   "loss of activity LOF",
   "other GOF",
-  "protein aggregation",
+  "aggregation",
 ];
 
 export const MechanismSupportAttribs = ["inferred", "evidence"];

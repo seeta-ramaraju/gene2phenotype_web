@@ -304,11 +304,46 @@ export default {
     </div>
     <h6 class="pb-2">Example input and output files</h6>
     <ul>
-      <li>run_vep_g2p_plugin</li>
-      <li>input.vcf</li>
-      <li>VEP TXT output</li>
-      <li>report.html</li>
-      <li>report.txt</li>
+      <li>
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/run_vep_g2p_plugin.txt"
+          target="_blank"
+          style="text-decoration: none"
+          >run_vep_g2p_plugin</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/input.vcf"
+          target="_blank"
+          style="text-decoration: none"
+          >input.vcf</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/output.txt"
+          target="_blank"
+          style="text-decoration: none"
+          >VEP TXT output</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/report.html"
+          target="_blank"
+          style="text-decoration: none"
+          >report.html</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/report.txt"
+          target="_blank"
+          style="text-decoration: none"
+          >report.txt</a
+        >
+      </li>
     </ul>
     <h6 class="pb-2">Speed and Optimization</h6>
     <ul>

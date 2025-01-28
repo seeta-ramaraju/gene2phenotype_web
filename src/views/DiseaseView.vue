@@ -1,8 +1,9 @@
 <script>
 import { DISEASE_SUMMARY_URL, DISEASE_URL } from "../utility/UrlConstants.js";
 import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
-import { checkLogInAndAppendAuthHeaders } from "../utility/AuthenticationUtility.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
+import api from "../services/api.js";
+import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -32,44 +33,22 @@ export default {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
       this.isDataLoading = true;
       const diseaseName = this.$route.params.name;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
       Promise.all([
-        fetch(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseName), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(DISEASE_URL.replace(":diseasename", diseaseName), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
+        api.get(DISEASE_SUMMARY_URL.replace(":diseasename", diseaseName)),
+        api.get(DISEASE_URL.replace(":diseasename", diseaseName)),
       ])
-        .then((responseArr) => {
-          return Promise.all(
-            responseArr.map((response) => {
-              if (response.status === 200) {
-                return response.json();
-              } else {
-                return Promise.reject(
-                  new Error(
-                    `Unable to fetch Disease information for ${diseaseName}`
-                  )
-                );
-              }
-            })
-          );
-        })
-        .then((responseJsonArr) => {
-          const [diseaseSummaryData, diseaseData] = responseJsonArr;
-          this.isDataLoading = false;
-          this.diseaseData = diseaseData;
-          this.diseaseSummaryData = diseaseSummaryData;
+        .then(([response1, response2]) => {
+          this.diseaseSummaryData = response1.data;
+          this.diseaseData = response2.data;
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch disease data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
   },

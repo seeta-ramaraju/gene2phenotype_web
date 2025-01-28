@@ -1,19 +1,13 @@
 <script>
 import {
-  isUserLoggedIn,
-  logOutUser,
-  appendAuthenticationHeaders,
-} from "../../utility/AuthenticationUtility";
-import {
   ADD_PUBLICATION_URL,
   HPO_SEARCH_API_URL,
   PUBLICATIONS_URL,
-} from "../../utility/UrlConstants";
+} from "../../utility/UrlConstants.js";
 import {
   prepareInputForNewPublicationDataSubmission,
   getInitialInputForAddingNewPublicationData,
 } from "../../utility/AddPublicationUtility.js";
-import LoginErrorAlert from "../alert/LoginErrorAlert.vue";
 import UpdatePublication from "./UpdatePublication.vue";
 import RemovePublicationModal from "../modal/RemovePublicationModal.vue";
 import UpdateVariantInformation from "./UpdateVariantInformation.vue";
@@ -26,13 +20,18 @@ import {
   updateInputWithNewPublicationsData,
   updateInputWithRemovedPublications,
 } from "../../utility/CurationUtility.js";
+import {
+  fetchAndLogApiResponseErrorMsg,
+  fetchAndLogGeneralErrorMsg,
+} from "../../utility/ErrorUtility.js";
+import axios from "axios";
+import api from "../../services/api.js";
 export default {
   props: {
     stableId: String,
     locusGeneDiseaseData: Object,
   },
   components: {
-    LoginErrorAlert,
     UpdatePublication,
     UpdateVariantInformation,
     UpdatePhenotype,
@@ -55,61 +54,36 @@ export default {
       inputPmids: "",
       isInputPmidsValid: true,
       inputPmidsInvalidMsg: "",
-      isLogInSessionExpired: false,
     };
   },
   methods: {
     updateData() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.updateDataErrorMsg = this.updateDataSuccessMsg = null;
       this.isUpdateDataSuccess = false;
       this.isUpdateApiCallLoading = true;
-
       const requestBody = prepareInputForNewPublicationDataSubmission(
         this.input,
         this.locusGeneDiseaseData
       );
-
-      let responseStatus = null;
-      let apiHeaders = appendAuthenticationHeaders({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      });
-      fetch(ADD_PUBLICATION_URL.replace(":stableid", this.stableId), {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-        headers: apiHeaders,
-      })
+      api
+        .post(
+          ADD_PUBLICATION_URL.replace(":stableid", this.stableId),
+          requestBody
+        )
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isUpdateApiCallLoading = false;
-          if (responseStatus === 201) {
-            this.isUpdateDataSuccess = true;
-            this.updateDataSuccessMsg = responseJson.message;
-          } else {
-            let errorMsg =
-              "Unable to add new publications. Please try again later.";
-            if (responseJson.error) {
-              errorMsg =
-                "Unable to add new publications. Error: " + responseJson.error;
-            }
-            this.updateDataErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
+          this.isUpdateDataSuccess = true;
+          this.updateDataSuccessMsg = response.data.message;
         })
         .catch((error) => {
+          this.updateDataErrorMsg = fetchAndLogApiResponseErrorMsg(
+            error,
+            error?.response?.data?.error,
+            "Unable to add new publications. Please try again later.",
+            "Unable to add new publications."
+          );
+        })
+        .finally(() => {
           this.isUpdateApiCallLoading = false;
-          this.updateDataErrorMsg =
-            "Unable to add new publications. Please try again later.";
-          console.log(error);
         });
     },
     validateInputPmids() {
@@ -158,11 +132,6 @@ export default {
         );
     },
     fetchPublications() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
       // if inputPmids is invalid then set isInputPmidsValid to false and dont continue further
       if (!this.validateInputPmids()) {
         this.isInputPmidsValid = false;
@@ -177,50 +146,42 @@ export default {
         .split(";")
         .filter((item) => item)
         .join(",");
-      let responseStatus = null;
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(PUBLICATIONS_URL.replace(":pmids", pmidListStr), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(PUBLICATIONS_URL.replace(":pmids", pmidListStr))
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isPublicationsDataLoading = false;
-          if (responseStatus === 200) {
-            const publicationsData = responseJson;
-            if (publicationsData && publicationsData.results) {
-              this.input = updateInputWithNewPublicationsData(
-                this.input,
-                publicationsData
+          const publicationsData = response.data;
+          if (publicationsData && publicationsData.results) {
+            this.input = updateInputWithNewPublicationsData(
+              this.input,
+              publicationsData
+            );
+            let pmidList = publicationsData.results.map((item) => item.pmid);
+            this.hpoTermsInputHelper =
+              updateHpoTermsInputHelperWithNewPublicationsData(
+                this.hpoTermsInputHelper,
+                pmidList
               );
-              let pmidList = publicationsData.results.map((item) => item.pmid);
-              this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithNewPublicationsData(
-                  this.hpoTermsInputHelper,
-                  pmidList
-                );
-              // clear inputPmids
-              this.inputPmids = "";
-            }
-          } else if (responseStatus === 404) {
-            this.publicationsApiErrorMsg = responseJson.detail
-              ? responseJson.detail
-              : "Unable to fetch publications data.";
-            console.log(this.publicationsApiErrorMsg);
-          } else {
-            this.publicationsApiErrorMsg = "Unable to fetch publications data.";
-            console.log(this.publicationsApiErrorMsg);
+            // clear inputPmids
+            this.inputPmids = "";
           }
         })
         .catch((error) => {
+          if (error.response?.status === 404) {
+            this.publicationsApiErrorMsg = fetchAndLogApiResponseErrorMsg(
+              error,
+              error?.response?.data?.detail,
+              "Unable to fetch publications data. Please try again later.",
+              "Unable to fetch publications data."
+            );
+          } else {
+            this.publicationsApiErrorMsg = fetchAndLogGeneralErrorMsg(
+              error,
+              "Unable to fetch publications data. Please try again later."
+            );
+          }
+        })
+        .finally(() => {
           this.isPublicationsDataLoading = false;
-          this.publicationsApiErrorMsg = "Unable to fetch publications data.";
-          console.log(error);
         });
     },
     fetchAndSearchHPO(pmid, inputValue) {
@@ -234,22 +195,12 @@ export default {
       }
 
       this.hpoTermsInputHelper[pmid].isLoadingValue = true;
-
-      fetch(`${HPO_SEARCH_API_URL}?q=${inputValue}&page=0&limit=10`)
+      axios
+        .get(`${HPO_SEARCH_API_URL}?q=${inputValue}&page=0&limit=10`)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Failed to fetch HPO data. Please try again later.")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.hpoTermsInputHelper[pmid].isLoadingValue = false;
-          if (responseJson?.terms?.length > 0) {
+          if (response.data?.terms?.length > 0) {
             this.hpoTermsInputHelper[pmid].HPOsearchResponseJson =
-              responseJson.terms;
+              response.data.terms;
           } else {
             const errorMsg = "No results found. Try another term.";
             this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
@@ -257,12 +208,14 @@ export default {
           }
         })
         .catch((error) => {
-          const errorMsg = error?.message
-            ? error.message
-            : "Failed to fetch HPO data. Please try again later.";
+          this.hpoTermsInputHelper[pmid].HPOAPIerrormsg =
+            fetchAndLogGeneralErrorMsg(
+              error,
+              "Failed to fetch HPO data. Please try again later."
+            );
+        })
+        .finally(() => {
           this.hpoTermsInputHelper[pmid].isLoadingValue = false;
-          this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
-          console.log(errorMsg);
         });
     },
   },
@@ -405,7 +358,6 @@ export default {
       {{ updateDataErrorMsg }}
     </div>
   </div>
-  <LoginErrorAlert v-if="isLogInSessionExpired" />
   <RemovePublicationModal
     :pmidList="Object.keys(input.publications)"
     @removePublication="(pmid) => removePublication(pmid)"

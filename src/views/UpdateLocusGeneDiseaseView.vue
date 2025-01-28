@@ -24,13 +24,6 @@ import SaveSuccessAlert from "../components/alert/SaveSuccessAlert.vue";
 import AlertModal from "../components/modal/AlertModal.vue";
 import RemovePublicationModal from "../components/modal/RemovePublicationModal.vue";
 import {
-  appendAuthenticationHeaders,
-  checkLogInAndAppendAuthHeaders,
-  isUserLoggedIn,
-  logOutUser,
-} from "../utility/AuthenticationUtility.js";
-import LoginErrorAlert from "../components/alert/LoginErrorAlert.vue";
-import {
   ATTRIBS_URL,
   GENE_DISEASE_URL,
   GENE_FUNCTION_URL,
@@ -41,8 +34,15 @@ import {
   SAVED_DRAFT_DATA_URL,
   UPDATE_SAVED_DRAFT_URL,
   USER_PANELS_URL,
-} from "../utility/UrlConstants";
+} from "../utility/UrlConstants.js";
 import Comment from "../components/curation/Comment.vue";
+import {
+  fetchAndLogApiResponseErrorListMsg,
+  fetchAndLogApiResponseErrorMsg,
+  fetchAndLogGeneralErrorMsg,
+} from "../utility/ErrorUtility.js";
+import api from "../services/api.js";
+import axios from "axios";
 
 export default {
   created() {
@@ -84,7 +84,6 @@ export default {
       isPanelDataLoading: false,
       panelData: null,
       stableID: null,
-      isLogInSessionExpired: false,
     };
   },
   beforeRouteLeave(to, from) {
@@ -92,7 +91,8 @@ export default {
       this.geneData &&
       !this.isSubmitSuccess &&
       !this.isSaveBeforePublishSuccess &&
-      !this.isPublishSuccess
+      !this.isPublishSuccess &&
+      to?.path !== "/login"
     ) {
       const answer = window.confirm(
         "Are you sure you want to leave? You have unsaved changes which will be lost. Consider saving your changes before leaving."
@@ -117,37 +117,17 @@ export default {
     SaveSuccessAlert,
     AlertModal,
     RemovePublicationModal,
-    LoginErrorAlert,
     Comment,
   },
   methods: {
     fetchPreviousCurationInput() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.isPreviousInputDataLoading = true;
       this.previousInput = this.errorMsg = null;
       this.stableID = this.$route.params.stableID;
-      let apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(SAVED_DRAFT_DATA_URL.replace(":stableid", this.stableID), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(SAVED_DRAFT_DATA_URL.replace(":stableid", this.stableID))
         .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Unable to fetch curation information");
-          }
-        })
-        .then((responseJson) => {
-          this.isPreviousInputDataLoading = false;
-          this.previousInput = prepareInputForUpdating(responseJson.data);
+          this.previousInput = prepareInputForUpdating(response.data.data);
           let pmidList = Object.keys(this.previousInput.publications);
           this.hpoTermsInputHelper =
             updateHpoTermsInputHelperWithNewPublicationsData(
@@ -159,9 +139,13 @@ export default {
           this.fetchPanels();
         })
         .catch((error) => {
+          this.errorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch curation information. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isPreviousInputDataLoading = false;
-          this.errorMsg = error.message;
-          console.log(error);
         });
     },
     fetchGeneInformation() {
@@ -171,101 +155,60 @@ export default {
         this.attributesData =
           null;
       this.isGeneDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
       Promise.all([
-        fetch(GENE_FUNCTION_URL.replace(":locus", this.previousInput.locus), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(GENE_URL.replace(":locus", this.previousInput.locus), {
-          method: "GET",
-          headers: apiHeaders,
-        }),
-        fetch(ATTRIBS_URL, {
-          method: "GET",
-          headers: apiHeaders,
-        }),
+        api.get(GENE_FUNCTION_URL.replace(":locus", this.previousInput.locus)),
+        api.get(GENE_URL.replace(":locus", this.previousInput.locus)),
+        api.get(ATTRIBS_URL),
       ])
-        .then((responseArr) => {
-          return Promise.all(
-            responseArr.map((response) => {
-              if (response.status === 200) {
-                return response.json();
-              } else {
-                return Promise.reject(new Error("Unable to fetch gene data"));
-              }
-            })
-          );
-        })
-        .then((responseJsonArr) => {
-          const [geneFunctionData, geneData, attributesData] = responseJsonArr;
-          this.isGeneDataLoading = false;
-          this.geneData = geneData;
-          this.geneFunctionData = geneFunctionData;
-          this.attributesData = attributesData;
+        .then(([response1, response2, response3]) => {
+          this.geneFunctionData = response1.data;
+          this.geneData = response2.data;
+          this.attributesData = response3.data;
         })
         .catch((error) => {
+          this.geneErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch gene data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isGeneDataLoading = false;
-          this.geneErrorMsg = error.message;
-          console.log(error);
         });
     },
     fetchGeneDiseaseInformation() {
       this.geneDiseaseErrorMsg = this.geneDiseaseData = null;
       this.isGeneDiseaseDataLoading = true;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(GENE_DISEASE_URL.replace(":locus", this.previousInput.locus), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(GENE_DISEASE_URL.replace(":locus", this.previousInput.locus))
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Unable to fetch gene disease data")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.isGeneDiseaseDataLoading = false;
-          this.geneDiseaseData = responseJson;
+          this.geneDiseaseData = response.data;
         })
         .catch((error) => {
+          this.geneDiseaseErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch gene disease data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isGeneDiseaseDataLoading = false;
-          this.geneDiseaseErrorMsg = error.message;
-          console.log(error);
         });
     },
     fetchPanels() {
       this.panelErrorMsg = this.panelData = null;
       this.isPanelDataLoading = true;
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(USER_PANELS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(USER_PANELS_URL)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(new Error("Unable to fetch panel data"));
-          }
-        })
-        .then((responseJson) => {
-          this.isPanelDataLoading = false;
-          this.panelData = responseJson;
+          this.panelData = response.data;
         })
         .catch((error) => {
+          this.panelErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch panel data. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isPanelDataLoading = false;
-          this.panelErrorMsg = error.message;
-          console.log(error);
         });
     },
     fetchPublications() {
@@ -283,48 +226,39 @@ export default {
         .split(";")
         .filter((item) => item)
         .join(",");
-      let responseStatus = null;
-      const apiHeaders = checkLogInAndAppendAuthHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(PUBLICATIONS_URL.replace(":pmids", pmidListStr), {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(PUBLICATIONS_URL.replace(":pmids", pmidListStr))
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isPublicationsDataLoading = false;
-          if (responseStatus === 200) {
-            let publicationsData = responseJson;
-            if (publicationsData && publicationsData.results) {
-              this.previousInput = updateInputWithNewPublicationsData(
-                this.previousInput,
-                publicationsData
+          let publicationsData = response.data;
+          if (publicationsData && publicationsData.results) {
+            this.previousInput = updateInputWithNewPublicationsData(
+              this.previousInput,
+              publicationsData
+            );
+            let pmidList = publicationsData.results.map((item) => item.pmid);
+            this.hpoTermsInputHelper =
+              updateHpoTermsInputHelperWithNewPublicationsData(
+                this.hpoTermsInputHelper,
+                pmidList
               );
-              let pmidList = publicationsData.results.map((item) => item.pmid);
-              this.hpoTermsInputHelper =
-                updateHpoTermsInputHelperWithNewPublicationsData(
-                  this.hpoTermsInputHelper,
-                  pmidList
-                );
-            }
-          } else if (responseStatus === 404) {
-            this.publicationsErrorMsg = responseJson.detail
-              ? responseJson.detail
-              : "Unable to fetch publications data.";
-            console.log(this.publicationsErrorMsg);
-          } else {
-            this.publicationsErrorMsg = "Unable to fetch publications data.";
-            console.log(this.publicationsErrorMsg);
           }
         })
         .catch((error) => {
+          if (error.response?.status === 404) {
+            this.publicationsErrorMsg = fetchAndLogApiResponseErrorMsg(
+              error,
+              error?.response?.data?.detail,
+              "Unable to fetch publications data."
+            );
+          } else {
+            this.publicationsErrorMsg = fetchAndLogGeneralErrorMsg(
+              error,
+              "Unable to fetch publications data. Please try again later."
+            );
+          }
+        })
+        .finally(() => {
           this.isPublicationsDataLoading = false;
-          this.publicationsErrorMsg = "Unable to fetch publications data.";
-          console.log(error);
         });
     },
     removePublication(removedPmidList) {
@@ -349,22 +283,12 @@ export default {
       }
 
       this.hpoTermsInputHelper[pmid].isLoadingValue = true;
-
-      fetch(`${HPO_SEARCH_API_URL}?q=${inputValue}&page=0&limit=10`)
+      axios
+        .get(`${HPO_SEARCH_API_URL}?q=${inputValue}&page=0&limit=10`)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error("Failed to fetch HPO data. Please try again later.")
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.hpoTermsInputHelper[pmid].isLoadingValue = false;
-          if (responseJson?.terms?.length > 0) {
+          if (response.data?.terms?.length > 0) {
             this.hpoTermsInputHelper[pmid].HPOsearchResponseJson =
-              responseJson.terms;
+              response.data.terms;
           } else {
             const errorMsg = "No results found. Try another term.";
             this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
@@ -372,21 +296,17 @@ export default {
           }
         })
         .catch((error) => {
-          const errorMsg = error?.message
-            ? error.message
-            : "Failed to fetch HPO data. Please try again later.";
+          this.hpoTermsInputHelper[pmid].HPOAPIerrormsg =
+            fetchAndLogGeneralErrorMsg(
+              error,
+              "Failed to fetch HPO data. Please try again later."
+            );
+        })
+        .finally(() => {
           this.hpoTermsInputHelper[pmid].isLoadingValue = false;
-          this.hpoTermsInputHelper[pmid].HPOAPIerrormsg = errorMsg;
-          console.log(errorMsg);
         });
     },
     saveDraft() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.publishErrorMsg =
         this.publishSucessMsg =
         this.saveBeforePublishErrorMsg =
@@ -405,49 +325,27 @@ export default {
       const requestBody = {
         json_data: preparedUpdatedInput,
       };
-      let responseStatus = null;
-      let apiHeaders = appendAuthenticationHeaders({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      });
-      fetch(UPDATE_SAVED_DRAFT_URL.replace(":stableid", this.stableID), {
-        method: "PUT",
-        body: JSON.stringify(requestBody),
-        headers: apiHeaders,
-      })
+      api
+        .put(
+          UPDATE_SAVED_DRAFT_URL.replace(":stableid", this.stableID),
+          requestBody
+        )
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isSubmitDataLoading = false;
-          if (responseStatus === 200) {
-            this.isSubmitSuccess = true;
-            this.submitSuccessMsg = responseJson.message;
-          } else {
-            let errorMsg = "Unable to save draft. Please try again later.";
-            if (responseJson.errors?.message?.length > 0) {
-              errorMsg =
-                "Unable to save draft. Error: " +
-                responseJson.errors.message[0];
-            }
-            this.submitErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
+          this.isSubmitSuccess = true;
+          this.submitSuccessMsg = response.data.message;
         })
         .catch((error) => {
+          this.submitErrorMsg = fetchAndLogApiResponseErrorListMsg(
+            error,
+            "Unable to save draft. Please try again later.",
+            "Unable to save draft."
+          );
+        })
+        .finally(() => {
           this.isSubmitDataLoading = false;
-          this.submitErrorMsg = "Unable to save draft. Please try again later.";
-          console.log(error);
         });
     },
     async saveAndPublishEntry() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.submitErrorMsg = this.submitSuccessMsg = null;
       this.isSubmitSuccess = false;
 
@@ -469,77 +367,38 @@ export default {
 
       try {
         // Call API to Save draft
-        let submitApiHeaders = appendAuthenticationHeaders({
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        });
-        const submitResponse = await fetch(
+        await api.put(
           UPDATE_SAVED_DRAFT_URL.replace(":stableid", this.stableID),
-          {
-            method: "PUT",
-            body: JSON.stringify(requestBody),
-            headers: submitApiHeaders,
-          }
+          requestBody
         );
 
-        const submitResponseJson = await submitResponse.json();
-
-        if (submitResponse.status === 200) {
-          this.isSaveBeforePublishSuccess = true;
-        } else {
-          this.isSubmitDataLoading = false;
-          let errorMsg =
-            "Unable to save and publish data. Please try again later.";
-          if (submitResponseJson.errors?.message?.length > 0) {
-            errorMsg =
-              "Unable to save and publish data. Error: " +
-              submitResponseJson.errors.message[0];
-          }
-          this.saveBeforePublishErrorMsg = errorMsg;
-          console.log(errorMsg);
-        }
+        this.isSaveBeforePublishSuccess = true;
 
         // Call API to Publish Data
-        if (this.isSaveBeforePublishSuccess) {
-          let publishApiHeaders = appendAuthenticationHeaders({
-            "Content-Length": 0,
-          });
-          const publishResponse = await fetch(
-            PUBLISH_URL.replace(":stableid", this.stableID),
-            {
-              method: "POST",
-              headers: publishApiHeaders,
-            }
-          );
+        const publishResponse = await api.post(
+          PUBLISH_URL.replace(":stableid", this.stableID)
+        );
+        const publishResponseJson = publishResponse.data;
 
-          const publishResponseJson = await publishResponse.json();
-          this.isSubmitDataLoading = false;
-
-          if (publishResponse.status === 201) {
-            this.isPublishSuccess = true;
-            this.publishSuccessMsg = publishResponseJson.message;
-          } else {
-            let errorMsg =
-              "Saved draft but unable to publish data. Please try again later.";
-            if (publishResponseJson.message) {
-              errorMsg =
-                "Saved draft but unable to publish data. Error: " +
-                publishResponseJson.message;
-            }
-            this.publishErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
-        }
+        this.isSubmitDataLoading = false;
+        this.isPublishSuccess = true;
+        this.publishSuccessMsg = publishResponseJson.message;
       } catch (error) {
         this.isSubmitDataLoading = false;
         if (this.isSaveBeforePublishSuccess) {
-          this.publishErrorMsg =
-            "Saved draft but unable to publish data. Please try again later.";
+          this.publishErrorMsg = fetchAndLogApiResponseErrorMsg(
+            error,
+            error?.response?.data?.message,
+            "Saved draft but unable to publish data. Please try again later.",
+            "Saved draft but unable to publish data."
+          );
         } else {
-          this.saveBeforePublishErrorMsg =
-            "Unable to save and publish data. Please try again later.";
+          this.saveBeforePublishErrorMsg = fetchAndLogApiResponseErrorListMsg(
+            error,
+            "Unable to save and publish data. Please try again later.",
+            "Unable to save and publish data."
+          );
         }
-        console.log("Error:", error);
       }
     },
   },
@@ -682,7 +541,6 @@ export default {
         {{ saveBeforePublishErrorMsg }}
       </div>
     </div>
-    <LoginErrorAlert v-if="isLogInSessionExpired" />
     <div
       class="d-flex justify-content-between py-3"
       v-if="

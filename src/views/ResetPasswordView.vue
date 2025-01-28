@@ -1,7 +1,6 @@
 <script>
 import api from "../services/api.js";
-import { LOGIN_URL } from "../utility/UrlConstants.js";
-import { useAuthStore } from "../store/auth.js";
+import { RESET_PASSWORD_URL } from "../utility/UrlConstants.js";
 import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
 
 export default {
@@ -9,35 +8,41 @@ export default {
     return {
       errorMsg: null,
       isDataLoading: false,
-      username: "",
-      password: "",
+      newPassword: "",
+      newPasswordRepeat: "",
       isPasswordVisible: false,
+      isResetSuccess: false,
     };
   },
   methods: {
-    login() {
-      const redirectRoute = this.$route.query.redirect || "/";
+    resetPassword() {
       this.errorMsg = null;
       this.isDataLoading = true;
+      this.isResetSuccess = false;
       const requestBody = {
-        username: this.username,
-        password: this.password,
+        password: this.newPassword,
+        password2: this.newPasswordRepeat,
       };
       api
-        .post(LOGIN_URL, requestBody)
-        .then((response) => {
-          const authStore = useAuthStore();
-          authStore.login(response.data);
-          this.$router.replace(redirectRoute);
+        .post(
+          RESET_PASSWORD_URL.replace(":uid", this.$route.params.uid).replace(
+            ":token",
+            this.$route.params.token
+          ),
+          requestBody
+        )
+        .then(() => {
+          this.isResetSuccess = true;
         })
         .catch((error) => {
           this.errorMsg = fetchAndLogGeneralErrorMsg(
             error,
-            "Unable to login. Please check your credentials or try again later."
+            "Unable to reset password. Please check your credentials or try again later."
           );
         })
         .finally(() => {
           this.isDataLoading = false;
+          this.isPasswordVisible = false;
         });
     },
     togglePasswordVisibility() {
@@ -57,42 +62,49 @@ export default {
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
+    <div
+      class="alert alert-success mt-3"
+      role="alert"
+      v-else-if="isResetSuccess"
+    >
+      <div>
+        <i class="bi bi-check-circle-fill"></i>
+        Password reset successful. Please
+        <router-link to="/login">log in</router-link>.
+      </div>
+    </div>
     <div class="form-signin w-100 m-auto" v-else>
-      <form @submit.prevent="login">
-        <img
-          class="mb-4 m-auto d-flex align-items-center"
-          alt="G2P logo"
-          src="../assets/G2P-logo.png"
-          width="50%"
-          height="auto"
-        />
+      <form @submit.prevent="resetPassword">
+        <h1 class="h3 mb-3 fw-normal">Reset password</h1>
         <div class="form-floating">
           <input
-            type="email"
+            :type="isPasswordVisible ? 'text' : 'password'"
             class="form-control"
-            id="input-username"
-            placeholder="name@example.com"
-            v-model.trim="username"
+            id="input-new-password"
+            placeholder="New Password"
+            v-model.trim="newPassword"
           />
-          <label for="input-username">Email address</label>
+          <label for="input-new-password">New Password</label>
         </div>
         <div class="form-floating">
           <input
             :type="isPasswordVisible ? 'text' : 'password'"
             class="form-control"
-            id="input-password"
-            placeholder="Password"
-            v-model.trim="password"
+            id="input-new-password-repeat"
+            placeholder="Repeat New Password"
+            v-model.trim="newPasswordRepeat"
           />
-          <label for="input-password">Password</label>
+          <label for="input-new-password-repeat">Repeat New Password</label>
+          <div class="mb-2">
+            <span id="passwordHelpInline" class="form-text">
+              Must be atleast 6 characters long.
+            </span>
+          </div>
           <input type="checkbox" @click="togglePasswordVisibility" />
           {{ isPasswordVisible ? "Hide Password" : "Show Password" }}
         </div>
-        <button class="btn btn-primary w-100 my-2" type="submit">Log in</button>
+        <button class="btn btn-primary w-100 mt-2" type="submit">Submit</button>
       </form>
-      <router-link to="/verify-email" style="text-decoration: None">
-        Forgot password?
-      </router-link>
       <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
         <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
       </div>
@@ -109,15 +121,13 @@ export default {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
+#input-new-password {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type="password"],
-.form-signin input[type="text"] {
-  margin-bottom: 10px;
+#input-new-password-repeat {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }

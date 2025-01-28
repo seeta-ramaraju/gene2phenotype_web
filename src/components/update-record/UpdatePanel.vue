@@ -1,19 +1,15 @@
 <script>
-import LoginErrorAlert from "../alert/LoginErrorAlert.vue";
 import {
-  isUserLoggedIn,
-  logOutUser,
-  appendAuthenticationHeaders,
-} from "../../utility/AuthenticationUtility";
-import { ADD_PANEL_URL, USER_PANELS_URL } from "../../utility/UrlConstants";
+  fetchAndLogApiResponseErrorListMsg,
+  fetchAndLogGeneralErrorMsg,
+} from "../../utility/ErrorUtility.js";
+import { ADD_PANEL_URL, USER_PANELS_URL } from "../../utility/UrlConstants.js";
+import api from "../../services/api.js";
 
 export default {
   props: {
     stableId: String,
     currentPanels: Array,
-  },
-  components: {
-    LoginErrorAlert,
   },
   data() {
     return {
@@ -21,7 +17,6 @@ export default {
       userPanels: null,
       userPanelsErrorMsg: null,
       isUserPanelsDataLoading: false,
-      isLogInSessionExpired: false,
       isAddPanelApiCallLoading: false,
       addPanelErrorMsg: null,
       isAddPanelSuccess: false,
@@ -37,88 +32,49 @@ export default {
     fetchUserPanels() {
       this.userPanelsErrorMsg = this.userPanels = null;
       this.isUserPanelsDataLoading = true;
-      const apiHeaders = appendAuthenticationHeaders({
-        "Content-Type": "application/json",
-      });
-      fetch(USER_PANELS_URL, {
-        method: "GET",
-        headers: apiHeaders,
-      })
+      api
+        .get(USER_PANELS_URL)
         .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-          } else {
-            return Promise.reject(
-              new Error(
-                "Unable to fetch user panels at the moment. Please try again later."
-              )
-            );
-          }
-        })
-        .then((responseJson) => {
-          this.isUserPanelsDataLoading = false;
-          if (responseJson?.length > 0) {
-            this.userPanels = responseJson;
+          if (response.data?.length > 0) {
+            this.userPanels = response.data;
             this.setUserPanelOptionsToAdd(this.panels, this.userPanels);
           }
         })
         .catch((error) => {
+          this.userPanelsErrorMsg = fetchAndLogGeneralErrorMsg(
+            error,
+            "Unable to fetch user panels. Please try again later."
+          );
+        })
+        .finally(() => {
           this.isUserPanelsDataLoading = false;
-          this.userPanelsErrorMsg = error.message;
-          console.log(error);
         });
     },
     addPanel() {
-      if (!isUserLoggedIn()) {
-        logOutUser();
-        this.isLogInSessionExpired = true;
-        return;
-      }
-
       this.addPanelErrorMsg = this.addPanelSuccessMsg = null;
       this.isAddPanelSuccess = false;
       this.isAddPanelApiCallLoading = true;
-
       const requestBody = {
         name: this.panelToAdd.name,
       };
-      let responseStatus = null;
-      let apiHeaders = appendAuthenticationHeaders({
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      });
-      fetch(ADD_PANEL_URL.replace(":stableid", this.stableId), {
-        method: "POST",
-        body: JSON.stringify(requestBody),
-        headers: apiHeaders,
-      })
+      api
+        .post(ADD_PANEL_URL.replace(":stableid", this.stableId), requestBody)
         .then((response) => {
-          responseStatus = response.status;
-          return response.json();
-        })
-        .then((responseJson) => {
-          this.isAddPanelApiCallLoading = false;
-          if (responseStatus === 201) {
-            this.isAddPanelSuccess = true;
-            this.addPanelSuccessMsg = responseJson.message;
-            this.panels.push(this.panelToAdd);
-            this.panelToAdd = "";
-            this.setUserPanelOptionsToAdd(this.panels, this.userPanels);
-          } else {
-            let errorMsg = "Unable to add panel. Please try again later.";
-            if (responseJson.errors?.message?.length > 0) {
-              errorMsg =
-                "Unable to add panel. Error: " + responseJson.errors.message[0];
-            }
-            this.addPanelErrorMsg = errorMsg;
-            console.log(errorMsg);
-          }
+          this.isAddPanelSuccess = true;
+          this.addPanelSuccessMsg = response.data.message;
+          this.panels.push(this.panelToAdd);
+          this.panelToAdd = "";
+          this.setUserPanelOptionsToAdd(this.panels, this.userPanels);
         })
         .catch((error) => {
+          this.addPanelErrorMsg = fetchAndLogApiResponseErrorListMsg(
+            error,
+            "Unable to add panel. Please try again later.",
+            "Unable to add panel."
+          );
+        })
+        .finally(() => {
           this.isAddPanelApiCallLoading = false;
-          this.addPanelErrorMsg =
-            "Unable to add panel. Please try again later.";
-          console.log(error);
         });
     },
     setUserPanelOptionsToAdd(panels, userPanels) {
@@ -240,7 +196,6 @@ export default {
                 {{ addPanelSuccessMsg }}
               </div>
             </div>
-            <LoginErrorAlert v-if="isLogInSessionExpired" />
           </div>
         </div>
       </div>
