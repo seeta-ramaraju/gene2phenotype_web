@@ -144,7 +144,7 @@ export default {
         Create new record
       </button>
       <div v-if="!geneExistingDrafts && !geneExistingRecords">
-        <p>
+        <p class="pt-3">
           <i class="bi bi-info-circle"></i> There are no saved drafts or
           published records for this Gene.
         </p>
