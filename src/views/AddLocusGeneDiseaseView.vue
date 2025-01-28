@@ -38,8 +38,6 @@ import {
 import ExistingGeneInformation from "../components/curation/ExistingGeneInformation.vue";
 import Comment from "../components/curation/Comment.vue";
 import api from "../services/api.js";
-import { mapState } from "pinia";
-import { useAuthStore } from "../store/auth.js";
 import axios from "axios";
 import {
   fetchAndLogApiResponseErrorListMsg,
@@ -86,7 +84,8 @@ export default {
       this.geneData &&
       !this.isSubmitSuccess &&
       !this.isSaveBeforePublishSuccess &&
-      !this.isPublishSuccess
+      !this.isPublishSuccess &&
+      to?.path !== "/login"
     ) {
       const answer = window.confirm(
         "Are you sure you want to leave? You have unsaved changes which will be lost. Consider saving your changes before leaving."
@@ -114,21 +113,16 @@ export default {
     ExistingGeneInformation,
     Comment,
   },
-  computed: {
-    ...mapState(useAuthStore, ["isAuthenticated"]),
-  },
   methods: {
     geneSearchBtnClickHandler() {
       if (this.input.locus !== "") {
         this.isInputLocusValid = true;
-        if (this.isAuthenticated) {
-          // Do not display ExistingGeneInformation component
-          this.isDisplayGeneExistingData = false;
-          // Fetch relevant data
-          this.fetchGeneInformation();
-          this.fetchGeneDiseaseInformation();
-          this.fetchPanels();
-        }
+        // Do not display ExistingGeneInformation component
+        this.isDisplayGeneExistingData = false;
+        // Fetch relevant data
+        this.fetchGeneInformation();
+        this.fetchGeneDiseaseInformation();
+        this.fetchPanels();
       } else {
         this.isInputLocusValid = false;
       }
@@ -136,16 +130,14 @@ export default {
     existingGeneDataSearchHandler() {
       if (this.input.locus !== "") {
         this.isInputLocusValid = true;
-        if (this.isAuthenticated) {
-          if (this.geneData) {
-            // if fetching data for another gene and data of current gene exists then reset data variables of current gene
-            this.resetData();
-          }
-          // Display ExistingGeneInformation component
-          this.isDisplayGeneExistingData = true;
-          // Notify ExistingGeneInformation component to fetch existing data for gene
-          this.notifyExistingGeneInformation = true;
+        if (this.geneData) {
+          // if fetching data for another gene and data of current gene exists then reset data variables of current gene
+          this.resetData();
         }
+        // Display ExistingGeneInformation component
+        this.isDisplayGeneExistingData = true;
+        // Notify ExistingGeneInformation component to fetch existing data for gene
+        this.notifyExistingGeneInformation = true;
       } else {
         this.isInputLocusValid = false;
       }
@@ -407,12 +399,7 @@ export default {
 
         // Call API to Publish Data
         const publishResponse = await api.post(
-          PUBLISH_URL.replace(":stableid", this.stableId),
-          {
-            headers: {
-              "Content-Length": 0,
-            },
-          }
+          PUBLISH_URL.replace(":stableid", this.stableId)
         );
         const publishResponseJson = publishResponse.data;
 

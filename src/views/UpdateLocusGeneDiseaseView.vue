@@ -90,7 +90,8 @@ export default {
       this.geneData &&
       !this.isSubmitSuccess &&
       !this.isSaveBeforePublishSuccess &&
-      !this.isPublishSuccess
+      !this.isPublishSuccess &&
+      to?.path !== "/login"
     ) {
       const answer = window.confirm(
         "Are you sure you want to leave? You have unsaved changes which will be lost. Consider saving your changes before leaving."
@@ -374,12 +375,7 @@ export default {
 
         // Call API to Publish Data
         const publishResponse = await api.post(
-          PUBLISH_URL.replace(":stableid", this.stableID),
-          {
-            headers: {
-              "Content-Length": 0,
-            },
-          }
+          PUBLISH_URL.replace(":stableid", this.stableID)
         );
         const publishResponseJson = publishResponse.data;
 
