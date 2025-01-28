@@ -283,7 +283,6 @@ export default {
                             <th>Type</th>
                             <th>Inheritance</th>
                             <th>Publications</th>
-                            <th>Comment</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -345,7 +344,6 @@ export default {
                                 </span>
                               </span>
                             </td>
-                            <td>{{ item.comment }}</td>
                           </tr>
                         </tbody>
                       </table>
