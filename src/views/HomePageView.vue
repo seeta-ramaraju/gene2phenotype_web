@@ -4,6 +4,7 @@ import { ALL_PANELS_URL, DOWNLOAD_PANEL_URL } from "../utility/UrlConstants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
+import { HELP_TEXT } from "@/utility/Constants.js";
 
 export default {
   data() {
@@ -16,6 +17,7 @@ export default {
       searchInput: "",
       selectedSearchType: "all",
       selectedSearchPanel: "all",
+      HELP_TEXT,
     };
   },
   created() {
@@ -347,10 +349,7 @@ export default {
                 <th>Disorder Panel</th>
                 <th>
                   Total LGMDE Records
-                  <ToolTip
-                    toolTipText="G2P records are Locus-Genotype-Mechanism-Disease-Evidence (LGMDE)
-                    threads describing gene-disease associations"
-                  />
+                  <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
                 </th>
                 <th>Total Genes</th>
                 <th>Download</th>

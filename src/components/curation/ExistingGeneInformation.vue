@@ -38,7 +38,7 @@ export default {
       geneExistingDraftsErrorMsg: null,
       geneExistingRecordsErrorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
-      helpText: { ...HELP_TEXT },
+      HELP_TEXT,
     };
   },
   components: { ToolTip },
@@ -155,16 +155,16 @@ export default {
           <table class="table table-hover table-bordered">
             <thead>
               <tr>
-                <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
+                <th>G2P ID <ToolTip :toolTipText="HELP_TEXT.G2P_ID" /></th>
                 <th>Gene</th>
                 <th>Disease</th>
                 <th>
                   Allelic Requirement
-                  <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                  <ToolTip :toolTipText="HELP_TEXT.ALLELIC_REQUIREMENT" />
                 </th>
                 <th>Panels</th>
                 <th>
-                  Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+                  Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
                 </th>
                 <th>Curator</th>
                 <th>Action</th>
@@ -257,17 +257,19 @@ export default {
           <table class="table table-hover table-bordered">
             <thead>
               <tr>
-                <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
+                <th>G2P ID <ToolTip :toolTipText="HELP_TEXT.G2P_ID" /></th>
                 <th>Gene</th>
                 <th>Disease</th>
                 <th>
                   Allelic Requirement
-                  <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                  <ToolTip :toolTipText="HELP_TEXT.ALLELIC_REQUIREMENT" />
                 </th>
-                <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
+                <th>
+                  Mechanism <ToolTip :toolTipText="HELP_TEXT.MECHANISM" />
+                </th>
                 <th>Panels</th>
                 <th>
-                  Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" />
+                  Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
                 </th>
                 <th>Action</th>
               </tr>

@@ -11,6 +11,7 @@ import kebabCase from "lodash/kebabCase";
 import ToolTip from "../tooltip/ToolTip.vue";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 import api from "../../services/api.js";
+import { HELP_TEXT } from "@/utility/Constants.js";
 
 export default {
   props: {
@@ -38,6 +39,7 @@ export default {
       mechanismSynopsisAttribs: [...MechanismSynopsisAttribs],
       mechanismSupportAttribs: [...MechanismSupportAttribs],
       evidenceTypesAttribs: [...EvidenceTypesAttribs],
+      HELP_TEXT,
     };
   },
   methods: {
@@ -254,9 +256,7 @@ export default {
                 <div class="col-lg-2">
                   <label for="mechanism-input" class="col-form-label">
                     Mechanism
-                    <ToolTip
-                      toolTipText="To change Mechanism, please contact Admin at g2p-help@ebi.ac.uk"
-                    />
+                    <ToolTip :toolTipText="HELP_TEXT.CHANGE_MECHANISM" />
                   </label>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-6">

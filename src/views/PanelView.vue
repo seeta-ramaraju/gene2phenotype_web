@@ -20,7 +20,7 @@ export default {
       errorMsg: null,
       downloadAllDataErrorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
-      helpText: { ...HELP_TEXT },
+      HELP_TEXT,
       chartData: {},
       chartOptions: {
         responsive: true,
@@ -186,10 +186,7 @@ export default {
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">
                 Total LGMDE Records
-                <ToolTip
-                  toolTipText="G2P records are Locus-Genotype-Mechanism-Disease-Evidence
-                  (LGMDE) threads describing gene-disease associations"
-                />
+                <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
               </h6>
               <h4 class="card-title" v-if="panelData.stats?.total_records">
                 {{ panelData.stats.total_records.toLocaleString() }}
@@ -235,9 +232,7 @@ export default {
           @click="downloadAllData"
         >
           <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
-          <ToolTip
-            toolTipText="Download all records for this panel, including all attributes, not just those displayed here."
-          />
+          <ToolTip :toolTipText="HELP_TEXT.DOWNLOAD_ALL_DATA" />
         </button>
         <button v-else disabled class="btn btn-outline-primary" type="button">
           <span
@@ -265,18 +260,20 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
+              <th>G2P ID <ToolTip :toolTipText="HELP_TEXT.G2P_ID" /></th>
               <th>Gene</th>
               <th>Disease</th>
               <th>
                 Allelic Requirement
-                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                <ToolTip :toolTipText="HELP_TEXT.ALLELIC_REQUIREMENT" />
               </th>
               <th>
-                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+                Variant Type <ToolTip :toolTipText="HELP_TEXT.VARIANT_TYPE" />
               </th>
-              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
-              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
+              <th>Mechanism <ToolTip :toolTipText="HELP_TEXT.MECHANISM" /></th>
+              <th>
+                Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
+              </th>
               <th>Last Update</th>
             </tr>
           </thead>

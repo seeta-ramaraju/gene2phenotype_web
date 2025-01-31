@@ -13,7 +13,7 @@ export default {
       diseaseData: null,
       errorMsg: null,
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
-      helpText: { ...HELP_TEXT },
+      HELP_TEXT,
     };
   },
   created() {
@@ -86,21 +86,23 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
+              <th>G2P ID <ToolTip :toolTipText="HELP_TEXT.G2P_ID" /></th>
               <th>Gene</th>
               <th>
                 Allelic Requirement
-                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                <ToolTip :toolTipText="HELP_TEXT.ALLELIC_REQUIREMENT" />
               </th>
               <th>
                 Variant Consequence
-                <ToolTip :toolTipText="helpText.VARIANT_CONSEQUENCE" />
+                <ToolTip :toolTipText="HELP_TEXT.VARIANT_CONSEQUENCE" />
               </th>
               <th>
-                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+                Variant Type <ToolTip :toolTipText="HELP_TEXT.VARIANT_TYPE" />
               </th>
-              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
-              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
+              <th>Mechanism <ToolTip :toolTipText="HELP_TEXT.MECHANISM" /></th>
+              <th>
+                Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
+              </th>
               <th>Panels</th>
             </tr>
           </thead>
@@ -178,7 +180,7 @@ export default {
         <p v-else>No Records found</p>
       </div>
       <h4 v-if="diseaseData.ontology_terms?.length > 0" class="py-3">
-        Cross references <ToolTip :toolTipText="helpText.CROSS_REFERENCES" />
+        Cross references <ToolTip :toolTipText="HELP_TEXT.CROSS_REFERENCES" />
       </h4>
       <table
         class="table table-bordered table-hover w-50 shadow-sm"

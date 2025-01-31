@@ -24,7 +24,7 @@ export default {
       confidenceColorMap: { ...CONFIDENCE_COLOR_MAP },
       isReadMoreActivated: false,
       maxCharacters: MAX_CHARACTERS,
-      helpText: { ...HELP_TEXT },
+      HELP_TEXT,
     };
   },
   created() {
@@ -147,21 +147,23 @@ export default {
         >
           <thead>
             <tr>
-              <th>G2P ID <ToolTip :toolTipText="helpText.G2P_ID" /></th>
+              <th>G2P ID <ToolTip :toolTipText="HELP_TEXT.G2P_ID" /></th>
               <th>Disease</th>
               <th>
                 Allelic Requirement
-                <ToolTip :toolTipText="helpText.ALLELIC_REQUIREMENT" />
+                <ToolTip :toolTipText="HELP_TEXT.ALLELIC_REQUIREMENT" />
               </th>
               <th>
                 Variant Consequence
-                <ToolTip :toolTipText="helpText.VARIANT_CONSEQUENCE" />
+                <ToolTip :toolTipText="HELP_TEXT.VARIANT_CONSEQUENCE" />
               </th>
               <th>
-                Variant Type <ToolTip :toolTipText="helpText.VARIANT_TYPE" />
+                Variant Type <ToolTip :toolTipText="HELP_TEXT.VARIANT_TYPE" />
               </th>
-              <th>Mechanism <ToolTip :toolTipText="helpText.MECHANISM" /></th>
-              <th>Confidence <ToolTip :toolTipText="helpText.CONFIDENCE" /></th>
+              <th>Mechanism <ToolTip :toolTipText="HELP_TEXT.MECHANISM" /></th>
+              <th>
+                Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
+              </th>
               <th>Panels</th>
               <th>Last Update</th>
             </tr>
