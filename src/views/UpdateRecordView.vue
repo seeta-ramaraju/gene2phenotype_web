@@ -61,7 +61,7 @@ export default {
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <div class="d-flex justify-content-between pb-2">
+    <div class="d-flex justify-content-between align-items-start pb-2">
       <h2>Update G2P Record</h2>
       <router-link class="btn btn-outline-primary" :to="`/lgd/${stableId}`">
         Go to record page
