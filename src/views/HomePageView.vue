@@ -295,20 +295,35 @@ export default {
               <router-link
                 :to="{
                   path: '/search',
-                  query: { query: 'Weill-Marchesani syndrome' },
+                  query: { query: 'FBN1', type: 'gene' },
                 }"
                 style="text-decoration: none"
-                >Weill-Marchesani syndrome</router-link
               >
+                FBN1
+              </router-link>
               |
               <router-link
                 :to="{
                   path: '/search',
-                  query: { query: 'Tuberous sclerosis' },
+                  query: {
+                    query: 'Weill-Marchesani syndrome',
+                    type: 'disease',
+                  },
                 }"
                 style="text-decoration: none"
-                >Tuberous sclerosis</router-link
               >
+                Weill-Marchesani syndrome
+              </router-link>
+              |
+              <router-link
+                :to="{
+                  path: '/search',
+                  query: { query: 'Tuberous sclerosis', type: 'disease' },
+                }"
+                style="text-decoration: none"
+              >
+                Tuberous sclerosis
+              </router-link>
             </div>
           </div>
         </div>
