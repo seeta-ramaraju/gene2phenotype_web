@@ -996,7 +996,7 @@ export default {
                     <td>
                       Ensembl ID:
                       <a
-                        :href="`https://www.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
+                        :href="`https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=${locusGeneDiseaseData.locus?.ids?.Ensembl}`"
                         style="text-decoration: none"
                         v-if="locusGeneDiseaseData.locus?.ids?.Ensembl"
                         target="_blank"
