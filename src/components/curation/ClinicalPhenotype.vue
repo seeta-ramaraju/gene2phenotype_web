@@ -1,10 +1,16 @@
 <script>
+import { HELP_TEXT } from "@/utility/Constants";
 import ToolTip from "../tooltip/ToolTip.vue";
 export default {
   props: {
     clinicalPhenotype: Object,
     hpoTermsInputHelper: Object,
     fetchAndSearchHPO: Function,
+  },
+  data() {
+    return {
+      HELP_TEXT,
+    };
   },
   components: { ToolTip },
   emits: ["update:clinicalPhenotype", "update:hpoTermsInputHelper"],
@@ -143,7 +149,9 @@ export default {
                     <li>
                       <h6 class="dropdown-header">
                         HPO term suggestions
-                        <ToolTip toolTipText="Click any term to select it." />
+                        <ToolTip
+                          :toolTipText="HELP_TEXT.CLICK_HPO_SUGGESTION"
+                        />
                       </h6>
                     </li>
                     <li

@@ -35,6 +35,13 @@ export const HELP_TEXT = {
     "Badonyi and Marsh pLOF: the probability that the protein is associated with a loss-of-function disease mechanism (pLOF). A loss-of-function mechanism is characterised by complete ablation of the function of the proteinGenes with higher scores are more likely to be associated with a loss of function disease mechanism. The recommended threshold for pLOF is 0.64.",
   DOMINANT_NEGATIVE:
     "Badonyi and Marsh pDN: the probability that the protein is associated with a dominant-negative disease mechanism (pDN). Dominant-negative mechanisms are characterized by the mutant protein directly or indirectly disrupting the function of the wild type protein. Genes with higher scores are more likely to be associated with a dominant-negative disease mechanism. The recommended threshold for pDN is 0.61.",
+  LGMDE_RECORD:
+    "G2P records are Locus-Genotype-Mechanism-Disease-Evidence (LGMDE) threads describing gene-disease associations",
+  DOWNLOAD_ALL_DATA:
+    "Download all records for this panel, including all attributes, not just those displayed here.",
+  CHANGE_MECHANISM:
+    "To change Mechanism, please contact Admin at g2p-help@ebi.ac.uk",
+  CLICK_HPO_SUGGESTION: "Click any term to select it.",
 };
 
 export const MARSH_PROBABILITY_THRESHOLD = {
