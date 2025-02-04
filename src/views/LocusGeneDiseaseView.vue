@@ -527,7 +527,9 @@ export default {
                 <span
                   v-if="
                     locusGeneDiseaseData.molecular_mechanism
-                      ?.mechanism_support === 'inferred'
+                      ?.mechanism_support === 'inferred' &&
+                    locusGeneDiseaseData.molecular_mechanism.mechanism !==
+                      'undetermined'
                   "
                 >
                   ({{
