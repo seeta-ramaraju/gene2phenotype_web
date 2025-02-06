@@ -926,7 +926,9 @@ export default {
           </tr>
           <tr class="align-middle">
             <td class="w-25 text-end">
-              <h6>Location</h6>
+              <h6>
+                Location <ToolTip :toolTipText="HELP_TEXT.GENE_LOCATION" />
+              </h6>
             </td>
             <td>
               <a
