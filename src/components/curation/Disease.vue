@@ -25,9 +25,17 @@ export default {
         updatedDiseaseCrossReferences
       );
     },
-    useDiseaseName(diseaseName) {
-      if (diseaseName) {
-        this.$emit("update:diseaseName", diseaseName);
+    useDiseaseName(diseaseCrossReference) {
+      if (diseaseCrossReference?.disease_name) {
+        this.$emit("update:diseaseName", diseaseCrossReference.disease_name);
+        // check if disease cross reference is present in list of selected disease cross references
+        const index = this.diseaseCrossReferences.findIndex(
+          (item) => item.identifier === diseaseCrossReference.identifier
+        );
+        // if disease cross reference is not present then select it
+        if (index === -1) {
+          this.checkboxHandler(diseaseCrossReference, true);
+        }
       }
     },
   },
@@ -122,7 +130,7 @@ export default {
                         <button
                           :id="`disease-name-use-btn-${index}`"
                           class="btn btn-outline-primary py-0 px-1"
-                          @click="useDiseaseName(item.disease_name)"
+                          @click="useDiseaseName(item)"
                           type="button"
                         >
                           Use name

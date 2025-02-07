@@ -7,6 +7,7 @@ export default {
     publications: Object,
     inputPmids: String,
     isInputPmidsValid: Boolean,
+    inputPmidsInvalidMsg: String,
   },
   emits: ["update:publications", "update:inputPmids"],
   methods: {
@@ -57,7 +58,7 @@ export default {
                 id="invalid-publications-input-feedback"
                 class="invalid-feedback"
               >
-                Please enter valid Publication(s).
+                {{ inputPmidsInvalidMsg }}
               </div>
               <div class="form-text" id="publications-input-help-text">
                 For multiple entries, separate by semicolon

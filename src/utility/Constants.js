@@ -30,7 +30,7 @@ export const HELP_TEXT = {
   MARSH_PROBABILITY:
     "These scores were calculated using a tripartite statistical model based on diverse gene and protein level features that are known to discriminate between molecular mechanisms. It is made up of machine classifiers trained to predict whether human protein coding genes are likely to be associated with dominant-negative, gain-of-function, or loss-of-function molecular disease mechanisms In many cases, the different dominant molecular mechanisms are not mutually exclusive in a gene.",
   GAIN_OF_FUNCTION:
-    "Badonyi and Marsh pGOF: The probability that the protein is associated with a gain-of-function disease mechanism (pGOF). Gain-of-function mechanisms are characterized by an altered or newly appeared function in the mutant protein. Genes with higher scores are more likely to be associated with a gain of function disease mechanism. The recommended threshold for pGOF is 0.61.",
+    "Badonyi and Marsh pGOF: The probability that the protein is associated with a gain-of-function disease mechanism (pGOF). Gain-of-function mechanisms are characterized by an altered or newly appeared function in the mutant protein. Genes with higher scores are more likely to be associated with a gain of function disease mechanism. The recommended threshold for pGOF is 0.63.",
   LOSS_OF_FUNCTION:
     "Badonyi and Marsh pLOF: the probability that the protein is associated with a loss-of-function disease mechanism (pLOF). A loss-of-function mechanism is characterised by complete ablation of the function of the proteinGenes with higher scores are more likely to be associated with a loss of function disease mechanism. The recommended threshold for pLOF is 0.64.",
   DOMINANT_NEGATIVE:
@@ -42,6 +42,8 @@ export const HELP_TEXT = {
   CHANGE_MECHANISM:
     "To change Mechanism, please contact Admin at g2p-help@ebi.ac.uk",
   CLICK_HPO_SUGGESTION: "Click any term to select it.",
+  GENE_LOCATION:
+    "The location of the gene on the GRCh38 reference assembly. The format is chromosome:start:end:strand where '1' is forward strand and '-1' is reverse strand.",
 };
 
 export const MARSH_PROBABILITY_THRESHOLD = {

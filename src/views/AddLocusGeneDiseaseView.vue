@@ -71,6 +71,7 @@ export default {
       isPublicationsDataLoading: false,
       inputPmids: "",
       isInputPmidsValid: true,
+      inputPmidsInvalidMsg: "",
       panelErrorMsg: null,
       isPanelDataLoading: false,
       panelData: null,
@@ -163,6 +164,7 @@ export default {
       this.isPublicationsDataLoading = false;
       this.inputPmids = "";
       this.isInputPmidsValid = true;
+      this.inputPmidsInvalidMsg = "";
       this.isSaveBeforePublishSuccess = false;
       this.saveBeforePublishErrorMsg = null;
       this.geneErrorMsg = null;
@@ -241,13 +243,14 @@ export default {
         });
     },
     fetchPublications() {
-      // if inputPmids is empty then set isInputPmidsValid to false and dont continue further
-      if (this.inputPmids.trim() === "") {
+      // if inputPmids is invalid then set isInputPmidsValid to false and dont continue further
+      if (!this.validateInputPmids()) {
         this.isInputPmidsValid = false;
         return;
       }
-      // if inputPmids is not empty then continue further
+      // if inputPmids is valid then continue further
       this.isInputPmidsValid = true;
+      this.inputPmidsInvalidMsg = "";
       this.publicationsErrorMsg = null;
       this.isPublicationsDataLoading = true;
       let pmidListStr = this.inputPmids
@@ -258,8 +261,8 @@ export default {
       api
         .get(PUBLICATIONS_URL.replace(":pmids", pmidListStr))
         .then((response) => {
-          let publicationsData = response.data;
-          if (publicationsData && publicationsData.results) {
+          const publicationsData = response.data;
+          if (publicationsData?.results) {
             this.input = updateInputWithNewPublicationsData(
               this.input,
               publicationsData
@@ -270,6 +273,8 @@ export default {
                 this.hpoTermsInputHelper,
                 pmidList
               );
+            // clear inputPmids
+            this.inputPmids = "";
           }
         })
         .catch((error) => {
@@ -289,6 +294,29 @@ export default {
         .finally(() => {
           this.isPublicationsDataLoading = false;
         });
+    },
+    validateInputPmids() {
+      if (this.inputPmids.trim() === "") {
+        this.inputPmidsInvalidMsg = "Input is empty";
+        return false;
+      } else {
+        // convert inpitPmids text to list of pmid strings
+        const inputPmidsList = this.inputPmids
+          .trim()
+          .split(";")
+          .filter((item) => item);
+        // check if any input publication is already added
+        if (
+          inputPmidsList.some((item) =>
+            Object.keys(this.input.publications).includes(item)
+          )
+        ) {
+          this.inputPmidsInvalidMsg =
+            "One or more publication(s) already added";
+          return false;
+        }
+      }
+      return true;
     },
     removePublication(removedPmidList) {
       this.input = updateInputWithRemovedPublications(
@@ -529,6 +557,7 @@ export default {
         v-model:publications="input.publications"
         v-model:input-pmids="inputPmids"
         :isInputPmidsValid="isInputPmidsValid"
+        :inputPmidsInvalidMsg="inputPmidsInvalidMsg"
       />
       <ClinicalPhenotype
         v-model:clinical-phenotype="input.phenotypes"

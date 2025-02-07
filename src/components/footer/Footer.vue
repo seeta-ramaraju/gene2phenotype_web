@@ -2,7 +2,7 @@
   <footer class="footer mt-auto py-3 footer-bg-color">
     <div class="container">
       <div class="row">
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 col-lg col-xl-2 mb-3">
           <h5>Information</h5>
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
@@ -40,7 +40,7 @@
           </ul>
         </div>
 
-        <div class="col-md-2 mb-3">
+        <div class="col-md-4 col-lg col-xl-2 mb-3">
           <h5>Policies</h5>
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
@@ -80,7 +80,7 @@
             </li>
           </ul>
         </div>
-        <div class="col-md-1 mb-3">
+        <div class="col-md-4 col-lg col-xl-1 mb-3">
           <h5>Data</h5>
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
@@ -93,7 +93,7 @@
             </li>
           </ul>
         </div>
-        <div class="col-md-2 mb-3 text-center">
+        <div class="col-md-4 col-lg col-xl-2 mb-3 text-center">
           <a href="https://www.ebi.ac.uk/" target="_blank">
             <img
               alt="EMBL-EBI logo"
@@ -103,7 +103,7 @@
             />
           </a>
         </div>
-        <div class="col-md-2 mb-3 text-center">
+        <div class="col-md-4 col-lg col-xl-2 mb-3 text-center">
           <p>Funded by Wellcome.</p>
           <a href="https://wellcome.org/" target="_blank">
             <img
@@ -114,7 +114,7 @@
             />
           </a>
         </div>
-        <div class="col-md-3 mb-3 text-center">
+        <div class="col-md-4 col-lg col-xl-3 mb-3 text-center">
           <p>G2P is part of the PARADIGM initiative.</p>
           <a href="https://paradigmgenomics.org/" target="_blank">
             <img

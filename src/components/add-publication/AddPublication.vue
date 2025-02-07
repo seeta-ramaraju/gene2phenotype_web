@@ -88,7 +88,7 @@ export default {
     },
     validateInputPmids() {
       if (this.inputPmids.trim() === "") {
-        this.inputPmidsInvalidMsg = "Input is empty.";
+        this.inputPmidsInvalidMsg = "Input is empty";
         return false;
       } else {
         // convert inpitPmids text to list of pmid strings
@@ -105,16 +105,16 @@ export default {
           )
         ) {
           this.inputPmidsInvalidMsg =
-            "One or more publication(s) exist in current publication(s)";
+            "One or more publication(s) already exists in current publication(s)";
           return false;
-          // check if any input publication already exists in new publications
+          // check if any input publication is already added in new publications
         } else if (
           inputPmidsList.some((item) =>
             Object.keys(this.input.publications).includes(item)
           )
         ) {
           this.inputPmidsInvalidMsg =
-            "One or more publication(s) exist in new publication(s)";
+            "One or more publication(s) already added in new publication(s)";
           return false;
         }
       }
@@ -139,6 +139,7 @@ export default {
       }
       // if inputPmids is valid then continue further
       this.isInputPmidsValid = true;
+      this.inputPmidsInvalidMsg = "";
       this.publicationsApiErrorMsg = null;
       this.isPublicationsDataLoading = true;
       let pmidListStr = this.inputPmids
@@ -150,7 +151,7 @@ export default {
         .get(PUBLICATIONS_URL.replace(":pmids", pmidListStr))
         .then((response) => {
           const publicationsData = response.data;
-          if (publicationsData && publicationsData.results) {
+          if (publicationsData?.results) {
             this.input = updateInputWithNewPublicationsData(
               this.input,
               publicationsData
