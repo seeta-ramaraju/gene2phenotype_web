@@ -284,6 +284,7 @@ export default {
                             <th>Type</th>
                             <th>Inheritance</th>
                             <th>Publications</th>
+                            <th>Comments</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -344,6 +345,18 @@ export default {
                                   </a>
                                 </span>
                               </span>
+                            </td>
+                            <td class="ps-0">
+                              <ul v-if="item.comments?.length > 0" class="mb-0">
+                                <li
+                                  v-for="commentItem in item.comments"
+                                  :key="commentItem.text"
+                                >
+                                  {{ commentItem.text }} ({{
+                                    commentItem.date
+                                  }})
+                                </li>
+                              </ul>
                             </td>
                           </tr>
                         </tbody>
@@ -782,6 +795,71 @@ export default {
                                   </a>
                                 </span>
                               </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p v-else class="text-muted">Not Available</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="w-25 text-end">
+              <h5>Phenotypic Summary</h5>
+            </td>
+            <td class="w-75">
+              <div
+                v-if="locusGeneDiseaseData.phenotype_summary?.length > 0"
+                class="accordion accordion-flush"
+                id="accordionPhenotypicSummary"
+              >
+                <div class="accordion-item">
+                  <h2 class="accordion-header border">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#collapsiblePhenotypicSummaryTable"
+                      aria-expanded="false"
+                      aria-controls="collapsiblePhenotypicSummaryTable"
+                    >
+                      Phenotypic Summary ({{
+                        locusGeneDiseaseData.phenotype_summary.length
+                      }})
+                    </button>
+                  </h2>
+                  <div
+                    id="collapsiblePhenotypicSummaryTable"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionPhenotypicSummary"
+                  >
+                    <div class="accordion-body p-0">
+                      <table class="table table-bordered mb-0">
+                        <thead>
+                          <tr>
+                            <th>Publication</th>
+                            <th>Phenotypic Summary</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="item in locusGeneDiseaseData.phenotype_summary"
+                          >
+                            <td>
+                              <a
+                                v-if="item.publication"
+                                :href="`https://europepmc.org/article/MED/${item.publication}`"
+                                style="text-decoration: none"
+                                target="_blank"
+                              >
+                                {{ item.publication }}
+                              </a>
+                            </td>
+                            <td>
+                              {{ item.summary }}
                             </td>
                           </tr>
                         </tbody>
