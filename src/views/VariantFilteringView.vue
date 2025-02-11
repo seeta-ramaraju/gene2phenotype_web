@@ -277,6 +277,16 @@ export default {
             Information may be lost using this option.
           </td>
         </tr>
+        <tr>
+          <th>only_vcf_freq</th>
+          <td>
+            By default, both cached frequency data and frequency data from VCF
+            files are used in the frequency filtering process. Setting this to
+            <b>1</b> ensures that only frequency data from VCF files is
+            considered<br /><b>Note</b>: Information may be lost using this
+            option.
+          </td>
+        </tr>
       </tbody>
     </table>
     <h6 class="pb-2">Additional example commands</h6>
