@@ -98,7 +98,8 @@ export default {
                   Click to search HPO terms
                 </button>
                 <div class="dropdown-menu">
-                  <form class="p-3">
+                  <!-- @submit.prevent to prevent the form for doing the default form submission-->
+                  <form class="p-3" @submit.prevent>
                     <label :for="`search-phenotype-${pmid}`" class="form-label">
                       Search and select Human Phenotype Ontology terms
                     </label>
