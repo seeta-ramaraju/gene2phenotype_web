@@ -86,6 +86,7 @@ export default {
                   <th>Type</th>
                   <th>Inheritance</th>
                   <th>Publications</th>
+                  <th>Comments</th>
                 </tr>
               </thead>
               <tbody>
@@ -143,6 +144,16 @@ export default {
                         </a>
                       </span>
                     </span>
+                  </td>
+                  <td class="ps-0">
+                    <ul v-if="item.comments?.length > 0" class="mb-0">
+                      <li
+                        v-for="commentItem in item.comments"
+                        :key="commentItem.text"
+                      >
+                        {{ commentItem.text }} ({{ commentItem.date }})
+                      </li>
+                    </ul>
                   </td>
                 </tr>
               </tbody>
