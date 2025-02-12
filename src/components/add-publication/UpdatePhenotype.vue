@@ -184,7 +184,7 @@ export default {
                       Click to search HPO terms
                     </button>
                     <div class="dropdown-menu">
-                      <form class="p-3">
+                      <form class="p-3" @submit.prevent>
                         <label
                           :for="`search-phenotype-${pmid}`"
                           class="form-label"

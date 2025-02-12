@@ -245,7 +245,7 @@ export default {
               style="text-decoration: none"
               target="_blank"
             >
-              View this gene on OMIM website
+              OMIM
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
@@ -255,7 +255,7 @@ export default {
               style="text-decoration: none"
               target="_blank"
             >
-              View this gene on Ensembl website
+              Ensembl
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
@@ -265,7 +265,7 @@ export default {
               style="text-decoration: none"
               target="_blank"
             >
-              View this gene on HGNC website
+              HGNC
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
@@ -275,7 +275,7 @@ export default {
               style="text-decoration: none"
               target="_blank"
             >
-              View this gene on UniProt website
+              UniProt
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
@@ -285,7 +285,7 @@ export default {
               style="text-decoration: none"
               target="_blank"
             >
-              View this gene on PanelApp website
+              PanelApp
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
