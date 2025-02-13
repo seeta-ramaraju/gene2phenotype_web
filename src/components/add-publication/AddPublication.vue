@@ -87,37 +87,57 @@ export default {
         });
     },
     validateInputPmids() {
+      // check if inputPmids is empty string
       if (this.inputPmids.trim() === "") {
         this.inputPmidsInvalidMsg = "Input is empty";
         return false;
-      } else {
-        // convert inpitPmids text to list of pmid strings
-        const inputPmidsList = this.inputPmids
-          .trim()
-          .split(";")
-          .filter((item) => item);
-        // check if any input publication already exists in current publications
-        if (
-          inputPmidsList.some((item) =>
-            this.locusGeneDiseaseData.publications
-              .map((itemObj) => itemObj.publication.pmid.toString())
-              .includes(item)
-          )
-        ) {
-          this.inputPmidsInvalidMsg =
-            "One or more publication(s) already exists in current publication(s)";
-          return false;
-          // check if any input publication is already added in new publications
-        } else if (
-          inputPmidsList.some((item) =>
-            Object.keys(this.input.publications).includes(item)
-          )
-        ) {
-          this.inputPmidsInvalidMsg =
-            "One or more publication(s) already added in new publication(s)";
-          return false;
-        }
       }
+
+      // convert inputPmids string to list of pmids
+      // Eg: "1;2;3;" => ["1","2","3"]
+      const inputPmidsList = this.inputPmids
+        .trim()
+        .split(";")
+        .filter((item) => item);
+
+      // check for duplicate input publications
+      const duplicatePmidsList = inputPmidsList.filter(
+        (item, index) => inputPmidsList.indexOf(item) !== index
+      );
+      if (duplicatePmidsList.length > 0) {
+        this.inputPmidsInvalidMsg = `Duplicate publication(s): ${duplicatePmidsList.join(
+          ", "
+        )}`;
+        return false;
+      }
+
+      // check if any input publication exists in current publications
+      const currentPmidsList = this.locusGeneDiseaseData.publications.map(
+        (item) => item.publication.pmid.toString()
+      );
+      const pmidsAlreadyExistingList = inputPmidsList.filter((item) =>
+        currentPmidsList.includes(item)
+      );
+      if (pmidsAlreadyExistingList.length > 0) {
+        this.inputPmidsInvalidMsg = `Publication(s) already exist(s): ${pmidsAlreadyExistingList.join(
+          ", "
+        )}`;
+        return false;
+      }
+
+      // check if any input publication has already been added in new publications
+      const addedPmidsList = Object.keys(this.input.publications);
+      const pmidsAlreadyAddedList = inputPmidsList.filter((item) =>
+        addedPmidsList.includes(item)
+      );
+      if (pmidsAlreadyAddedList.length > 0) {
+        this.inputPmidsInvalidMsg = `Publication(s) already added: ${pmidsAlreadyAddedList.join(
+          ", "
+        )}`;
+        return false;
+      }
+
+      // if inputPmids passed all above checks, then it is valid
       return true;
     },
     removePublication(removedPmidList) {
