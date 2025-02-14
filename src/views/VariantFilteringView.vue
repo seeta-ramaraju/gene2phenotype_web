@@ -216,6 +216,16 @@ export default {
           </td>
         </tr>
         <tr>
+          <th>only_vcf_freq</th>
+          <td>
+            By default, both cached frequency data and frequency data from VCF
+            files are used in the frequency filtering process. Setting this to
+            <b>1</b> ensures that only frequency data from VCF files is
+            considered<br /><b>Note</b>: Information may be lost using this
+            option.
+          </td>
+        </tr>
+        <tr>
           <th>variant_include_list</th>
           <td>
             A list of variants to include even if they do not pass allele
@@ -275,16 +285,6 @@ export default {
             this option is set to 1, variants are only analysed against MANE
             transcripts, which simplifies the output. <br /><b>Note</b>:
             Information may be lost using this option.
-          </td>
-        </tr>
-        <tr>
-          <th>only_vcf_freq</th>
-          <td>
-            By default, both cached frequency data and frequency data from VCF
-            files are used in the frequency filtering process. Setting this to
-            <b>1</b> ensures that only frequency data from VCF files is
-            considered<br /><b>Note</b>: Information may be lost using this
-            option.
           </td>
         </tr>
       </tbody>
