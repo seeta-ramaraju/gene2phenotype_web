@@ -342,7 +342,7 @@ export default {
             {{ errorMsg || dataDownloadErrorMsg }}
           </div>
         </div>
-        <div v-if="panelData?.results?.length > 0" class="col-lg-7 mx-auto">
+        <div v-if="panelData?.results?.length > 0" class="col-lg-8 mx-auto">
           <table class="table table-hover table-bordered shadow-sm">
             <thead>
               <tr>
@@ -352,6 +352,7 @@ export default {
                   <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
                 </th>
                 <th>Total Genes</th>
+                <th>Last Updated</th>
                 <th>Download</th>
               </tr>
             </thead>
@@ -368,6 +369,7 @@ export default {
                 </td>
                 <td>{{ item.stats?.total_records.toLocaleString() }}</td>
                 <td>{{ item.stats?.total_genes.toLocaleString() }}</td>
+                <td>{{ item.last_updated }}</td>
                 <td class="p-0">
                   <div class="d-flex justify-content-center">
                     <button

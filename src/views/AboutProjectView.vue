@@ -5,7 +5,7 @@ export default {
       gencc: "https://thegencc.org/",
       initialpaper: "https://doi.org/10.1038/s41467-019-10016-3",
       curationpaper:
-        "https://www.medrxiv.org/content/10.1101/2024.02.26.24303357v1",
+        "https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-024-01398-1",
       variantfiltering: "/variant-filtering",
     };
   },
