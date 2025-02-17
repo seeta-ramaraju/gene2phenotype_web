@@ -71,14 +71,14 @@ export default {
     <div v-if="diseaseData && diseaseSummaryData">
       <h2 v-if="diseaseData.name">{{ diseaseData.name }}</h2>
       <h2 v-else class="text-muted">Not Available</h2>
-      <h4 class="py-3">Synonyms</h4>
+      <h4 class="py-3">Previous G2P names</h4>
       <div>
         <ul v-if="diseaseData.synonyms?.length > 0">
           <li v-for="item in diseaseData.synonyms" :key="item">{{ item }}</li>
         </ul>
         <p v-else class="text-muted">Not Available</p>
       </div>
-      <h4 class="py-3">Latest Records</h4>
+      <h4 class="py-3">G2P records</h4>
       <div class="table-responsive-xl">
         <table
           class="table table-hover table-bordered shadow-sm"
