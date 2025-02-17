@@ -165,7 +165,7 @@ export default {
                 Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
               </th>
               <th>Panels</th>
-              <th>Last Update</th>
+              <th>Last Updated</th>
             </tr>
           </thead>
           <tbody>
@@ -292,7 +292,7 @@ export default {
         </ul>
       </div>
       <p>
-        <strong>Last Update: </strong>
+        <strong>Last Updated: </strong>
         <span v-if="geneData.last_updated">
           {{ geneData.last_updated }}
         </span>

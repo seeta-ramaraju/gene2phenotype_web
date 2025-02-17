@@ -274,7 +274,7 @@ export default {
               <th>
                 Confidence <ToolTip :toolTipText="HELP_TEXT.CONFIDENCE" />
               </th>
-              <th>Last Update</th>
+              <th>Last Updated</th>
             </tr>
           </thead>
           <tbody>
@@ -340,7 +340,7 @@ export default {
         <p v-else style="color: grey">Not Available</p>
       </div>
       <p>
-        <strong>Last Update: </strong>
+        <strong>Last Updated: </strong>
         <span v-if="panelData.last_updated">
           {{ panelData.last_updated }}
         </span>

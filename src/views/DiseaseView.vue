@@ -237,7 +237,7 @@ export default {
         </li>
       </ul>
       <p>
-        <strong>Last Update: </strong>
+        <strong>Last Updated: </strong>
         <span v-if="diseaseData.last_updated && diseaseData.last_updated != ''">
           {{ diseaseData.last_updated }}
         </span>
