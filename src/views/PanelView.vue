@@ -220,7 +220,7 @@ export default {
           class="w-50 mx-auto"
         />
       </div>
-      <h3 class="pt-5 pb-2">Latest records</h3>
+      <h3 class="pt-5 pb-2">Last added/updated records</h3>
       <div
         class="d-flex justify-content-end mb-2"
         v-if="panelSummaryData.records_summary?.length > 0"
@@ -231,7 +231,7 @@ export default {
           class="btn btn-outline-primary"
           @click="downloadAllData"
         >
-          <i class="bi bi-cloud-arrow-down-fill"></i> Download all data
+          <i class="bi bi-cloud-arrow-down-fill"></i> Download panel
           <ToolTip :toolTipText="HELP_TEXT.DOWNLOAD_ALL_DATA" />
         </button>
         <button v-else disabled class="btn btn-outline-primary" type="button">
