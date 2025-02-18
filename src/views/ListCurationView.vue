@@ -68,8 +68,8 @@ export default {
             <th>Session Name</th>
             <th>G2P ID</th>
             <th>Locus</th>
-            <th>Date Created</th>
-            <th>Date Last Updated</th>
+            <th>Created On</th>
+            <th>Last Updated</th>
           </tr>
         </thead>
         <tbody>
