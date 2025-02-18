@@ -162,16 +162,24 @@ export default {
                 </span>
               </td>
               <td>
-                <span
-                  v-if="item.panels?.length > 0"
-                  v-for="(panelName, index) in item.panels"
-                >
-                  <router-link
-                    :to="`/panel/${panelName}`"
-                    style="text-decoration: none"
-                  >
-                    {{ panelName }} </router-link
-                  ><span v-if="index < item.panels.length - 1">, </span>
+                <span v-if="item.panels?.length > 0">
+                  <span v-for="(panelName, index) in item.panels">
+                    <span v-if="index < item.panels.length - 1">
+                      <router-link
+                        :to="`/panel/${panelName}`"
+                        style="text-decoration: none"
+                      >
+                        {{ panelName }} </router-link
+                      >,
+                    </span>
+                    <router-link
+                      :to="`/panel/${panelName}`"
+                      style="text-decoration: none"
+                      v-else
+                    >
+                      {{ panelName }}
+                    </router-link>
+                  </span>
                 </span>
               </td>
             </tr>
@@ -220,22 +228,6 @@ export default {
           </tr>
         </tbody>
       </table>
-      <h4 v-if="diseaseData.publications?.length > 0" class="py-3">
-        Publications
-      </h4>
-      <ul
-        v-if="diseaseData.publications?.length > 0"
-        v-for="item in diseaseData.publications"
-      >
-        <li>
-          <a
-            :href="`https://pubmed.ncbi.nlm.nih.gov/${item.pmid}`"
-            target="_blank"
-          >
-            {{ item.title }}
-          </a>
-        </li>
-      </ul>
       <p>
         <strong>Last Updated: </strong>
         <span v-if="diseaseData.last_updated && diseaseData.last_updated != ''">

@@ -185,16 +185,24 @@ export default {
               <td>{{ item.genotype }}</td>
               <td>{{ item.mechanism }}</td>
               <td>
-                <span
-                  v-if="item.panel?.length > 0"
-                  v-for="(panelName, index) in item.panel"
-                >
-                  <router-link
-                    :to="`/panel/${panelName}`"
-                    style="text-decoration: none"
-                  >
-                    {{ panelName }} </router-link
-                  ><span v-if="index < item.panel.length - 1">, </span>
+                <span v-if="item.panel?.length > 0">
+                  <span v-for="(panelName, index) in item.panel">
+                    <span v-if="index < item.panel.length - 1">
+                      <router-link
+                        :to="`/panel/${panelName}`"
+                        style="text-decoration: none"
+                      >
+                        {{ panelName }} </router-link
+                      >,
+                    </span>
+                    <router-link
+                      :to="`/panel/${panelName}`"
+                      style="text-decoration: none"
+                      v-else
+                    >
+                      {{ panelName }}
+                    </router-link>
+                  </span>
                 </span>
               </td>
               <td>
