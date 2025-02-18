@@ -5,6 +5,7 @@ import UpdatePanel from "../components/update-record/UpdatePanel.vue";
 import UpdateMechanism from "../components/update-record/UpdateMechanism.vue";
 import api from "../services/api.js";
 import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
+import AddComment from "@/components/update-record/AddComment.vue";
 
 export default {
   data() {
@@ -20,6 +21,7 @@ export default {
     UpdateConfidence,
     UpdatePanel,
     UpdateMechanism,
+    AddComment,
   },
   created() {
     // watch the params of the route to fetch the data again
@@ -105,6 +107,7 @@ export default {
         :attributesData="attributesData"
         :currentConfidence="locusGeneDiseaseData.confidence"
       />
+      <AddComment :stableId="stableId" />
     </div>
   </div>
 </template>
