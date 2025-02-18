@@ -317,7 +317,7 @@ export default {
     <ul>
       <li>
         <a
-          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/run_vep_g2p_plugin.txt"
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_vep_plugin/run_vep_g2p_plugin.txt"
           target="_blank"
           style="text-decoration: none"
           >run_vep_g2p_plugin</a
@@ -325,7 +325,7 @@ export default {
       </li>
       <li>
         <a
-          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/input.vcf"
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_vep_plugin/input.vcf"
           target="_blank"
           style="text-decoration: none"
           >input.vcf</a
@@ -333,7 +333,7 @@ export default {
       </li>
       <li>
         <a
-          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/output.txt"
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_vep_plugin/output.txt"
           target="_blank"
           style="text-decoration: none"
           >VEP TXT output</a
@@ -341,7 +341,7 @@ export default {
       </li>
       <li>
         <a
-          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/report.html"
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_vep_plugin/report.html"
           target="_blank"
           style="text-decoration: none"
           >report.html</a
@@ -349,7 +349,7 @@ export default {
       </li>
       <li>
         <a
-          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_website_files/g2p_vep_plugin/report.txt"
+          href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/g2p_vep_plugin/report.txt"
           target="_blank"
           style="text-decoration: none"
           >report.txt</a
