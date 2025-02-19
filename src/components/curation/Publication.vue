@@ -1,4 +1,8 @@
 <script>
+import {
+  getAffectedIndividualsInputErrorMsg,
+  getFamiliesInputErrorMsg,
+} from "../../utility/CurationUtility.js";
 export default {
   props: {
     fetchPublications: Function,
@@ -16,6 +20,8 @@ export default {
       updatedPublications[pmid][key] = inputValue;
       this.$emit("update:publications", updatedPublications);
     },
+    getFamiliesInputErrorMsg,
+    getAffectedIndividualsInputErrorMsg,
   },
 };
 </script>
@@ -215,7 +221,14 @@ export default {
                         </label>
                         <input
                           type="number"
-                          class="form-control"
+                          :class="
+                            getFamiliesInputErrorMsg(
+                              publications[pmid].families,
+                              publications[pmid].affectedIndividuals
+                            )
+                              ? 'form-control is-invalid'
+                              : 'form-control'
+                          "
                           :id="`publication-families-input-${pmid}`"
                           min="0"
                           :value="publications[pmid].families"
@@ -226,7 +239,19 @@ export default {
                               Number($event.target.value)
                             )
                           "
+                          aria-describedby="invalid-families-input-feedback"
                         />
+                        <div
+                          id="invalid-families-input-feedback"
+                          class="invalid-feedback"
+                        >
+                          {{
+                            getFamiliesInputErrorMsg(
+                              publications[pmid].families,
+                              publications[pmid].affectedIndividuals
+                            )
+                          }}
+                        </div>
                       </div>
                       <div class="col-md-3">
                         <label
@@ -237,7 +262,14 @@ export default {
                         </label>
                         <input
                           type="number"
-                          class="form-control"
+                          :class="
+                            getAffectedIndividualsInputErrorMsg(
+                              publications[pmid].families,
+                              publications[pmid].affectedIndividuals
+                            )
+                              ? 'form-control is-invalid'
+                              : 'form-control'
+                          "
                           :id="`publication-affected-individuals-input-${pmid}`"
                           min="0"
                           :value="publications[pmid].affectedIndividuals"
@@ -248,7 +280,19 @@ export default {
                               Number($event.target.value)
                             )
                           "
+                          aria-describedby="invalid-affected-individuals-input-feedback"
                         />
+                        <div
+                          id="invalid-affected-individuals-input-feedback"
+                          class="invalid-feedback"
+                        >
+                          {{
+                            getAffectedIndividualsInputErrorMsg(
+                              publications[pmid].families,
+                              publications[pmid].affectedIndividuals
+                            )
+                          }}
+                        </div>
                       </div>
                       <div class="col-md-3">
                         <label

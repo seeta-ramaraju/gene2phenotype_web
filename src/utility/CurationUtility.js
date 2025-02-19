@@ -542,3 +542,23 @@ export const prepareInputForUpdating = (previousInput) => {
     private_comment: clonedpreviousInput.private_comment,
   };
 };
+
+export const getFamiliesInputErrorMsg = (families, affectedIndividuals) => {
+  if (affectedIndividuals && families > affectedIndividuals) {
+    return "No. of families can not be greater than affected individuals";
+  }
+  if (!families && affectedIndividuals) {
+    return "No. of families can not be empty or zero";
+  }
+  return null;
+};
+
+export const getAffectedIndividualsInputErrorMsg = (
+  families,
+  affectedIndividuals
+) => {
+  if (families && !affectedIndividuals) {
+    return "Affected individuals can not be empty or zero";
+  }
+  return null;
+};
