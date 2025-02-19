@@ -23,6 +23,14 @@
             </li>
             <li class="nav-item mb-2">
               <router-link
+                to="/reference-data"
+                class="nav-link p-0 text-body-secondary"
+              >
+                Reference data
+              </router-link>
+            </li>
+            <li class="nav-item mb-2">
+              <router-link
                 to="/publications"
                 class="nav-link p-0 text-body-secondary"
               >

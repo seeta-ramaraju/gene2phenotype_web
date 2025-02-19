@@ -25,6 +25,7 @@ import { useAuthStore } from "../store/auth.js";
 import ChangePasswordView from "../views/ChangePasswordView.vue";
 import ResetPasswordView from "../views/ResetPasswordView.vue";
 import VerifyEmailView from "../views/VerifyEmailView.vue";
+import ReferenceDataView from "../views/ReferenceDataView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -156,6 +157,11 @@ const router = createRouter({
       path: "/contact",
       name: "contact",
       component: ContactPageView,
+    },
+    {
+      path: "/reference-data",
+      name: "reference-data",
+      component: ReferenceDataView,
     },
     // 404 page route, should always be at end of routes list
     {

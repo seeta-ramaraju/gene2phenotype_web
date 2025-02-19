@@ -134,6 +134,11 @@ export default {
                 Downloads
               </router-link>
             </li>
+            <li>
+              <router-link to="/reference-data" class="dropdown-item">
+                Reference data
+              </router-link>
+            </li>
           </ul>
         </li>
         <li class="nav-item dropdown" v-if="panelData?.results?.length > 0">
