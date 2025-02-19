@@ -206,6 +206,14 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.phenotypes = phenotypesArray;
 
+  // if molecular_mechanism.name is 'undetermined' and molecular_mechanism.support is blank then set molecular_mechanism.support to 'inferred'
+  if (
+    preparedInput.molecular_mechanism.name === "undetermined" &&
+    preparedInput.molecular_mechanism.support === ""
+  ) {
+    preparedInput.molecular_mechanism.support = "inferred";
+  }
+
   if (preparedInput.molecular_mechanism.support !== "evidence") {
     // if molecular_mechanism.support is not evidence then set mechanism_evidence as []
     preparedInput.mechanism_evidence = [];
@@ -447,6 +455,14 @@ export const prepareInputForUpdating = (previousInput) => {
     name: clonedpreviousInput.molecular_mechanism.name,
     support: clonedpreviousInput.molecular_mechanism.support,
   };
+
+  // if MechanismNameObj.name is 'undetermined' and MechanismNameObj.support is 'inferred' then set MechanismNameObj.support to blank
+  if (
+    MechanismNameObj.name === "undetermined" &&
+    MechanismNameObj.support === "inferred"
+  ) {
+    MechanismNameObj.support = "";
+  }
 
   let MechanismSynopsisObj = {
     name: clonedpreviousInput.mechanism_synopsis.name,
