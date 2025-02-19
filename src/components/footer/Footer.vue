@@ -10,7 +10,7 @@
                 to="/about/project"
                 class="nav-link p-0 text-body-secondary"
               >
-                Documentation
+                The G2P project
               </router-link>
             </li>
             <li class="nav-item mb-2">
@@ -19,6 +19,14 @@
                 class="nav-link p-0 text-body-secondary"
               >
                 Terminology
+              </router-link>
+            </li>
+            <li class="nav-item mb-2">
+              <router-link
+                to="/variant-filtering"
+                class="nav-link p-0 text-body-secondary"
+              >
+                Variant filtering
               </router-link>
             </li>
             <li class="nav-item mb-2">

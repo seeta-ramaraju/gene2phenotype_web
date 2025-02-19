@@ -78,7 +78,7 @@ export default {
     <h2 class="pb-3">Reference data</h2>
     <p>
       G2P evidence-based gene-disease models are curated from the literature by
-      experts. The diseases names assign in G2P records use the dyadic format
+      experts. The diseases names assigned in G2P records use the dyadic format
       and are based on existing OMIM or MONDO names for the same/related
       conditions where possible.
     </p>
