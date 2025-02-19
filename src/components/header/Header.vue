@@ -310,8 +310,8 @@ export default {
               </router-link>
             </li>
             <li>
-              <router-link to="/g2p-reference-data" class="dropdown-item">
-                G2P reference data
+              <router-link to="/reference-data" class="dropdown-item">
+                Reference data
               </router-link>
             </li>
           </ul>

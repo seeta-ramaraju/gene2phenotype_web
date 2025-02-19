@@ -159,8 +159,8 @@ const router = createRouter({
       component: ContactPageView,
     },
     {
-      path: "/g2p-reference-data",
-      name: "g2p-reference-data",
+      path: "/reference-data",
+      name: "reference-data",
       component: ReferenceDataView,
     },
     // 404 page route, should always be at end of routes list
