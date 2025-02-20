@@ -131,10 +131,10 @@ export default {
     existingGeneDataSearchHandler() {
       if (this.input.locus !== "") {
         this.isInputLocusValid = true;
-        if (this.geneData) {
-          // if fetching data for another gene and data of current gene exists then reset data variables of current gene
-          this.resetData();
-        }
+
+        // Reset data variables of current gene before fetching data for another gene
+        this.resetData();
+
         // Display ExistingGeneInformation component
         this.isDisplayGeneExistingData = true;
         // Notify ExistingGeneInformation component to fetch existing data for gene
@@ -149,7 +149,7 @@ export default {
       this.input = { ...cloneDeep(resetInput), locus: this.input.locus };
 
       // these variables wont be part of reset logic in this function:
-      // stableId, isDisplayGeneExistingData, notifyExistingGeneInformation
+      // isInputLocusValid, stableId, isDisplayGeneExistingData, notifyExistingGeneInformation
 
       // other data variables have to be reset
       this.hpoTermsInputHelper = {};
@@ -199,7 +199,7 @@ export default {
         .catch((error) => {
           this.geneErrorMsg = fetchAndLogGeneralErrorMsg(
             error,
-            "Unable to fetch gene data. Please try again later."
+            "Unable to fetch gene data. Please check the gene name is correct and contact us at g2p-help@ebi.ac.uk if the problem continues."
           );
         })
         .finally(() => {
