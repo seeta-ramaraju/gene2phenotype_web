@@ -40,6 +40,72 @@ export default {
       helpText: { ...HELP_TEXT },
     };
   },
+  computed: {
+    molecularMechanismErrorMsg() {
+      // Any of following conditions will return an error message:
+      // 1. molecularMechanism is empty and molecularMechanismSupport is defined
+      // 2. molecularMechanism is empty and mechanismSynopsis is defined
+
+      if (
+        !this.molecularMechanism &&
+        (this.molecularMechanismSupport || this.mechanismSynopsis)
+      ) {
+        return "Select Mechanism";
+      }
+      return null;
+    },
+    molecularMechanismSupportErrorMsg() {
+      // Any of following conditions will return an error message:
+      // 1. molecularMechanismSupport is set to 'inferred' or 'evidence' and molecularMechanism is set to 'undetermined'
+      // 2. molecularMechanismSupport is empty and molecularMechanism is set to any value except 'undetermined'
+      // 3. molecularMechanismSupport is empty and mechanismSynopsisSupport is set to 'inferred' or 'evidence'
+
+      if (
+        (this.molecularMechanismSupport === "inferred" ||
+          this.molecularMechanismSupport === "evidence") &&
+        this.molecularMechanism === "undetermined"
+      ) {
+        return `Mechanism source can not be set to '${this.molecularMechanismSupport}' for 'undetermined' Mechanism`;
+      } else if (
+        !this.molecularMechanismSupport &&
+        this.molecularMechanism &&
+        this.molecularMechanism !== "undetermined"
+      ) {
+        return "Select source";
+      } else if (
+        !this.molecularMechanismSupport &&
+        (this.mechanismSynopsisSupport === "inferred" ||
+          this.mechanismSynopsisSupport === "evidence")
+      ) {
+        return "Select source";
+      }
+      return null;
+    },
+    mechanismSynopsisErrorMsg() {
+      // Following condition will return an error message:
+      // 1. mechanismSynopsis is empty and mechanismSynopsisSupport is defined
+
+      if (!this.mechanismSynopsis && this.mechanismSynopsisSupport) {
+        return "Select Categorisation";
+      }
+      return null;
+    },
+    mechanismSynopsisSupportErrorMsg() {
+      // Any of following conditions will return an error message:
+      // 1. mechanismSynopsisSupport is empty and mechanismSynopsis is defined
+      // 2. mechanismSynopsisSupport is set to 'evidence' and molecularMechanismSupport is set to 'inferred'
+
+      if (!this.mechanismSynopsisSupport && this.mechanismSynopsis) {
+        return "Select source";
+      } else if (
+        this.mechanismSynopsisSupport === "evidence" &&
+        this.molecularMechanismSupport === "inferred"
+      ) {
+        return "Categorisation source can not be set to 'evidence' if Mechanism source is 'inferred'";
+      }
+      return null;
+    },
+  },
 };
 </script>
 <template>
@@ -172,22 +238,37 @@ export default {
               <div class="col-xl-3 col-lg-3 col-6">
                 <select
                   id="mechanism-input"
-                  class="form-select"
+                  :class="
+                    molecularMechanismErrorMsg
+                      ? 'form-select is-invalid'
+                      : 'form-select'
+                  "
                   :value="molecularMechanism"
                   @input="
                     $emit('update:molecularMechanism', $event.target.value)
                   "
+                  aria-describedby="invalid-mechanism-input-feedback"
                 >
                   <option value="">Select</option>
                   <option v-for="item in mechanismAttribs" :value="item">
                     {{ item }}
                   </option>
                 </select>
+                <div
+                  id="invalid-mechanism-input-feedback"
+                  class="invalid-feedback"
+                >
+                  {{ molecularMechanismErrorMsg }}
+                </div>
               </div>
               <div class="col-xl-3 col-lg-3 col-6">
                 <select
                   id="mechanism-input-source"
-                  class="form-select"
+                  :class="
+                    molecularMechanismSupportErrorMsg
+                      ? 'form-select is-invalid'
+                      : 'form-select'
+                  "
                   :value="molecularMechanismSupport"
                   @input="
                     $emit(
@@ -195,12 +276,19 @@ export default {
                       $event.target.value
                     )
                   "
+                  aria-describedby="invalid-mechanism-input-source-feedback"
                 >
                   <option value="">Select Source</option>
                   <option v-for="item in mechanismSupportAttribs" :value="item">
                     {{ item }}
                   </option>
                 </select>
+                <div
+                  id="invalid-mechanism-input-source-feedback"
+                  class="invalid-feedback"
+                >
+                  {{ molecularMechanismSupportErrorMsg }}
+                </div>
               </div>
             </div>
             <div class="row g-3 px-3 py-3">
@@ -212,11 +300,16 @@ export default {
               <div class="col-xl-3 col-lg-3 col-6">
                 <select
                   id="categorisation-input"
-                  class="form-select"
+                  :class="
+                    mechanismSynopsisErrorMsg
+                      ? 'form-select is-invalid'
+                      : 'form-select'
+                  "
                   :value="mechanismSynopsis"
                   @input="
                     $emit('update:mechanismSynopsis', $event.target.value)
                   "
+                  aria-describedby="invalid-categorisation-input-feedback"
                 >
                   <option value="">Select</option>
                   <option
@@ -226,11 +319,21 @@ export default {
                     {{ item }}
                   </option>
                 </select>
+                <div
+                  id="invalid-categorisation-input-feedback"
+                  class="invalid-feedback"
+                >
+                  {{ mechanismSynopsisErrorMsg }}
+                </div>
               </div>
               <div class="col-xl-3 col-lg-3 col-6">
                 <select
                   id="categorisation-input-source"
-                  class="form-select"
+                  :class="
+                    mechanismSynopsisSupportErrorMsg
+                      ? 'form-select is-invalid'
+                      : 'form-select'
+                  "
                   :value="mechanismSynopsisSupport"
                   @input="
                     $emit(
@@ -238,12 +341,19 @@ export default {
                       $event.target.value
                     )
                   "
+                  aria-describedby="invalid-categorisation-input-source-feedback"
                 >
                   <option value="">Select Source</option>
                   <option v-for="item in mechanismSupportAttribs" :value="item">
                     {{ item }}
                   </option>
                 </select>
+                <div
+                  id="invalid-categorisation-input-source-feedback"
+                  class="invalid-feedback"
+                >
+                  {{ mechanismSynopsisSupportErrorMsg }}
+                </div>
               </div>
             </div>
             <MechanismEvidence

@@ -206,6 +206,14 @@ export const prepareInputForDataSubmission = (input) => {
   }
   preparedInput.phenotypes = phenotypesArray;
 
+  // if molecular_mechanism.name is 'undetermined' and molecular_mechanism.support is blank then set molecular_mechanism.support to 'inferred'
+  if (
+    preparedInput.molecular_mechanism.name === "undetermined" &&
+    preparedInput.molecular_mechanism.support === ""
+  ) {
+    preparedInput.molecular_mechanism.support = "inferred";
+  }
+
   if (preparedInput.molecular_mechanism.support !== "evidence") {
     // if molecular_mechanism.support is not evidence then set mechanism_evidence as []
     preparedInput.mechanism_evidence = [];
@@ -448,6 +456,14 @@ export const prepareInputForUpdating = (previousInput) => {
     support: clonedpreviousInput.molecular_mechanism.support,
   };
 
+  // if MechanismNameObj.name is 'undetermined' and MechanismNameObj.support is 'inferred' then set MechanismNameObj.support to blank
+  if (
+    MechanismNameObj.name === "undetermined" &&
+    MechanismNameObj.support === "inferred"
+  ) {
+    MechanismNameObj.support = "";
+  }
+
   let MechanismSynopsisObj = {
     name: clonedpreviousInput.mechanism_synopsis.name,
     support: clonedpreviousInput.mechanism_synopsis.support,
@@ -525,4 +541,24 @@ export const prepareInputForUpdating = (previousInput) => {
     public_comment: clonedpreviousInput.public_comment,
     private_comment: clonedpreviousInput.private_comment,
   };
+};
+
+export const getFamiliesInputErrorMsg = (families, affectedIndividuals) => {
+  if (affectedIndividuals && families > affectedIndividuals) {
+    return "No. of families can not be greater than affected individuals";
+  }
+  if (!families && affectedIndividuals) {
+    return "No. of families can not be empty or zero";
+  }
+  return null;
+};
+
+export const getAffectedIndividualsInputErrorMsg = (
+  families,
+  affectedIndividuals
+) => {
+  if (families && !affectedIndividuals) {
+    return "Affected individuals can not be empty or zero";
+  }
+  return null;
 };
