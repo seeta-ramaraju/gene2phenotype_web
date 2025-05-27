@@ -45,9 +45,8 @@ export default {
     },
     isDisplayEvidenceForm() {
       return (
-        this.mechanismEvidence &&
-        Object.keys(this.mechanismEvidence).length > 0 &&
-        this.molecularMechanismSupport === "evidence"
+        this.mechanismEvidence && Object.keys(this.mechanismEvidence).length > 0
+        // && this.molecularMechanismSupport === "evidence"
       );
     },
   },
