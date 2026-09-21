@@ -23,6 +23,13 @@ export default {
   computed: {
     ...mapState(useAuthStore, ["isAuthenticated", "userName", "isSuperUser"]),
   },
+  watch: {
+    "$route.fullPath"() {
+      this.$nextTick(() => {
+        this.closeMobileNavigation();
+      });
+    },
+  },
   created() {
     // watch the params of the route to fetch the data again
     this.$watch(
@@ -39,6 +46,18 @@ export default {
     MaintenanceAlert,
   },
   methods: {
+    closeMobileNavigation() {
+      // Close the expanded mobile navbar after navigation so it is not left open on the new page
+      const navigation = this.$refs.navigation;
+
+      if (!navigation?.classList.contains("show")) {
+        return;
+      }
+
+      window.bootstrap?.Collapse?.getOrCreateInstance(navigation, {
+        toggle: false,
+      })?.hide();
+    },
     fetchPanelData() {
       this.searchInput = "";
       this.selectedSearchType = SEARCH_FILTER.SEARCH_TYPE.ALL_TYPES;
@@ -108,12 +127,11 @@ export default {
 <template>
   <header class="py-2 top-header">
     <div
-      class="container d-grid gap-3 align-items-center"
-      style="grid-template-columns: 2fr 3fr"
+      class="container d-flex flex-column flex-md-row gap-3 align-items-stretch align-items-md-center"
     >
       <router-link
         to="/"
-        class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-decoration-none"
+        class="d-flex align-items-center mb-0 flex-shrink-0 text-decoration-none"
       >
         <img
           src="../../assets/G2P-logo.png"
@@ -125,7 +143,10 @@ export default {
           Gene2Phenotype
         </span>
       </router-link>
-      <div class="d-flex align-items-center" v-if="!isMaintenance">
+      <div
+        v-if="!isMaintenance"
+        class="d-flex align-items-center header-search"
+      >
         <div class="input-group w-100">
           <input
             type="text"
@@ -141,8 +162,10 @@ export default {
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
+            aria-label="Filter search results"
           >
-            Filter
+            <span class="d-none d-md-inline">Filter</span>
+            <i class="bi bi-funnel d-md-none" aria-hidden="true"></i>
           </button>
           <div class="dropdown-menu dropdown-menu-end p-3">
             <p class="fw-bold mb-1">Filter by type</p>
@@ -239,7 +262,11 @@ export default {
                   All
                 </label>
               </div>
-              <div class="form-check" v-for="item in panelData.results">
+              <div
+                v-for="item in panelData.results"
+                :key="item.name"
+                class="form-check"
+              >
                 <input
                   class="form-check-input"
                   type="radio"
@@ -260,194 +287,214 @@ export default {
             type="button"
             class="btn text-white search-btn"
             @click="searchClickHandler"
+            aria-label="Search"
           >
-            <i class="bi bi-search"></i>
+            <i class="bi bi-search" aria-hidden="true"></i>
           </button>
         </div>
       </div>
     </div>
   </header>
-  <nav class="py-2 border-bottom text-white bottom-header">
-    <div class="container d-flex flex-wrap">
-      <ul class="nav me-auto nav-underline">
-        <li class="nav-item">
-          <router-link
-            to="/"
-            class="nav-link px-1 fw-bold text-white text-decoration-none"
-          >
-            Home
-          </router-link>
-        </li>
-        <li class="nav-item dropdown">
-          <span
-            class="nav-link dropdown-toggle px-1 text-white fw-bold"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            About
-          </span>
-          <ul class="dropdown-menu">
-            <li>
-              <router-link to="/about/project" class="dropdown-item">
-                The G2P project
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/about/terminology" class="dropdown-item"
-                >Terminology</router-link
-              >
-            </li>
-            <li>
-              <router-link to="/variant-filtering" class="dropdown-item">
-                Variant filtering
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/publications" class="dropdown-item">
-                Publications
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/curators" class="dropdown-item">
-                Curators
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/contributing" class="dropdown-item">
-                Contributing
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/download" class="dropdown-item">
-                Downloads
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/g2p-api-info" class="dropdown-item">
-                G2P API
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/reference-data" class="dropdown-item">
-                Reference data
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/use-of-ai-in-g2p" class="dropdown-item">
-                Use of AI in G2P
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/using-this-site" class="dropdown-item">
-                Using this site
-              </router-link>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown" v-if="panelData?.results?.length > 0">
-          <a
-            class="nav-link dropdown-toggle px-1 text-white fw-bold"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Browse panels
-          </a>
-          <ul class="dropdown-menu">
-            <li v-for="item in panelData.results">
-              <router-link
-                :to="`/panel/${item.name}`"
-                v-if="item.name"
-                class="dropdown-item"
-              >
-                {{ item.description }} panel
-              </router-link>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" v-else>
-          <router-link to="/" class="nav-link px-1 text-white fw-bold">
-            Browse panels
-          </router-link>
-        </li>
-        <li class="nav-item dropdown" v-if="isAuthenticated">
-          <a
-            class="nav-link dropdown-toggle px-1 text-white fw-bold"
-            href="#"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Curate
-          </a>
-          <ul class="dropdown-menu">
-            <li>
-              <router-link to="/lgd/add" class="dropdown-item">
-                Add new G2P record
-              </router-link>
-            </li>
-            <li>
-              <router-link to="/draft-records" class="dropdown-item">
-                Draft records
-              </router-link>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item" v-if="isAuthenticated && isSuperUser">
-          <router-link
-            to="/records-review"
-            class="nav-link px-1 text-white fw-bold"
-          >
-            Review records
-          </router-link>
-        </li>
-      </ul>
-      <ul class="nav nav-underline">
-        <li class="nav-item" v-if="isAuthenticated && !!userName">
-          <span class="nav-link text-white fw-bold">
-            <i class="bi bi-person-fill"></i>
+  <nav
+    class="navbar navbar-expand-md navbar-dark py-2 border-bottom text-white bottom-header"
+  >
+    <div class="container">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#header-navigation"
+        aria-controls="header-navigation"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        ref="navigation"
+        class="collapse navbar-collapse order-3 order-md-1"
+        id="header-navigation"
+      >
+        <ul class="navbar-nav me-auto nav-underline gap-0 gap-md-3">
+          <li class="nav-item">
             <router-link
-              to="/profile"
-              class="text-white"
-              style="text-decoration: none"
+              to="/"
+              class="nav-link px-1 fw-bold text-white text-decoration-none"
             >
-              {{ userName }}
+              Home
             </router-link>
-          </span>
-        </li>
-        <li class="nav-item" v-if="isAuthenticated">
-          <button
-            class="nav-link text-white fw-bold"
-            disabled="true"
-            v-if="isLogoutInProgress"
-          >
-            Logging Out
+          </li>
+          <li class="nav-item dropdown">
             <span
-              class="spinner-border spinner-border-sm"
-              role="status"
-              aria-hidden="true"
-            ></span>
-          </button>
-          <button
-            class="nav-link text-white fw-bold"
-            @click="logoutBtnClickHandler"
-            v-else
-          >
-            Log Out
-          </button>
-        </li>
-        <li class="nav-item" v-else>
-          <button
-            class="nav-link text-white fw-bold"
-            @click="loginBtnClickHandler"
-          >
-            Log In
-          </button>
-        </li>
-      </ul>
+              class="nav-link dropdown-toggle px-1 text-white fw-bold"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              About
+            </span>
+            <ul class="dropdown-menu">
+              <li>
+                <router-link to="/about/project" class="dropdown-item">
+                  The G2P project
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/about/terminology" class="dropdown-item"
+                  >Terminology</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/variant-filtering" class="dropdown-item">
+                  Variant filtering
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/publications" class="dropdown-item">
+                  Publications
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/curators" class="dropdown-item">
+                  Curators
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/contributing" class="dropdown-item">
+                  Contributing
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/download" class="dropdown-item">
+                  Downloads
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/g2p-api-info" class="dropdown-item">
+                  G2P API
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/reference-data" class="dropdown-item">
+                  Reference data
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/use-of-ai-in-g2p" class="dropdown-item">
+                  Use of AI in G2P
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/using-this-site" class="dropdown-item">
+                  Using this site
+                </router-link>
+              </li>
+            </ul>
+          </li>
+          <li v-if="panelData?.results?.length > 0" class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle px-1 text-white fw-bold"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Browse panels
+            </a>
+            <ul class="dropdown-menu">
+              <li v-for="item in panelData.results" :key="item.name">
+                <router-link
+                  v-if="item.name"
+                  :to="`/panel/${item.name}`"
+                  class="dropdown-item"
+                >
+                  {{ item.description }} panel
+                </router-link>
+              </li>
+            </ul>
+          </li>
+          <li v-else class="nav-item">
+            <router-link to="/" class="nav-link px-1 text-white fw-bold">
+              Browse panels
+            </router-link>
+          </li>
+          <li v-if="isAuthenticated" class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle px-1 text-white fw-bold"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Curate
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <router-link to="/lgd/add" class="dropdown-item">
+                  Add new G2P record
+                </router-link>
+              </li>
+              <li>
+                <router-link to="/draft-records" class="dropdown-item">
+                  Draft records
+                </router-link>
+              </li>
+            </ul>
+          </li>
+          <li v-if="isAuthenticated && isSuperUser" class="nav-item">
+            <router-link
+              to="/records-review"
+              class="nav-link px-1 text-white fw-bold"
+            >
+              Review records
+            </router-link>
+          </li>
+        </ul>
+        <ul class="navbar-nav nav-underline gap-0 gap-md-3">
+          <li v-if="isAuthenticated && !!userName" class="nav-item">
+            <span class="nav-link px-1 text-white fw-bold">
+              <i class="bi bi-person-fill"></i>
+              <router-link
+                to="/profile"
+                class="text-white"
+                style="text-decoration: none"
+              >
+                {{ userName }}
+              </router-link>
+            </span>
+          </li>
+          <li v-if="isAuthenticated" class="nav-item">
+            <button
+              v-if="isLogoutInProgress"
+              disabled="true"
+              class="nav-link px-1 text-white fw-bold"
+            >
+              Logging Out
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+            </button>
+            <button
+              v-else
+              @click="logoutBtnClickHandler"
+              class="nav-link px-1 text-white fw-bold"
+            >
+              Log Out
+            </button>
+          </li>
+          <li v-else class="nav-item">
+            <button
+              @click="loginBtnClickHandler"
+              class="nav-link px-1 text-white fw-bold"
+            >
+              Log In
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
   <MaintenanceAlert v-if="isMaintenance" />
@@ -456,9 +503,21 @@ export default {
 .top-header {
   background-color: #286ece;
 }
+.header-search {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .header-search {
+    width: 60%;
+    margin-left: auto;
+  }
+}
 .filter-btn {
   background-color: #4d89dc;
   border-right: solid;
+}
+.filter-btn .bi-funnel {
+  -webkit-text-stroke: 1px;
 }
 .search-btn {
   background-color: #4d89dc;
