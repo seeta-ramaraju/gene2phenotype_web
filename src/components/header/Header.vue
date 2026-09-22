@@ -131,7 +131,8 @@ export default {
     >
       <router-link
         to="/"
-        class="d-flex align-items-center mb-0 flex-shrink-0 text-decoration-none"
+        aria-label="Gene2Phenotype home"
+        class="brand-home-link d-flex align-items-center mb-0 flex-shrink-0 text-decoration-none"
       >
         <img
           src="../../assets/G2P-logo.png"
@@ -502,6 +503,9 @@ export default {
 <style scoped>
 .top-header {
   background-color: #286ece;
+}
+.brand-home-link {
+  width: fit-content;
 }
 .header-search {
   width: 100%;

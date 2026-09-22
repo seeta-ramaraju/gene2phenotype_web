@@ -103,7 +103,8 @@ export default {
     <div class="container d-grid align-items-center">
       <router-link
         to="/"
-        class="d-flex align-items-center mb-0 me-lg-auto text-decoration-none"
+        aria-label="Gene2Phenotype home"
+        class="brand-home-link d-flex align-items-center mb-0 me-lg-auto text-decoration-none"
       >
         <img
           src="../../assets/G2P-logo.png"
@@ -316,6 +317,9 @@ export default {
 <style scoped>
 .top-header {
   background-color: #286ece;
+}
+.brand-home-link {
+  width: fit-content;
 }
 .bottom-header {
   background-color: #4d89dc;
