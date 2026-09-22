@@ -1,6 +1,6 @@
 <script>
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
-import { UPDATE_COMMENT_URL } from "../../utility/UrlConstants.js";
+import { DELETE_COMMENT_URL } from "../../utility/UrlConstants.js";
 import api from "../../services/api.js";
 import DeleteCommentModal from "../modal/DeleteCommentModal.vue";
 
@@ -30,20 +30,19 @@ export default {
       this.deleteApiCallErrorMsg = this.deleteApiCallSuccessMsg = null;
       this.isDeleteApiCallSuccess = false;
       this.isDeleteApiCallLoading = true;
-      const requestBody = {
-        comment_id: this.commentIdToDelete,
-      };
       api
         .patch(
-          UPDATE_COMMENT_URL.replace(":stableid", this.stableId),
-          requestBody
+          DELETE_COMMENT_URL.replace(":stableid", this.stableId).replace(
+            ":commentid",
+            this.commentIdToDelete,
+          ),
         )
         .then((response) => {
           this.isDeleteApiCallSuccess = true;
           this.deleteApiCallSuccessMsg = response.data.message;
           // Remove the deleted delete from comments list
           this.comments = this.comments.filter(
-            (item) => item.id !== this.commentIdToDelete
+            (item) => item.id !== this.commentIdToDelete,
           );
           // Clear commentIdToDelete
           this.clearCommentIdToDelete();
@@ -53,7 +52,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to delete comment. Please try again later.",
-            "Unable to delete comment."
+            "Unable to delete comment.",
           );
         })
         .finally(() => {
@@ -125,8 +124,8 @@ export default {
                         item.is_public === 1
                           ? "Public"
                           : item.is_public === 0
-                          ? "Private"
-                          : ""
+                            ? "Private"
+                            : ""
                       }}
                     </td>
                     <td>{{ item.user }}</td>
