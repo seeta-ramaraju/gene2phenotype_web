@@ -2,7 +2,7 @@
 import api from "../services/api.js";
 import { LOGIN_URL } from "../utility/UrlConstants.js";
 import { useAuthStore } from "../store/auth.js";
-import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
+import { fetchAndLogApiResponseErrorListMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -24,15 +24,17 @@ export default {
         password: this.password,
       };
       api
-        .post(LOGIN_URL, requestBody)
+        .post(LOGIN_URL, requestBody, { _skipAuthRefresh: true })
         .then((response) => {
           const authStore = useAuthStore();
           authStore.login(response.data);
           this.$router.replace(redirectRoute);
         })
         .catch((error) => {
-          this.errorMsg = fetchAndLogGeneralErrorMsg(
+          const apiError = error.response?.data?.error;
+          this.errorMsg = fetchAndLogApiResponseErrorListMsg(
             error,
+            Array.isArray(apiError) ? apiError : [apiError],
             "Unable to login. Please check your credentials or try again later."
           );
         })
