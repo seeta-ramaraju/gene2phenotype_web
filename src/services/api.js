@@ -33,7 +33,11 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     // Check if error is due to an expired access token
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest._skipAuthRefresh
+    ) {
       originalRequest._retry = true; // Mark the request to avoid infinite loops
 
       // If token refresh is in progress, queue current request

@@ -1,7 +1,7 @@
 <script>
 import api from "../services/api.js";
 import { RESET_PASSWORD_URL } from "../utility/UrlConstants.js";
-import { fetchAndLogGeneralErrorMsg } from "../utility/ErrorUtility.js";
+import { fetchAndLogApiResponseErrorListMsg } from "../utility/ErrorUtility.js";
 
 export default {
   data() {
@@ -35,8 +35,10 @@ export default {
           this.isResetSuccess = true;
         })
         .catch((error) => {
-          this.errorMsg = fetchAndLogGeneralErrorMsg(
+          const apiError = error.response?.data?.error;
+          this.errorMsg = fetchAndLogApiResponseErrorListMsg(
             error,
+            Array.isArray(apiError) ? apiError : [apiError],
             "Unable to reset password. Please check your credentials or try again later."
           );
         })
@@ -97,7 +99,7 @@ export default {
           <label for="input-new-password-repeat">Repeat New Password</label>
           <div class="mb-2">
             <span id="passwordHelpInline" class="form-text">
-              Must be atleast 6 characters long.
+              Must be at least 8 characters long.
             </span>
           </div>
           <input type="checkbox" @click="togglePasswordVisibility" />
