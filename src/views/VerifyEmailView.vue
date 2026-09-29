@@ -9,26 +9,30 @@ export default {
       errorMsg: null,
       isDataLoading: false,
       email: "",
-      isVerificationSuccess: false,
+      isVerifySuccess: false,
+      verifySuccessMsg: null,
     };
   },
   methods: {
     verifyEmail() {
-      this.errorMsg = null;
+      this.errorMsg = this.verifySuccessMsg = null;
       this.isDataLoading = true;
-      this.isVerificationSuccess = false;
+      this.isVerifySuccess = false;
       const requestBody = {
         email: this.email,
       };
       api
         .post(VERIFY_EMAIL_URL, requestBody)
-        .then(() => {
-          this.isVerificationSuccess = true;
+        .then((response) => {
+          this.isVerifySuccess = true;
+          this.verifySuccessMsg =
+            response?.data?.message ||
+            "If an account exists for this email, a reset link has been sent.";
         })
         .catch((error) => {
           this.errorMsg = fetchAndLogGeneralErrorMsg(
             error,
-            "Unable to verify email. Please try again later."
+            "Unable to verify email. Please try again later.",
           );
         })
         .finally(() => {
@@ -52,11 +56,11 @@ export default {
     <div
       class="alert alert-success mt-3"
       role="alert"
-      v-else-if="isVerificationSuccess"
+      v-else-if="isVerifySuccess"
     >
       <div>
         <i class="bi bi-check-circle-fill"></i>
-        Instructions to reset your password has been sent to your email.
+        {{ verifySuccessMsg }}
       </div>
     </div>
     <div class="form-signin w-100 m-auto" v-else>
