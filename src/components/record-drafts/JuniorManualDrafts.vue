@@ -1,14 +1,12 @@
 <script>
+import { formatFullName } from "../../utility/CommonUtility.js";
+
 export default {
   props: {
     juniorManualDrafts: Array,
   },
   methods: {
-    getCuratorName(item) {
-      return [item.curator_first_name, item.curator_last_name]
-        .filter(Boolean)
-        .join(" ");
-    },
+    formatFullName,
   },
 };
 </script>
@@ -44,9 +42,9 @@ export default {
             </span>
           </td>
           <td>
-            <span v-if="getCuratorName(item)">
-              {{ getCuratorName(item) }}
-            </span>
+            {{
+              formatFullName(item.curator_first_name, item.curator_last_name)
+            }}
           </td>
           <td>{{ item.last_update }}</td>
           <td class="text-nowrap">

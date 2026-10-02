@@ -5,6 +5,7 @@ import { CLAIM_DRAFT_URL, SEARCH_URL } from "../../utility/UrlConstants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
 import { useAuthStore } from "../../store/auth.js";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
+import { formatFullName } from "../../utility/CommonUtility.js";
 
 export default {
   props: {
@@ -194,11 +195,7 @@ export default {
     isUnclaimedAutomaticDraft(status, email) {
       return status === "automatic" && email === "g2p-admin@ebi.ac.uk";
     },
-    getCuratorName(item) {
-      return [item.curator_first, item.curator_last_name]
-        .filter(Boolean)
-        .join(" ");
-    },
+    formatFullName,
   },
 };
 </script>
@@ -449,10 +446,15 @@ export default {
                         !isUnclaimedAutomaticDraft(
                           item.status,
                           item.curator_email,
-                        ) && getCuratorName(item)
+                        )
                       "
                     >
-                      {{ getCuratorName(item) }}
+                      {{
+                        formatFullName(
+                          item.curator_first,
+                          item.curator_last_name,
+                        )
+                      }}
                     </template>
                   </td>
                   <td class="text-nowrap">
