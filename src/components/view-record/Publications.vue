@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     filteredAndSortedCuratedPublications() {
-      const searchFields = ["pmid", "title", "year"];
+      const searchFields = ["pmid", "year", "title"];
       const queryText = this.searchQuery.trim().toLowerCase();
       // Filter curated publications by matching the query text against the search fields (case insensitive text matching)
       let filteredList = this.publications.filter((item) => {
