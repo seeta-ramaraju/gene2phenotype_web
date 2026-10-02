@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     filteredAndSortedCuratedPublications() {
-      const searchFields = ["pmid", "title"];
+      const searchFields = ["pmid", "year", "title"];
       const queryText = this.searchQuery.trim().toLowerCase();
       // Filter curated publications by matching the query text against the search fields (case insensitive text matching)
       let filteredList = this.publications.filter((item) => {
@@ -173,6 +173,16 @@ export default {
                     </th>
                     <th>
                       <button
+                        @click="toggleSort('year')"
+                        aria-label="Sort by year"
+                        class="btn btn-link p-0 text-decoration-none fw-bold"
+                      >
+                        <span class="text-black me-1">Year</span>
+                        <i :class="getSortIcon('year')"></i>
+                      </button>
+                    </th>
+                    <th>
+                      <button
                         @click="toggleSort('title')"
                         aria-label="Sort by title"
                         class="btn btn-link p-0 text-decoration-none fw-bold"
@@ -188,7 +198,7 @@ export default {
                 <tbody>
                   <tr v-if="filteredAndSortedCuratedPublications.length === 0">
                     <td
-                      :colspan="isAuthenticated ? 5 : 4"
+                      :colspan="isAuthenticated ? 6 : 5"
                       class="text-center text-muted"
                     >
                       No publications found.
@@ -216,6 +226,9 @@ export default {
                       >
                         {{ item.publication.pmid }}
                       </a>
+                    </td>
+                    <td>
+                      {{ item.publication?.year }}
                     </td>
                     <td>
                       {{ item.publication?.title }}

@@ -82,7 +82,7 @@ const getMechanismEvidenceTypes = (obj) => {
         secondaryEvidenceTypeArray?.length > 0
           ? secondaryEvidenceTypeArray.join(", ")
           : null
-      }`
+      }`,
     );
   }
   return mechanismEvidenceTypes;
@@ -97,7 +97,7 @@ const prepareVariantTypesObj = (locusGeneDiseaseData, isAuthenticated) => {
       variantTypesTableHeaders.push("Comments");
     }
     const variantTypesTableHeaderRow = createTableHeaderRow(
-      variantTypesTableHeaders
+      variantTypesTableHeaders,
     );
     // Prepare table body rows
     let variantTypesTableBodyRows = [];
@@ -127,10 +127,10 @@ const prepareVariantTypesObj = (locusGeneDiseaseData, isAuthenticated) => {
           item.comments?.length > 0
             ? {
                 ul: item.comments.map(
-                  (commentItem) => `${commentItem.text} (${commentItem.date})`
+                  (commentItem) => `${commentItem.text} (${commentItem.date})`,
                 ),
               }
-            : ""
+            : "",
         );
       }
       variantTypesTableBodyRows.push(tableBodyRow);
@@ -153,7 +153,7 @@ const prepareVariantDescriptionObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const variantDescriptionHeaders = ["Variant Description", "Publications"];
     const variantDescriptionTableHeaderRow = createTableHeaderRow(
-      variantDescriptionHeaders
+      variantDescriptionHeaders,
     );
     // Prepare table body rows
     const variantDescriptionTableBodyRows =
@@ -182,7 +182,7 @@ const prepareVariantConsequencesObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const variantConsequencesHeaders = ["Variant Consequence", "Support"];
     const variantConsequencesTableHeaderRow = createTableHeaderRow(
-      variantConsequencesHeaders
+      variantConsequencesHeaders,
     );
     // Prepare table body rows
     const variantConsequencesTableBodyRows =
@@ -190,7 +190,7 @@ const prepareVariantConsequencesObj = (locusGeneDiseaseData) => {
         item.accession
           ? createLinkObj(
               item.variant_consequence,
-              SEQUENCE_ONTOLOGY_URL + item.accession
+              SEQUENCE_ONTOLOGY_URL + item.accession,
             )
           : item.variant_consequence,
         item.variant_consequence !== "uncertain" ? item.support : "",
@@ -212,7 +212,7 @@ const prepareMechanismCategorisationObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const mechanismCategorisationHeaders = ["Categorisation", "Support"];
     const mechanismCategorisationTableHeaderRow = createTableHeaderRow(
-      mechanismCategorisationHeaders
+      mechanismCategorisationHeaders,
     );
     // Prepare table body rows
     const mechanismCategorisationTableBodyRows =
@@ -240,12 +240,12 @@ const prepareMechanismEvidenceObj = (locusGeneDiseaseData) => {
     "Descriptions",
   ];
   const mechanismEvidenceTableHeaderRow = createTableHeaderRow(
-    mechanismEvidenceHeaders
+    mechanismEvidenceHeaders,
   );
   // Prepare table body rows
   let mechanismEvidenceTableBodyRows = [];
   for (const [key, value] of Object.entries(
-    locusGeneDiseaseData.molecular_mechanism.evidence
+    locusGeneDiseaseData.molecular_mechanism.evidence,
   )) {
     mechanismEvidenceTableBodyRows.push([
       createLinkObj(key, EUROPE_PMC_URL + key),
@@ -276,7 +276,7 @@ const preparePhenotypicFeaturesObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const phenotypicFeaturesHeaders = ["Accession", "Term", "Publications"];
     const phenotypicFeaturesTableHeaderRow = createTableHeaderRow(
-      phenotypicFeaturesHeaders
+      phenotypicFeaturesHeaders,
     );
     // Prepare table body rows
     const phenotypicFeaturesTableBodyRows = locusGeneDiseaseData.phenotypes.map(
@@ -290,7 +290,7 @@ const preparePhenotypicFeaturesObj = (locusGeneDiseaseData) => {
               ul: createListOfPublicationLinkObj(item.publications),
             }
           : "",
-      ]
+      ],
     );
     // Prepare table rows (header and body rows)
     const phenotypicFeaturesTableRows = [
@@ -309,7 +309,7 @@ const preparePhenotypicSummaryObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const phenotypicSummaryHeaders = ["Publication", "Phenotypic Summary"];
     const phenotypicSummaryTableHeaderRow = createTableHeaderRow(
-      phenotypicSummaryHeaders
+      phenotypicSummaryHeaders,
     );
     // Prepare table body rows
     const phenotypicSummaryTableBodyRows =
@@ -333,17 +333,22 @@ const preparePhenotypicSummaryObj = (locusGeneDiseaseData) => {
 
 const prepareCuratedPublicationsObj = (
   locusGeneDiseaseData,
-  isAuthenticated
+  isAuthenticated,
 ) => {
   if (locusGeneDiseaseData.publications?.length > 0) {
     // Prepare table header row
-    let publicationsEvidenceTableHeaders = ["PMID", "Title", "Individuals"];
+    let publicationsEvidenceTableHeaders = [
+      "PMID",
+      "Year",
+      "Title",
+      "Individuals",
+    ];
     // If user is authenticated, then include comment header column
     if (isAuthenticated) {
       publicationsEvidenceTableHeaders.push("Comments");
     }
     const publicationsEvidenceTableHeaderRow = createTableHeaderRow(
-      publicationsEvidenceTableHeaders
+      publicationsEvidenceTableHeaders,
     );
     // Prepare table body rows
     let publicationsEvidenceTableBodyRows = [];
@@ -352,10 +357,11 @@ const prepareCuratedPublicationsObj = (
         item.publication?.pmid
           ? createLinkObj(
               item.publication.pmid,
-              EUROPE_PMC_URL + item.publication.pmid
+              EUROPE_PMC_URL + item.publication.pmid,
             )
           : "",
-        item.publication.title,
+        item.publication?.year,
+        item.publication?.title,
         item.number_of_families ||
         item.affected_individuals ||
         item.ancestry ||
@@ -383,10 +389,10 @@ const prepareCuratedPublicationsObj = (
             ? {
                 ul: item.comments.map(
                   (commentItem) =>
-                    `${commentItem.comment} (${commentItem.date})`
+                    `${commentItem.comment} (${commentItem.date})`,
                 ),
               }
-            : ""
+            : "",
         );
       }
       publicationsEvidenceTableBodyRows.push(bodyRow);
@@ -405,20 +411,21 @@ const prepareCuratedPublicationsObj = (
 
 const prepareMinedPublicationsObj = (locusGeneDiseaseData) => {
   // Prepare table header row
-  const minedPublicationsHeaders = ["PMID", "Title"];
+  const minedPublicationsHeaders = ["PMID", "Year", "Title"];
   const minedPublicationsTableHeaderRow = createTableHeaderRow(
-    minedPublicationsHeaders
+    minedPublicationsHeaders,
   );
   // Prepare table body rows
   const minedPublicationsUnderReview =
     locusGeneDiseaseData.mined_publications.filter(
-      (item) => item.status === MINED_PUBLICATION_STATUS.MINED
+      (item) => item.status === MINED_PUBLICATION_STATUS.MINED,
     );
   const minedPublicationsTableBodyRows = minedPublicationsUnderReview.map(
     (item) => [
       item.pmid ? createLinkObj(item.pmid, EUROPE_PMC_URL + item.pmid) : "",
+      item.year,
       item.title,
-    ]
+    ],
   );
   // Prepare table rows (header and body rows)
   const minedPublicationsTableRows = [
@@ -439,25 +446,25 @@ const prepareExternalLinksObj = (locusGeneDiseaseData) => {
   const geneSymbolLink = locusGeneDiseaseData.locus?.gene_symbol
     ? createLinkObj(
         locusGeneDiseaseData.locus.gene_symbol,
-        DECIPHER_URL + locusGeneDiseaseData.locus.gene_symbol
+        DECIPHER_URL + locusGeneDiseaseData.locus.gene_symbol,
       )
     : NOT_AVAILABLE;
   const omim = locusGeneDiseaseData.locus?.ids?.OMIM
     ? createLinkObj(
         locusGeneDiseaseData.locus.ids.OMIM,
-        OMIM_URL + locusGeneDiseaseData.locus.ids.OMIM
+        OMIM_URL + locusGeneDiseaseData.locus.ids.OMIM,
       )
     : NOT_AVAILABLE;
   const ensembl = locusGeneDiseaseData.locus?.ids?.Ensembl
     ? createLinkObj(
         locusGeneDiseaseData.locus.ids.Ensembl,
-        ENSEMBL_GENE_URL + locusGeneDiseaseData.locus.ids.Ensembl
+        ENSEMBL_GENE_URL + locusGeneDiseaseData.locus.ids.Ensembl,
       )
     : NOT_AVAILABLE;
   const hgnc = locusGeneDiseaseData.locus?.ids?.HGNC
     ? createLinkObj(
         locusGeneDiseaseData.locus.ids.HGNC,
-        HGNC_URL + locusGeneDiseaseData.locus.ids.HGNC
+        HGNC_URL + locusGeneDiseaseData.locus.ids.HGNC,
       )
     : NOT_AVAILABLE;
   const externalLinksTableBodyRow = [geneSymbolLink, omim, ensembl, hgnc];
@@ -476,7 +483,7 @@ const prepareCrossReferencesObj = (locusGeneDiseaseData) => {
     // Prepare table header row
     const crossReferencesHeaders = ["Accession", "Term", "Source"];
     const crossReferencesTableHeaderRow = createTableHeaderRow(
-      crossReferencesHeaders
+      crossReferencesHeaders,
     );
     // Prepare table body rows
     const crossReferencesTableBodyRows =
@@ -484,8 +491,8 @@ const prepareCrossReferencesObj = (locusGeneDiseaseData) => {
         item.source === "OMIM"
           ? createLinkObj(item.accession, OMIM_URL + item.accession)
           : item.source === "Mondo"
-          ? createLinkObj(item.accession, MONDO_URL + item.accession)
-          : item.accession,
+            ? createLinkObj(item.accession, MONDO_URL + item.accession)
+            : item.accession,
         item.term,
         item.source,
       ]);
@@ -520,7 +527,7 @@ const prepareCommentsObj = (locusGeneDiseaseData) => {
 const createDocumentDefinition = (
   locusGeneDiseaseData,
   isAuthenticated,
-  downloadedDate
+  downloadedDate,
 ) => {
   // Downloaded record page section
   const downloadedRecordPageObj = {
@@ -576,7 +583,7 @@ const createDocumentDefinition = (
     : NOT_AVAILABLE;
   // Cross cutting modifiers section
   const crossCuttingModifiersHeaderObj = createSubHeader(
-    "Cross Cutting Modifiers"
+    "Cross Cutting Modifiers",
   );
   const crossCuttingModifiersObj =
     locusGeneDiseaseData.cross_cutting_modifier?.length > 0
@@ -598,7 +605,7 @@ const createDocumentDefinition = (
   const variantTypesHeaderObj = createSubSubHeader("Variant Types");
   const variantTypesObj = prepareVariantTypesObj(
     locusGeneDiseaseData,
-    isAuthenticated
+    isAuthenticated,
   );
   // Variant description section
   const variantDescriptionHeaderObj = createSubSubHeader("Variant Description");
@@ -606,7 +613,7 @@ const createDocumentDefinition = (
     prepareVariantDescriptionObj(locusGeneDiseaseData);
   // Variant consequences section
   const variantConsequencesHeaderObj = createSubSubHeader(
-    "Variant Consequences"
+    "Variant Consequences",
   );
   const variantConsequencesObj =
     prepareVariantConsequencesObj(locusGeneDiseaseData);
@@ -646,19 +653,19 @@ const createDocumentDefinition = (
   const evidenceHeaderObj = createSubHeader("Evidence");
   // Curated publications section
   const curatedPublicationsHeaderObj = createSubSubHeader(
-    "Curated Publications"
+    "Curated Publications",
   );
   const curatedPublicationsObj = prepareCuratedPublicationsObj(
     locusGeneDiseaseData,
-    isAuthenticated
+    isAuthenticated,
   );
   // Mined publications section
   const isDisplayMinedPublicationsSection =
     locusGeneDiseaseData.mined_publications?.filter(
-      (item) => item.status === MINED_PUBLICATION_STATUS.MINED
+      (item) => item.status === MINED_PUBLICATION_STATUS.MINED,
     ).length > 0;
   const minedPublicationsHeaderObj = createSubSubHeader(
-    "Additional Mined Publications Awaiting Review"
+    "Additional Mined Publications Awaiting Review",
   );
   const minedPublicationsObj =
     prepareMinedPublicationsObj(locusGeneDiseaseData);
@@ -683,13 +690,13 @@ const createDocumentDefinition = (
     locusGeneDiseaseData.locus?.end
       ? createLinkObj(
           `${locusGeneDiseaseData.locus.sequence}:${locusGeneDiseaseData.locus.start}-${locusGeneDiseaseData.locus.end}:${locusGeneDiseaseData.locus.strand}`,
-          `${ENSEMBL_LOCATION_URL}${locusGeneDiseaseData.locus?.sequence}:${locusGeneDiseaseData.locus?.start}-${locusGeneDiseaseData.locus?.end}`
+          `${ENSEMBL_LOCATION_URL}${locusGeneDiseaseData.locus?.sequence}:${locusGeneDiseaseData.locus?.start}-${locusGeneDiseaseData.locus?.end}`,
         )
       : locusGeneDiseaseData.locus?.sequence ||
-        locusGeneDiseaseData.locus?.start ||
-        locusGeneDiseaseData.locus?.end
-      ? `${locusGeneDiseaseData.locus.sequence}:${locusGeneDiseaseData.locus.start}-${locusGeneDiseaseData.locus.end}:${locusGeneDiseaseData.locus.strand}`
-      : NOT_AVAILABLE;
+          locusGeneDiseaseData.locus?.start ||
+          locusGeneDiseaseData.locus?.end
+        ? `${locusGeneDiseaseData.locus.sequence}:${locusGeneDiseaseData.locus.start}-${locusGeneDiseaseData.locus.end}:${locusGeneDiseaseData.locus.strand}`
+        : NOT_AVAILABLE;
   // External links section
   const externalLinksHeaderObj = createSubSubHeader("External Links");
   const externalLinksObj = prepareExternalLinksObj(locusGeneDiseaseData);
@@ -875,7 +882,7 @@ export const exportRecordPdf = (locusGeneDiseaseData, isAuthenticated) => {
   const documentDefinition = createDocumentDefinition(
     clonedLocusGeneDiseaseData,
     isAuthenticated,
-    downloadedDate
+    downloadedDate,
   );
   const fileName = `${recordStableId}_${downloadedDate.toISOString()}.pdf`;
   pdfMake.createPdf(documentDefinition).download(fileName);
