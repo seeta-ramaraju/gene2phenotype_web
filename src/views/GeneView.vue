@@ -189,8 +189,8 @@ export default {
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.variant_consequence.join(", ") }}</td>
-              <td>{{ item.variant_type.join(", ") }}</td>
+              <td>{{ item.variant_consequence?.join(", ") }}</td>
+              <td>{{ item.variant_type?.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
                 <span
@@ -206,7 +206,10 @@ export default {
               </td>
               <td>
                 <span v-if="item.panels?.length > 0">
-                  <span v-for="(panelName, index) in item.panels">
+                  <span
+                    v-for="(panelName, index) in item.panels"
+                    :key="panelName"
+                  >
                     <span v-if="index < item.panels.length - 1">
                       <router-link
                         :to="`/panel/${panelName}`"
@@ -216,9 +219,9 @@ export default {
                       >,
                     </span>
                     <router-link
+                      v-else
                       :to="`/panel/${panelName}`"
                       style="text-decoration: none"
-                      v-else
                     >
                       {{ panelName }}
                     </router-link>
@@ -236,7 +239,7 @@ export default {
       <div
         v-if="
           geneSummaryData.records_summary?.length === 0 &&
-          geneFunctionData.gene_stats
+          geneFunctionData?.gene_stats
         "
       >
         <h4 class="py-3">Predictions of likely gene-disease mechanism</h4>
@@ -262,7 +265,7 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.gain_of_function_mp >
+                        geneFunctionData?.gene_stats?.gain_of_function_mp >
                         MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
                       "
                       class="badge red-text-box"
@@ -271,7 +274,7 @@ export default {
                     </span>
                     <span
                       v-else-if="
-                        geneFunctionData.gene_stats.gain_of_function_mp <=
+                        geneFunctionData?.gene_stats?.gain_of_function_mp <=
                         MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
                       "
                       class="badge green-text-box"
@@ -289,7 +292,7 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.loss_of_function_mp >
+                        geneFunctionData?.gene_stats?.loss_of_function_mp >
                         MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
                       "
                       class="badge red-text-box"
@@ -298,7 +301,7 @@ export default {
                     </span>
                     <span
                       v-else-if="
-                        geneFunctionData.gene_stats.loss_of_function_mp <=
+                        geneFunctionData?.gene_stats?.loss_of_function_mp <=
                         MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
                       "
                       class="badge green-text-box"
@@ -316,7 +319,7 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.dominant_negative_mp >
+                        geneFunctionData?.gene_stats?.dominant_negative_mp >
                         MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
                       "
                       class="badge red-text-box"
@@ -325,7 +328,7 @@ export default {
                     </span>
                     <span
                       v-else-if="
-                        geneFunctionData.gene_stats.dominant_negative_mp <=
+                        geneFunctionData?.gene_stats?.dominant_negative_mp <=
                         MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
                       "
                       class="badge green-text-box"
@@ -362,8 +365,8 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.pli_gnomAD != null &&
-                        geneFunctionData.gene_stats.pli_gnomAD !== ''
+                        geneFunctionData?.gene_stats?.pli_gnomAD != null &&
+                        geneFunctionData?.gene_stats?.pli_gnomAD !== ''
                       "
                     >
                       {{ geneFunctionData.gene_stats.pli_gnomAD }}
@@ -379,8 +382,8 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.loeuf_gnomAD != null &&
-                        geneFunctionData.gene_stats.loeuf_gnomAD !== ''
+                        geneFunctionData?.gene_stats?.loeuf_gnomAD != null &&
+                        geneFunctionData?.gene_stats?.loeuf_gnomAD !== ''
                       "
                     >
                       {{ geneFunctionData.gene_stats.loeuf_gnomAD }}
