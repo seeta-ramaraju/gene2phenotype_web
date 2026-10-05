@@ -363,12 +363,7 @@ export default {
             <td>{{ item.locus }}</td>
             <td>{{ item.allelic_requirement }}</td>
             <td>
-              <span v-if="item.panels?.length > 0">
-                <template v-for="(panel, index) in item.panels" :key="panel">
-                  {{ panel }}
-                  <span v-if="index !== item.panels.length - 1">, </span>
-                </template>
-              </span>
+              {{ item.panels?.join(", ") }}
             </td>
             <td>{{ item.last_update }}</td>
             <td class="text-nowrap text-center">

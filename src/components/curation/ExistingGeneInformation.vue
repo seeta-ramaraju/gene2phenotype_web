@@ -424,9 +424,7 @@ export default {
                   </td>
                   <td>{{ item.genotype }}</td>
                   <td>
-                    <span v-if="item.panels?.length > 0">
-                      {{ item.panels.join(", ") }}
-                    </span>
+                    {{ item.panels?.join(", ") }}
                   </td>
                   <td>
                     <span
