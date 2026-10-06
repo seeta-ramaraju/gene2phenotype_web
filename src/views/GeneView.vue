@@ -32,14 +32,6 @@ export default {
       externalLinks: [],
       errorMsg: null,
       HELP_TEXT,
-      DECIPHER_URL,
-      ENSEMBL_GENE_URL,
-      GENCC_URL,
-      HGNC_URL,
-      OMIM_URL,
-      PANELAPP_URL,
-      UNIPROT_URL,
-      CLINGEN_URL,
       MARSH_PROBABILITY_THRESHOLD,
     };
   },
@@ -221,7 +213,7 @@ export default {
                 <router-link
                   v-if="item.stable_id"
                   :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   {{ item.stable_id }}
                 </router-link>
@@ -230,7 +222,7 @@ export default {
                 <router-link
                   v-if="item.disease"
                   :to="`/disease/${item.disease}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   {{ item.disease }}
                 </router-link>
@@ -266,7 +258,8 @@ export default {
           <a
             href="https://europepmc.org/article/MED/39172982"
             target="_blank"
-            style="text-decoration: none"
+            rel="noopener noreferrer"
+            class="text-decoration-none"
             >Badonyi and Marsh, 2024</a
           >
         </p>
@@ -366,7 +359,8 @@ export default {
           <a
             href="https://gnomad.broadinstitute.org/downloads#v4-constraint"
             target="_blank"
-            style="text-decoration: none"
+            rel="noopener noreferrer"
+            class="text-decoration-none"
             >here</a
           >
           for more information.
