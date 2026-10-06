@@ -126,7 +126,8 @@ export default {
                     <a
                       href="https://europepmc.org/article/MED/39172982"
                       target="_blank"
-                      style="text-decoration: none"
+                      rel="noopener noreferrer"
+                      class="text-decoration-none"
                     >
                       Badonyi and Marsh, 2024
                       <i class="bi bi-box-arrow-up-right"></i>
@@ -282,8 +283,8 @@ export default {
                     v-if="sourceData.url"
                     :href="sourceData.url"
                     target="_blank"
-                    style="text-decoration: none"
-                    class="mt-0 subtitle-text"
+                    rel="noopener noreferrer"
+                    class="mt-0 subtitle-text text-decoration-none"
                   >
                     See details in source
                     <i class="bi bi-box-arrow-up-right"></i>
@@ -360,8 +361,7 @@ export default {
               <div class="col-auto mt-0">
                 <button
                   type="button"
-                  class="btn btn-link m-0 p-0"
-                  style="text-decoration: none"
+                  class="btn btn-link m-0 p-0 text-decoration-none"
                   data-bs-toggle="modal"
                   data-bs-target="#mechanism-guidelines-modal"
                 >
@@ -380,8 +380,9 @@ export default {
                         Categorisation
                         <a
                           href="/gene2phenotype/about/terminology#mechanism-synopsis-section"
-                          style="text-decoration: none"
                           target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-decoration-none"
                         >
                           <i class="bi bi-question-circle"></i>
                         </a>
