@@ -21,6 +21,7 @@ import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
 import GeneFunction from "../components/text/GeneFunction.vue";
+import PanelLinks from "../components/panel/PanelLinks.vue";
 export default {
   data() {
     return {
@@ -54,7 +55,7 @@ export default {
       { immediate: true },
     );
   },
-  components: { ToolTip, GeneFunction },
+  components: { ToolTip, GeneFunction, PanelLinks },
   methods: {
     fetchData() {
       this.errorMsg =
@@ -205,28 +206,7 @@ export default {
                 </span>
               </td>
               <td>
-                <span v-if="item.panels?.length > 0">
-                  <span
-                    v-for="(panelName, index) in item.panels"
-                    :key="panelName"
-                  >
-                    <span v-if="index < item.panels.length - 1">
-                      <router-link
-                        :to="`/panel/${panelName}`"
-                        style="text-decoration: none"
-                      >
-                        {{ panelName }} </router-link
-                      >,
-                    </span>
-                    <router-link
-                      v-else
-                      :to="`/panel/${panelName}`"
-                      style="text-decoration: none"
-                    >
-                      {{ panelName }}
-                    </router-link>
-                  </span>
-                </span>
+                <PanelLinks :panels="item.panels" />
               </td>
               <td>{{ item.last_updated }}</td>
             </tr>

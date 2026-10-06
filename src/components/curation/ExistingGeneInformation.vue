@@ -6,7 +6,7 @@ import ToolTip from "../tooltip/ToolTip.vue";
 import { useAuthStore } from "../../store/auth.js";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 import { formatFullName } from "../../utility/CommonUtility.js";
-
+import PanelLinks from "../panel/PanelLinks.vue";
 export default {
   props: {
     gene: String,
@@ -47,7 +47,7 @@ export default {
       HELP_TEXT,
     };
   },
-  components: { ToolTip },
+  components: { ToolTip, PanelLinks },
   methods: {
     resetClaimDraftState() {
       this.claimDraftErrorMsg = this.claimDraftSuccessMsg = null;
@@ -311,25 +311,7 @@ export default {
                   <td>{{ item.genotype }}</td>
                   <td>{{ item.mechanism }}</td>
                   <td>
-                    <span v-if="item.panel?.length > 0">
-                      <span v-for="(panelName, index) in item.panel">
-                        <span v-if="index < item.panel.length - 1">
-                          <router-link
-                            :to="`/panel/${panelName}`"
-                            style="text-decoration: none"
-                          >
-                            {{ panelName }} </router-link
-                          >,
-                        </span>
-                        <router-link
-                          v-else
-                          :to="`/panel/${panelName}`"
-                          style="text-decoration: none"
-                        >
-                          {{ panelName }}
-                        </router-link>
-                      </span>
-                    </span>
+                    <PanelLinks :panels="item.panel" />
                   </td>
                   <td>
                     <span
