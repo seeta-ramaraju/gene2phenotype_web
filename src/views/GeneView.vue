@@ -29,6 +29,7 @@ export default {
       geneSummaryData: null,
       geneData: null,
       geneFunctionData: null,
+      externalLinks: [],
       errorMsg: null,
       HELP_TEXT,
       DECIPHER_URL,
@@ -62,6 +63,7 @@ export default {
         this.geneFunctionData =
         this.geneData =
           null;
+      this.externalLinks = [];
       this.isDataLoading = true;
       const geneSymbol = this.$route.params.symbol;
       Promise.all([
@@ -73,6 +75,7 @@ export default {
           this.geneSummaryData = response1.data;
           this.geneFunctionData = response2.data;
           this.geneData = response3.data;
+          this.externalLinks = this.buildExternalLinks();
         })
         .catch((error) => {
           this.errorMsg = fetchAndLogApiResponseErrorMsg(
@@ -86,21 +89,65 @@ export default {
           this.isDataLoading = false;
         });
     },
+    buildExternalLinks() {
+      return [
+        {
+          label: "View this gene or submit patient variants via DECIPHER",
+          value: this.geneData?.gene_symbol,
+          url: DECIPHER_URL + this.geneData?.gene_symbol,
+        },
+        {
+          label: "OMIM",
+          value: this.geneData?.ids?.OMIM,
+          url: OMIM_URL + this.geneData?.ids?.OMIM,
+        },
+        {
+          label: "Ensembl",
+          value: this.geneData?.ids?.Ensembl,
+          url: ENSEMBL_GENE_URL + this.geneData?.ids?.Ensembl,
+        },
+        {
+          label: "HGNC",
+          value: this.geneData?.ids?.HGNC,
+          url: HGNC_URL + this.geneData?.ids?.HGNC,
+        },
+        {
+          label: "UniProt",
+          value: this.geneFunctionData?.function?.uniprot_accession,
+          url: UNIPROT_URL + this.geneFunctionData?.function?.uniprot_accession,
+        },
+        {
+          label: "PanelApp",
+          value: this.geneData?.gene_symbol,
+          url: PANELAPP_URL + this.geneData?.gene_symbol,
+        },
+        {
+          label: "GenCC",
+          value: this.geneData?.ids?.HGNC,
+          url: GENCC_URL + this.geneData?.ids?.HGNC,
+        },
+        {
+          label: "ClinGen",
+          value: this.geneData?.ids?.HGNC,
+          url: CLINGEN_URL + this.geneData?.ids?.HGNC,
+        },
+      ].filter((link) => link.value);
+    },
   },
 };
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <div
-      class="d-flex justify-content-center"
       v-if="isDataLoading"
+      class="d-flex justify-content-center"
       style="margin-top: 250px; margin-bottom: 250px"
     >
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+    <div v-if="errorMsg" class="alert alert-danger mt-3" role="alert">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div v-if="geneData && geneSummaryData">
@@ -172,17 +219,17 @@ export default {
             >
               <td>
                 <router-link
+                  v-if="item.stable_id"
                   :to="`/lgd/${item.stable_id}`"
                   style="text-decoration: none"
-                  v-if="item.stable_id"
                 >
                   {{ item.stable_id }}
                 </router-link>
               </td>
               <td>
                 <router-link
-                  :to="`/disease/${item.disease}`"
                   v-if="item.disease"
+                  :to="`/disease/${item.disease}`"
                   style="text-decoration: none"
                 >
                   {{ item.disease }}
@@ -369,83 +416,14 @@ export default {
       <h4 class="py-3">External Links</h4>
       <div class="row mx-3 pb-3">
         <ul>
-          <li v-if="geneData.gene_symbol">
+          <li v-for="link in externalLinks" :key="link.label">
             <a
-              :href="DECIPHER_URL + geneData.gene_symbol"
-              style="text-decoration: none"
+              :href="link.url"
+              class="text-decoration-none"
               target="_blank"
+              rel="noopener noreferrer"
             >
-              View this gene or submit patient variants via DECIPHER
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.OMIM">
-            <a
-              :href="OMIM_URL + geneData.ids.OMIM"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              OMIM
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.Ensembl">
-            <a
-              :href="ENSEMBL_GENE_URL + geneData.ids.Ensembl"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              Ensembl
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="HGNC_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              HGNC
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneFunctionData?.function?.uniprot_accession">
-            <a
-              :href="UNIPROT_URL + geneFunctionData.function.uniprot_accession"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              UniProt
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.gene_symbol">
-            <a
-              :href="PANELAPP_URL + geneData.gene_symbol"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              PanelApp
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="GENCC_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              GenCC
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="CLINGEN_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              ClinGen
+              {{ link.label }}
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
