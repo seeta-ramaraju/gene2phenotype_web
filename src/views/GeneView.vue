@@ -22,6 +22,7 @@ import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
 import GeneFunction from "../components/text/GeneFunction.vue";
 import PanelLinks from "../components/panel/PanelLinks.vue";
 import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
+import MarshProbabilityBadge from "../components/mechanism/MarshProbabilityBadge.vue";
 export default {
   data() {
     return {
@@ -47,7 +48,13 @@ export default {
       { immediate: true },
     );
   },
-  components: { ToolTip, GeneFunction, PanelLinks, ConfidenceBadge },
+  components: {
+    ToolTip,
+    GeneFunction,
+    PanelLinks,
+    ConfidenceBadge,
+    MarshProbabilityBadge,
+  },
   methods: {
     fetchData() {
       this.errorMsg =
@@ -273,25 +280,10 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.GAIN_OF_FUNCTION" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData?.gene_stats?.gain_of_function_mp >
-                        MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                      "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.gain_of_function_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData?.gene_stats?.gain_of_function_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.gain_of_function_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                    <MarshProbabilityBadge
+                      :value="geneFunctionData?.gene_stats?.gain_of_function_mp"
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION"
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -300,25 +292,10 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.LOSS_OF_FUNCTION" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData?.gene_stats?.loss_of_function_mp >
-                        MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                      "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.loss_of_function_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData?.gene_stats?.loss_of_function_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.loss_of_function_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                    <MarshProbabilityBadge
+                      :value="geneFunctionData?.gene_stats?.loss_of_function_mp"
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION"
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -327,25 +304,12 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.DOMINANT_NEGATIVE" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData?.gene_stats?.dominant_negative_mp >
-                        MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
+                    <MarshProbabilityBadge
+                      :value="
+                        geneFunctionData?.gene_stats?.dominant_negative_mp
                       "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.dominant_negative_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData?.gene_stats?.dominant_negative_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.dominant_negative_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE"
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -436,13 +400,5 @@ export default {
 <style scoped>
 th {
   white-space: nowrap;
-}
-.red-text-box {
-  color: white;
-  background-color: rgb(255, 21, 0);
-}
-.green-text-box {
-  color: black;
-  background-color: rgb(0, 243, 148);
 }
 </style>

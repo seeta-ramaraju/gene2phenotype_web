@@ -1,5 +1,6 @@
 <script>
 import MechanismEvidence from "./MechanismEvidence.vue";
+import MarshProbabilityBadge from "../mechanism/MarshProbabilityBadge.vue";
 import ToolTip from "../tooltip/ToolTip.vue";
 import {
   MechanismAttribs,
@@ -31,6 +32,7 @@ export default {
     "updateMechanismEvidence",
   ],
   components: {
+    MarshProbabilityBadge,
     MechanismEvidence,
     ToolTip,
   },
@@ -141,25 +143,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.gain_of_function_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.gain_of_function_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.gain_of_function_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.gain_of_function_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.gain_of_function_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -170,25 +159,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.loss_of_function_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.loss_of_function_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.loss_of_function_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.loss_of_function_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.loss_of_function_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -199,25 +175,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.dominant_negative_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.dominant_negative_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.dominant_negative_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.dominant_negative_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.dominant_negative_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                       </tbody>
@@ -490,14 +453,6 @@ export default {
   </div>
 </template>
 <style scoped>
-.red-text-box {
-  color: white;
-  background-color: rgb(255, 21, 0);
-}
-.green-text-box {
-  color: black;
-  background-color: rgb(0, 243, 148);
-}
 .source-data-card {
   background-color: #fff3cd;
 }
