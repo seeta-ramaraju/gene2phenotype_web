@@ -1,10 +1,6 @@
 <script>
 import { GENE_URL, SEARCH_URL } from "../utility/UrlConstants.js";
-import {
-  CONFIDENCE_COLOR_MAP,
-  HELP_TEXT,
-  SEARCH_FILTER,
-} from "../utility/Constants.js";
+import { HELP_TEXT, SEARCH_FILTER } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import {
@@ -12,6 +8,7 @@ import {
   logGeneralErrorMsg,
 } from "../utility/ErrorUtility.js";
 import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 export default {
   data() {
     return {
@@ -23,7 +20,6 @@ export default {
       geneData: null,
       mergedDataMsg: null,
       mergedStableId: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       SEARCH_FILTER,
     };
@@ -43,6 +39,7 @@ export default {
   components: {
     ToolTip,
     PanelLinks,
+    ConfidenceBadge,
   },
   methods: {
     fetchData(dataUrl) {
@@ -262,16 +259,7 @@ export default {
                 <PanelLinks :panels="item.panel" />
               </td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
             </tr>
           </tbody>

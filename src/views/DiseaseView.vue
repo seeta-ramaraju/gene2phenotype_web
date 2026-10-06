@@ -5,11 +5,12 @@ import {
   MONDO_URL,
   OMIM_URL,
 } from "../utility/UrlConstants.js";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
+import { HELP_TEXT } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
 import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 export default {
   data() {
     return {
@@ -17,7 +18,6 @@ export default {
       diseaseSummaryData: null,
       diseaseData: null,
       errorMsg: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       OMIM_URL,
       MONDO_URL,
@@ -34,7 +34,7 @@ export default {
       { immediate: true },
     );
   },
-  components: { ToolTip, PanelLinks },
+  components: { ToolTip, PanelLinks, ConfidenceBadge },
   methods: {
     fetchData() {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
@@ -159,16 +159,7 @@ export default {
                 {{ item.molecular_mechanism }}
               </td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
               <td>
                 <PanelLinks :panels="item.panels" />

@@ -1,12 +1,13 @@
 <script>
 import api from "../../services/api.js";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../../utility/Constants.js";
+import { HELP_TEXT } from "../../utility/Constants.js";
 import { CLAIM_DRAFT_URL, SEARCH_URL } from "../../utility/UrlConstants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
 import { useAuthStore } from "../../store/auth.js";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
 import { formatFullName } from "../../utility/CommonUtility.js";
 import PanelLinks from "../panel/PanelLinks.vue";
+import ConfidenceBadge from "../confidence/ConfidenceBadge.vue";
 export default {
   props: {
     gene: String,
@@ -43,11 +44,10 @@ export default {
       claimDraftSuccessMsg: null,
       isClaimDraftLoading: false,
       claimDraftStableId: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
     };
   },
-  components: { ToolTip, PanelLinks },
+  components: { ToolTip, PanelLinks, ConfidenceBadge },
   methods: {
     resetClaimDraftState() {
       this.claimDraftErrorMsg = this.claimDraftSuccessMsg = null;
@@ -314,16 +314,7 @@ export default {
                     <PanelLinks :panels="item.panel" />
                   </td>
                   <td>
-                    <span
-                      v-if="item.confidence"
-                      class="badge text-white"
-                      :style="{
-                        backgroundColor:
-                          CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                      }"
-                    >
-                      {{ item.confidence }}
-                    </span>
+                    <ConfidenceBadge :confidence="item.confidence" />
                   </td>
                   <td class="text-nowrap">
                     <router-link
@@ -409,16 +400,7 @@ export default {
                     {{ item.panels?.join(", ") }}
                   </td>
                   <td>
-                    <span
-                      v-if="item.confidence"
-                      class="badge text-white"
-                      :style="{
-                        backgroundColor:
-                          CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                      }"
-                    >
-                      {{ item.confidence }}
-                    </span>
+                    <ConfidenceBadge :confidence="item.confidence" />
                   </td>
                   <td>
                     <template

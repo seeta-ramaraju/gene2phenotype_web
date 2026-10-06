@@ -13,7 +13,6 @@ import {
   CLINGEN_URL,
 } from "../utility/UrlConstants.js";
 import {
-  CONFIDENCE_COLOR_MAP,
   HELP_TEXT,
   MARSH_PROBABILITY_THRESHOLD,
 } from "../utility/Constants.js";
@@ -22,6 +21,7 @@ import api from "../services/api.js";
 import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
 import GeneFunction from "../components/text/GeneFunction.vue";
 import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 export default {
   data() {
     return {
@@ -30,7 +30,6 @@ export default {
       geneData: null,
       geneFunctionData: null,
       errorMsg: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       DECIPHER_URL,
       ENSEMBL_GENE_URL,
@@ -55,7 +54,7 @@ export default {
       { immediate: true },
     );
   },
-  components: { ToolTip, GeneFunction, PanelLinks },
+  components: { ToolTip, GeneFunction, PanelLinks, ConfidenceBadge },
   methods: {
     fetchData() {
       this.errorMsg =
@@ -194,16 +193,7 @@ export default {
               <td>{{ item.variant_type?.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
               <td>
                 <PanelLinks :panels="item.panels" />

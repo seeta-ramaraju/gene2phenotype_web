@@ -5,7 +5,7 @@ import {
   PANEL_URL,
 } from "../utility/UrlConstants.js";
 import BarChart from "../components/chart/BarChart.vue";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
+import { HELP_TEXT } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import {
@@ -13,6 +13,7 @@ import {
   fetchAndLogApiResponseErrorMsg,
 } from "../utility/ErrorUtility.js";
 import { trackPanelDownload } from "../utility/AnalyticsUtility.js";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 
 export default {
   data() {
@@ -23,7 +24,6 @@ export default {
       panelSummaryData: null,
       errorMsg: null,
       downloadAllDataErrorMsg: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       chartData: {},
       chartOptions: {
@@ -59,7 +59,7 @@ export default {
       },
       // fetch the data when the view is created and the data is
       // already being observed
-      { immediate: true }
+      { immediate: true },
     );
   },
   methods: {
@@ -69,7 +69,7 @@ export default {
       Promise.all([
         api.get(PANEL_URL.replace(":panelname", this.$route.params.panel)),
         api.get(
-          PANEL_SUMMARY_URL.replace(":panelname", this.$route.params.panel)
+          PANEL_SUMMARY_URL.replace(":panelname", this.$route.params.panel),
         ),
       ])
         .then(([response1, response2]) => {
@@ -108,7 +108,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to fetch panel data. Please try again later.",
-            "Unable to fetch panel data."
+            "Unable to fetch panel data.",
           );
         })
         .finally(() => {
@@ -127,15 +127,15 @@ export default {
               "Content-Type": "text/csv;charset=UTF-8",
             },
             responseType: "text",
-          }
+          },
         )
         .then((response) => {
           const responseContentDisposition = response.headers.get(
-            "Content-Disposition"
+            "Content-Disposition",
           );
           // get csv file name from response Content-Disposition header
           const regexMatch = responseContentDisposition.match(
-            /attachment; filename="([^"]+)"/
+            /attachment; filename="([^"]+)"/,
           ); // Eg responseContentDisposition value: attachment; filename="some_file_name.csv"
           let csvFileName = "data.csv"; // default csv file name
           if (regexMatch?.length > 0 && regexMatch[1]) {
@@ -154,7 +154,7 @@ export default {
         .catch((error) => {
           this.downloadAllDataErrorMsg = fetchAndLogGeneralErrorMsg(
             error,
-            "Unable to download data. Please try again later."
+            "Unable to download data. Please try again later.",
           );
         })
         .finally(() => {
@@ -165,6 +165,7 @@ export default {
   components: {
     BarChart,
     ToolTip,
+    ConfidenceBadge,
   },
 };
 </script>
@@ -320,16 +321,7 @@ export default {
               <td>{{ item.variant_type.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
               <td>{{ item.last_updated }}</td>
             </tr>
