@@ -62,6 +62,17 @@ export default {
       { immediate: true },
     );
   },
+  computed: {
+    panelTitle() {
+      const { name, description } = this.panelData ?? {};
+
+      if (description && name) {
+        return `${description} panel (${name})`;
+      }
+
+      return `${description || name} panel`;
+    },
+  },
   methods: {
     fetchData() {
       this.errorMsg = this.panelData = this.panelSummaryData = null;
@@ -158,7 +169,7 @@ export default {
           );
         })
         .finally(() => {
-          this.isDownloadAllDataLoading = null;
+          this.isDownloadAllDataLoading = false;
         });
     },
   },
@@ -172,21 +183,19 @@ export default {
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <div
-      class="d-flex justify-content-center"
       v-if="isDataLoading"
+      class="d-flex justify-content-center"
       style="margin-top: 250px; margin-bottom: 250px"
     >
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+    <div v-if="errorMsg" class="alert alert-danger mt-3" role="alert">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div v-if="panelData && panelSummaryData">
-      <h2 v-if="panelData.name || panelData.description">
-        {{ panelData.description }} panel ({{ panelData.name }})
-      </h2>
+      <h2 v-if="panelData.name || panelData.description">{{ panelTitle }}</h2>
       <h2 v-else>Not Available</h2>
       <div class="row pt-4 justify-content-md-center">
         <div class="col-4">
@@ -196,10 +205,10 @@ export default {
                 Total LGMDE Records
                 <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
               </h6>
-              <h4 class="card-title" v-if="panelData.stats?.total_records">
+              <h4 v-if="panelData.stats?.total_records" class="card-title">
                 {{ panelData.stats.total_records.toLocaleString() }}
               </h4>
-              <h4 class="card-title" v-else style="color: grey">
+              <h4 v-else style="color: grey" class="card-title">
                 Not Available
               </h4>
             </div>
@@ -209,10 +218,10 @@ export default {
           <div class="card">
             <div class="card-body">
               <h6 class="card-subtitle mb-2 text-muted">Total Genes</h6>
-              <h4 class="card-title" v-if="panelData.stats?.total_genes">
+              <h4 v-if="panelData.stats?.total_genes" class="card-title">
                 {{ panelData.stats.total_genes.toLocaleString() }}
               </h4>
-              <h4 class="card-title" v-else style="color: grey">
+              <h4 v-else style="color: grey" class="card-title">
                 Not Available
               </h4>
             </div>
@@ -222,16 +231,16 @@ export default {
       <h5 class="pt-5 text-center">Records per confidence class</h5>
       <div>
         <BarChart
+          v-if="panelData.stats?.by_confidence"
           :chartData="chartData"
           :chartOptions="chartOptions"
-          v-if="panelData.stats.by_confidence"
           class="w-50 mx-auto"
         />
       </div>
       <h3 class="pt-5 pb-2">Last added/updated records</h3>
       <div
-        class="d-flex justify-content-end mb-2"
         v-if="panelSummaryData.records_summary?.length > 0"
+        class="d-flex justify-content-end mb-2"
       >
         <button
           v-if="!isDownloadAllDataLoading"
@@ -252,9 +261,9 @@ export default {
         </button>
       </div>
       <div
+        v-if="downloadAllDataErrorMsg"
         class="alert alert-danger mt-3"
         role="alert"
-        v-if="downloadAllDataErrorMsg"
       >
         <div>
           <i class="bi bi-exclamation-circle-fill"></i>
@@ -263,8 +272,8 @@ export default {
       </div>
       <div class="table-responsive-xl">
         <table
-          class="table table-hover table-bordered shadow-sm"
           v-if="panelSummaryData.records_summary?.length > 0"
+          class="table table-hover table-bordered shadow-sm"
         >
           <thead>
             <tr>
@@ -292,33 +301,33 @@ export default {
             >
               <td>
                 <router-link
-                  :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
                   v-if="item.stable_id"
+                  :to="`/lgd/${item.stable_id}`"
+                  class="text-decoration-none"
                 >
                   {{ item.stable_id }}
                 </router-link>
               </td>
               <td>
                 <router-link
-                  :to="`/gene/${item.locus}`"
                   v-if="item.locus"
-                  style="text-decoration: none"
+                  :to="`/gene/${item.locus}`"
+                  class="text-decoration-none"
                 >
                   {{ item.locus }}
                 </router-link>
               </td>
               <td>
                 <router-link
-                  :to="`/disease/${item.disease}`"
                   v-if="item.disease"
-                  style="text-decoration: none"
+                  :to="`/disease/${item.disease}`"
+                  class="text-decoration-none"
                 >
                   {{ item.disease }}
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.variant_type.join(", ") }}</td>
+              <td>{{ item.variant_type?.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
                 <ConfidenceBadge :confidence="item.confidence" />
@@ -332,7 +341,7 @@ export default {
       <p>
         <strong>Curators: </strong>
         Full list of expert curators is available
-        <router-link to="/curators" style="text-decoration: none"
+        <router-link to="/curators" class="text-decoration-none"
           >here</router-link
         >.
       </p>
@@ -341,7 +350,7 @@ export default {
         <span v-if="panelData.last_updated">
           {{ panelData.last_updated }}
         </span>
-        <span v-else style="color: grey">Not Available</span>
+        <span v-else class="text-secondary">Not Available</span>
       </p>
     </div>
   </div>
