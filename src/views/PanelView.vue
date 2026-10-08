@@ -197,45 +197,41 @@ export default {
     <div v-if="panelData && panelSummaryData">
       <h2 v-if="panelData.name || panelData.description">{{ panelTitle }}</h2>
       <h2 v-else>Not Available</h2>
-      <div class="row pt-4 justify-content-md-center">
-        <div class="col-4">
-          <div class="card">
+      <div class="row g-3 pt-4 justify-content-center">
+        <div class="col-6 col-lg-4">
+          <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">
+              <h6 class="card-subtitle summary-card-subtitle mb-2 text-muted">
                 Total LGMDE Records
                 <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
               </h6>
               <h4 v-if="panelData.stats?.total_records" class="card-title">
                 {{ panelData.stats.total_records.toLocaleString() }}
               </h4>
-              <h4 v-else style="color: grey" class="card-title">
-                Not Available
-              </h4>
+              <h4 v-else class="card-title text-secondary">Not Available</h4>
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <div class="card">
+        <div class="col-6 col-lg-4">
+          <div class="card h-100">
             <div class="card-body">
-              <h6 class="card-subtitle mb-2 text-muted">Total Genes</h6>
+              <h6 class="card-subtitle summary-card-subtitle mb-2 text-muted">
+                Total Genes
+              </h6>
               <h4 v-if="panelData.stats?.total_genes" class="card-title">
                 {{ panelData.stats.total_genes.toLocaleString() }}
               </h4>
-              <h4 v-else style="color: grey" class="card-title">
-                Not Available
-              </h4>
+              <h4 v-else class="card-title text-secondary">Not Available</h4>
             </div>
           </div>
         </div>
       </div>
-      <h5 class="pt-5 text-center">Records per confidence class</h5>
-      <div>
-        <BarChart
-          v-if="panelData.stats?.by_confidence"
-          :chartData="chartData"
-          :chartOptions="chartOptions"
-          class="w-50 mx-auto"
-        />
+      <h5 class="pt-4 text-center">Records per confidence class</h5>
+      <div
+        v-if="panelData.stats?.by_confidence"
+        class="chart-container mx-auto"
+      >
+        <BarChart :chartData="chartData" :chartOptions="chartOptions" />
       </div>
       <h3 class="pt-5 pb-2">Last added/updated records</h3>
       <div
@@ -356,6 +352,28 @@ export default {
   </div>
 </template>
 <style scoped>
+.chart-container {
+  width: 100%;
+}
+
+@media (max-width: 767.98px) {
+  .summary-card-subtitle {
+    font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    width: 75%;
+  }
+}
+
+@media (min-width: 992px) {
+  .chart-container {
+    width: 50%;
+  }
+}
+
 th {
   white-space: nowrap;
 }
