@@ -72,6 +72,13 @@ export default {
 
       return `${description || name} panel`;
     },
+    hasRecordsByConfidence() {
+      const recordsByConfidence = this.panelData?.stats?.by_confidence;
+
+      return Boolean(
+        recordsByConfidence && Object.keys(recordsByConfidence).length > 0,
+      );
+    },
   },
   methods: {
     fetchData() {
@@ -205,7 +212,10 @@ export default {
                 Total LGMDE Records
                 <ToolTip :toolTipText="HELP_TEXT.LGMDE_RECORD" />
               </h6>
-              <h4 v-if="panelData.stats?.total_records" class="card-title">
+              <h4
+                v-if="panelData.stats?.total_records != null"
+                class="card-title"
+              >
                 {{ panelData.stats.total_records.toLocaleString() }}
               </h4>
               <h4 v-else class="card-title text-secondary">Not Available</h4>
@@ -218,7 +228,10 @@ export default {
               <h6 class="card-subtitle summary-card-subtitle mb-2 text-muted">
                 Total Genes
               </h6>
-              <h4 v-if="panelData.stats?.total_genes" class="card-title">
+              <h4
+                v-if="panelData.stats?.total_genes != null"
+                class="card-title"
+              >
                 {{ panelData.stats.total_genes.toLocaleString() }}
               </h4>
               <h4 v-else class="card-title text-secondary">Not Available</h4>
@@ -226,13 +239,12 @@ export default {
           </div>
         </div>
       </div>
-      <h5 class="pt-4 text-center">Records per confidence class</h5>
-      <div
-        v-if="panelData.stats?.by_confidence"
-        class="chart-container mx-auto"
-      >
-        <BarChart :chartData="chartData" :chartOptions="chartOptions" />
-      </div>
+      <template v-if="hasRecordsByConfidence">
+        <h5 class="pt-4 text-center">Records per confidence class</h5>
+        <div class="chart-container mx-auto">
+          <BarChart :chartData="chartData" :chartOptions="chartOptions" />
+        </div>
+      </template>
       <h3 class="pt-5 pb-2">Last added/updated records</h3>
       <div
         v-if="panelSummaryData.records_summary?.length > 0"
@@ -332,7 +344,7 @@ export default {
             </tr>
           </tbody>
         </table>
-        <p v-else>No Records found</p>
+        <p v-else>No records found</p>
       </div>
       <p>
         <strong>Curators: </strong>
