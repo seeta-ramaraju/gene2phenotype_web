@@ -54,16 +54,7 @@ export default {
     };
   },
   created() {
-    // watch the params of the route to fetch the data again
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        this.fetchPanelData();
-      },
-      // fetch the data when the view is created and the data is
-      // already being observed
-      { immediate: true },
-    );
+    this.fetchPanelData();
   },
   components: {
     ToolTip,
@@ -91,9 +82,10 @@ export default {
         });
     },
     searchClickHandler() {
-      if (this.searchInput) {
-        let routeQuery = {
-          query: this.searchInput,
+      const searchInput = this.searchInput.trim();
+      if (searchInput) {
+        const routeQuery = {
+          query: searchInput,
           type:
             this.selectedSearchType === SEARCH_FILTER.SEARCH_TYPE.ALL_TYPES
               ? undefined
@@ -180,7 +172,7 @@ export default {
               with information on allelic requirement, observed variant classes
               and disease mechanism.
             </p>
-            <div class="mt-3" v-if="!isMaintenance">
+            <div v-if="!isMaintenance" class="mt-3">
               <div class="input-group">
                 <input
                   type="text"
@@ -292,7 +284,11 @@ export default {
                         All
                       </label>
                     </div>
-                    <div class="form-check" v-for="item in panelData.results">
+                    <div
+                      v-for="item in panelData.results"
+                      :key="item.name"
+                      class="form-check"
+                    >
                       <input
                         class="form-check-input"
                         type="radio"
@@ -312,6 +308,7 @@ export default {
                 <button
                   type="button"
                   class="btn btn-primary"
+                  aria-label="Search"
                   @click="searchClickHandler"
                 >
                   <i class="bi bi-search"></i>
@@ -327,7 +324,7 @@ export default {
                       type: SEARCH_FILTER.SEARCH_TYPE.GENE,
                     },
                   }"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   FBN1
                 </router-link>
@@ -340,7 +337,7 @@ export default {
                       type: SEARCH_FILTER.SEARCH_TYPE.DISEASE,
                     },
                   }"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   Weill-Marchesani syndrome
                 </router-link>
@@ -353,7 +350,7 @@ export default {
                       type: SEARCH_FILTER.SEARCH_TYPE.DISEASE,
                     },
                   }"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   Tuberous sclerosis
                 </router-link>
@@ -455,15 +452,15 @@ export default {
             <tr v-for="item in panelData.results" :key="item.name">
               <td>
                 <router-link
-                  :to="`/panel/${item.name}`"
                   v-if="item.name"
-                  style="text-decoration: none"
+                  :to="`/panel/${item.name}`"
+                  class="text-decoration-none"
                 >
                   {{ item.description || item.name }}
                 </router-link>
               </td>
-              <td>{{ item.stats?.total_records.toLocaleString() }}</td>
-              <td>{{ item.stats?.total_genes.toLocaleString() }}</td>
+              <td>{{ item.stats?.total_records?.toLocaleString() }}</td>
+              <td>{{ item.stats?.total_genes?.toLocaleString() }}</td>
               <td>{{ item.last_updated }}</td>
               <td class="p-0">
                 <div class="d-flex justify-content-center">
