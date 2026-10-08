@@ -13,7 +13,6 @@ import {
   CLINGEN_URL,
 } from "../utility/UrlConstants.js";
 import {
-  CONFIDENCE_COLOR_MAP,
   HELP_TEXT,
   MARSH_PROBABILITY_THRESHOLD,
 } from "../utility/Constants.js";
@@ -21,6 +20,9 @@ import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
 import GeneFunction from "../components/text/GeneFunction.vue";
+import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
+import MarshProbabilityBadge from "../components/mechanism/MarshProbabilityBadge.vue";
 export default {
   data() {
     return {
@@ -28,17 +30,9 @@ export default {
       geneSummaryData: null,
       geneData: null,
       geneFunctionData: null,
+      externalLinks: [],
       errorMsg: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
-      DECIPHER_URL,
-      ENSEMBL_GENE_URL,
-      GENCC_URL,
-      HGNC_URL,
-      OMIM_URL,
-      PANELAPP_URL,
-      UNIPROT_URL,
-      CLINGEN_URL,
       MARSH_PROBABILITY_THRESHOLD,
     };
   },
@@ -54,7 +48,13 @@ export default {
       { immediate: true },
     );
   },
-  components: { ToolTip, GeneFunction },
+  components: {
+    ToolTip,
+    GeneFunction,
+    PanelLinks,
+    ConfidenceBadge,
+    MarshProbabilityBadge,
+  },
   methods: {
     fetchData() {
       this.errorMsg =
@@ -62,6 +62,7 @@ export default {
         this.geneFunctionData =
         this.geneData =
           null;
+      this.externalLinks = [];
       this.isDataLoading = true;
       const geneSymbol = this.$route.params.symbol;
       Promise.all([
@@ -73,6 +74,7 @@ export default {
           this.geneSummaryData = response1.data;
           this.geneFunctionData = response2.data;
           this.geneData = response3.data;
+          this.externalLinks = this.buildExternalLinks();
         })
         .catch((error) => {
           this.errorMsg = fetchAndLogApiResponseErrorMsg(
@@ -86,21 +88,65 @@ export default {
           this.isDataLoading = false;
         });
     },
+    buildExternalLinks() {
+      return [
+        {
+          label: "View this gene or submit patient variants via DECIPHER",
+          value: this.geneData?.gene_symbol,
+          url: DECIPHER_URL + this.geneData?.gene_symbol,
+        },
+        {
+          label: "OMIM",
+          value: this.geneData?.ids?.OMIM,
+          url: OMIM_URL + this.geneData?.ids?.OMIM,
+        },
+        {
+          label: "Ensembl",
+          value: this.geneData?.ids?.Ensembl,
+          url: ENSEMBL_GENE_URL + this.geneData?.ids?.Ensembl,
+        },
+        {
+          label: "HGNC",
+          value: this.geneData?.ids?.HGNC,
+          url: HGNC_URL + this.geneData?.ids?.HGNC,
+        },
+        {
+          label: "UniProt",
+          value: this.geneFunctionData?.function?.uniprot_accession,
+          url: UNIPROT_URL + this.geneFunctionData?.function?.uniprot_accession,
+        },
+        {
+          label: "PanelApp",
+          value: this.geneData?.gene_symbol,
+          url: PANELAPP_URL + this.geneData?.gene_symbol,
+        },
+        {
+          label: "GenCC",
+          value: this.geneData?.ids?.HGNC,
+          url: GENCC_URL + this.geneData?.ids?.HGNC,
+        },
+        {
+          label: "ClinGen",
+          value: this.geneData?.ids?.HGNC,
+          url: CLINGEN_URL + this.geneData?.ids?.HGNC,
+        },
+      ].filter((link) => link.value);
+    },
   },
 };
 </script>
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <div
-      class="d-flex justify-content-center"
       v-if="isDataLoading"
+      class="d-flex justify-content-center"
       style="margin-top: 250px; margin-bottom: 250px"
     >
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
-    <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+    <div v-if="errorMsg" class="alert alert-danger mt-3" role="alert">
       <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
     </div>
     <div v-if="geneData && geneSummaryData">
@@ -172,58 +218,31 @@ export default {
             >
               <td>
                 <router-link
-                  :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
                   v-if="item.stable_id"
+                  :to="`/lgd/${item.stable_id}`"
+                  class="text-decoration-none"
                 >
                   {{ item.stable_id }}
                 </router-link>
               </td>
               <td>
                 <router-link
-                  :to="`/disease/${item.disease}`"
                   v-if="item.disease"
-                  style="text-decoration: none"
+                  :to="`/disease/${item.disease}`"
+                  class="text-decoration-none"
                 >
                   {{ item.disease }}
                 </router-link>
               </td>
               <td>{{ item.genotype }}</td>
-              <td>{{ item.variant_consequence.join(", ") }}</td>
-              <td>{{ item.variant_type.join(", ") }}</td>
+              <td>{{ item.variant_consequence?.join(", ") }}</td>
+              <td>{{ item.variant_type?.join(", ") }}</td>
               <td>{{ item.molecular_mechanism }}</td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
               <td>
-                <span v-if="item.panels?.length > 0">
-                  <span v-for="(panelName, index) in item.panels">
-                    <span v-if="index < item.panels.length - 1">
-                      <router-link
-                        :to="`/panel/${panelName}`"
-                        style="text-decoration: none"
-                      >
-                        {{ panelName }} </router-link
-                      >,
-                    </span>
-                    <router-link
-                      :to="`/panel/${panelName}`"
-                      style="text-decoration: none"
-                      v-else
-                    >
-                      {{ panelName }}
-                    </router-link>
-                  </span>
-                </span>
+                <PanelLinks :panels="item.panels" />
               </td>
               <td>{{ item.last_updated }}</td>
             </tr>
@@ -236,7 +255,7 @@ export default {
       <div
         v-if="
           geneSummaryData.records_summary?.length === 0 &&
-          geneFunctionData.gene_stats
+          geneFunctionData?.gene_stats
         "
       >
         <h4 class="py-3">Predictions of likely gene-disease mechanism</h4>
@@ -246,7 +265,8 @@ export default {
           <a
             href="https://europepmc.org/article/MED/39172982"
             target="_blank"
-            style="text-decoration: none"
+            rel="noopener noreferrer"
+            class="text-decoration-none"
             >Badonyi and Marsh, 2024</a
           >
         </p>
@@ -260,25 +280,10 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.GAIN_OF_FUNCTION" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData.gene_stats.gain_of_function_mp >
-                        MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                      "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.gain_of_function_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData.gene_stats.gain_of_function_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.gain_of_function_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                    <MarshProbabilityBadge
+                      :value="geneFunctionData?.gene_stats?.gain_of_function_mp"
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION"
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -287,25 +292,10 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.LOSS_OF_FUNCTION" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData.gene_stats.loss_of_function_mp >
-                        MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                      "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.loss_of_function_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData.gene_stats.loss_of_function_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.loss_of_function_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                    <MarshProbabilityBadge
+                      :value="geneFunctionData?.gene_stats?.loss_of_function_mp"
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION"
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -314,25 +304,12 @@ export default {
                     <ToolTip :toolTipText="HELP_TEXT.DOMINANT_NEGATIVE" />
                   </td>
                   <td style="width: 25%">
-                    <span
-                      v-if="
-                        geneFunctionData.gene_stats.dominant_negative_mp >
-                        MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
+                    <MarshProbabilityBadge
+                      :value="
+                        geneFunctionData?.gene_stats?.dominant_negative_mp
                       "
-                      class="badge red-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.dominant_negative_mp }}
-                    </span>
-                    <span
-                      v-else-if="
-                        geneFunctionData.gene_stats.dominant_negative_mp <=
-                        MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
-                      "
-                      class="badge green-text-box"
-                    >
-                      {{ geneFunctionData.gene_stats.dominant_negative_mp }}
-                    </span>
-                    <span v-else class="text-muted">Not Available</span>
+                      :threshold="MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE"
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -346,7 +323,8 @@ export default {
           <a
             href="https://gnomad.broadinstitute.org/downloads#v4-constraint"
             target="_blank"
-            style="text-decoration: none"
+            rel="noopener noreferrer"
+            class="text-decoration-none"
             >here</a
           >
           for more information.
@@ -362,8 +340,8 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.pli_gnomAD != null &&
-                        geneFunctionData.gene_stats.pli_gnomAD !== ''
+                        geneFunctionData?.gene_stats?.pli_gnomAD != null &&
+                        geneFunctionData?.gene_stats?.pli_gnomAD !== ''
                       "
                     >
                       {{ geneFunctionData.gene_stats.pli_gnomAD }}
@@ -379,8 +357,8 @@ export default {
                   <td style="width: 25%">
                     <span
                       v-if="
-                        geneFunctionData.gene_stats.loeuf_gnomAD != null &&
-                        geneFunctionData.gene_stats.loeuf_gnomAD !== ''
+                        geneFunctionData?.gene_stats?.loeuf_gnomAD != null &&
+                        geneFunctionData?.gene_stats?.loeuf_gnomAD !== ''
                       "
                     >
                       {{ geneFunctionData.gene_stats.loeuf_gnomAD }}
@@ -396,83 +374,14 @@ export default {
       <h4 class="py-3">External Links</h4>
       <div class="row mx-3 pb-3">
         <ul>
-          <li v-if="geneData.gene_symbol">
+          <li v-for="link in externalLinks" :key="link.label">
             <a
-              :href="DECIPHER_URL + geneData.gene_symbol"
-              style="text-decoration: none"
+              :href="link.url"
+              class="text-decoration-none"
               target="_blank"
+              rel="noopener noreferrer"
             >
-              View this gene or submit patient variants via DECIPHER
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.OMIM">
-            <a
-              :href="OMIM_URL + geneData.ids.OMIM"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              OMIM
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.Ensembl">
-            <a
-              :href="ENSEMBL_GENE_URL + geneData.ids.Ensembl"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              Ensembl
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="HGNC_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              HGNC
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneFunctionData?.function?.uniprot_accession">
-            <a
-              :href="UNIPROT_URL + geneFunctionData.function.uniprot_accession"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              UniProt
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.gene_symbol">
-            <a
-              :href="PANELAPP_URL + geneData.gene_symbol"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              PanelApp
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="GENCC_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              GenCC
-              <i class="bi bi-box-arrow-up-right"></i>
-            </a>
-          </li>
-          <li v-if="geneData.ids?.HGNC">
-            <a
-              :href="CLINGEN_URL + geneData.ids.HGNC"
-              style="text-decoration: none"
-              target="_blank"
-            >
-              ClinGen
+              {{ link.label }}
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
           </li>
@@ -491,13 +400,5 @@ export default {
 <style scoped>
 th {
   white-space: nowrap;
-}
-.red-text-box {
-  color: white;
-  background-color: rgb(255, 21, 0);
-}
-.green-text-box {
-  color: black;
-  background-color: rgb(0, 243, 148);
 }
 </style>

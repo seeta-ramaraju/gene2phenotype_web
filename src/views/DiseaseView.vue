@@ -5,11 +5,12 @@ import {
   MONDO_URL,
   OMIM_URL,
 } from "../utility/UrlConstants.js";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../utility/Constants.js";
+import { HELP_TEXT } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import { fetchAndLogApiResponseErrorMsg } from "../utility/ErrorUtility.js";
-
+import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 export default {
   data() {
     return {
@@ -17,7 +18,6 @@ export default {
       diseaseSummaryData: null,
       diseaseData: null,
       errorMsg: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       OMIM_URL,
       MONDO_URL,
@@ -31,10 +31,10 @@ export default {
         this.fetchData();
       },
       // fetch this data when the view is created and the data is already being observed
-      { immediate: true }
+      { immediate: true },
     );
   },
-  components: { ToolTip },
+  components: { ToolTip, PanelLinks, ConfidenceBadge },
   methods: {
     fetchData() {
       this.errorMsg = this.diseaseSummaryData = this.diseaseData = null;
@@ -53,7 +53,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to fetch disease data. Please try again later.",
-            "Unable to fetch disease data."
+            "Unable to fetch disease data.",
           );
         })
         .finally(() => {
@@ -159,37 +159,10 @@ export default {
                 {{ item.molecular_mechanism }}
               </td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
               <td>
-                <span v-if="item.panels?.length > 0">
-                  <span v-for="(panelName, index) in item.panels">
-                    <span v-if="index < item.panels.length - 1">
-                      <router-link
-                        :to="`/panel/${panelName}`"
-                        style="text-decoration: none"
-                      >
-                        {{ panelName }} </router-link
-                      >,
-                    </span>
-                    <router-link
-                      :to="`/panel/${panelName}`"
-                      style="text-decoration: none"
-                      v-else
-                    >
-                      {{ panelName }}
-                    </router-link>
-                  </span>
-                </span>
+                <PanelLinks :panels="item.panels" />
               </td>
             </tr>
           </tbody>

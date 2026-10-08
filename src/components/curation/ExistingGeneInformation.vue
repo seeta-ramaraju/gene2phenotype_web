@@ -1,11 +1,13 @@
 <script>
 import api from "../../services/api.js";
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../../utility/Constants.js";
+import { HELP_TEXT } from "../../utility/Constants.js";
 import { CLAIM_DRAFT_URL, SEARCH_URL } from "../../utility/UrlConstants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
 import { useAuthStore } from "../../store/auth.js";
 import { fetchAndLogApiResponseErrorMsg } from "../../utility/ErrorUtility.js";
-
+import { formatFullName } from "../../utility/CommonUtility.js";
+import PanelLinks from "../panel/PanelLinks.vue";
+import ConfidenceBadge from "../confidence/ConfidenceBadge.vue";
 export default {
   props: {
     gene: String,
@@ -42,11 +44,10 @@ export default {
       claimDraftSuccessMsg: null,
       isClaimDraftLoading: false,
       claimDraftStableId: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
     };
   },
-  components: { ToolTip },
+  components: { ToolTip, PanelLinks, ConfidenceBadge },
   methods: {
     resetClaimDraftState() {
       this.claimDraftErrorMsg = this.claimDraftSuccessMsg = null;
@@ -194,11 +195,7 @@ export default {
     isUnclaimedAutomaticDraft(status, email) {
       return status === "automatic" && email === "g2p-admin@ebi.ac.uk";
     },
-    getCuratorName(item) {
-      return [item.curator_first, item.curator_last_name]
-        .filter(Boolean)
-        .join(" ");
-    },
+    formatFullName,
   },
 };
 </script>
@@ -314,37 +311,10 @@ export default {
                   <td>{{ item.genotype }}</td>
                   <td>{{ item.mechanism }}</td>
                   <td>
-                    <span v-if="item.panel?.length > 0">
-                      <span v-for="(panelName, index) in item.panel">
-                        <span v-if="index < item.panel.length - 1">
-                          <router-link
-                            :to="`/panel/${panelName}`"
-                            style="text-decoration: none"
-                          >
-                            {{ panelName }} </router-link
-                          >,
-                        </span>
-                        <router-link
-                          v-else
-                          :to="`/panel/${panelName}`"
-                          style="text-decoration: none"
-                        >
-                          {{ panelName }}
-                        </router-link>
-                      </span>
-                    </span>
+                    <PanelLinks :panels="item.panel" />
                   </td>
                   <td>
-                    <span
-                      v-if="item.confidence"
-                      class="badge text-white"
-                      :style="{
-                        backgroundColor:
-                          CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                      }"
-                    >
-                      {{ item.confidence }}
-                    </span>
+                    <ConfidenceBadge :confidence="item.confidence" />
                   </td>
                   <td class="text-nowrap">
                     <router-link
@@ -427,21 +397,10 @@ export default {
                   </td>
                   <td>{{ item.genotype }}</td>
                   <td>
-                    <span v-if="item.panels?.length > 0">
-                      {{ item.panels.join(", ") }}
-                    </span>
+                    {{ item.panels?.join(", ") }}
                   </td>
                   <td>
-                    <span
-                      v-if="item.confidence"
-                      class="badge text-white"
-                      :style="{
-                        backgroundColor:
-                          CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                      }"
-                    >
-                      {{ item.confidence }}
-                    </span>
+                    <ConfidenceBadge :confidence="item.confidence" />
                   </td>
                   <td>
                     <template
@@ -449,10 +408,15 @@ export default {
                         !isUnclaimedAutomaticDraft(
                           item.status,
                           item.curator_email,
-                        ) && getCuratorName(item)
+                        )
                       "
                     >
-                      {{ getCuratorName(item) }}
+                      {{
+                        formatFullName(
+                          item.curator_first,
+                          item.curator_last_name,
+                        )
+                      }}
                     </template>
                   </td>
                   <td class="text-nowrap">

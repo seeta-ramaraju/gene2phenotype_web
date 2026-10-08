@@ -1,5 +1,6 @@
 <script>
 import MechanismEvidence from "./MechanismEvidence.vue";
+import MarshProbabilityBadge from "../mechanism/MarshProbabilityBadge.vue";
 import ToolTip from "../tooltip/ToolTip.vue";
 import {
   MechanismAttribs,
@@ -31,6 +32,7 @@ export default {
     "updateMechanismEvidence",
   ],
   components: {
+    MarshProbabilityBadge,
     MechanismEvidence,
     ToolTip,
   },
@@ -124,7 +126,8 @@ export default {
                     <a
                       href="https://europepmc.org/article/MED/39172982"
                       target="_blank"
-                      style="text-decoration: none"
+                      rel="noopener noreferrer"
+                      class="text-decoration-none"
                     >
                       Badonyi and Marsh, 2024
                       <i class="bi bi-box-arrow-up-right"></i>
@@ -141,25 +144,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.gain_of_function_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.gain_of_function_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.gain_of_function_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.gain_of_function_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.GAIN_OF_FUNCTION
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.gain_of_function_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -170,25 +160,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.loss_of_function_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.loss_of_function_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.loss_of_function_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.loss_of_function_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.LOSS_OF_FUNCTION
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.loss_of_function_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                         <tr>
@@ -199,25 +176,12 @@ export default {
                             />
                           </td>
                           <td style="width: 40%">
-                            <span
-                              v-if="
-                                mechanismGeneStats?.dominant_negative_mp >
+                            <MarshProbabilityBadge
+                              :value="mechanismGeneStats?.dominant_negative_mp"
+                              :threshold="
                                 MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
                               "
-                              class="badge red-text-box"
-                            >
-                              {{ mechanismGeneStats.dominant_negative_mp }}
-                            </span>
-                            <span
-                              v-else-if="
-                                mechanismGeneStats?.dominant_negative_mp <=
-                                MARSH_PROBABILITY_THRESHOLD.DOMINANT_NEGATIVE
-                              "
-                              class="badge green-text-box"
-                            >
-                              {{ mechanismGeneStats.dominant_negative_mp }}
-                            </span>
-                            <span v-else class="text-muted">Not Available</span>
+                            />
                           </td>
                         </tr>
                       </tbody>
@@ -319,8 +283,8 @@ export default {
                     v-if="sourceData.url"
                     :href="sourceData.url"
                     target="_blank"
-                    style="text-decoration: none"
-                    class="mt-0 subtitle-text"
+                    rel="noopener noreferrer"
+                    class="mt-0 subtitle-text text-decoration-none"
                   >
                     See details in source
                     <i class="bi bi-box-arrow-up-right"></i>
@@ -397,8 +361,7 @@ export default {
               <div class="col-auto mt-0">
                 <button
                   type="button"
-                  class="btn btn-link m-0 p-0"
-                  style="text-decoration: none"
+                  class="btn btn-link m-0 p-0 text-decoration-none"
                   data-bs-toggle="modal"
                   data-bs-target="#mechanism-guidelines-modal"
                 >
@@ -417,8 +380,9 @@ export default {
                         Categorisation
                         <a
                           href="/gene2phenotype/about/terminology#mechanism-synopsis-section"
-                          style="text-decoration: none"
                           target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-decoration-none"
                         >
                           <i class="bi bi-question-circle"></i>
                         </a>
@@ -490,14 +454,6 @@ export default {
   </div>
 </template>
 <style scoped>
-.red-text-box {
-  color: white;
-  background-color: rgb(255, 21, 0);
-}
-.green-text-box {
-  color: black;
-  background-color: rgb(0, 243, 148);
-}
 .source-data-card {
   background-color: #fff3cd;
 }

@@ -1,17 +1,14 @@
 <script>
 import { GENE_URL, SEARCH_URL } from "../utility/UrlConstants.js";
-import {
-  CONFIDENCE_COLOR_MAP,
-  HELP_TEXT,
-  SEARCH_FILTER,
-} from "../utility/Constants.js";
+import { HELP_TEXT, SEARCH_FILTER } from "../utility/Constants.js";
 import ToolTip from "../components/tooltip/ToolTip.vue";
 import api from "../services/api.js";
 import {
   fetchAndLogApiResponseErrorMsg,
   logGeneralErrorMsg,
 } from "../utility/ErrorUtility.js";
-
+import PanelLinks from "../components/panel/PanelLinks.vue";
+import ConfidenceBadge from "../components/confidence/ConfidenceBadge.vue";
 export default {
   data() {
     return {
@@ -23,7 +20,6 @@ export default {
       geneData: null,
       mergedDataMsg: null,
       mergedStableId: null,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       SEARCH_FILTER,
     };
@@ -37,11 +33,13 @@ export default {
       },
       // fetch the data when the view is created and the data is
       // already being observed
-      { immediate: true }
+      { immediate: true },
     );
   },
   components: {
     ToolTip,
+    PanelLinks,
+    ConfidenceBadge,
   },
   methods: {
     fetchData(dataUrl) {
@@ -85,7 +83,7 @@ export default {
             const searchDataNotFoundMsg = fetchAndLogApiResponseErrorMsg(
               error,
               error?.response?.data?.error,
-              "No results found. Please try another search."
+              "No results found. Please try another search.",
             );
             const queryType = this.$route.query?.type;
             if (!queryType || queryType === SEARCH_FILTER.SEARCH_TYPE.GENE) {
@@ -109,7 +107,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to fetch search results. Please try again later.",
-              "Unable to fetch search results."
+              "Unable to fetch search results.",
             );
           }
         });
@@ -258,37 +256,10 @@ export default {
               <td>{{ item.genotype }}</td>
               <td>{{ item.mechanism }}</td>
               <td>
-                <span v-if="item.panel?.length > 0">
-                  <span v-for="(panelName, index) in item.panel">
-                    <span v-if="index < item.panel.length - 1">
-                      <router-link
-                        :to="`/panel/${panelName}`"
-                        style="text-decoration: none"
-                      >
-                        {{ panelName }} </router-link
-                      >,
-                    </span>
-                    <router-link
-                      :to="`/panel/${panelName}`"
-                      style="text-decoration: none"
-                      v-else
-                    >
-                      {{ panelName }}
-                    </router-link>
-                  </span>
-                </span>
+                <PanelLinks :panels="item.panel" />
               </td>
               <td>
-                <span
-                  v-if="item.confidence"
-                  class="badge text-white"
-                  :style="{
-                    backgroundColor:
-                      CONFIDENCE_COLOR_MAP[item.confidence.toLowerCase()],
-                  }"
-                >
-                  {{ item.confidence }}
-                </span>
+                <ConfidenceBadge :confidence="item.confidence" />
               </td>
             </tr>
           </tbody>

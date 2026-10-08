@@ -34,3 +34,6 @@ export const parseDetailsInput = (rawDetails) => {
   }
   return { valid: false, error: "Details must be valid JSON." };
 };
+
+export const formatFullName = (firstName, lastName) =>
+  [firstName, lastName].filter(Boolean).join(" ");

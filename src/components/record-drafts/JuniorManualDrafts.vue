@@ -1,14 +1,12 @@
 <script>
+import { formatFullName } from "../../utility/CommonUtility.js";
+
 export default {
   props: {
     juniorManualDrafts: Array,
   },
   methods: {
-    getCuratorName(item) {
-      return [item.curator_first_name, item.curator_last_name]
-        .filter(Boolean)
-        .join(" ");
-    },
+    formatFullName,
   },
 };
 </script>
@@ -36,17 +34,12 @@ export default {
           <td>{{ item.allelic_requirement }}</td>
           <td>{{ item.molecular_mechanism }}</td>
           <td>
-            <span v-if="item.panels?.length > 0">
-              <template v-for="(panel, index) in item.panels" :key="panel">
-                {{ panel }}
-                <span v-if="index !== item.panels.length - 1">, </span>
-              </template>
-            </span>
+            {{ item.panels?.join(", ") }}
           </td>
           <td>
-            <span v-if="getCuratorName(item)">
-              {{ getCuratorName(item) }}
-            </span>
+            {{
+              formatFullName(item.curator_first_name, item.curator_last_name)
+            }}
           </td>
           <td>{{ item.last_update }}</td>
           <td class="text-nowrap">
