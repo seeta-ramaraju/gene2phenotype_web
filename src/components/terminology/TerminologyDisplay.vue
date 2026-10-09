@@ -6,51 +6,80 @@ import {
 } from "../../utility/CurationConstants.js";
 export default {
   props: {
-    terminologyDescriptionData: Object,
-    molecularDescriptionData: Object,
-    variantDescriptionData: Object,
+    terminologyDescriptionData: {
+      type: Object,
+      required: true,
+    },
+    molecularDescriptionData: {
+      type: Object,
+      required: true,
+    },
+    variantDescriptionData: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
       observer: null,
-      sortedConfidenceCategoryList:
-        this.terminologyDescriptionData?.confidence_category?.sort(
-          (a, b) =>
-            ConfidenceAttribsOrder.indexOf(Object.keys(a)[0]) -
-            ConfidenceAttribsOrder.indexOf(Object.keys(b)[0])
-        ) || [],
       CONFIDENCE_COLOR_MAP,
       VariantConsequencesAttribs,
+      navigationItems: [
+        {
+          id: "g2p-confidence-section",
+          label: "G2P Confidence Category",
+        },
+        { id: "allelic-requirement-section", label: "Allelic Requirement" },
+        {
+          id: "cross-cutting-modifier-section",
+          label: "Cross Cutting Modifier",
+        },
+        { id: "molecular-mechanism-section", label: "Molecular Mechanism" },
+        {
+          id: "mechanism-synopsis-section",
+          label: "Molecular Mechanism Synopsis",
+        },
+        {
+          id: "mechanism-evidence-section",
+          label: "Molecular Mechanism Evidence Types",
+        },
+        { id: "variant-consequence-section", label: "Variant Consequence" },
+        { id: "variant-types-section", label: "Variant Types" },
+      ],
     };
   },
-  created() {
+  computed: {
+    sortedConfidenceCategoryList() {
+      return [
+        ...(this.terminologyDescriptionData?.confidence_category || []),
+      ].sort(
+        (a, b) =>
+          ConfidenceAttribsOrder.indexOf(Object.keys(a)[0]) -
+          ConfidenceAttribsOrder.indexOf(Object.keys(b)[0]),
+      );
+    },
+  },
+  mounted() {
     this.observer = new IntersectionObserver(this.onElementObserved, {
-      root: document.querySelector("#terminology-main"),
+      root: null,
       rootMargin: "-50% 0% -50% 0%",
       threshold: 0,
     });
-  },
-  mounted() {
-    document.querySelectorAll("section[id]").forEach((section) => {
+
+    this.$el.querySelectorAll("section[id]").forEach((section) => {
       this.observer.observe(section);
     });
   },
-  beforeDestroy() {
-    this.observer.disconnect();
+  beforeUnmount() {
+    this.observer?.disconnect();
   },
   methods: {
     onElementObserved(entries) {
       entries.forEach(({ target, isIntersecting }) => {
         const id = target.getAttribute("id");
-        if (isIntersecting) {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.add("active");
-        } else {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.remove("active");
-        }
+        this.$el
+          .querySelectorAll(`nav a[href="#${id}"]`)
+          .forEach((link) => link.classList.toggle("active", isIntersecting));
       });
     },
   },
@@ -59,6 +88,30 @@ export default {
 <template>
   <main id="terminology-main">
     <div id="terminology-content-div">
+      <div class="dropdown mobile-navigation mb-4">
+        <button
+          id="terminology-mobile-navigation-button"
+          class="btn btn-outline-primary dropdown-toggle w-100"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          On this page
+        </button>
+        <nav
+          class="dropdown-menu w-100"
+          aria-labelledby="terminology-mobile-navigation-button"
+        >
+          <a
+            v-for="item in navigationItems"
+            :key="item.id"
+            class="dropdown-item"
+            :href="`#${item.id}`"
+          >
+            {{ item.label }}
+          </a>
+        </nav>
+      </div>
       <h2 class="pb-3">Terminology</h2>
       <h6>
         Terminologies used in G2P are described here. Where possible, community
@@ -67,7 +120,7 @@ export default {
       <section id="g2p-confidence-section">
         <h4>G2P Confidence Category</h4>
         <h6>GenCC confidence terms are used</h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -122,7 +175,7 @@ export default {
           HPO Mode of inheritance (MOI) terminology is used. G2P uses synonyms
           of the MOI terms as many of the disorders described are de novo.
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -152,7 +205,7 @@ export default {
       <section id="cross-cutting-modifier-section" class="pt-3">
         <h4>Cross Cutting Modifier</h4>
         <h6>HPO inheritance qualifier terms are used where available</h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -189,12 +242,13 @@ export default {
           be found
           <a
             href="https://europepmc.org/article/MED/35395171"
-            style="text-decoration: none"
+            class="text-decoration-none"
             target="_blank"
+            rel="noopener noreferrer"
             >here</a
           >.
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -228,12 +282,13 @@ export default {
           definitions of Backwell and Marsh. More information can be found
           <a
             href="https://europepmc.org/article/MED/35395171"
-            style="text-decoration: none"
+            class="text-decoration-none"
             target="_blank"
+            rel="noopener noreferrer"
             >here</a
           >.
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -270,12 +325,13 @@ export default {
           can be found
           <a
             href="https://clinicalgenome.org/docs/gene-disease-validity-standard-operating-procedures-version-10/"
-            style="text-decoration: none"
+            class="text-decoration-none"
             target="_blank"
+            rel="noopener noreferrer"
             >here</a
           >.
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -287,7 +343,7 @@ export default {
             <tbody>
               <template
                 v-for="primaryEvidenceType in Object.keys(
-                  molecularDescriptionData.evidence
+                  molecularDescriptionData.evidence,
                 )"
                 :key="primaryEvidenceType"
               >
@@ -320,12 +376,13 @@ export default {
           allele. More information can be found
           <a
             href="https://europepmc.org/article/MED/37982373"
-            style="text-decoration: none"
+            class="text-decoration-none"
             target="_blank"
+            rel="noopener noreferrer"
             >here</a
           >.
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -341,7 +398,7 @@ export default {
                 <td
                   v-if="
                     VariantConsequencesAttribs.some(
-                      (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                      (attr) => attr.inputKey === term.term.replace(/ /g, '_'),
                     )
                   "
                 >
@@ -350,14 +407,15 @@ export default {
                 <td
                   v-if="
                     VariantConsequencesAttribs.some(
-                      (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                      (attr) => attr.inputKey === term.term.replace(/ /g, '_'),
                     )
                   "
                 >
                   <a
                     :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
-                    style="text-decoration: none"
+                    class="text-decoration-none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {{ term.accession }}
                   </a>
@@ -373,7 +431,7 @@ export default {
           The types of variants associated with the curated gene-disease pair
           reported in the publication
         </h6>
-        <div class="pt-1 table-responsive-xl">
+        <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -385,7 +443,7 @@ export default {
             <tbody>
               <template
                 v-for="(consequences, index) in Object.keys(
-                  variantDescriptionData
+                  variantDescriptionData,
                 )"
                 :key="index"
               >
@@ -404,7 +462,8 @@ export default {
                   <td
                     v-if="
                       !VariantConsequencesAttribs.some(
-                        (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                        (attr) =>
+                          attr.inputKey === term.term.replace(/ /g, '_'),
                       )
                     "
                   >
@@ -413,14 +472,16 @@ export default {
                   <td
                     v-if="
                       !VariantConsequencesAttribs.some(
-                        (attr) => attr.inputKey === term.term.replace(/ /g, '_')
+                        (attr) =>
+                          attr.inputKey === term.term.replace(/ /g, '_'),
                       )
                     "
                   >
                     <a
                       :href="`http://www.sequenceontology.org/browser/current_release/term/${term.accession}`"
-                      style="text-decoration: none"
+                      class="text-decoration-none"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       {{ term.accession }}
                     </a>
@@ -438,28 +499,14 @@ export default {
       </strong>
       <hr class="d-none d-md-block my-2 ms-3" />
       <nav class="nav nav-pills flex-column">
-        <a class="nav-link" href="#g2p-confidence-section">
-          G2P Confidence Category
+        <a
+          v-for="item in navigationItems"
+          :key="item.id"
+          class="nav-link"
+          :href="`#${item.id}`"
+        >
+          {{ item.label }}
         </a>
-        <a class="nav-link" href="#allelic-requirement-section">
-          Allelic Requirement
-        </a>
-        <a class="nav-link" href="#cross-cutting-modifier-section">
-          Cross Cutting Modifier
-        </a>
-        <a class="nav-link" href="#molecular-mechanism-section">
-          Molecular Mechanism
-        </a>
-        <a class="nav-link" href="#mechanism-synopsis-section">
-          Molecular Mechanism Synopsis
-        </a>
-        <a class="nav-link" href="#mechanism-evidence-section">
-          Molecular Mechanism Evidence Types
-        </a>
-        <a class="nav-link" href="#variant-consequence-section">
-          Variant Consequence
-        </a>
-        <a class="nav-link" href="#variant-types-section"> Variant Types </a>
       </nav>
     </nav>
   </main>
@@ -491,5 +538,24 @@ th {
 
 h6 {
   padding-bottom: 12px;
+}
+
+.mobile-navigation {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  #terminology-content-div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #side-navbar {
+    display: none;
+  }
+
+  .mobile-navigation {
+    display: block;
+  }
 }
 </style>
