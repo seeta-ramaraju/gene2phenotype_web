@@ -113,19 +113,19 @@ export default {
         </nav>
       </div>
       <h2 class="pb-3">Terminology</h2>
-      <h6>
+      <p class="terminology-description">
         Terminologies used in G2P are described here. Where possible, community
         standards are used.
-      </h6>
+      </p>
       <section id="g2p-confidence-section">
-        <h4>G2P Confidence Category</h4>
-        <h6>GenCC confidence terms are used</h6>
+        <h3>G2P Confidence Category</h3>
+        <p class="terminology-description">GenCC confidence terms are used</p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Category</th>
-                <th>Description</th>
+                <th scope="col">Category</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -161,26 +161,27 @@ export default {
         </div>
         <p class="mb-0">
           <i class="bi bi-info-circle"></i> Operationally several groups use
-          <b>definitive</b>, <b>strong</b> and <b>moderate</b> for clinical
-          reporting.
+          <strong>definitive</strong>, <strong>strong</strong> and
+          <strong>moderate</strong> for clinical reporting.
         </p>
         <p>
-          <i class="bi bi-info-circle"></i> <b>Limited</b>, <b>disputed</b> and
-          <b>refuted</b> are not used for clinical reporting.
+          <i class="bi bi-info-circle"></i> <strong>Limited</strong>,
+          <strong>disputed</strong> and <strong>refuted</strong> are not used
+          for clinical reporting.
         </p>
       </section>
       <section id="allelic-requirement-section" class="pt-3">
-        <h4>Allelic Requirement</h4>
-        <h6>
+        <h3>Allelic Requirement</h3>
+        <p class="terminology-description">
           HPO Mode of inheritance (MOI) terminology is used. G2P uses synonyms
           of the MOI terms as many of the disorders described are de novo.
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Genotype</th>
-                <th>Description</th>
+                <th scope="col">Genotype</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -203,14 +204,16 @@ export default {
         </div>
       </section>
       <section id="cross-cutting-modifier-section" class="pt-3">
-        <h4>Cross Cutting Modifier</h4>
-        <h6>HPO inheritance qualifier terms are used where available</h6>
+        <h3>Cross Cutting Modifier</h3>
+        <p class="terminology-description">
+          HPO inheritance qualifier terms are used where available
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Modifier</th>
-                <th>Description</th>
+                <th scope="col">Modifier</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -235,8 +238,8 @@ export default {
         </div>
       </section>
       <section id="molecular-mechanism-section" class="pt-3">
-        <h4>Molecular Mechanism</h4>
-        <h6>
+        <h3>Molecular Mechanism</h3>
+        <p class="terminology-description">
           The mechanism of disease derived from the available evidence,
           following the definitions of Backwell and Marsh. More information can
           be found
@@ -247,13 +250,13 @@ export default {
             rel="noopener noreferrer"
             >here</a
           >.
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Molecular Mechanism</th>
-                <th>Description</th>
+                <th scope="col">Molecular Mechanism</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -276,8 +279,8 @@ export default {
         </div>
       </section>
       <section id="mechanism-synopsis-section" class="pt-3">
-        <h4>Molecular Mechanism Synopsis</h4>
-        <h6>
+        <h3>Molecular Mechanism Synopsis</h3>
+        <p class="terminology-description">
           A more detailed description of the molecular mechanism, following the
           definitions of Backwell and Marsh. More information can be found
           <a
@@ -287,13 +290,13 @@ export default {
             rel="noopener noreferrer"
             >here</a
           >.
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Molecular Mechanism Synopsis</th>
-                <th>Description</th>
+                <th scope="col">Molecular Mechanism Synopsis</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -318,8 +321,8 @@ export default {
         </div>
       </section>
       <section id="mechanism-evidence-section" class="pt-3">
-        <h4>Molecular Mechanism Evidence Types</h4>
-        <h6>
+        <h3>Molecular Mechanism Evidence Types</h3>
+        <p class="terminology-description">
           G2P evidence classifications reuse terms from the ClinGen gene-disease
           validity SOP Experimental Evidence Summary Matrix. More information
           can be found
@@ -330,14 +333,14 @@ export default {
             rel="noopener noreferrer"
             >here</a
           >.
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Class</th>
-                <th>Evidence Type</th>
-                <th>Description</th>
+                <th scope="col">Class</th>
+                <th scope="col">Evidence Type</th>
+                <th scope="col">Description</th>
               </tr>
             </thead>
             <tbody>
@@ -369,8 +372,8 @@ export default {
         </div>
       </section>
       <section id="variant-consequence-section" class="pt-3">
-        <h4>Variant Consequence</h4>
-        <h6>
+        <h3>Variant Consequence</h3>
+        <p class="terminology-description">
           The consequence of the reported variants at the protein (for
           protein-coding genes) or the RNA (for non-protein coding genes), per
           allele. More information can be found
@@ -381,13 +384,13 @@ export default {
             rel="noopener noreferrer"
             >here</a
           >.
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Consequence</th>
-                <th>Description in SO</th>
+                <th scope="col">Consequence</th>
+                <th scope="col">Description in SO</th>
               </tr>
             </thead>
             <tbody>
@@ -426,18 +429,18 @@ export default {
         </div>
       </section>
       <section id="variant-types-section" class="pt-3">
-        <h4>Variant Types</h4>
-        <h6>
+        <h3>Variant Types</h3>
+        <p class="terminology-description">
           The types of variants associated with the curated gene-disease pair
           reported in the publication
-        </h6>
+        </p>
         <div class="pt-1 table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Primary Type</th>
-                <th>Variant Type</th>
-                <th>Description in SO</th>
+                <th scope="col">Primary Type</th>
+                <th scope="col">Variant Type</th>
+                <th scope="col">Description in SO</th>
               </tr>
             </thead>
             <tbody>
@@ -536,8 +539,8 @@ th {
   white-space: nowrap;
 }
 
-h6 {
-  padding-bottom: 12px;
+.terminology-description {
+  padding-bottom: 8px;
 }
 
 .mobile-navigation {
