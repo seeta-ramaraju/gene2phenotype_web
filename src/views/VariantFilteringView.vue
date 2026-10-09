@@ -97,37 +97,41 @@
         configuring VEP-G2P to use the relevant VCF files.
       </li>
     </ul>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Allelic requirement</th>
-          <th>Transcript variant count filter</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            biallelic_autosomal <br />
-            biallelic_PAR
-          </td>
-          <td>
-            At least 2 heterozygous variants or 1 homozygous variants which pass
-            all variant filtering rules
-          </td>
-        </tr>
-        <tr>
-          <td>
-            monoallelic_autosomal <br />monoallelic_PAR <br />monoallelic_X <br />monoallelic_X_hemizygous
-            <br />
-            monoallelic_X_heterozygous <br />monoallelic_Y_hemizygous <br />mitochondrial
-          </td>
-          <td>
-            At least 1 heterozygous variant or 1 homozygous variant which passes
-            all filtering rules
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Allelic requirement</th>
+            <th>Transcript variant count filter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              biallelic_autosomal <br />
+              biallelic_PAR
+            </td>
+            <td>
+              At least 2 heterozygous variants or 1 homozygous variants which
+              pass all variant filtering rules
+            </td>
+          </tr>
+          <tr>
+            <td>
+              monoallelic_autosomal <br />monoallelic_PAR <br />monoallelic_X
+              <br />monoallelic_X_hemizygous
+              <br />
+              monoallelic_X_heterozygous <br />monoallelic_Y_hemizygous
+              <br />mitochondrial
+            </td>
+            <td>
+              At least 1 heterozygous variant or 1 homozygous variant which
+              passes all filtering rules
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <h6 class="pb-2">Installing and running VEP-G2P</h6>
     <p>
       Please refer to the Ensembl VEP
@@ -187,193 +191,198 @@
       additional options are passed to the plugin as
       <code>key=value</code> pairs.
     </p>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Key</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>af_monoallelic</th>
-          <td>
-            Maximum allele frequency for inclusion for monoallelic genes.<br />
-            <b>Default</b>: 0.0001
-          </td>
-        </tr>
-        <tr>
-          <th>af_biallelic</th>
-          <td>
-            Maximum allele frequency for inclusion for biallelic genes.<br />
-            <b>Default</b>: 0.005
-          </td>
-        </tr>
-        <tr>
-          <th>confidence_levels</th>
-          <td>
-            Confidence levels of assertions to include. Separate multiple values
-            with '&'.<br />
-            <b>Default</b>: definitive, strong, moderate
-          </td>
-        </tr>
-        <tr>
-          <th>all_confidence_levels</th>
-          <td>
-            Set value to 1 to include all assertions regardless of confidence
-            level. Not recommended for diagnostic reporting.<br />
-            <b>Default</b>: 0
-          </td>
-        </tr>
-        <tr>
-          <th>af_from_vcf</th>
-          <td>
-            Set value to 1 to include allele frequencies from VCF files.
-            Specifiy the list of populations to include with option
-            <code>af_from_vcf_keys</code>.<br />
-            <b>Note</b>: filtering using additional VCF files takes more time
-            than using data in the Ensembl VEP cache only.<br />
-            <b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>af_from_vcf_keys</th>
-          <td>
-            Select additional studies for AF filtering. Separate multiple values
-            with '&'. Can only be used with option <code>af_from_vcf</code>.
-            Currently supported studies are uk10k, topmed, gnomADe,
-            gnomADe_r2.1.1, gnomADg, gnomADg_v3.1.2, gnomADe_v4.1, and
-            gnomADg_v4.1.<br />
-            <b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>only_vcf_freq</th>
-          <td>
-            By default, both cached frequency data and frequency data from VCF
-            files are used in the frequency filtering process when
-            <strong>af_from_vcf</strong> is used. Setting this to
-            <b>1</b> ensures that only frequency data from VCF files is
-            considered<br /><b>Note</b>: Information may be lost using this
-            option.
-          </td>
-        </tr>
-        <tr>
-          <th>variant_include_list</th>
-          <td>
-            A list of variants to include even if they do not pass allele
-            frequency filtering. The include list is a sorted, bgzipped and
-            tabixed VCF file.<br />
-            <b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>types</th>
-          <td>
-            Sequence Ontology predicted molecular consequence types to include.
-            Separate multiple values with '&'.<br />
-            This option replaces the default list.<br />
-            <b>Default set</b>: splice_donor_variant, splice_acceptor_variant,
-            splice_donor_region_variant, splice_donor_5th_base_variant,
-            splice_region_variant, splice_polypyrimidine_tract_variant,
-            stop_gained, frameshift_variant, stop_lost, initiator_codon_variant,
-            inframe_insertion, inframe_deletion, missense_variant,
-            coding_sequence_variant, start_lost, transcript_ablation,
-            transcript_amplification, protein_altering_variant
-          </td>
-        </tr>
-        <tr>
-          <th>add_types</th>
-          <td>
-            Sequence Ontology predicted molecular consequence types to append to the default list.
-            Separate multiple values with '&'.<br />
-            <b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>log_dir</th>
-          <td>
-            The log_dir is used to store log_files which hold intermediate
-            results. The log_dir should be empty on starting analysis.<br />
-            <b>Default</b>:
-            current_working_dir/g2p_log_dir_[year]_[mon]_[mday]_[hour]_[min]_[sec]
-          </td>
-        </tr>
-        <tr>
-          <th>txt_report</th>
-          <td>
-            Output report listing all G2P complete genes and attributes.<br />
-            <b>Default</b>:
-            current_working_dir/txt_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].txt
-          </td>
-        </tr>
-        <tr>
-          <th>html_report</th>
-          <td>
-            Output report listing all G2P complete genes and attributes t.
-            <br /><b>Default</b>:
-            current_working_dir/html_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].html
-          </td>
-        </tr>
-        <tr>
-          <th>filter_by_gene_symbol</th>
-          <td>
-            Set this option to 1 to filter by gene symbol. This is automatically
-            enabled for PanelApp files.<br /><b>Default</b>: non-PanelApp files
-            are filtered by HGNC ID.
-          </td>
-        </tr>
-        <tr>
-          <th>filter_consequence_match</th>
-          <td>
-            Set to <code>strict</code> or <code>broad</code> to only report
-            variants where the VEP-predicted consequence matches the G2P variant
-            consequence (GenCC term).<br />
-            The value <code>broad</code> includes 'almost always', 'probable'
-            and 'possible' matches; the value <code>strict</code> includes
-            'almost always' and 'probable' matches. More details in Figure 2 of
-            <a
-              href="https://europepmc.org/article/MED/37982373"
-              target="_blank"
-              style="text-decoration: none"
-              >this publication</a
-            >. <br /><b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>flag_consequence_match</th>
-          <td>
-            Set to <code>strict</code> or <code>broad</code> to only report
-            variants where the VEP-predicted consequence matches the G2P variant
-            consequence (GenCC term).<br />
-            The value <code>broad</code> includes 'almost always', 'probable'
-            and 'possible' matches; the value <code>strict</code> includes
-            'almost always' and 'probable' matches. More details in Figure 2 of
-            <a
-              href="https://europepmc.org/article/MED/37982373"
-              target="_blank"
-              style="text-decoration: none"
-              >this publication</a
-            >. <br /><b>Default</b>: not used
-          </td>
-        </tr>
-        <tr>
-          <th>include_disease</th>
-          <td>
-            Set to 1 to include the G2P disease name in the VEP output for
-            reported G2P variants.<br /><b>Default</b>: 0
-          </td>
-        </tr>
-        <tr>
-          <th>only_mane</th>
-          <td>
-            Set to 1 to analyse variants against MANE transcripts only. This
-            simplifies the output but may omit relevant transcript-specific
-            findings.<br /><b>Default</b>: all transcripts are used.
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>af_monoallelic</th>
+            <td>
+              Maximum allele frequency for inclusion for monoallelic genes.<br />
+              <b>Default</b>: 0.0001
+            </td>
+          </tr>
+          <tr>
+            <th>af_biallelic</th>
+            <td>
+              Maximum allele frequency for inclusion for biallelic genes.<br />
+              <b>Default</b>: 0.005
+            </td>
+          </tr>
+          <tr>
+            <th>confidence_levels</th>
+            <td>
+              Confidence levels of assertions to include. Separate multiple
+              values with '&'.<br />
+              <b>Default</b>: definitive, strong, moderate
+            </td>
+          </tr>
+          <tr>
+            <th>all_confidence_levels</th>
+            <td>
+              Set value to 1 to include all assertions regardless of confidence
+              level. Not recommended for diagnostic reporting.<br />
+              <b>Default</b>: 0
+            </td>
+          </tr>
+          <tr>
+            <th>af_from_vcf</th>
+            <td>
+              Set value to 1 to include allele frequencies from VCF files.
+              Specifiy the list of populations to include with option
+              <code>af_from_vcf_keys</code>.<br />
+              <b>Note</b>: filtering using additional VCF files takes more time
+              than using data in the Ensembl VEP cache only.<br />
+              <b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>af_from_vcf_keys</th>
+            <td>
+              Select additional studies for AF filtering. Separate multiple
+              values with '&'. Can only be used with option
+              <code>af_from_vcf</code>. Currently supported studies are uk10k,
+              topmed, gnomADe, gnomADe_r2.1.1, gnomADg, gnomADg_v3.1.2,
+              gnomADe_v4.1, and gnomADg_v4.1.<br />
+              <b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>only_vcf_freq</th>
+            <td>
+              By default, both cached frequency data and frequency data from VCF
+              files are used in the frequency filtering process when
+              <strong>af_from_vcf</strong> is used. Setting this to
+              <b>1</b> ensures that only frequency data from VCF files is
+              considered<br /><b>Note</b>: Information may be lost using this
+              option.
+            </td>
+          </tr>
+          <tr>
+            <th>variant_include_list</th>
+            <td>
+              A list of variants to include even if they do not pass allele
+              frequency filtering. The include list is a sorted, bgzipped and
+              tabixed VCF file.<br />
+              <b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>types</th>
+            <td>
+              Sequence Ontology predicted molecular consequence types to
+              include. Separate multiple values with '&'.<br />
+              This option replaces the default list.<br />
+              <b>Default set</b>: splice_donor_variant, splice_acceptor_variant,
+              splice_donor_region_variant, splice_donor_5th_base_variant,
+              splice_region_variant, splice_polypyrimidine_tract_variant,
+              stop_gained, frameshift_variant, stop_lost,
+              initiator_codon_variant, inframe_insertion, inframe_deletion,
+              missense_variant, coding_sequence_variant, start_lost,
+              transcript_ablation, transcript_amplification,
+              protein_altering_variant
+            </td>
+          </tr>
+          <tr>
+            <th>add_types</th>
+            <td>
+              Sequence Ontology predicted molecular consequence types to append
+              to the default list. Separate multiple values with '&'.<br />
+              <b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>log_dir</th>
+            <td>
+              The log_dir is used to store log_files which hold intermediate
+              results. The log_dir should be empty on starting analysis.<br />
+              <b>Default</b>:
+              current_working_dir/g2p_log_dir_[year]_[mon]_[mday]_[hour]_[min]_[sec]
+            </td>
+          </tr>
+          <tr>
+            <th>txt_report</th>
+            <td>
+              Output report listing all G2P complete genes and attributes.<br />
+              <b>Default</b>:
+              current_working_dir/txt_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].txt
+            </td>
+          </tr>
+          <tr>
+            <th>html_report</th>
+            <td>
+              Output report listing all G2P complete genes and attributes t.
+              <br /><b>Default</b>:
+              current_working_dir/html_report_[year]_[mon]_[mday]_[hour]_[min]_[sec].html
+            </td>
+          </tr>
+          <tr>
+            <th>filter_by_gene_symbol</th>
+            <td>
+              Set this option to 1 to filter by gene symbol. This is
+              automatically enabled for PanelApp files.<br /><b>Default</b>:
+              non-PanelApp files are filtered by HGNC ID.
+            </td>
+          </tr>
+          <tr>
+            <th>filter_consequence_match</th>
+            <td>
+              Set to <code>strict</code> or <code>broad</code> to only report
+              variants where the VEP-predicted consequence matches the G2P
+              variant consequence (GenCC term).<br />
+              The value <code>broad</code> includes 'almost always', 'probable'
+              and 'possible' matches; the value <code>strict</code> includes
+              'almost always' and 'probable' matches. More details in Figure 2
+              of
+              <a
+                href="https://europepmc.org/article/MED/37982373"
+                target="_blank"
+                style="text-decoration: none"
+                >this publication</a
+              >. <br /><b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>flag_consequence_match</th>
+            <td>
+              Set to <code>strict</code> or <code>broad</code> to only report
+              variants where the VEP-predicted consequence matches the G2P
+              variant consequence (GenCC term).<br />
+              The value <code>broad</code> includes 'almost always', 'probable'
+              and 'possible' matches; the value <code>strict</code> includes
+              'almost always' and 'probable' matches. More details in Figure 2
+              of
+              <a
+                href="https://europepmc.org/article/MED/37982373"
+                target="_blank"
+                style="text-decoration: none"
+                >this publication</a
+              >. <br /><b>Default</b>: not used
+            </td>
+          </tr>
+          <tr>
+            <th>include_disease</th>
+            <td>
+              Set to 1 to include the G2P disease name in the VEP output for
+              reported G2P variants.<br /><b>Default</b>: 0
+            </td>
+          </tr>
+          <tr>
+            <th>only_mane</th>
+            <td>
+              Set to 1 to analyse variants against MANE transcripts only. This
+              simplifies the output but may omit relevant transcript-specific
+              findings.<br /><b>Default</b>: all transcripts are used.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <h6 class="pb-2">Additional example commands</h6>
     <p>
       Limiting the molecular consequence type reported and maximum allele
@@ -466,45 +475,49 @@
       filtering is done within VEP-G2P.
     </p>
     <p>Other filtering is as follows</p>
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>PanelApp Model_Of_Inheritance</th>
-          <th>Filtering</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Includes 'monogenic' with or without other inheritance types</td>
-          <td>
-            Monoallelic filters are applied (default allele frequency not more
-            than 0.0001 in reference populations and one variant required).
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Includes 'biallelic' with or without other inheritance types, except
-            monoallelic
-          </td>
-          <td>
-            Biallelic filters are applied (default allele frequency not more
-            than 0.005, rules and either one homozygous or 2 heterozygous
-            variants required).
-          </td>
-        </tr>
-        <tr>
-          <td>
-            X-LINKED: hemizygous mutation in males, biallelic mutations in
-            females
-          </td>
-          <td>
-            Hemizygous/biallelic filters are applied (default allele frequency
-            not more than 0.0001 in reference populations and either one
-            homozygous or two heterozygous variants are required).
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>PanelApp Model_Of_Inheritance</th>
+            <th>Filtering</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Includes 'monogenic' with or without other inheritance types
+            </td>
+            <td>
+              Monoallelic filters are applied (default allele frequency not more
+              than 0.0001 in reference populations and one variant required).
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Includes 'biallelic' with or without other inheritance types,
+              except monoallelic
+            </td>
+            <td>
+              Biallelic filters are applied (default allele frequency not more
+              than 0.005, rules and either one homozygous or 2 heterozygous
+              variants required).
+            </td>
+          </tr>
+          <tr>
+            <td>
+              X-LINKED: hemizygous mutation in males, biallelic mutations in
+              females
+            </td>
+            <td>
+              Hemizygous/biallelic filters are applied (default allele frequency
+              not more than 0.0001 in reference populations and either one
+              homozygous or two heterozygous variants are required).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -516,6 +529,8 @@
   background: #f4f4f4;
   border-radius: 5px;
   font-family: courier, monospace;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 code {
   color: black;
