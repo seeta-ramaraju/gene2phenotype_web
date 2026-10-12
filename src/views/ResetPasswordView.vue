@@ -13,6 +13,9 @@ export default {
       newPasswordRepeat: "",
       isPasswordVisible: false,
       isResetSuccess: false,
+      isResetLinkInvalid: false,
+      invalidResetLinkMsg:
+        "This password reset link is invalid or expired. Please request a new password reset email.",
     };
   },
   methods: {
@@ -20,6 +23,7 @@ export default {
       this.errorMsg = null;
       this.isDataLoading = true;
       this.isResetSuccess = false;
+      this.isResetLinkInvalid = false;
       const requestBody = {
         password: this.newPassword,
         password2: this.newPasswordRepeat,
@@ -43,6 +47,13 @@ export default {
         })
         .catch((error) => {
           const apiError = error.response?.data?.error;
+          if (apiError === this.invalidResetLinkMsg) {
+            this.errorMsg = apiError;
+            this.isResetLinkInvalid = true;
+            this.newPassword = "";
+            this.newPasswordRepeat = "";
+            return;
+          }
           this.errorMsg = fetchAndLogApiResponseErrorListMsg(
             error,
             Array.isArray(apiError) ? apiError : [apiError],
@@ -80,6 +91,16 @@ export default {
         <i class="bi bi-check-circle-fill"></i>
         Password reset successful. Please
         <router-link to="/login">log in</router-link>.
+      </div>
+    </div>
+    <div
+      class="alert alert-danger mt-3"
+      role="alert"
+      v-else-if="isResetLinkInvalid"
+    >
+      <div>
+        <i class="bi bi-exclamation-circle-fill"></i>
+        {{ errorMsg }}
       </div>
     </div>
     <div class="form-signin w-100 m-auto" v-else>
