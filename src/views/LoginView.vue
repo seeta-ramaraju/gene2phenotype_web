@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       errorMsg: null,
-      isDataLoading: false,
+      isSubmitting: false,
       username: "",
       password: "",
       isPasswordVisible: false,
@@ -21,9 +21,17 @@ export default {
   },
   methods: {
     login() {
-      const redirectRoute = this.$route.query.redirect || "/";
+      if (this.isSubmitting) return;
+
+      const redirect = this.$route.query.redirect;
+      const redirectRoute =
+        typeof redirect === "string" &&
+        redirect.startsWith("/") &&
+        !redirect.startsWith("//")
+          ? redirect
+          : "/";
       this.errorMsg = null;
-      this.isDataLoading = true;
+      this.isSubmitting = true;
       const requestBody = {
         username: this.username,
         password: this.password,
@@ -40,34 +48,27 @@ export default {
         })
         .catch((error) => {
           const apiError = error.response?.data?.error;
+          const apiErrors = Array.isArray(apiError)
+            ? apiError
+            : apiError
+              ? [apiError]
+              : [];
           this.errorMsg = fetchAndLogApiResponseErrorListMsg(
             error,
-            Array.isArray(apiError) ? apiError : [apiError],
+            apiErrors,
             "Unable to login. Please check your credentials or try again later.",
           );
         })
         .finally(() => {
-          this.isDataLoading = false;
+          this.isSubmitting = false;
         });
-    },
-    togglePasswordVisibility() {
-      this.isPasswordVisible = !this.isPasswordVisible;
     },
   },
 };
 </script>
 <template>
   <div class="container px-5 py-5" style="min-height: 60vh">
-    <div
-      class="d-flex justify-content-center"
-      v-if="isDataLoading"
-      style="margin-top: 250px; margin-bottom: 250px"
-    >
-      <div class="spinner-border text-secondary" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    <div class="form-signin w-100 m-auto" v-else>
+    <div class="form-signin w-100 m-auto">
       <form @submit.prevent="login">
         <img
           class="mb-4 m-auto d-flex align-items-center"
@@ -86,6 +87,10 @@ export default {
             id="input-username"
             placeholder="name@example.com"
             v-model.trim="username"
+            :disabled="isSubmitting"
+            @input="errorMsg = null"
+            required
+            autocomplete="username"
           />
           <label for="input-username">Email address</label>
         </div>
@@ -95,18 +100,43 @@ export default {
             class="form-control"
             id="input-password"
             placeholder="Password"
-            v-model.trim="password"
+            v-model="password"
+            :disabled="isSubmitting"
+            @input="errorMsg = null"
+            required
+            autocomplete="current-password"
           />
           <label for="input-password">Password</label>
-          <input type="checkbox" @click="togglePasswordVisibility" />
-          {{ isPasswordVisible ? "Hide Password" : "Show Password" }}
         </div>
-        <button class="btn btn-primary w-100 my-2" type="submit">Log in</button>
+        <div class="form-check">
+          <input
+            id="show-password"
+            v-model="isPasswordVisible"
+            class="form-check-input"
+            type="checkbox"
+            :disabled="isSubmitting"
+          />
+          <label class="form-check-label" for="show-password">
+            Show password
+          </label>
+        </div>
+        <button
+          class="btn btn-primary w-100 my-2"
+          type="submit"
+          :disabled="isSubmitting"
+        >
+          <span
+            v-if="isSubmitting"
+            class="spinner-border spinner-border-sm me-2"
+            aria-hidden="true"
+          ></span>
+          {{ isSubmitting ? "Logging in…" : "Log in" }}
+        </button>
       </form>
       <router-link to="/verify-email" style="text-decoration: None">
         Forgot password?
       </router-link>
-      <div class="alert alert-danger mt-3" role="alert" v-if="errorMsg">
+      <div v-if="errorMsg" class="alert alert-danger mt-3" role="alert">
         <div><i class="bi bi-exclamation-circle-fill"></i> {{ errorMsg }}</div>
       </div>
     </div>
