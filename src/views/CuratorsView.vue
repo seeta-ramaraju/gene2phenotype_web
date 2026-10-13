@@ -1,7 +1,7 @@
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>Curators</h2>
-    <p class="h6 py-4">Each G2P panel is curated by domain experts.</p>
+    <h2 class="pb-3">Curators</h2>
+    <p>Each G2P panel is curated by domain experts.</p>
     <div class="pb-4">
       <div class="row g-3">
         <div class="col-12 col-md-6 col-lg-4">
