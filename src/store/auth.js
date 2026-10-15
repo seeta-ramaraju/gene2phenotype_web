@@ -1,5 +1,4 @@
 import api from "../services/api.js";
-import { logGeneralErrorMsg } from "../utility/ErrorUtility.js";
 import { LOGOUT_URL, PROFILE_URL } from "../utility/UrlConstants.js";
 import { defineStore } from "pinia";
 
@@ -124,9 +123,8 @@ export const useAuthStore = defineStore("auth", {
         .then((response) => {
           this.login(response.data);
         })
-        .catch((error) => {
+        .catch(() => {
           this.logout();
-          logGeneralErrorMsg(error);
         });
     },
   },
