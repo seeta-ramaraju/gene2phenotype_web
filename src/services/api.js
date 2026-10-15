@@ -8,7 +8,7 @@ import {
 import { PROFILE_URL, REFRESH_TOKEN_URL } from "../utility/UrlConstants.js";
 
 const REFRESH_REQUEST_TIMEOUT_IN_MS = 10 * 1000;
-const ENDED_SESSION_STATUS_CODES = [400, 401, 403];
+const ENDED_SESSION_STATUS_CODES = [401, 403];
 
 const apiConfig = {
   withCredentials: true,
