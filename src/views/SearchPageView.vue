@@ -56,19 +56,18 @@ export default {
       if (dataUrl) {
         url = dataUrl.replace(/^.*\/\/[^\/]+/, ""); // remove domain from url
       } else {
-        url = `${SEARCH_URL}?`;
         const { query, type, panel } = this.$route.query;
-        let queryParamsArr = [];
+        const queryParams = new URLSearchParams();
         if (query) {
-          queryParamsArr.push(`query=${query}`);
+          queryParams.set("query", query);
         }
         if (type) {
-          queryParamsArr.push(`type=${type}`);
+          queryParams.set("type", type);
         }
         if (panel) {
-          queryParamsArr.push(`panel=${panel}`);
+          queryParams.set("panel", panel);
         }
-        url += queryParamsArr.join("&");
+        url = `${SEARCH_URL}?${queryParams.toString()}`;
       }
       api
         .get(url)
