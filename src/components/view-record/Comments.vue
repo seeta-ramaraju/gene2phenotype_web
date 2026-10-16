@@ -37,6 +37,7 @@ export default {
               <tr v-for="commentObj in comments">
                 <td style="white-space: pre-wrap">
                   {{ commentObj.text }}
+                  <span v-if="commentObj.date">({{ commentObj.date }})</span>
                 </td>
                 <td>
                   {{

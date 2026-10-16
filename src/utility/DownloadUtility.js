@@ -514,7 +514,7 @@ const prepareCommentsObj = (locusGeneDiseaseData) => {
   const commentsTableHeaderRow = createTableHeaderRow(commentsHeaders);
   // Prepare table body rows
   const commentsTableBodyRows = locusGeneDiseaseData.comments.map((item) => [
-    item.text,
+    item.date ? `${item.text} (${item.date})` : item.text,
     item.is_public === 1 ? "Public" : item.is_public === 0 ? "Private" : "",
   ]);
   // Prepare table rows (header and body rows)
