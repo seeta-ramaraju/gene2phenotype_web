@@ -230,7 +230,7 @@ export default {
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
                   v-if="item.stable_id"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   {{ item.stable_id }}
                 </router-link>
@@ -239,7 +239,7 @@ export default {
                 <router-link
                   v-if="item.gene"
                   :to="`/gene/${item.gene}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   {{ item.gene }}
                 </router-link>
@@ -248,7 +248,7 @@ export default {
                 <router-link
                   v-if="item.disease"
                   :to="`/disease/${item.disease}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                 >
                   {{ item.disease }}
                 </router-link>

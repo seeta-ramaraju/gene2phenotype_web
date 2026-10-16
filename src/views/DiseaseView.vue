@@ -123,7 +123,7 @@ export default {
               <td>
                 <router-link
                   :to="`/lgd/${item.stable_id}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                   v-if="item.stable_id"
                 >
                   {{ item.stable_id }}
@@ -132,7 +132,7 @@ export default {
               <td>
                 <router-link
                   :to="`/gene/${item.locus}`"
-                  style="text-decoration: none"
+                  class="text-decoration-none"
                   v-if="item.locus"
                 >
                   {{ item.locus }}
@@ -191,7 +191,8 @@ export default {
                 :href="OMIM_URL + item.accession"
                 v-if="item.source === 'OMIM'"
                 target="_blank"
-                style="text-decoration: none"
+                rel="noopener noreferrer"
+                class="text-decoration-none"
               >
                 {{ item.accession }}
               </a>
@@ -199,7 +200,8 @@ export default {
                 :href="MONDO_URL + item.accession"
                 v-else-if="item.source === 'Mondo'"
                 target="_blank"
-                style="text-decoration: none"
+                rel="noopener noreferrer"
+                class="text-decoration-none"
               >
                 {{ item.accession }}
               </a>
