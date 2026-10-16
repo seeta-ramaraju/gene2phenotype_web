@@ -1,25 +1,35 @@
 <script>
 import ToolTip from "../components/tooltip/ToolTip.vue";
+
+const NAVIGATION_ITEMS = Object.freeze([
+  { id: "navigation-section", label: "Navigation" },
+  { id: "search-section", label: "Search" },
+  { id: "finding-help-section", label: "Finding help information" },
+  { id: "logging-in-section", label: "Logging in" },
+  { id: "links-section", label: "Links" },
+  { id: "further-help-section", label: "Further help" },
+]);
+
 export default {
   data() {
     return {
       observer: null,
+      navigationItems: NAVIGATION_ITEMS,
     };
   },
-  created() {
+  mounted() {
     this.observer = new IntersectionObserver(this.onElementObserved, {
-      root: document.querySelector("#website-help-main"),
+      root: null,
       rootMargin: "-50% 0% -50% 0%",
       threshold: 0,
     });
-  },
-  mounted() {
-    document.querySelectorAll("section[id]").forEach((section) => {
+
+    this.$refs.content.querySelectorAll("section[id]").forEach((section) => {
       this.observer.observe(section);
     });
   },
-  beforeDestroy() {
-    this.observer.disconnect();
+  beforeUnmount() {
+    this.observer?.disconnect();
   },
   components: {
     ToolTip,
@@ -28,15 +38,9 @@ export default {
     onElementObserved(entries) {
       entries.forEach(({ target, isIntersecting }) => {
         const id = target.getAttribute("id");
-        if (isIntersecting) {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.add("active");
-        } else {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.remove("active");
-        }
+        this.$el
+          .querySelectorAll(`nav a[href="#${id}"]`)
+          .forEach((link) => link.classList.toggle("active", isIntersecting));
       });
     },
   },
@@ -45,7 +49,28 @@ export default {
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
     <main id="website-help-main">
-      <div id="website-help-content-div">
+      <div id="website-help-content-div" ref="content">
+        <div class="dropdown mobile-navigation mb-4">
+          <button
+            id="help-mobile-navigation-button"
+            class="btn btn-outline-primary dropdown-toggle w-100"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            On this page
+          </button>
+          <nav class="dropdown-menu w-100" aria-label="On this page">
+            <a
+              v-for="item in navigationItems"
+              :key="item.id"
+              class="dropdown-item"
+              :href="`#${item.id}`"
+            >
+              {{ item.label }}
+            </a>
+          </nav>
+        </div>
         <h2 class="pb-3">Using this site</h2>
         <p>
           The G2P database holds detailed gene disease models, defined as
@@ -66,10 +91,9 @@ export default {
             <figure class="figure">
               <img
                 src="../assets/G2P-navigation.png"
-                class="figure-img img-thumbnail border-secondary-subtle"
+                class="figure-img img-fluid img-thumbnail border-secondary-subtle"
                 alt="G2P navigation"
                 width="800"
-                height="auto"
               />
             </figure>
           </div>
@@ -88,10 +112,9 @@ export default {
             <figure class="figure">
               <img
                 src="../assets/G2P-help-search.png"
-                class="figure-img img-thumbnail border-secondary-subtle"
+                class="figure-img img-fluid img-thumbnail border-secondary-subtle"
                 alt="G2P search"
                 width="800"
-                height="auto"
               />
             </figure>
           </div>
@@ -101,10 +124,9 @@ export default {
             <figure class="figure">
               <img
                 src="../assets/G2P-help-search-example-1.png"
-                class="figure-img img-thumbnail border-secondary-subtle"
+                class="figure-img img-fluid img-thumbnail border-secondary-subtle"
                 alt="G2P search example 1"
                 width="800"
-                height="auto"
               />
             </figure>
           </div>
@@ -113,13 +135,12 @@ export default {
             all records with 'cardiomyopathy' in the disease name or synonym
           </h6>
           <div class="mt-3 d-flex justify-content-center">
-            <figure class="figure" style="width: 800px">
+            <figure class="figure help-figure-wide">
               <img
                 src="../assets/G2P-help-search-example-2.png"
-                class="figure-img img-thumbnail border-secondary-subtle"
+                class="figure-img img-fluid img-thumbnail border-secondary-subtle"
                 alt="G2P search example 2"
                 width="800"
-                height="auto"
               />
               <figcaption class="figure-caption">
                 Search results page showing summary information with links to
@@ -136,10 +157,9 @@ export default {
             <figure class="figure">
               <img
                 src="../assets/G2P-help-search-example-3.png"
-                class="figure-img img-thumbnail border-secondary-subtle"
+                class="figure-img img-fluid img-thumbnail border-secondary-subtle"
                 alt="G2P search example 3"
                 width="800"
-                height="auto"
               />
             </figure>
           </div>
@@ -187,21 +207,25 @@ export default {
           </p>
         </section>
       </div>
-      <nav id="side-navbar" class="h-100 flex-column align-items-stretch ps-3">
+      <nav
+        id="side-navbar"
+        class="h-100 flex-column align-items-stretch ps-3"
+        aria-label="On this page"
+      >
         <strong class="d-none d-md-block h6 my-2 ms-3 text-body-secondary">
           On this page
         </strong>
         <hr class="d-none d-md-block my-2 ms-3" />
-        <nav class="nav nav-pills flex-column">
-          <a class="nav-link" href="#navigation-section"> Navigation </a>
-          <a class="nav-link" href="#search-section"> Search </a>
-          <a class="nav-link" href="#finding-help-section">
-            Finding help information
+        <div class="nav nav-pills flex-column">
+          <a
+            v-for="item in navigationItems"
+            :key="item.id"
+            class="nav-link"
+            :href="`#${item.id}`"
+          >
+            {{ item.label }}
           </a>
-          <a class="nav-link" href="#logging-in-section"> Logging in </a>
-          <a class="nav-link" href="#links-section"> Links </a>
-          <a class="nav-link" href="#further-help-section"> Further help </a>
-        </nav>
+        </div>
       </nav>
     </main>
   </div>
@@ -225,5 +249,29 @@ main > nav {
 
 #side-navbar {
   width: 20%;
+}
+
+.help-figure-wide {
+  width: 100%;
+  max-width: 800px;
+}
+
+.mobile-navigation {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  #website-help-content-div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  #side-navbar {
+    display: none;
+  }
+
+  .mobile-navigation {
+    display: block;
+  }
 }
 </style>

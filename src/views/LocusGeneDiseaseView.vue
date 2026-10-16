@@ -44,7 +44,7 @@ export default {
       },
       // fetch the data when the view is created and the data is
       // already being observed
-      { immediate: true }
+      { immediate: true },
     );
   },
   methods: {
@@ -74,7 +74,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to fetch record data. Please try again later.",
-              "Unable to fetch record data."
+              "Unable to fetch record data.",
             );
           }
         })
@@ -92,7 +92,7 @@ export default {
             this.userPanels = response.data;
             this.validateIsRecordPartOfUserPanels(
               this.locusGeneDiseaseData?.panels,
-              this.userPanels
+              this.userPanels,
             );
           }
         })
@@ -106,11 +106,11 @@ export default {
     validateIsRecordPartOfUserPanels(recordPanels, userPanels) {
       // convert array of objects (name, description) to array of strings (description)
       const userPanelDescriptions = userPanels.map(
-        (panelObj) => panelObj.description
+        (panelObj) => panelObj.description,
       );
       // if any of the user panels exists in the g2p record panels list then true else false
       this.isRecordPartOfUserPanels = recordPanels.some((item) =>
-        userPanelDescriptions.includes(item.description)
+        userPanelDescriptions.includes(item.description),
       );
     },
     refreshPage() {
@@ -152,7 +152,6 @@ export default {
       <LocusGeneDiseaseDisplay
         :isRecordPartOfUserPanels="isRecordPartOfUserPanels"
         :locusGeneDiseaseData="locusGeneDiseaseData"
-        :stableId="stableId"
         :userPanels="userPanels"
         :isPanelDataLoading="isPanelDataLoading"
         :isAuthenticated="isAuthenticated"

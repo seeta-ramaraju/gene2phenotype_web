@@ -1,134 +1,162 @@
 <template>
   <div class="container px-5 py-3" style="min-height: 60vh">
-    <h2>Publications</h2>
+    <h2 class="pb-3">Publications</h2>
     <h4 class="pb-2">Citing G2P</h4>
-    <h6 class="pb-2">
+    <p>
       If you have used Gene2Phenotype in your work, please cite the
-      <a href="/gene2phenotype/" style="text-decoration: none" target="_blank">
-        website
-      </a>
+      <router-link to="/" class="text-decoration-none"> website </router-link>
       with date accessed and below article.
-    </h6>
-    <a
-      href="https://doi.org/10.1016/j.jmb.2026.169768"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        Gene2Phenotype: A Database of Structured Human Monogenic Diseases and
-        Pathomechanisms
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        Hunt SE, Lemos D, Pericherla SR, Austine-Orimoloye O, Cibrian Uhalte E,
-        Yates TM, et al. Gene2Phenotype: A Database of Structured Human
-        Monogenic Diseases and Pathomechanisms. Journal of Molecular Biology.
-        2026 Mar;169768. doi:10.1016/j.jmb.2026.169768
+    </p>
+    <article>
+      <a
+        href="https://doi.org/10.1016/j.jmb.2026.169768"
+        class="text-decoration-none"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <h6>
+          Gene2Phenotype: A Database of Structured Human Monogenic Diseases and
+          Pathomechanisms
+        </h6>
+      </a>
+      <p class="pb-2 citation">
+        <cite class="fst-normal">
+          Hunt SE, Lemos D, Pericherla SR, Austine-Orimoloye O, Cibrian Uhalte
+          E, Yates TM, et al. Gene2Phenotype: A Database of Structured Human
+          Monogenic Diseases and Pathomechanisms. Journal of Molecular Biology.
+          2026 Mar;169768. doi:10.1016/j.jmb.2026.169768
+        </cite>
       </p>
-    </div>
+    </article>
     <h4 class="pb-2">Additional G2P Publications</h4>
-    <a
-      href="https://doi.org/10.1186/s13073-024-01398-1"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        Curating genomic disease-gene relationships with Gene2Phenotype (G2P)
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        T Michael Yates, Morad Ansari, Louise Thompson, Sarah E Hunt, Elena
-        Cibrian Uhalte, Rachel J Hobson, Joseph A Marsh, Caroline F Wright,
-        Helen V Firth. Curating genomic disease-gene relationships with
-        Gene2Phenotype (G2P). Genome Med 16, 127 (2024).
-        https://doi.org/10.1186/s13073-024-01398-1.
-      </p>
-    </div>
-    <a
-      href="https://doi.org/10.1136/jmg-2022-108618"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        EyeG2P: an automated variant filtering approach improves efficiency of
-        diagnostic genomic testing for inherited ophthalmic disorders
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        Lenassi E, Carvalho A, Thormann A, et al. EyeG2P: an automated variant
-        filtering approach improves efficiency of diagnostic genomic testing for
-        inherited ophthalmic disordersJournal of Medical Genetics
-        2023;60:810-818.
-      </p>
-    </div>
-    <a
-      href="https://doi.org/10.1186/s13073-023-01246-8"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        Beyond gene-disease validity: capturing structured data on inheritance,
-        allelic-requirement, disease-relevant variant classes, and disease
-        mechanism for inherited cardiac conditions
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        Josephs, K.S., Roberts, A.M., Theotokis, P. et al. Beyond gene-disease
-        validity: capturing structured data on inheritance, allelic requirement,
-        disease-relevant variant classes, and disease mechanism for inherited
-        cardiac conditions. Genome Med 15, 86 (2023).
-        https://doi.org/10.1186/s13073-023-01246-8
-      </p>
-    </div>
-    <a
-      href="https://doi.org/10.1038/s41467-019-10016-3"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        Flexible and scalable diagnostic filtering of genomic variants using G2P
-        with Ensembl VEP
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        Thormann, A., Halachev, M., McLaren, W. et al. Flexible and scalable
-        diagnostic filtering of genomic variants using G2P with Ensembl VEP. Nat
-        Commun 10, 2373 (2019). https://doi.org/10.1038/s41467-019-10016-3
-      </p>
-    </div>
-    <a
-      href="https://doi.org/10.1101/2025.11.24.25340871"
-      style="text-decoration: none"
-      target="_blank"
-    >
-      <h6>
-        Domain-wide Mapping of Peer-reviewed Literature for Genetic
-        Developmental Disorders using Machine Learning and Gene2Phenotype
-      </h6>
-    </a>
-    <div class="pb-2 citation-div">
-      <p>
-        Thabo Michael Yates, Sarah E Hunt, Diana Lemos, Seeta Ramaraju
-        Pericherla, Elena Cibrian Uhalte, Morad Ansari, Louise Thompson, Simona
-        E Doneva, Caroline F Wright, Helen V Firth, T Ian Simpson. Domain-wide
-        Mapping of Peer-reviewed Literature for Genetic Developmental Disorders
-        using Machine Learning and Gene2Phenotype. medRxiv 2025.11.24.25340871;
-        doi: https://doi.org/10.1101/2025.11.24.25340871
-      </p>
-    </div>
+    <ul class="list-unstyled m-0 p-0">
+      <li>
+        <article>
+          <a
+            href="https://doi.org/10.1186/s13073-024-01398-1"
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h6>
+              Curating genomic disease-gene relationships with Gene2Phenotype
+              (G2P)
+            </h6>
+          </a>
+          <p class="pb-2 citation">
+            <cite class="fst-normal">
+              T Michael Yates, Morad Ansari, Louise Thompson, Sarah E Hunt,
+              Elena Cibrian Uhalte, Rachel J Hobson, Joseph A Marsh, Caroline F
+              Wright, Helen V Firth. Curating genomic disease-gene relationships
+              with Gene2Phenotype (G2P). Genome Med 16, 127 (2024).
+              https://doi.org/10.1186/s13073-024-01398-1.
+            </cite>
+          </p>
+        </article>
+      </li>
+      <li>
+        <article>
+          <a
+            href="https://doi.org/10.1136/jmg-2022-108618"
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h6>
+              EyeG2P: an automated variant filtering approach improves
+              efficiency of diagnostic genomic testing for inherited ophthalmic
+              disorders
+            </h6>
+          </a>
+          <p class="pb-2 citation">
+            <cite class="fst-normal">
+              Lenassi E, Carvalho A, Thormann A, et al. EyeG2P: an automated
+              variant filtering approach improves efficiency of diagnostic
+              genomic testing for inherited ophthalmic disorders. Journal of
+              Medical Genetics 2023;60:810-818.
+            </cite>
+          </p>
+        </article>
+      </li>
+      <li>
+        <article>
+          <a
+            href="https://doi.org/10.1186/s13073-023-01246-8"
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h6>
+              Beyond gene-disease validity: capturing structured data on
+              inheritance, allelic-requirement, disease-relevant variant
+              classes, and disease mechanism for inherited cardiac conditions
+            </h6>
+          </a>
+          <p class="pb-2 citation">
+            <cite class="fst-normal">
+              Josephs, K.S., Roberts, A.M., Theotokis, P. et al. Beyond
+              gene-disease validity: capturing structured data on inheritance,
+              allelic requirement, disease-relevant variant classes, and disease
+              mechanism for inherited cardiac conditions. Genome Med 15, 86
+              (2023). https://doi.org/10.1186/s13073-023-01246-8
+            </cite>
+          </p>
+        </article>
+      </li>
+      <li>
+        <article>
+          <a
+            href="https://doi.org/10.1038/s41467-019-10016-3"
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h6>
+              Flexible and scalable diagnostic filtering of genomic variants
+              using G2P with Ensembl VEP
+            </h6>
+          </a>
+          <p class="pb-2 citation">
+            <cite class="fst-normal">
+              Thormann, A., Halachev, M., McLaren, W. et al. Flexible and
+              scalable diagnostic filtering of genomic variants using G2P with
+              Ensembl VEP. Nat Commun 10, 2373 (2019).
+              https://doi.org/10.1038/s41467-019-10016-3
+            </cite>
+          </p>
+        </article>
+      </li>
+      <li>
+        <article>
+          <a
+            href="https://doi.org/10.1101/2025.11.24.25340871"
+            class="text-decoration-none"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <h6>
+              Domain-wide Mapping of Peer-reviewed Literature for Genetic
+              Developmental Disorders using Machine Learning and Gene2Phenotype
+            </h6>
+          </a>
+          <p class="pb-2 citation">
+            <cite class="fst-normal">
+              Thabo Michael Yates, Sarah E Hunt, Diana Lemos, Seeta Ramaraju
+              Pericherla, Elena Cibrian Uhalte, Morad Ansari, Louise Thompson,
+              Simona E Doneva, Caroline F Wright, Helen V Firth, T Ian Simpson.
+              Domain-wide Mapping of Peer-reviewed Literature for Genetic
+              Developmental Disorders using Machine Learning and Gene2Phenotype.
+              medRxiv 2025.11.24.25340871; doi:
+              https://doi.org/10.1101/2025.11.24.25340871
+            </cite>
+          </p>
+        </article>
+      </li>
+    </ul>
   </div>
 </template>
 <style scoped>
-.citation-div {
-  margin: 0;
-}
-
-.citation-div p {
+.citation {
   padding: 15px;
   background: #eee;
   border-radius: 5px;

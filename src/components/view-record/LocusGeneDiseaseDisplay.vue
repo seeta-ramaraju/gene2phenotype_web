@@ -1,6 +1,8 @@
 <script>
-import { CONFIDENCE_COLOR_MAP, HELP_TEXT } from "../../utility/Constants.js";
+import { HELP_TEXT } from "../../utility/Constants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
+import ConfidenceBadge from "../confidence/ConfidenceBadge.vue";
+import PanelLinks from "../panel/PanelLinks.vue";
 import { exportRecordPdf } from "../../utility/DownloadUtility.js";
 import { ENSEMBL_LOCATION_URL } from "../../utility/UrlConstants.js";
 import VariantTypes from "./VariantTypes.vue";
@@ -19,7 +21,6 @@ export default {
   props: {
     isRecordPartOfUserPanels: Boolean,
     locusGeneDiseaseData: Object,
-    stableId: String,
     userPanels: Array,
     isPanelDataLoading: Boolean,
     isAuthenticated: Boolean,
@@ -27,12 +28,33 @@ export default {
   data() {
     return {
       observer: null,
-      isDisplayComments: this.locusGeneDiseaseData?.comments?.length > 0,
-      CONFIDENCE_COLOR_MAP,
       HELP_TEXT,
       ENSEMBL_LOCATION_URL,
-      exportRecordPdf,
     };
+  },
+  computed: {
+    canAddToPanel() {
+      return (
+        !this.isPanelDataLoading &&
+        this.userPanels?.length > 0 &&
+        this.isAuthenticated &&
+        !this.isRecordPartOfUserPanels
+      );
+    },
+    canUpdateRecord() {
+      return (
+        !this.isPanelDataLoading &&
+        this.isAuthenticated &&
+        this.isRecordPartOfUserPanels
+      );
+    },
+    hasComments() {
+      return this.locusGeneDiseaseData?.comments?.length > 0;
+    },
+    hasMechanismEvidence() {
+      const evidence = this.locusGeneDiseaseData.molecular_mechanism?.evidence;
+      return Object.keys(evidence ?? {}).length > 0;
+    },
   },
   created() {
     this.observer = new IntersectionObserver(this.onElementObserved, {
@@ -51,6 +73,8 @@ export default {
   },
   components: {
     ToolTip,
+    ConfidenceBadge,
+    PanelLinks,
     VariantTypes,
     VariantDescription,
     VariantConsequences,
@@ -65,6 +89,7 @@ export default {
     Comments,
   },
   methods: {
+    exportRecordPdf,
     onElementObserved(entries) {
       entries.forEach(({ target, isIntersecting, intersectionRatio }) => {
         const id = target.getAttribute("id");
@@ -90,18 +115,10 @@ export default {
         <div class="flex-grow-1 me-1">
           <h2 v-if="locusGeneDiseaseData.disease?.name">
             {{ locusGeneDiseaseData.disease.name }}
-            <span
-              v-if="locusGeneDiseaseData.confidence"
-              class="badge text-white fs-6"
-              :style="{
-                backgroundColor:
-                  CONFIDENCE_COLOR_MAP[
-                    locusGeneDiseaseData.confidence.toLowerCase()
-                  ],
-              }"
-            >
-              {{ locusGeneDiseaseData.confidence }}
-            </span>
+            <ConfidenceBadge
+              :confidence="locusGeneDiseaseData.confidence"
+              class="fs-6"
+            />
           </h2>
           <h2 v-else class="text-muted">Disease Name Not Available</h2>
           <span
@@ -115,36 +132,31 @@ export default {
           <div class="d-flex align-items-start flex-column">
             <div>
               <button
+                v-if="canAddToPanel"
                 class="btn btn-outline-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#add-panel-modal"
-                v-if="
-                  !isPanelDataLoading &&
-                  userPanels?.length > 0 &&
-                  isAuthenticated &&
-                  !isRecordPartOfUserPanels
-                "
               >
                 <i class="bi bi-plus-circle-fill"></i> Add to another panel
               </button>
               <button
+                v-if="canUpdateRecord"
                 class="btn btn-outline-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#update-record-modal"
-                v-if="
-                  !isPanelDataLoading &&
-                  isAuthenticated &&
-                  isRecordPartOfUserPanels
-                "
               >
                 <i class="bi bi-pencil-square"></i> Update record
               </button>
-              <div v-if="isPanelDataLoading && isAuthenticated" class="my-auto">
+              <div
+                v-if="isPanelDataLoading && isAuthenticated"
+                class="my-auto"
+                role="status"
+              >
                 <span
                   class="spinner-border spinner-border-sm text-primary"
-                  role="status"
                   aria-hidden="true"
                 ></span>
+                <span class="visually-hidden">Loading panel data...</span>
               </div>
             </div>
             <div class="mt-1">
@@ -203,27 +215,10 @@ export default {
               <h5>Panels</h5>
             </td>
             <td class="w-75">
-              <span v-if="locusGeneDiseaseData.panels?.length > 0">
-                <span v-for="(item, index) in locusGeneDiseaseData.panels">
-                  <span v-if="index < locusGeneDiseaseData.panels.length - 1">
-                    <router-link
-                      :to="`/panel/${item.name}`"
-                      style="text-decoration: none"
-                    >
-                      {{ item.description ? item.description : item.name }}
-                    </router-link>
-                    ,
-                  </span>
-                  <router-link
-                    :to="`/panel/${item.name}`"
-                    v-else
-                    style="text-decoration: none"
-                  >
-                    {{ item.description ? item.description : item.name }}
-                  </router-link>
-                </span>
-              </span>
-              <p v-else class="text-muted">Not Available</p>
+              <PanelLinks
+                :panels="locusGeneDiseaseData.panels"
+                empty-text="Not Available"
+              />
             </td>
           </tr>
           <tr id="variant-information-section" class="align-middle">
@@ -313,13 +308,7 @@ export default {
               />
             </td>
           </tr>
-          <tr
-            v-if="
-              locusGeneDiseaseData.molecular_mechanism?.evidence &&
-              Object.keys(locusGeneDiseaseData.molecular_mechanism.evidence)
-                .length > 0
-            "
-          >
+          <tr v-if="hasMechanismEvidence">
             <td class="w-25 text-end">
               <h6>Evidence</h6>
             </td>
@@ -382,9 +371,9 @@ export default {
             </td>
             <td>
               <router-link
-                :to="`/gene/${locusGeneDiseaseData.locus?.gene_symbol}`"
                 v-if="locusGeneDiseaseData.locus?.gene_symbol"
-                style="text-decoration: none"
+                :to="`/gene/${locusGeneDiseaseData.locus?.gene_symbol}`"
+                class="text-decoration-none"
               >
                 {{ locusGeneDiseaseData.locus.gene_symbol }}
               </router-link>
@@ -416,8 +405,9 @@ export default {
                   locusGeneDiseaseData.locus?.end
                 "
                 :href="`${ENSEMBL_LOCATION_URL}${locusGeneDiseaseData.locus.sequence}:${locusGeneDiseaseData.locus.start}-${locusGeneDiseaseData.locus.end}`"
-                style="text-decoration: none"
+                class="text-decoration-none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ locusGeneDiseaseData.locus.sequence }}:{{
                   locusGeneDiseaseData.locus.start
@@ -469,9 +459,9 @@ export default {
             </td>
             <td>
               <router-link
-                :to="`/disease/${locusGeneDiseaseData.disease?.name}`"
                 v-if="locusGeneDiseaseData.disease?.name"
-                style="text-decoration: none"
+                :to="`/disease/${locusGeneDiseaseData.disease?.name}`"
+                class="text-decoration-none"
               >
                 {{ locusGeneDiseaseData.disease?.name }}
               </router-link>
@@ -502,7 +492,7 @@ export default {
               <p v-else class="text-muted">Not Available</p>
             </td>
           </tr>
-          <tr id="comments-section" v-if="isDisplayComments">
+          <tr v-if="hasComments" id="comments-section">
             <td class="w-25 text-end">
               <h5>Comments</h5>
             </td>
@@ -576,7 +566,7 @@ export default {
         <a class="nav-link" href="#disease-information-section"
           >Disease Information</a
         >
-        <a v-if="isDisplayComments" class="nav-link" href="#comments-section"
+        <a v-if="hasComments" class="nav-link" href="#comments-section"
           >Comments</a
         >
         <a class="nav-link" href="#curation-information-section"

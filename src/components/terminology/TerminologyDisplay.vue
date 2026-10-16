@@ -4,6 +4,30 @@ import {
   ConfidenceAttribsOrder,
   VariantConsequencesAttribs,
 } from "../../utility/CurationConstants.js";
+
+const NAVIGATION_ITEMS = Object.freeze([
+  {
+    id: "g2p-confidence-section",
+    label: "G2P Confidence Category",
+  },
+  { id: "allelic-requirement-section", label: "Allelic Requirement" },
+  {
+    id: "cross-cutting-modifier-section",
+    label: "Cross Cutting Modifier",
+  },
+  { id: "molecular-mechanism-section", label: "Molecular Mechanism" },
+  {
+    id: "mechanism-synopsis-section",
+    label: "Molecular Mechanism Synopsis",
+  },
+  {
+    id: "mechanism-evidence-section",
+    label: "Molecular Mechanism Evidence Types",
+  },
+  { id: "variant-consequence-section", label: "Variant Consequence" },
+  { id: "variant-types-section", label: "Variant Types" },
+]);
+
 export default {
   props: {
     terminologyDescriptionData: {
@@ -24,28 +48,7 @@ export default {
       observer: null,
       CONFIDENCE_COLOR_MAP,
       VariantConsequencesAttribs,
-      navigationItems: [
-        {
-          id: "g2p-confidence-section",
-          label: "G2P Confidence Category",
-        },
-        { id: "allelic-requirement-section", label: "Allelic Requirement" },
-        {
-          id: "cross-cutting-modifier-section",
-          label: "Cross Cutting Modifier",
-        },
-        { id: "molecular-mechanism-section", label: "Molecular Mechanism" },
-        {
-          id: "mechanism-synopsis-section",
-          label: "Molecular Mechanism Synopsis",
-        },
-        {
-          id: "mechanism-evidence-section",
-          label: "Molecular Mechanism Evidence Types",
-        },
-        { id: "variant-consequence-section", label: "Variant Consequence" },
-        { id: "variant-types-section", label: "Variant Types" },
-      ],
+      navigationItems: NAVIGATION_ITEMS,
     };
   },
   computed: {
@@ -66,7 +69,7 @@ export default {
       threshold: 0,
     });
 
-    this.$el.querySelectorAll("section[id]").forEach((section) => {
+    this.$refs.content.querySelectorAll("section[id]").forEach((section) => {
       this.observer.observe(section);
     });
   },
@@ -87,7 +90,7 @@ export default {
 </script>
 <template>
   <main id="terminology-main">
-    <div id="terminology-content-div">
+    <div id="terminology-content-div" ref="content">
       <div class="dropdown mobile-navigation mb-4">
         <button
           id="terminology-mobile-navigation-button"
@@ -98,10 +101,7 @@ export default {
         >
           On this page
         </button>
-        <nav
-          class="dropdown-menu w-100"
-          aria-labelledby="terminology-mobile-navigation-button"
-        >
+        <nav class="dropdown-menu w-100" aria-label="On this page">
           <a
             v-for="item in navigationItems"
             :key="item.id"
@@ -496,12 +496,16 @@ export default {
         </div>
       </section>
     </div>
-    <nav id="side-navbar" class="h-100 flex-column align-items-stretch ps-3">
+    <nav
+      id="side-navbar"
+      class="h-100 flex-column align-items-stretch ps-3"
+      aria-label="On this page"
+    >
       <strong class="d-none d-md-block h6 my-2 ms-3 text-body-secondary">
         On this page
       </strong>
       <hr class="d-none d-md-block my-2 ms-3" />
-      <nav class="nav nav-pills flex-column">
+      <div class="nav nav-pills flex-column">
         <a
           v-for="item in navigationItems"
           :key="item.id"
@@ -510,7 +514,7 @@ export default {
         >
           {{ item.label }}
         </a>
-      </nav>
+      </div>
     </nav>
   </main>
 </template>
