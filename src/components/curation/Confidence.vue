@@ -91,9 +91,10 @@ export default {
               <ul class="mb-0">
                 <li v-if="geneData?.gene_symbol">
                   <a
+                    class="text-decoration-none"
                     :href="PANELAPP_URL + geneData.gene_symbol"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     PanelApp
                     <i class="bi bi-box-arrow-up-right"></i>
@@ -101,9 +102,10 @@ export default {
                 </li>
                 <li v-if="geneData?.ids?.HGNC">
                   <a
+                    class="text-decoration-none"
                     :href="GENCC_URL + geneData.ids.HGNC"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     GenCC
                     <i class="bi bi-box-arrow-up-right"></i>
@@ -118,9 +120,10 @@ export default {
             <label for="confidence-level-input" class="col-lg-3 col-form-label">
               Level<span class="text-danger">* </span>
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/about/terminology#g2p-confidence-section"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <i class="bi bi-question-circle"></i>
               </a>

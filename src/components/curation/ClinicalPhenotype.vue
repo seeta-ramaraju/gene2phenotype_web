@@ -99,8 +99,8 @@ export default {
                   v-if="sourceData.url"
                   :href="sourceData.url"
                   target="_blank"
-                  style="text-decoration: none"
-                  class="mb-0 mt-0 subtitle-text"
+                  rel="noopener noreferrer"
+                  class="mb-0 mt-0 subtitle-text text-decoration-none"
                 >
                   See details in source
                   <i class="bi bi-box-arrow-up-right"></i>
@@ -251,8 +251,7 @@ export default {
                         <td class="text-nowrap">
                           <button
                             type="button"
-                            class="btn btn-link p-0 text-danger"
-                            style="text-decoration: none"
+                            class="btn btn-link p-0 text-danger text-decoration-none"
                             :disabled="disabled"
                             @click="removeSelectedTerm(pmid, item.accession)"
                           >

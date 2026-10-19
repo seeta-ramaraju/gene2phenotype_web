@@ -46,10 +46,11 @@ export default {
           <tr v-for="item in variantConsequencesAttribs" :key="item.inputKey">
             <td :class="getVariantConsequenceCssClass(item.hierarchyLevel)">
               <a
+                class="text-decoration-none"
                 v-if="item.accession"
                 :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ item.labelText }}
               </a>
@@ -62,9 +63,10 @@ export default {
                 {{ item.description }} <br />
                 See table
                 <a
+                  class="text-decoration-none"
                   href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11039201/figure/F2/"
-                  style="text-decoration: none"
                   target="_blank"
+                  rel="noopener noreferrer"
                   >here</a
                 >.
               </template>

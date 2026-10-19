@@ -143,8 +143,7 @@ export default {
             <div class="d-flex align-items-center gap-1">
               <span>Score</span>
               <button
-                class="btn btn-link m-0 p-0"
-                style="text-decoration: none"
+                class="btn btn-link m-0 p-0 text-decoration-none"
                 data-bs-toggle="modal"
                 data-bs-target="#score-modal"
               >
@@ -161,10 +160,11 @@ export default {
         <tr v-for="item in currentMinedPublications">
           <td>
             <a
+              class="text-decoration-none"
               v-if="item.pmid"
               :href="EUROPE_PMC_URL + item.pmid"
-              style="text-decoration: none"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {{ item.pmid }}
             </a>
@@ -178,8 +178,7 @@ export default {
           <td>
             <button
               v-if="item.score && item.score_comment"
-              class="btn btn-link m-0 p-0"
-              style="text-decoration: none"
+              class="btn btn-link m-0 p-0 text-decoration-none"
               data-bs-toggle="modal"
               data-bs-target="#score-comment-modal"
               @click="setActiveScoreComment(item.score_comment)"
@@ -194,9 +193,9 @@ export default {
             <td>
               <a
                 :href="`/gene2phenotype/lgd/add-publication/${stableId}?publication=${item.pmid}`"
-                class="btn btn-primary"
-                style="text-decoration: none"
+                class="btn btn-primary text-decoration-none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 Curate
               </a>

@@ -23,10 +23,10 @@ export default {
   data() {
     return {
       clinicalPhenotype: this.getInitialClinicalPhenotype(
-        this.currentPublications
+        this.currentPublications,
       ),
       hpoTermsInputHelper: this.getInitialHpoTermsInputHelper(
-        this.currentPublications
+        this.currentPublications,
       ),
       isUpdateApiCallLoading: false,
       updatePhenotypeErrorMsg: null,
@@ -100,7 +100,7 @@ export default {
           this.hpoTermsInputHelper[pmid].HPOAPIerrormsg =
             fetchAndLogGeneralErrorMsg(
               error,
-              "Failed to fetch HPO data. Please try again later."
+              "Failed to fetch HPO data. Please try again later.",
             );
         })
         .finally(() => {
@@ -115,7 +115,7 @@ export default {
       // IF the selected term is not already present in hpo_terms list THEN add it
       if (
         !this.clinicalPhenotype[pmid].hpo_terms.find(
-          (item) => item.accession === term.id
+          (item) => item.accession === term.id,
         )
       ) {
         this.clinicalPhenotype[pmid].hpo_terms.push({
@@ -139,7 +139,7 @@ export default {
       api
         .post(
           UPDATE_PHENOTYPE_URL.replace(":stableid", this.stableId),
-          requestBody
+          requestBody,
         )
         .then((response) => {
           this.isUpdatePhenotypeSuccess = true;
@@ -150,7 +150,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to update phenotype. Please try again later.",
-            "Unable to update phenotype."
+            "Unable to update phenotype.",
           );
         })
         .finally(() => {
@@ -161,7 +161,7 @@ export default {
       // convert clinicalPhenotype from object to array of phenotype objects and include phenotypes that have non empty hpo terms
       let phenotypesArray = [];
       for (const [pmidKey, valueObj] of Object.entries(
-        this.clinicalPhenotype
+        this.clinicalPhenotype,
       )) {
         if (valueObj.hpo_terms?.length > 0) {
           valueObj.hpo_terms.forEach((hpoTermObj) => {
@@ -177,7 +177,7 @@ export default {
       // convert clinicalPhenotype from object to array of phenotype summary objects and include non empty phenotype summary
       let summaryArray = [];
       for (const [pmidKey, valueObj] of Object.entries(
-        this.clinicalPhenotype
+        this.clinicalPhenotype,
       )) {
         if (valueObj.summary.trim()) {
           let summaryObj = {
@@ -289,10 +289,11 @@ export default {
                           >
                             <td style="width: 10%">
                               <a
+                                class="text-decoration-none"
                                 :href="HPO_URL + item.accession"
-                                style="text-decoration: none"
                                 v-if="item.accession"
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {{ item.accession }}
                               </a>
@@ -311,19 +312,21 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
+                                      class="text-decoration-none"
                                       :href="EUROPE_PMC_URL + publicationItem"
-                                      style="text-decoration: none"
                                       target="_blank"
+                                      rel="noopener noreferrer"
                                     >
                                       {{ publicationItem }}
                                     </a>
                                     ,
                                   </span>
                                   <a
+                                    class="text-decoration-none"
                                     v-else
                                     :href="EUROPE_PMC_URL + publicationItem"
-                                    style="text-decoration: none"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     {{ publicationItem }}
                                   </a>
@@ -378,10 +381,11 @@ export default {
                           <tr v-for="item in currentPhenotypeSummary">
                             <td>
                               <a
+                                class="text-decoration-none"
                                 v-if="item.publication"
                                 :href="EUROPE_PMC_URL + item.publication"
-                                style="text-decoration: none"
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {{ item.publication }}
                               </a>
@@ -533,8 +537,7 @@ export default {
                             <td class="text-nowrap">
                               <button
                                 type="button"
-                                class="btn btn-link p-0 text-danger"
-                                style="text-decoration: none"
+                                class="btn btn-link p-0 text-danger text-decoration-none"
                                 @click="
                                   removeSelectedTerm(pmid, item.accession)
                                 "

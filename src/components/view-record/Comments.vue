@@ -34,7 +34,10 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="commentObj in comments">
+              <tr
+                v-for="commentObj in comments"
+                :key="`${commentObj.text}-${commentObj.date}-${commentObj.is_public}`"
+              >
                 <td style="white-space: pre-wrap">
                   {{ commentObj.text }}
                   <span v-if="commentObj.date">({{ commentObj.date }})</span>

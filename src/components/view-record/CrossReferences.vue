@@ -46,21 +46,26 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="ontologyTerm in ontologyTerms">
+              <tr
+                v-for="ontologyTerm in ontologyTerms"
+                :key="`${ontologyTerm.source}-${ontologyTerm.accession}`"
+              >
                 <td>
                   <a
+                    class="text-decoration-none"
                     v-if="ontologyTerm.source === 'OMIM'"
                     :href="OMIM_URL + ontologyTerm.accession"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {{ ontologyTerm.accession }}
                   </a>
                   <a
+                    class="text-decoration-none"
                     v-else-if="ontologyTerm.source === 'Mondo'"
                     :href="MONDO_URL + ontologyTerm.accession"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {{ ontologyTerm.accession }}
                   </a>

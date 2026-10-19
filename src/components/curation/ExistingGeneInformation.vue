@@ -292,18 +292,18 @@ export default {
                   </td>
                   <td>
                     <router-link
+                      class="text-decoration-none"
                       v-if="item.gene"
                       :to="`/gene/${item.gene}`"
-                      style="text-decoration: none"
                     >
                       {{ item.gene }}
                     </router-link>
                   </td>
                   <td>
                     <router-link
+                      class="text-decoration-none"
                       v-if="item.disease"
                       :to="`/disease/${item.disease}`"
-                      style="text-decoration: none"
                     >
                       {{ item.disease }}
                     </router-link>
@@ -318,10 +318,11 @@ export default {
                   </td>
                   <td class="text-nowrap">
                     <router-link
+                      class="text-decoration-none"
                       v-if="item.stable_id"
                       :to="`/lgd/${item.stable_id}`"
-                      style="text-decoration: none"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       View <i class="bi bi-box-arrow-up-right"></i>
                     </router-link>
@@ -421,22 +422,22 @@ export default {
                   </td>
                   <td class="text-nowrap">
                     <router-link
+                      class="text-decoration-none"
                       v-if="
                         isUserManualDraft(item.status, item.curator_email) &&
                         item.stable_id
                       "
                       :to="`/lgd/update-draft/${item.stable_id}`"
-                      style="text-decoration: none"
                     >
                       Update <i class="bi bi-pencil-square"></i>
                     </router-link>
                     <router-link
+                      class="text-decoration-none"
                       v-else-if="
                         isUserAutomaticDraft(item.status, item.curator_email) &&
                         item.stable_id
                       "
                       :to="`/lgd/review-draft/${item.stable_id}`"
-                      style="text-decoration: none"
                     >
                       Review <i class="bi bi-file-earmark-text"></i>
                     </router-link>
@@ -450,8 +451,7 @@ export default {
                     >
                       <button
                         type="button"
-                        class="btn btn-link p-0 mb-1 claim-draft-button"
-                        style="text-decoration: none"
+                        class="btn btn-link p-0 mb-1 claim-draft-button text-decoration-none"
                         :disabled="isClaimDraftLoading"
                         @click="claimDraft(item.stable_id)"
                       >
@@ -467,17 +467,18 @@ export default {
                       </button>
                       <br />
                       <router-link
+                        class="text-decoration-none"
                         :to="`/lgd/review-draft/${item.stable_id}`"
-                        style="text-decoration: none"
                       >
                         Review <i class="bi bi-file-earmark-text"></i>
                       </router-link>
                     </template>
                     <a
+                      class="text-decoration-none"
                       v-else-if="item.curator_email"
                       :href="`mailto:${item.curator_email}`"
-                      style="text-decoration: none"
                       target="_blank"
+                      rel="noopener noreferrer"
                     >
                       Mail curator <i class="bi bi-box-arrow-up-right"></i>
                     </a>
@@ -520,8 +521,7 @@ export default {
           <div>
             <button
               type="button"
-              class="btn btn-link m-0 p-0"
-              style="text-decoration: none"
+              class="btn btn-link m-0 p-0 text-decoration-none"
               data-bs-toggle="modal"
               data-bs-target="#record-guidelines-modal"
             >

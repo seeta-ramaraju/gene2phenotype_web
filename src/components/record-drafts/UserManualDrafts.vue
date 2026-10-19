@@ -65,17 +65,16 @@ export default {
           <td>{{ item.last_update }}</td>
           <td class="text-nowrap text-center">
             <router-link
+              class="text-decoration-none"
               v-if="item.stable_id"
               :to="`/lgd/update-draft/${item.stable_id}`"
-              style="text-decoration: none"
             >
               Update <i class="bi bi-pencil-square"></i>
             </router-link>
             <br />
             <button
               type="button"
-              class="btn btn-link p-0 mb-1 d-inline-flex align-items-center justify-content-center delete-draft-button"
-              style="text-decoration: none"
+              class="btn btn-link p-0 mb-1 d-inline-flex align-items-center justify-content-center delete-draft-button text-decoration-none"
               :disabled="isDeleteDraftLoading"
               data-bs-toggle="modal"
               data-bs-target="#delete-draft-modal"

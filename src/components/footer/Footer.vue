@@ -71,6 +71,7 @@ export default {
               <a
                 href="https://ftp.ebi.ac.uk/pub/databases/gene2phenotype/privacy_notices/"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="nav-link p-0 text-body-secondary"
               >
                 Privacy
@@ -80,6 +81,7 @@ export default {
               <a
                 href="https://www.ebi.ac.uk/about/terms-of-use#privacy"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="nav-link p-0 text-body-secondary"
               >
                 Cookies
@@ -97,6 +99,7 @@ export default {
               <a
                 href="https://www.ebi.ac.uk/about/terms-of-use#general"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="nav-link p-0 text-body-secondary"
               >
                 Terms of use
@@ -164,6 +167,7 @@ export default {
               <a
                 href="https://ebi-g2p.gitdocs.ebi.ac.uk/g2p-blog/"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="nav-link p-0 text-body-secondary"
               >
                 G2P Blog
@@ -173,6 +177,7 @@ export default {
               <a
                 href="https://bsky.app/profile/gene2phenotype.bsky.social"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="nav-link p-0 text-body-secondary"
               >
                 Follow us on Bluesky
@@ -182,7 +187,11 @@ export default {
         </div>
         <div class="col-md-4 col-lg mb-3 text-center">
           <p>G2P is part of the PARADIGM initiative.</p>
-          <a href="https://paradigmgenomics.org/" target="_blank">
+          <a
+            href="https://paradigmgenomics.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               alt="PARADIGM logo"
               src="../../assets/PARADIGM-logo.png"
@@ -193,7 +202,11 @@ export default {
         </div>
         <div class="col-md-4 col-lg mb-3 text-center">
           <p>Funded by Wellcome.</p>
-          <a href="https://wellcome.org/" target="_blank">
+          <a
+            href="https://wellcome.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               alt="WELLCOME logo"
               src="../../assets/WELLCOME-logo.png"
@@ -203,7 +216,11 @@ export default {
           </a>
         </div>
         <div class="col-md-4 col-lg mb-3 text-center">
-          <a href="https://www.ebi.ac.uk/" target="_blank">
+          <a
+            href="https://www.ebi.ac.uk/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
               alt="EMBL-EBI logo"
               src="../../assets/EMBL-EBI-logo.png"

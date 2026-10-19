@@ -29,20 +29,23 @@ export default {
             <li>
               Diseases that present both as monoallelic and biallelic (example
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/search?query=FBN1"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >FBN1-related Marfan syndrome</a
               >) are recorded as independent records, but using the same disease
               name, with 'monoallelic' or 'biallelic' added as in '<a
+                class="text-decoration-none"
                 href="/gene2phenotype/disease/FBN1-related%20Marfan%20syndrome%20(monoallelic)"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >FBN1-related Marfan syndrome (monoallelic)</a
               >' and '<a
+                class="text-decoration-none"
                 href="/gene2phenotype/disease/FBN1-related%20Marfan%20syndrome%20(biallelic)"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >FBN1-related Marfan syndrome (biallelic)</a
               >'.
             </li>
@@ -55,9 +58,10 @@ export default {
               specific protein domain) can result in different disorders for the
               same allelic requirement. See monoallelic
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/search?query=FGFR3"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >FGFR3 associations</a
               >.
             </li>
@@ -78,9 +82,10 @@ export default {
               via loss of interaction versus LoF via loss of activity) can
               result in distinct disease entities. See
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/search?query=INPP5E"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >INPP5E</a
               >.
             </li>
@@ -114,9 +119,10 @@ export default {
           Nosological authorities: OMIM, MONDO (Monarch Initiative), Orphanet,
           and GeneReviews. Please, contact the G2P team
           <a
+            class="text-decoration-none"
             href="mailto:g2p-help@ebi.ac.uk"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >g2p-help@ebi.ac.uk</a
           >
           if you are unsure about a new disease name or you want to update an
@@ -211,18 +217,20 @@ export default {
           <ul>
             <li>
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/lgd/G2P03429"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >AMOTL1-related orofacial clefting, cardiac anomalies, and tall
                 stature</a
               >
             </li>
             <li>
               <a
+                class="text-decoration-none"
                 href="/gene2phenotype/lgd/G2P03310"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
                 >PTPN11-related Noonan syndrome</a
               >
             </li>
@@ -236,16 +244,18 @@ export default {
           association presents as mono- and biallelic forms, add '(monoallelic)'
           or '(biallelic)' as appropriate (example:
           <a
+            class="text-decoration-none"
             href="/gene2phenotype/lgd/G2P00159"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >ALDH18A1-related spastic paraplegia (monoallelic)</a
           >
           and
           <a
+            class="text-decoration-none"
             href="/gene2phenotype/lgd/G2P02080"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >ALDH18A1-related spastic paraplegia (biallelic)</a
           >).
         </li>
@@ -254,19 +264,22 @@ export default {
         </li>
         <li>
           Use lower case for everything except: Proper names (<a
+            class="text-decoration-none"
             href="/gene2phenotype/lgd/G2P00010"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >TRIM32-related Bardet-Biedl syndrome</a
           >), Acronyms (<a
+            class="text-decoration-none"
             href="/gene2phenotype/lgd/G2P00012"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >FGFR3-related lacrimo-auriculo-dento-digital syndrome (LADD)</a
           >), Chemical names (<a
+            class="text-decoration-none"
             href="/gene2phenotype/lgd/G2P00085"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
             >HADH-related 3-hydroxyacyl-CoA dehydrogenase deficiency</a
           >).
         </li>
@@ -274,9 +287,10 @@ export default {
       <p>
         Please contact the G2P team
         <a
+          class="text-decoration-none"
           href="mailto:g2p-help@ebi.ac.uk"
-          style="text-decoration: none"
           target="_blank"
+          rel="noopener noreferrer"
           >g2p-help@ebi.ac.uk</a
         >
         if you are unsure about a new disease name.

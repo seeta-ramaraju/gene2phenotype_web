@@ -219,10 +219,11 @@ export default {
                     </td>
                     <td>
                       <a
+                        class="text-decoration-none"
                         v-if="item.publication?.pmid"
                         :href="EUROPE_PMC_URL + item.publication.pmid"
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.publication.pmid }}
                       </a>
@@ -290,8 +291,7 @@ export default {
             <div class="pt-1 px-0 pb-0">
               <button
                 type="button"
-                class="btn btn-link p-0"
-                style="text-decoration: none"
+                class="btn btn-link p-0 text-decoration-none"
                 @click="selectAll"
                 :disabled="
                   selectedCuratedPublicationsList.length ===
@@ -303,8 +303,7 @@ export default {
               |
               <button
                 type="button"
-                class="btn btn-link p-0"
-                style="text-decoration: none"
+                class="btn btn-link p-0 text-decoration-none"
                 @click="deselectAll"
                 :disabled="selectedCuratedPublicationsList.length === 0"
               >
@@ -313,8 +312,7 @@ export default {
             </div>
             <button
               type="button"
-              class="btn btn-link pt-1 px-0 pb-0"
-              style="text-decoration: none"
+              class="btn btn-link pt-1 px-0 pb-0 text-decoration-none"
               @click="viewPublications"
               :disabled="selectedCuratedPublicationsList.length === 0"
             >

@@ -29,7 +29,7 @@ export default {
       // IF the selected term is not already present in hpo_terms list THEN add it
       if (
         !this.clinicalPhenotype[pmid].hpo_terms.find(
-          (item) => item.accession === term.id
+          (item) => item.accession === term.id,
         )
       ) {
         let updatedClinicalPhenotype = { ...this.clinicalPhenotype };
@@ -116,10 +116,11 @@ export default {
                         >
                           <td style="width: 10%">
                             <a
+                              class="text-decoration-none"
                               :href="HPO_URL + item.accession"
-                              style="text-decoration: none"
                               v-if="item.accession"
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               {{ item.accession }}
                             </a>
@@ -138,19 +139,21 @@ export default {
                                   v-if="index < item.publications.length - 1"
                                 >
                                   <a
+                                    class="text-decoration-none"
                                     :href="EUROPE_PMC_URL + publicationItem"
-                                    style="text-decoration: none"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     {{ publicationItem }}
                                   </a>
                                   ,
                                 </span>
                                 <a
+                                  class="text-decoration-none"
                                   v-else
                                   :href="EUROPE_PMC_URL + publicationItem"
-                                  style="text-decoration: none"
                                   target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   {{ publicationItem }}
                                 </a>
@@ -300,8 +303,7 @@ export default {
                           <td class="text-nowrap">
                             <button
                               type="button"
-                              class="btn btn-link p-0 text-danger"
-                              style="text-decoration: none"
+                              class="btn btn-link p-0 text-danger text-decoration-none"
                               @click="removeSelectedTerm(pmid, item.accession)"
                             >
                               <i class="bi bi-trash-fill"></i> Remove

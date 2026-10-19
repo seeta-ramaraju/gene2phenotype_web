@@ -14,11 +14,11 @@ export default {
     return {
       // initialCurrentVariantConsequences keeps track of existing variant consequences provided by API
       initialCurrentVariantConsequences: this.getInitialVariantConsequences(
-        this.currentVariantConsequences
+        this.currentVariantConsequences,
       ),
       // variantConsequences keeps track of variant consequences based on user actions
       variantConsequences: this.getInitialVariantConsequences(
-        this.currentVariantConsequences
+        this.currentVariantConsequences,
       ),
       isUpdateApiCallLoading: false,
       updateVariantConsequenceErrorMsg: null,
@@ -73,7 +73,7 @@ export default {
       api
         .post(
           UPDATE_VARIANT_CONSEQUENCE_URL.replace(":stableid", this.stableId),
-          requestBody
+          requestBody,
         )
         .then((response) => {
           this.isUpdateVariantConsequenceSuccess = true;
@@ -85,7 +85,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to update variant consequences. Please try again later.",
-              "Unable to update variant consequences."
+              "Unable to update variant consequences.",
             );
         })
         .finally(() => {
@@ -101,7 +101,7 @@ export default {
         return Object.keys(this.variantConsequences).every(
           (key) =>
             this.initialCurrentVariantConsequences[key] ===
-            this.variantConsequences[key]
+            this.variantConsequences[key],
         );
       }
       return true;
@@ -180,10 +180,11 @@ export default {
                         "
                       >
                         <a
+                          class="text-decoration-none"
                           v-if="item.accession"
                           :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
-                          style="text-decoration: none"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ item.labelText }}
                         </a>
@@ -196,9 +197,10 @@ export default {
                           {{ item.description }} <br />
                           See table
                           <a
+                            class="text-decoration-none"
                             href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11039201/figure/F2/"
-                            style="text-decoration: none"
                             target="_blank"
+                            rel="noopener noreferrer"
                             >here</a
                           >.
                         </template>

@@ -53,19 +53,21 @@ export default {
                     <span v-for="(publicationItem, index) in item.publications">
                       <span v-if="index < item.publications.length - 1">
                         <a
+                          class="text-decoration-none"
                           :href="EUROPE_PMC_URL + publicationItem"
-                          style="text-decoration: none"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ publicationItem }}
                         </a>
                         ,
                       </span>
                       <a
+                        class="text-decoration-none"
                         v-else
                         :href="EUROPE_PMC_URL + publicationItem"
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ publicationItem }}
                       </a>

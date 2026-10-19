@@ -207,10 +207,11 @@ export default {
                           >
                             <td>
                               <a
+                                class="text-decoration-none"
                                 v-if="item.accession"
                                 :href="`http://www.sequenceontology.org/browser/current_release/term/${item.accession}`"
-                                style="text-decoration: none"
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {{ item.term }}
                               </a>
@@ -242,19 +243,21 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
+                                      class="text-decoration-none"
                                       :href="EUROPE_PMC_URL + pmid"
-                                      style="text-decoration: none"
                                       target="_blank"
+                                      rel="noopener noreferrer"
                                     >
                                       {{ pmid }}
                                     </a>
                                     ,
                                   </span>
                                   <a
+                                    class="text-decoration-none"
                                     v-else
                                     :href="EUROPE_PMC_URL + pmid"
-                                    style="text-decoration: none"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     {{ pmid }}
                                   </a>

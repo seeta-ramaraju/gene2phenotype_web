@@ -73,16 +73,16 @@ export default {
       <tr v-for="item in items" :key="item.id">
         <td>
           <router-link
+            class="text-decoration-none"
             :to="`/record-review-update/${item.id}`"
-            style="text-decoration: none"
           >
             {{ item.id }}
           </router-link>
         </td>
         <td>
           <a
+            class="text-decoration-none"
             :href="`/gene2phenotype/lgd/${item.stable_id}`"
-            style="text-decoration: none"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -96,8 +96,7 @@ export default {
             <button
               v-if="shouldTruncateSummary(item.summary)"
               type="button"
-              class="btn btn-link p-0 align-baseline"
-              style="text-decoration: none"
+              class="btn btn-link p-0 align-baseline text-decoration-none"
               @click="toggleSummary(item.id)"
             >
               Show less
@@ -109,8 +108,7 @@ export default {
             <button
               v-if="shouldTruncateSummary(item.summary)"
               type="button"
-              class="btn btn-link p-0 align-baseline"
-              style="text-decoration: none"
+              class="btn btn-link p-0 align-baseline text-decoration-none"
               @click="toggleSummary(item.id)"
             >
               Show more

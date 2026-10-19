@@ -16,9 +16,10 @@ export default {
   },
   data() {
     return {
-      minedPublicationsUnderReview: this.minedPublications?.filter(
-        (item) => item.status === MINED_PUBLICATION_STATUS.MINED,
-      ),
+      minedPublicationsUnderReview:
+        this.minedPublications?.filter(
+          (item) => item.status === MINED_PUBLICATION_STATUS.MINED,
+        ) ?? [],
       selectedMinedPublicationsList: [],
       searchQuery: "",
       sortKey: null,
@@ -161,8 +162,7 @@ export default {
                   isAuthenticated &&
                   isRecordPartOfUserPanels
                 "
-                class="btn btn-link p-0 m-0"
-                style="text-decoration: none"
+                class="btn btn-link p-0 m-0 text-decoration-none"
                 @click="goToReviewMinedPublicationPage"
               >
                 <i class="bi bi-file-earmark-text"></i> Review all mined
@@ -237,10 +237,11 @@ export default {
                     </td>
                     <td>
                       <a
+                        class="text-decoration-none"
                         v-if="item.pmid"
                         :href="EUROPE_PMC_URL + item.pmid"
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.pmid }}
                       </a>
@@ -263,8 +264,7 @@ export default {
             <div class="pt-1 px-0 pb-0">
               <button
                 type="button"
-                class="btn btn-link p-0"
-                style="text-decoration: none"
+                class="btn btn-link p-0 text-decoration-none"
                 @click="selectAll"
                 :disabled="
                   selectedMinedPublicationsList.length ===
@@ -276,8 +276,7 @@ export default {
               |
               <button
                 type="button"
-                class="btn btn-link p-0"
-                style="text-decoration: none"
+                class="btn btn-link p-0 text-decoration-none"
                 @click="deselectAll"
                 :disabled="selectedMinedPublicationsList.length === 0"
               >
@@ -286,8 +285,7 @@ export default {
             </div>
             <button
               type="button"
-              class="btn btn-link pt-1 px-0 pb-0"
-              style="text-decoration: none"
+              class="btn btn-link pt-1 px-0 pb-0 text-decoration-none"
               @click="viewPublications"
               :disabled="selectedMinedPublicationsList.length === 0"
             >

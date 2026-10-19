@@ -151,14 +151,14 @@ export default {
       return preparedInput;
     },
     isMechanismUpdated() {
-      const currentMechanism = this.currentMechanism.mechanism ?? ""; // if mechanism is null or undefined then it will set the value as empty string
+      const currentMechanism = this.currentMechanism?.mechanism ?? ""; // if mechanism is null or undefined then it will set the value as empty string
       const newMechanism = this.mechanism;
 
       return newMechanism !== currentMechanism;
     },
     isMechanismSupportUpdated() {
       const currentMechanismSupport =
-        this.currentMechanism.mechanism_support ?? ""; // if mechanism_support is null or undefined then it will set the value as empty string
+        this.currentMechanism?.mechanism_support ?? ""; // if mechanism_support is null or undefined then it will set the value as empty string
       const newMechanismSupport = this.mechanismSupport;
 
       return newMechanismSupport !== currentMechanismSupport;
@@ -482,9 +482,10 @@ export default {
                           <tr v-for="(value, key) in currentMechanism.evidence">
                             <td>
                               <a
+                                class="text-decoration-none"
                                 :href="EUROPE_PMC_URL + key"
-                                style="text-decoration: none"
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {{ key }}
                               </a>
