@@ -43,7 +43,7 @@ export default {
         .catch((error) => {
           this.userPanelsErrorMsg = fetchAndLogGeneralErrorMsg(
             error,
-            "Unable to fetch user panels. Please try again later."
+            "Unable to fetch user panels. Please try again later.",
           );
         })
         .finally(() => {
@@ -71,7 +71,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to add panel. Please try again later.",
-            "Unable to add panel."
+            "Unable to add panel.",
           );
         })
         .finally(() => {
@@ -84,7 +84,7 @@ export default {
       userPanels.forEach((userPanelItem) => {
         if (
           !panels.some(
-            (panelItem) => panelItem.description === userPanelItem.description
+            (panelItem) => panelItem.description === userPanelItem.description,
           )
         ) {
           userPanelOptions.push(userPanelItem);
@@ -137,7 +137,7 @@ export default {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in panels">
+                  <tr v-for="item in panels" :key="item.description">
                     <td>{{ item.description }}</td>
                   </tr>
                 </tbody>

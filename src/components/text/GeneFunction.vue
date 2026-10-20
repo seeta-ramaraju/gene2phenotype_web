@@ -119,8 +119,7 @@ export default {
     <button
       v-if="fullGeneFunctionText.length > MAX_CHARACTERS"
       @click="toggleText"
-      class="btn btn-link p-0"
-      style="text-decoration: none"
+      class="btn btn-link p-0 text-decoration-none"
     >
       {{ isTextExpanded ? "Show less" : "Show more" }}
       <i
@@ -130,8 +129,8 @@ export default {
     <p class="mb-0">
       <b>{{ linkLabel }}:</b>
       <a
+        class="text-decoration-none"
         :href="uniprotHref"
-        style="text-decoration: none"
         target="_blank"
         rel="noopener noreferrer"
       >

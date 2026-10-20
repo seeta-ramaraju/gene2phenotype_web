@@ -105,6 +105,7 @@ export default {
                       {{ sourceData.disease_cross_references[0].disease_name }}
                       (
                       <a
+                        class="text-decoration-none"
                         v-if="
                           sourceData.disease_cross_references[0].source ===
                           'OMIM'
@@ -113,12 +114,13 @@ export default {
                           OMIM_URL +
                           sourceData.disease_cross_references[0].identifier
                         "
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ sourceData.disease_cross_references[0].identifier }}
                       </a>
                       <a
+                        class="text-decoration-none"
                         v-else-if="
                           sourceData.disease_cross_references[0].source ===
                           'Mondo'
@@ -127,8 +129,8 @@ export default {
                           MONDO_URL +
                           sourceData.disease_cross_references[0].identifier
                         "
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ sourceData.disease_cross_references[0].identifier }}
                       </a>
@@ -143,8 +145,8 @@ export default {
                   v-if="sourceData.url"
                   :href="sourceData.url"
                   target="_blank"
-                  style="text-decoration: none"
-                  class="mb-0 mt-0 subtitle-text"
+                  rel="noopener noreferrer"
+                  class="mb-0 mt-0 subtitle-text text-decoration-none"
                 >
                   See details in source
                   <i class="bi bi-box-arrow-up-right"></i>
@@ -187,8 +189,7 @@ export default {
               <div class="col-auto mt-0">
                 <button
                   type="button"
-                  class="btn btn-link m-0 p-0"
-                  style="text-decoration: none"
+                  class="btn btn-link m-0 p-0 text-decoration-none"
                   data-bs-toggle="modal"
                   data-bs-target="#disease-name-guidelines-modal"
                 >
@@ -255,18 +256,20 @@ export default {
                     </td>
                     <td style="width: 20%">
                       <a
+                        class="text-decoration-none"
                         :href="OMIM_URL + item.identifier"
-                        style="text-decoration: none"
                         v-if="item.source === 'OMIM'"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.identifier }}
                       </a>
                       <a
+                        class="text-decoration-none"
                         :href="MONDO_URL + item.identifier"
-                        style="text-decoration: none"
                         v-else-if="item.source === 'Mondo'"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.identifier }}
                       </a>

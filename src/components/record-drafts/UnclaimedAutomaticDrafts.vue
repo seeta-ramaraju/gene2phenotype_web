@@ -261,8 +261,7 @@ export default {
       <button
         v-if="hasActiveFilters"
         type="button"
-        class="btn btn-link px-0"
-        style="text-decoration: none"
+        class="btn btn-link px-0 text-decoration-none"
         @click="clearFilters"
       >
         <i class="bi bi-x-circle"></i>
@@ -369,8 +368,7 @@ export default {
             <td class="text-nowrap text-center">
               <button
                 type="button"
-                class="btn btn-link p-0 mb-1 d-inline-flex align-items-center justify-content-center claim-draft-button"
-                style="text-decoration: none"
+                class="btn btn-link p-0 mb-1 d-inline-flex align-items-center justify-content-center claim-draft-button text-decoration-none"
                 :disabled="isClaimDraftLoading"
                 @click="$emit('claimDraft', item.stable_id)"
               >
@@ -384,9 +382,9 @@ export default {
               </button>
               <br />
               <router-link
+                class="text-decoration-none"
                 v-if="item.stable_id"
                 :to="`/lgd/review-draft/${item.stable_id}`"
-                style="text-decoration: none"
               >
                 Review <i class="bi bi-file-earmark-text"></i>
               </router-link>

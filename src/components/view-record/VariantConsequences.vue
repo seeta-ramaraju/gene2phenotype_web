@@ -47,10 +47,11 @@ export default {
               <tr v-for="item in variantConsequences">
                 <td>
                   <a
+                    class="text-decoration-none"
                     v-if="item.accession"
                     :href="SEQUENCE_ONTOLOGY_URL + item.accession"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {{ item.variant_consequence }}
                   </a>

@@ -43,10 +43,11 @@ export default {
             <dt class="gene-info-label">Symbol</dt>
             <dd class="gene-info-value">
               <a
+                class="text-decoration-none"
                 v-if="geneData.gene_symbol"
                 :href="`/gene2phenotype/gene/${geneData.gene_symbol}`"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ geneData.gene_symbol }}
               </a>
@@ -86,10 +87,11 @@ export default {
             <dt class="gene-info-label">OMIM</dt>
             <dd class="gene-info-value">
               <a
+                class="text-decoration-none"
                 v-if="geneData.ids?.OMIM"
                 :href="OMIM_URL + geneData.ids.OMIM"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ geneData.ids.OMIM }}
               </a>
@@ -98,10 +100,11 @@ export default {
             <dt class="gene-info-label">HGNC ID</dt>
             <dd class="gene-info-value">
               <a
+                class="text-decoration-none"
                 v-if="geneData.ids?.HGNC"
                 :href="HGNC_URL + geneData.ids.HGNC"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ geneData.ids.HGNC }}
               </a>
@@ -110,10 +113,11 @@ export default {
             <dt class="gene-info-label">Ensembl ID</dt>
             <dd class="gene-info-value">
               <a
+                class="text-decoration-none"
                 v-if="geneData.ids?.Ensembl"
                 :href="ENSEMBL_GENE_URL + geneData.ids.Ensembl"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ geneData.ids.Ensembl }}
               </a>
@@ -122,9 +126,10 @@ export default {
           </dl>
           <div class="row">
             <a
+              class="text-decoration-none"
               :href="DECIPHER_URL + geneData.gene_symbol"
-              style="text-decoration: none"
               target="_blank"
+              rel="noopener noreferrer"
             >
               View in DECIPHER
               <i class="bi bi-box-arrow-up-right"></i>

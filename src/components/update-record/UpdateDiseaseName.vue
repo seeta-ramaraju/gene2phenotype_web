@@ -48,7 +48,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to update disease name. Please try again later.",
-              "Unable to update disease name."
+              "Unable to update disease name.",
             );
         })
         .finally(() => {
@@ -104,9 +104,9 @@ export default {
         <a
           v-if="diseaseName"
           :href="`/gene2phenotype/disease/${diseaseName}`"
-          style="text-decoration: none"
           target="_blank"
-          class="pt-0 mt-0"
+          rel="noopener noreferrer"
+          class="pt-0 mt-0 text-decoration-none"
         >
           {{ diseaseName }}
         </a>

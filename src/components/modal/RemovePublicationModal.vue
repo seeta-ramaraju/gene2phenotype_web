@@ -43,7 +43,7 @@ export default {
             <fieldset class="row">
               <legend class="col-form-label col-auto">Publication(s)</legend>
               <div class="col-6">
-                <div class="form-check" v-for="pmid in pmidList">
+                <div class="form-check" v-for="pmid in pmidList" :key="pmid">
                   <input
                     class="form-check-input"
                     type="checkbox"

@@ -61,9 +61,10 @@
             <p class="p-0 mb-0">
               <b>Note</b>: Scores are calculated using
               <a
+                class="text-decoration-none"
                 href="https://github.com/EBI-G2P/gene2phenotype_scripts/blob/main/publication_analysis/gemini_publication_analyser.py"
-                style="text-decoration: none"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 this Gemini script
                 <i class="bi bi-box-arrow-up-right"></i>

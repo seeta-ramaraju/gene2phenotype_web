@@ -30,7 +30,7 @@ export default {
       },
       // fetch the data when the view is created and the data is
       // already being observed
-      { immediate: true }
+      { immediate: true },
     );
   },
   data() {
@@ -125,7 +125,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to fetch cross references. Please try again later.",
-              "Unable to fetch cross references."
+              "Unable to fetch cross references.",
             );
           }
           /*
@@ -171,7 +171,7 @@ export default {
       api
         .post(
           UPDATE_CROSS_REFERENCE_URL.replace(":diseaseid", this.diseaseId),
-          requestBody
+          requestBody,
         )
         .then((response) => {
           this.isAddApiCallSuccess = true;
@@ -189,7 +189,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to add cross references. Please try again later.",
-            "Unable to add cross references."
+            "Unable to add cross references.",
           );
         })
         .finally(() => {
@@ -223,14 +223,14 @@ export default {
       api
         .delete(
           UPDATE_CROSS_REFERENCE_URL.replace(":diseaseid", this.diseaseId),
-          requestBody
+          requestBody,
         )
         .then((response) => {
           this.isDeleteApiCallSuccess = true;
           this.deleteApiCallSuccessMsg = response.data.message;
           // Remove the deleted cross reference from crossReferences list
           this.crossReferences = this.crossReferences.filter(
-            (item) => item.accession !== this.crossReferenceToDelete
+            (item) => item.accession !== this.crossReferenceToDelete,
           );
           // Since crossReferences list has been updated, filter out updated crossReferences list
           this.filteredSuggestedCrossReferences =
@@ -243,7 +243,7 @@ export default {
             error,
             error?.response?.data?.error,
             "Unable to delete cross reference. Please try again later.",
-            "Unable to delete cross reference."
+            "Unable to delete cross reference.",
           );
         })
         .finally(() => {
@@ -261,10 +261,10 @@ export default {
     getFilteredSuggestedCrossReferences() {
       // Filter out items in crossReferences list from allSuggestedCrossReferences list
       const existingCrossReferenceIds = this.crossReferences.map(
-        (item) => item.accession
+        (item) => item.accession,
       );
       return this.allSuggestedCrossReferences.filter(
-        (item) => !existingCrossReferenceIds.includes(item.accession)
+        (item) => !existingCrossReferenceIds.includes(item.accession),
       );
     },
     validateInputCrossReferences() {
@@ -292,22 +292,22 @@ export default {
       // Currently, only MONDO terms are supported, so the format must be MONDO:#######
       // TODO: Remove this check, when OMIM terms are also supported
       const invalidFormatCrossReferencesList = inputCrossReferencesList.filter(
-        (item) => !item.startsWith("MONDO:")
+        (item) => !item.startsWith("MONDO:"),
       );
       if (invalidFormatCrossReferencesList.length > 0) {
         this.inputCrossReferencesStrInvalidMsg = `Invalid format for term(s): ${invalidFormatCrossReferencesList.join(
-          ", "
+          ", ",
         )}. Expected format MONDO:#######`;
         return false;
       }
 
       // check for duplicate input cross references
       const duplicateCrossReferencesList = inputCrossReferencesList.filter(
-        (item, index) => inputCrossReferencesList.indexOf(item) !== index
+        (item, index) => inputCrossReferencesList.indexOf(item) !== index,
       );
       if (duplicateCrossReferencesList.length > 0) {
         this.inputCrossReferencesStrInvalidMsg = `Duplicate term(s): ${duplicateCrossReferencesList.join(
-          ", "
+          ", ",
         )}`;
         return false;
       }
@@ -315,30 +315,30 @@ export default {
       // check if any input cross reference exists in fetched cross references
       const fetchedInputCrossReferencesAccessionList =
         this.fetchedInputCrossReferences.map((item) =>
-          item.accession.toString()
+          item.accession.toString(),
         );
       const crossReferencesExistingFetchedList =
         inputCrossReferencesList.filter((item) =>
-          fetchedInputCrossReferencesAccessionList.includes(item)
+          fetchedInputCrossReferencesAccessionList.includes(item),
         );
       if (crossReferencesExistingFetchedList.length > 0) {
         this.inputCrossReferencesStrInvalidMsg = `Term(s) already fetched below: ${crossReferencesExistingFetchedList.join(
-          ", "
+          ", ",
         )}`;
         return false;
       }
 
       // check if any input cross reference exists in current cross references
       const currentCrossReferencesList = this.crossReferences.map((item) =>
-        item.accession.toString()
+        item.accession.toString(),
       );
       const crossReferencesAlreadyExistingList =
         inputCrossReferencesList.filter((item) =>
-          currentCrossReferencesList.includes(item)
+          currentCrossReferencesList.includes(item),
         );
       if (crossReferencesAlreadyExistingList.length > 0) {
         this.inputCrossReferencesStrInvalidMsg = `Term(s) already exist(s): ${crossReferencesAlreadyExistingList.join(
-          ", "
+          ", ",
         )}`;
         return false;
       }
@@ -346,15 +346,15 @@ export default {
       // check if any input cross reference exists in suggested cross references
       const suggestedCrossReferencesList =
         this.filteredSuggestedCrossReferences.map((item) =>
-          item.accession.toString()
+          item.accession.toString(),
         );
       const crossReferencesAlreadySuggestedList =
         inputCrossReferencesList.filter((item) =>
-          suggestedCrossReferencesList.includes(item)
+          suggestedCrossReferencesList.includes(item),
         );
       if (crossReferencesAlreadySuggestedList.length > 0) {
         this.inputCrossReferencesStrInvalidMsg = `Term(s) already suggested above: ${crossReferencesAlreadySuggestedList.join(
-          ", "
+          ", ",
         )}`;
         return false;
       }
@@ -382,8 +382,8 @@ export default {
         .get(
           CROSS_REFERENCE_URL.replace(
             ":crossreferences",
-            crossReferencesListStr
-          )
+            crossReferencesListStr,
+          ),
         )
         .then((response) => {
           if (response.data?.results) {
@@ -427,7 +427,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to fetch cross references. Please try again later.",
-              "Unable to fetch cross references."
+              "Unable to fetch cross references.",
             );
         })
         .finally(() => {
@@ -444,7 +444,7 @@ export default {
       api
         .post(
           UPDATE_CROSS_REFERENCE_URL.replace(":diseaseid", this.diseaseId),
-          requestBody
+          requestBody,
         )
         .then((response) => {
           this.isAddInputCrossReferencesApiCallSuccess = true;
@@ -460,7 +460,7 @@ export default {
               error,
               error?.response?.data?.error,
               "Unable to add cross references. Please try again later.",
-              "Unable to add cross references."
+              "Unable to add cross references.",
             );
         })
         .finally(() => {
@@ -470,7 +470,7 @@ export default {
     removeInputCrossReference(accessionToRemove) {
       this.fetchedInputCrossReferences =
         this.fetchedInputCrossReferences.filter(
-          (item) => item.accession !== accessionToRemove
+          (item) => item.accession !== accessionToRemove,
         );
     },
   },
@@ -537,18 +537,20 @@ export default {
                   <tr v-for="item in crossReferences" :key="item.accession">
                     <td>
                       <a
+                        class="text-decoration-none"
                         v-if="item.source === 'OMIM'"
                         :href="OMIM_URL + item.accession"
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.accession }}
                       </a>
                       <a
+                        class="text-decoration-none"
                         v-else-if="item.source === 'Mondo'"
                         :href="MONDO_URL + item.accession"
-                        style="text-decoration: none"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {{ item.accession }}
                       </a>
@@ -626,18 +628,20 @@ export default {
                       </td>
                       <td>
                         <a
+                          class="text-decoration-none"
                           :href="OMIM_URL + item.accession"
-                          style="text-decoration: none"
                           v-if="item.source === 'OMIM'"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ item.accession }}
                         </a>
                         <a
+                          class="text-decoration-none"
                           :href="MONDO_URL + item.accession"
-                          style="text-decoration: none"
                           v-else-if="item.source === 'Mondo'"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ item.accession }}
                         </a>
@@ -768,18 +772,20 @@ export default {
                     >
                       <td>
                         <a
+                          class="text-decoration-none"
                           :href="OMIM_URL + item.accession"
-                          style="text-decoration: none"
                           v-if="item.source === 'OMIM'"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ item.accession }}
                         </a>
                         <a
+                          class="text-decoration-none"
                           :href="MONDO_URL + item.accession"
-                          style="text-decoration: none"
                           v-else-if="item.source === 'Mondo'"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {{ item.accession }}
                         </a>

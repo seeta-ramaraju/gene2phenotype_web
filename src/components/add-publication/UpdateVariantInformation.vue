@@ -107,19 +107,21 @@ export default {
                                     v-if="index < item.publications.length - 1"
                                   >
                                     <a
+                                      class="text-decoration-none"
                                       :href="EUROPE_PMC_URL + publicationItem"
-                                      style="text-decoration: none"
                                       target="_blank"
+                                      rel="noopener noreferrer"
                                     >
                                       {{ publicationItem }}
                                     </a>
                                     ,
                                   </span>
                                   <a
+                                    class="text-decoration-none"
                                     v-else
                                     :href="EUROPE_PMC_URL + publicationItem"
-                                    style="text-decoration: none"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     {{ publicationItem }}
                                   </a>
@@ -175,9 +177,10 @@ export default {
                     <div class="form-text" id="publications-input-help-text">
                       Please follow
                       <a
+                        class="text-decoration-none"
                         href="https://hgvs-nomenclature.org/stable/"
                         target="_blank"
-                        style="text-decoration: none"
+                        rel="noopener noreferrer"
                       >
                         HGVS Nomenclature
                       </a>

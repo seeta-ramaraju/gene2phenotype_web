@@ -244,10 +244,11 @@ export default {
                       <div class="row g-3">
                         <div class="col-12">
                           <a
+                            class="text-decoration-none"
                             v-if="pmid"
                             :href="EUROPE_PMC_URL + pmid"
-                            style="text-decoration: none"
                             target="_blank"
+                            rel="noopener noreferrer"
                           >
                             View Publication
                             <i class="bi bi-box-arrow-up-right"></i>

@@ -94,9 +94,10 @@ export default {
                   <div class="form-text" id="publications-input-help-text">
                     Please follow
                     <a
+                      class="text-decoration-none"
                       href="https://hgvs-nomenclature.org/stable/"
                       target="_blank"
-                      style="text-decoration: none"
+                      rel="noopener noreferrer"
                     >
                       HGVS Nomenclature
                     </a>

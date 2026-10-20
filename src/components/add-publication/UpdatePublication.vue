@@ -85,10 +85,11 @@ export default {
                       >
                         <td>
                           <a
+                            class="text-decoration-none"
                             v-if="item.publication?.pmid"
                             :href="EUROPE_PMC_URL + item.publication.pmid"
-                            style="text-decoration: none"
                             target="_blank"
+                            rel="noopener noreferrer"
                           >
                             {{ item.publication.pmid }}
                           </a>
@@ -184,10 +185,11 @@ export default {
                     <div class="row g-3">
                       <div class="col-12">
                         <a
+                          class="text-decoration-none"
                           :href="EUROPE_PMC_URL + pmid"
-                          style="text-decoration: none"
                           v-if="pmid"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           View Publication
                           <i class="bi bi-box-arrow-up-right"></i>

@@ -44,13 +44,14 @@ export default {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in phenotypeSummary">
+              <tr v-for="item in phenotypeSummary" :key="item.publication">
                 <td>
                   <a
                     v-if="item.publication"
                     :href="EUROPE_PMC_URL + item.publication"
-                    style="text-decoration: none"
                     target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-decoration-none"
                   >
                     {{ item.publication }}
                   </a>

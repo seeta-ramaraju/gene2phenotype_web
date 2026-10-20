@@ -353,9 +353,10 @@ export default {
                         <tr v-for="(value, key) in currentMechanism.evidence">
                           <td>
                             <a
+                              class="text-decoration-none"
                               :href="EUROPE_PMC_URL + key"
-                              style="text-decoration: none"
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               {{ key }}
                             </a>

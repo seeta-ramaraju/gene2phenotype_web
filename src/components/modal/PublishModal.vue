@@ -135,10 +135,11 @@ export default {
                       </td>
                       <td class="text-nowrap">
                         <router-link
+                          class="text-decoration-none"
                           v-if="item.stable_id"
                           :to="`/lgd/${item.stable_id}`"
-                          style="text-decoration: none"
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           View record <i class="bi bi-box-arrow-up-right"></i>
                         </router-link>

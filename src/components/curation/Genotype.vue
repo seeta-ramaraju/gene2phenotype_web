@@ -73,8 +73,7 @@ export default {
               <div class="col-auto mt-0">
                 <button
                   type="button"
-                  class="btn btn-link m-0 p-0"
-                  style="text-decoration: none"
+                  class="btn btn-link m-0 p-0 text-decoration-none"
                   data-bs-toggle="modal"
                   data-bs-target="#allelic-requirement-guidelines-modal"
                 >

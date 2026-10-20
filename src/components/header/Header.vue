@@ -467,8 +467,7 @@ export default {
               <i class="bi bi-person-fill"></i>
               <router-link
                 to="/profile"
-                class="text-white"
-                style="text-decoration: none"
+                class="text-white text-decoration-none"
               >
                 {{ userName }}
               </router-link>

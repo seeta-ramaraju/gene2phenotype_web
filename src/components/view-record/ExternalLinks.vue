@@ -36,10 +36,11 @@ export default {
       <tr>
         <td>
           <a
+            class="text-decoration-none"
             v-if="geneSymbol"
             :href="DECIPHER_URL + geneSymbol"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ geneSymbol }}
           </a>
@@ -47,10 +48,11 @@ export default {
         </td>
         <td>
           <a
+            class="text-decoration-none"
             v-if="omimId"
             :href="OMIM_URL + omimId"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ omimId }}
           </a>
@@ -58,10 +60,11 @@ export default {
         </td>
         <td>
           <a
+            class="text-decoration-none"
             v-if="ensemblId"
             :href="ENSEMBL_GENE_URL + ensemblId"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ ensemblId }}
           </a>
@@ -69,10 +72,11 @@ export default {
         </td>
         <td>
           <a
+            class="text-decoration-none"
             v-if="hgncId"
             :href="HGNC_URL + hgncId"
-            style="text-decoration: none"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ hgncId }}
           </a>
