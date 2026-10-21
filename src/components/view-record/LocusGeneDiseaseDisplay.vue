@@ -3,7 +3,6 @@ import { HELP_TEXT } from "../../utility/Constants.js";
 import ToolTip from "../tooltip/ToolTip.vue";
 import ConfidenceBadge from "../confidence/ConfidenceBadge.vue";
 import PanelLinks from "../panel/PanelLinks.vue";
-import { exportRecordPdf } from "../../utility/DownloadUtility.js";
 import { ENSEMBL_LOCATION_URL } from "../../utility/UrlConstants.js";
 import VariantTypes from "./VariantTypes.vue";
 import VariantConsequences from "./VariantConsequences.vue";
@@ -28,6 +27,7 @@ export default {
   data() {
     return {
       observer: null,
+      isPdfDownloading: false,
       HELP_TEXT,
       ENSEMBL_LOCATION_URL,
     };
@@ -89,7 +89,21 @@ export default {
     Comments,
   },
   methods: {
-    exportRecordPdf,
+    async exportRecordPdf(locusGeneDiseaseData, isAuthenticated) {
+      if (this.isPdfDownloading) {
+        return;
+      }
+
+      this.isPdfDownloading = true;
+
+      try {
+        const { exportRecordPdf } =
+          await import("../../utility/DownloadUtility.js");
+        exportRecordPdf(locusGeneDiseaseData, isAuthenticated);
+      } finally {
+        this.isPdfDownloading = false;
+      }
+    },
     onElementObserved(entries) {
       entries.forEach(({ target, isIntersecting, intersectionRatio }) => {
         const id = target.getAttribute("id");
@@ -163,9 +177,21 @@ export default {
               <button
                 class="btn btn-outline-primary"
                 type="button"
+                :disabled="isPdfDownloading"
+                :aria-busy="isPdfDownloading"
                 @click="exportRecordPdf(locusGeneDiseaseData, isAuthenticated)"
               >
-                <i class="bi bi-file-earmark-arrow-down"></i> Download PDF
+                <span
+                  v-if="isPdfDownloading"
+                  class="spinner-border spinner-border-sm me-1"
+                  aria-hidden="true"
+                ></span>
+                <i
+                  v-else
+                  class="bi bi-file-earmark-arrow-down me-1"
+                  aria-hidden="true"
+                ></i>
+                {{ isPdfDownloading ? "Downloading" : "Download PDF" }}
               </button>
             </div>
           </div>
