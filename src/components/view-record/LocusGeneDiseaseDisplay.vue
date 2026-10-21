@@ -68,8 +68,8 @@ export default {
       this.observer.observe(heading);
     });
   },
-  beforeDestroy() {
-    this.observer.disconnect();
+  beforeUnmount() {
+    this.observer?.disconnect();
   },
   components: {
     ToolTip,
