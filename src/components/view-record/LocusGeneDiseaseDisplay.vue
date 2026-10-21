@@ -16,6 +16,10 @@ import MinedPublications from "./MinedPublications.vue";
 import ExternalLinks from "./ExternalLinks.vue";
 import CrossReferences from "./CrossReferences.vue";
 import Comments from "./Comments.vue";
+
+const SECTION_ACTIVATION_LINE_PX = 2;
+const RESIZE_DEBOUNCE_DELAY = 150;
+
 export default {
   props: {
     isRecordPartOfUserPanels: Boolean,
@@ -27,6 +31,7 @@ export default {
   data() {
     return {
       observer: null,
+      resizeTimer: null,
       isPdfDownloading: false,
       HELP_TEXT,
       ENSEMBL_LOCATION_URL,
@@ -56,20 +61,14 @@ export default {
       return Object.keys(evidence ?? {}).length > 0;
     },
   },
-  created() {
-    this.observer = new IntersectionObserver(this.onElementObserved, {
-      root: document.querySelector("#record-main"),
-      rootMargin: "0% 0% -90% 0%",
-      threshold: [0, 0.25, 0.5, 0.75, 1],
-    });
-  },
   mounted() {
-    document.querySelectorAll("tr[id]").forEach((heading) => {
-      this.observer.observe(heading);
-    });
+    this.createSectionObserver();
+    window.addEventListener("resize", this.onWindowResize);
   },
-  beforeDestroy() {
-    this.observer.disconnect();
+  beforeUnmount() {
+    window.removeEventListener("resize", this.onWindowResize);
+    window.clearTimeout(this.resizeTimer);
+    this.observer?.disconnect();
   },
   components: {
     ToolTip,
@@ -104,26 +103,75 @@ export default {
         this.isPdfDownloading = false;
       }
     },
-    onElementObserved(entries) {
-      entries.forEach(({ target, isIntersecting, intersectionRatio }) => {
-        const id = target.getAttribute("id");
-        const ratio = Math.floor(intersectionRatio * 100);
-        if (isIntersecting && ratio > 80) {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.add("active");
-        } else {
-          document
-            .querySelector(`nav a[href="#${id}"]`)
-            .classList.remove("active");
-        }
+    createSectionObserver() {
+      this.observer?.disconnect();
+
+      const headings = this.getSectionHeadings();
+      // Reduce the observer root to a narrow activation line at the viewport top.
+      const bottomMargin = Math.max(
+        window.innerHeight - SECTION_ACTIVATION_LINE_PX,
+        0,
+      );
+
+      this.observer = new IntersectionObserver(this.onElementObserved, {
+        root: null,
+        rootMargin: `1px 0px -${bottomMargin}px 0px`,
+        threshold: 0,
       });
+
+      headings.forEach((heading) => this.observer.observe(heading));
+      // Set the initial active section before the observer callback runs.
+      this.updateActiveSection(headings, SECTION_ACTIVATION_LINE_PX);
+    },
+    getSectionHeadings() {
+      return Array.from(this.$refs.recordMain.querySelectorAll("tr[id]"));
+    },
+    onElementObserved() {
+      this.updateActiveSection(
+        this.getSectionHeadings(),
+        SECTION_ACTIVATION_LINE_PX,
+      );
+    },
+    onWindowResize() {
+      // Debounce observer recreation while the viewport is being resized.
+      window.clearTimeout(this.resizeTimer);
+      this.resizeTimer = window.setTimeout(() => {
+        this.createSectionObserver();
+        this.resizeTimer = null;
+      }, RESIZE_DEBOUNCE_DELAY);
+    },
+    updateActiveSection(headings, activationOffset) {
+      if (headings.length === 0) {
+        return;
+      }
+
+      const pageBottom = window.scrollY + window.innerHeight;
+      // Keep the final section active when its heading cannot reach the activation line.
+      const isAtPageBottom =
+        Math.ceil(pageBottom) >= document.documentElement.scrollHeight;
+      const activeHeading = isAtPageBottom
+        ? headings[headings.length - 1]
+        : headings.reduce((current, heading) => {
+            // Use the last heading that has crossed the activation line.
+            return heading.getBoundingClientRect().top <= activationOffset
+              ? heading
+              : current;
+          }, headings[0]);
+
+      this.setActiveSection(activeHeading.id);
+    },
+    setActiveSection(id) {
+      this.$refs.sideNav
+        ?.querySelectorAll("a.nav-link")
+        .forEach((link) =>
+          link.classList.toggle("active", link.hash === `#${id}`),
+        );
     },
   },
 };
 </script>
 <template>
-  <main id="record-main">
+  <main id="record-main" ref="recordMain">
     <div id="record-content-div">
       <div class="d-flex justify-content-between">
         <div class="flex-grow-1 me-1">
@@ -559,7 +607,9 @@ export default {
     </div>
     <nav
       id="record-side-navbar"
+      ref="sideNav"
       class="h-100 flex-column align-items-stretch ps-3"
+      aria-label="On this page"
     >
       <strong class="d-none d-md-block h6 my-2 ms-3 text-body-secondary"
         >On this page</strong

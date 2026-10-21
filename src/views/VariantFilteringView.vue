@@ -188,7 +188,7 @@
     </p>
     <pre
       class="command-block"
-    ><code>vep -i input.vcf —cache --fasta /path/to/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --plugin G2P,file=G2P.csv</code></pre>
+    ><code>vep --i input.vcf --cache --fasta /path/to/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --plugin G2P,file=G2P.csv</code></pre>
     <p>
       This runs the analysis locally annotating variant genotypes in input.vcf
       using information from the Ensembl VEP cache and the G2P.csv gene data
@@ -409,7 +409,7 @@
     </p>
     <pre
       class="command-block"
-    ><code>vep -i input.vcf --cache --fasta /path/to/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --plugin G2P,file=G2P.csv,variant_include_list=known_var.vcf</code></pre>
+    ><code>vep --i input.vcf --cache --fasta /path/to/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --plugin G2P,file=G2P.csv,variant_include_list=known_var.vcf</code></pre>
     <h6 class="pb-2">Example input and output files</h6>
     <ul>
       <li>
