@@ -327,6 +327,11 @@ export default {
   <p v-else class="text-muted">No curated publications available</p>
 </template>
 <style scoped>
+#accordionPublications {
+  width: 100%;
+  contain: inline-size;
+}
+
 /* Border styling fix for sticky header - START */
 table {
   border-collapse: separate; /* Does not collapse border */
