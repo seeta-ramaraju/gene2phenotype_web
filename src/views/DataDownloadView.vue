@@ -235,14 +235,18 @@ export default {
         for further information.
       </p>
       <p>
-        If you use these data in your work please cite the data version and
-        Thorman et al 2019 (<a
-          href="https://www.nature.com/articles/s41467-019-10016-3"
+        If you use these data in your work please cite the data version and Hunt
+        SE, Lemos D, Pericherla SR, Austine-Orimoloye O, Cibrian Uhalte E, Yates
+        TM, et al. Gene2Phenotype: A Database of Structured Human Monogenic
+        Diseases and Pathomechanisms. Journal of Molecular Biology. 2026
+        Mar;169768.
+        <a
+          href="https://doi.org/10.1016/j.jmb.2026.169768"
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none"
-          >https://www.nature.com/articles/s41467-019-10016-3</a
-        >).
+          >doi:10.1016/j.jmb.2026.169768</a
+        >
       </p>
     </div>
   </div>
